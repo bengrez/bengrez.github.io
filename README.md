@@ -28,3 +28,15 @@ Publicado con GitHub Pages desde la rama `main`, raíz del repositorio: https://
 - Anchos en `rem`/`em`, no en `ch`: `ch` depende de la fuente y hacía saltar la página al cargar
   Bricolage. Los respaldos `Bricolage Respaldo` y `Source Serif Respaldo` usan `size-adjust`
   medido contra Arial y Georgia por la misma razón.
+
+## Tarjetas, esquema del sistema y capturas (2026-09-23)
+
+- Las tres tarjetas de la portada llevan un arte SVG propio (mapa de telemetría, perfil RNA-SIP,
+  fragmento de tabla periódica), dibujado en línea con las variables de color del sitio.
+- `Ingeniería` abre con un esquema del sistema (SVG en línea); en pantallas angostas se desplaza en
+  horizontal.
+- `tabla-periodica.webp` y `autodiagnostico.webp` son recortes de las herramientas públicas de
+  `aula-herramientas`, capturadas a 2x con Chrome headless y recortadas para no incluir cabeceras con
+  nombres de instituciones. Regenerar: captura a 2560×1720, `convert … -crop 1200x1000+680+370` y
+  `-crop 1960x540+300+810 -resize 1400x`, calidad WebP 80.
+

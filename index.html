@@ -36,7 +36,7 @@
   /* Anchos en rem/em, no en ch: ch depende de la fuente cargada y haría saltar la página al cambiarla. */
   --measure:37.2rem; --wide:calc(var(--measure) * 1.5); --gutter:clamp(1rem,4vw,2.5rem);
   --fs-hero:clamp(2.25rem,4.2vw + 1rem,5.25rem); --fs-band:clamp(2.1rem,3.6vw + 1rem,4.5rem);
-  --trace-h:clamp(8rem,19vw,17rem); --art-h:clamp(4.5rem,11vw,9rem);
+  --trace-h:clamp(9.5rem,23vw,19rem); --art-h:clamp(4.5rem,11vw,9rem);
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
@@ -89,9 +89,9 @@ p+p{margin-top:1em}
 .indice a:hover{text-decoration:underline;text-decoration-thickness:1px}
 .hero-type{flex-shrink:0;margin-block:auto;padding-block:clamp(2.25rem,6vw,4rem) clamp(1.5rem,4vw,2.5rem)}
 .display{font-size:var(--fs-hero);line-height:1.01;max-width:10.25em;letter-spacing:-.025em;font-weight:450}
-.facets{font-family:var(--display);font-size:clamp(1.05rem,.6vw + .9rem,1.3rem);line-height:1.5;color:var(--muted);
+.facets{font-family:var(--display);font-size:clamp(1rem,.45vw + .85rem,1.15rem);line-height:1.5;color:var(--muted);
   margin-top:clamp(1.25rem,3vw,2rem);max-width:25.9em}
-.facets span{display:inline}
+.facets span{display:inline;white-space:nowrap}
 @media (max-width:640px){.facets span{display:block}}
 
 .serie{margin:0;border-top:1px solid var(--rule);flex-shrink:0}
@@ -146,9 +146,9 @@ p+p{margin-top:1em}
 
 /* ---- puertas ---- */
 .puertas{border-block:1px solid var(--rule);padding-block:clamp(2rem,5vw,3.5rem)}
-.puertas .band{display:grid;grid-template-columns:repeat(3,1fr);max-width:var(--wide);margin-inline:auto;padding-inline:var(--gutter)}
-.puerta{padding-inline:clamp(1rem,2.5vw,2rem);border-left:1px solid var(--rule-strong);display:flex;flex-direction:column;gap:.9rem}
-.puerta:first-child{border-left:0;padding-left:0}
+.puertas .band{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1.25rem,3vw,2.5rem);max-width:var(--wide);margin-inline:auto;padding-inline:var(--gutter)}
+.puerta{position:relative;display:flex;flex-direction:column;gap:.9rem}
+.puerta+.puerta::before{content:"";position:absolute;top:0;bottom:0;left:calc(-.5 * clamp(1.25rem,3vw,2.5rem));width:1px;background:var(--rule-strong)}
 .puerta h2{font-size:1.25rem;margin:0}
 .puerta .status{font-family:var(--display);font-size:1.02rem;line-height:1.4}
 .puerta p{font-size:.98rem;color:var(--ink)}
@@ -164,8 +164,9 @@ p+p{margin-top:1em}
 .datarow dd{margin:0;font-family:var(--display);font-size:1.9rem;line-height:1.1;font-variant-numeric:tabular-nums;font-weight:500}
 @media (max-width:760px){
   .puertas .band{grid-template-columns:1fr;gap:0}
-  .puerta{border-left:0;padding-inline:0;padding-block:1.5rem;border-top:1px solid var(--rule-strong)}
+  .puerta{padding-block:1.5rem;border-top:1px solid var(--rule-strong)}
   .puerta:first-child{border-top:0;padding-top:0}
+  .puerta+.puerta::before{display:none}
   .caso{grid-template-columns:auto 1fr;gap:.4rem .75rem}
   .caso dd{margin:0}
 }
@@ -273,6 +274,81 @@ section.deep{border-bottom:1px solid var(--rule)}
 #contacto h2{font-size:clamp(1.8rem,2vw + 1rem,2.4rem);font-weight:460;letter-spacing:-.015em}
 footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:var(--muted)}
 
+
+/* ---- portada: facetas en una línea, gráfico protagonista, paso a paso ---- */
+.facets{max-width:none}
+.facets span+span::before{content:"";display:inline-block;width:1px;height:.85em;background:var(--rule-strong);margin:0 .85em;vertical-align:-.08em}
+@media (max-width:640px){.facets span+span::before{display:none}}
+.paso{background:none;border:0;padding:.35rem 0;margin:0;font:inherit;color:inherit;cursor:pointer;text-align:left;
+  display:inline-flex;align-items:baseline;gap:.45rem;font-family:var(--display);font-size:.88rem;color:var(--muted)}
+.paso .num{font-variant-numeric:tabular-nums;color:var(--muted)}
+.paso .nom{color:var(--ink);font-weight:500}
+.paso .sub{color:var(--muted)}
+.paso[aria-current="step"] .nom{color:var(--accent-ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.2em}
+.paso:hover .nom{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.2em}
+/* Estado inicial con JS: sólo los puntos (01). La banda y la línea entran con 02; las palabras con 03. */
+.serie.ready .detectar .ref,.serie.ready .detectar .ref-mid,.serie.ready .detectar .perturb{opacity:0;animation:appear .5s ease-out .25s forwards}
+/* Paso elegido a mano: se cancelan las animaciones y manda data-step. */
+.serie.manual .trend{animation:none;stroke-dasharray:none!important;stroke-dashoffset:0!important}
+.serie.manual .detectar,.serie.manual .detectar .ref,.serie.manual .detectar .ref-mid,.serie.manual .detectar .perturb,.serie.manual .alerta,.serie.manual .explicar{animation:none;opacity:1;transition:opacity .35s ease}
+.serie.manual[data-step="1"] .detectar,.serie.manual[data-step="1"] .alerta,.serie.manual[data-step="1"] .explicar,
+.serie.manual[data-step="2"] .explicar{opacity:0}
+
+/* ---- tarjetas de la portada ---- */
+.tarjeta{display:flex;flex-direction:column;gap:.55rem;color:inherit;text-decoration:none;height:100%}
+.arte{border:1px solid var(--rule);background:var(--surface);aspect-ratio:16/10;overflow:hidden}
+.arte svg{display:block;width:100%;height:100%}
+.arte .g{stroke:var(--grid);stroke-width:1px}
+.arte .ruta{fill:none;stroke:var(--rule-strong);stroke-width:2px;stroke-linecap:round;stroke-linejoin:round}
+.arte .veh{fill:var(--ink)}
+.arte .al{fill:none;stroke:var(--alert);stroke-width:1.6px}
+.arte .al-p{fill:var(--alert)}
+.arte .ax{fill:none;stroke:var(--rule-strong);stroke-width:1px}
+.arte .c12{fill:none;stroke:var(--signal-muted);stroke-width:1.6px}
+.arte .c13{fill:none;stroke:var(--accent);stroke-width:1.8px}
+.arte .a13{fill:var(--band-fill)}
+.arte text{font-family:var(--display);font-size:11px;fill:var(--muted)}
+.arte .t13{fill:var(--accent-ink)}
+.arte .cel{fill:var(--accent);opacity:.16}
+.arte .cel.hi{opacity:.95}
+.arte .cmp{fill:none;stroke:var(--ink);stroke-width:1.2px}
+.arte .panel{fill:var(--bg);stroke:var(--rule-strong);stroke-width:1px}
+.arte .linea{stroke:var(--rule-strong);stroke-width:2px;stroke-linecap:round}
+.kicker{font-family:var(--display);font-size:.85rem;color:var(--muted);margin-top:.5rem}
+.puerta h2{font-size:1.2rem;line-height:1.25}
+.meta{font-family:var(--display);font-size:.9rem;color:var(--muted);margin-top:auto;padding-top:.35rem}
+.puerta:hover .arte{border-color:var(--accent)}
+.puerta:hover h2{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
+@media (max-width:760px){.arte{aspect-ratio:16/8}}
+
+/* ---- caso en cada sección ---- */
+.caso-deep{grid-template-columns:11rem 1fr;gap:.55rem 1rem;margin-bottom:clamp(1.5rem,3vw,2.25rem);font-size:1.02rem}
+.caso-deep dt{font-size:.9rem;padding-top:.15rem}
+.caso-deep dd{margin:0}
+@media (max-width:560px){.caso-deep{grid-template-columns:1fr;gap:.1rem}.caso-deep dd{margin-bottom:.5rem}}
+
+/* ---- esquema del sistema (ingeniería) ---- */
+.sistema{margin:0 0 clamp(1.5rem,3vw,2.25rem)}
+.sistema .lienzo{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.sistema svg{display:block;width:100%;height:auto;min-width:700px}
+.sistema .nodo{fill:var(--surface);stroke:var(--rule-strong);stroke-width:1px}
+.sistema .nodo.db{stroke:var(--accent)}
+.sistema .nodo.alerta-n{stroke:var(--alert)}
+.sistema .flujo{fill:none;stroke:var(--rule-strong);stroke-width:1.4px}
+.sistema .flujo.al{stroke:var(--alert)}
+.sistema .punta{fill:var(--rule-strong)}
+.sistema .punta.al{fill:var(--alert)}
+.sistema text{font-family:var(--display);font-size:17px;fill:var(--ink)}
+.sistema text.sub{font-size:14px;fill:var(--muted)}
+.sistema .lbl{font-size:14px;fill:var(--muted)}
+.sistema figcaption{font-family:var(--display);font-size:.82rem;line-height:1.45;color:var(--muted);max-width:50.8em;padding-top:.6rem}
+
+/* ---- recursos con captura real ---- */
+.recurso{position:relative;grid-template-columns:minmax(12rem,20rem) 1fr}
+.recurso .mini img{display:block;width:100%;height:auto;border:1px solid var(--rule)}
+.recurso h3 a::after{content:"";position:absolute;inset:0}
+.recurso:hover .mini img{border-color:var(--accent)}
+
 /* Movimiento: will-change sólo en escenas cerca de pantalla. Con reduced-motion todo queda quieto. */
 .is-live [data-depth]{will-change:transform}
 @media (prefers-reduced-motion:reduce){
@@ -298,7 +374,7 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
   </div>
   <div class="hero-type wide" data-depth="-0.4" data-fade>
     <h1 class="display">Resuelvo problemas con lo que hay disponible.</h1>
-    <p class="facets"><span>El doctorado me dio un método: medir, detectar, explicar. </span><span>Hoy lo aplico trabajando con agentes de IA en entornos controlados: búsqueda vectorial, embeddings y evaluación antes de desplegar. </span><span>Empresa de transporte, investigación, colegio: cambia el problema; el método no.</span></p>
+    <p class="facets"><span>Sistemas de datos y agentes de IA</span><span>Investigación científica</span><span>Enseñanza de ciencias</span></p>
   </div>
   <figure class="serie" id="serie" data-z="0 0 0 0 0 0 0 0 0.2 -5.8 -10.3 -12.9 -13.1 -11.6 -9.8 -8.2 -7.2 -6.6 -6.2 -5.7 -5.4 -5.1 -4.9 -4.7 -4.5 -4.5 -4.6 -4.7 -4.6 -4.5 -4.3 -4.1 -4.3 -4.7 -5.1 -5" data-hit="25">
     <div class="plot">
@@ -319,9 +395,9 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
       </div>
     </div>
     <figcaption class="leyenda wide">
-      <span class="k k-medir">medir: réplicas por muestreo</span>
-      <span class="k k-detectar">detectar: referencia previa ± 2σ</span>
-      <span class="k k-explicar">explicar: la curva en palabras</span>
+      <button type="button" class="k k-medir paso" data-paso="1"><span class="num">01</span><span class="nom">Medir</span><span class="sub">réplicas por muestreo</span></button>
+      <button type="button" class="k k-detectar paso" data-paso="2"><span class="num">02</span><span class="nom">Detectar</span><span class="sub">referencia previa ± 2σ</span></button>
+      <button type="button" class="k k-explicar paso" data-paso="3"><span class="num">03</span><span class="nom">Explicar</span><span class="sub">se recupera, pero no del todo</span></button>
     </figcaption>
   </figure>
   <script>
@@ -338,46 +414,63 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
     // Terminado el dibujo se quitan los guiones: si la ventana cambia de ancho, la línea sigue entera.
     p.addEventListener('animationend',function(){ p.style.strokeDasharray=''; p.style.strokeDashoffset=''; fig.classList.add('drawn'); });
     fig.classList.add('ready');
+    // Paso a paso: 01 sólo los puntos, 02 entra la referencia y la línea, 03 las palabras.
+    var pasos=[].slice.call(fig.querySelectorAll('.paso')), manual=false;
+    function setStep(n){ fig.setAttribute('data-step',n); pasos.forEach(function(b){ b.setAttribute('aria-current',b.getAttribute('data-paso')===String(n)?'step':'false'); }); }
+    setStep(1); setTimeout(function(){ if(!manual) setStep(2); },300); setTimeout(function(){ if(!manual) setStep(3); },3100);
+    pasos.forEach(function(b){ b.addEventListener('click',function(){ manual=true; fig.classList.add('manual','drawn'); setStep(+b.getAttribute('data-paso')); }); });
   })();
   </script>
 </header>
 
 <main id="contenido">
 
-<section class="puertas" aria-label="Tres casos">
+<section class="puertas" aria-label="Tres áreas de trabajo">
   <div class="band">
     <article class="puerta">
-      <h2>Empresa de transporte</h2>
-      <p class="status">Telemetría y datos para una flota de buses.</p>
-      <dl class="caso">
-        <dt>Problema</dt><dd>Una flota sin visibilidad de lo que reportaban sus vehículos ni de qué fallas venían.</dd>
-        <dt>Qué había</dt><dd>Señales de bus CAN sin procesar, trámites por correo y una ley de datos personales por entrar en vigencia.</dd>
-        <dt>Qué hice</dt><dd>Plataforma de telemetría con series temporales, detección de fallas y un sistema de datos de conductores conforme a la Ley 21.719.</dd>
-        <dt>Resultado</dt><dd>Datos en tiempo real sobre los que se toman decisiones, en piloto. Un flujo de datos personales que antes iba por correo, ahora con resguardos.</dd>
-      </dl>
-      <p class="go"><a href="#ingenieria">Ver el trabajo de ingeniería</a></p>
+      <a class="tarjeta" href="#ingenieria">
+        <div class="arte"><svg viewBox="0 0 320 200" aria-hidden="true">
+<path class="g" d="M32 0V200 M64 0V200 M96 0V200 M128 0V200 M160 0V200 M192 0V200 M224 0V200 M256 0V200 M288 0V200 M0 32H320 M0 64H320 M0 96H320 M0 128H320 M0 160H320 M0 192H320"/>
+<path class="ruta" d="M-10 152 C50 128 82 62 148 70 S244 118 330 62"/>
+<path class="ruta" d="M22 -10 C36 58 118 92 138 148 S196 214 262 210"/>
+<path class="ruta" d="M-10 92 L118 100 L198 42 L330 30"/>
+<g class="veh"><circle cx="38" cy="134" r="3.4"/><circle cx="96" cy="74" r="3.4"/><circle cx="148" cy="70" r="3.4"/><circle cx="262" cy="104" r="3.4"/><circle cx="298" cy="74" r="3.4"/><circle cx="56" cy="52" r="3.4"/><circle cx="128" cy="106" r="3.4"/><circle cx="150" cy="150" r="3.4"/><circle cx="206" cy="184" r="3.4"/><circle cx="60" cy="95" r="3.4"/><circle cx="160" cy="68" r="3.4"/><circle cx="198" cy="42" r="3.4"/><circle cx="262" cy="36" r="3.4"/></g>
+<circle class="al-p" cx="210" cy="86" r="3.4"/><circle class="al" cx="210" cy="86" r="9"/>
+</svg></div>
+        <p class="kicker">Ingeniería</p>
+        <h2>Telemetría y detección de fallas para una flota de buses</h2>
+        <p class="meta">Bus CAN y GNSS, series temporales en PostgreSQL con TimescaleDB y PostGIS, mapa en vivo, alertas.</p>
+      </a>
     </article>
     <article class="puerta">
-      <h2>Investigación</h2>
-      <dl class="datarow"><div><dt>citas</dt><dd>738</dd></div><div><dt>índice h</dt><dd>12</dd></div></dl>
-      <dl class="caso">
-        <dt>Problema</dt><dd>Saber si un suelo degradado por la minería se recupera cuando se le devuelven microorganismos, o solo lo parece.</dd>
-        <dt>Qué había</dt><dd>Pocas muestras, datos de secuenciación ruidosos y ninguna referencia clara de suelo sano.</dd>
-        <dt>Qué hice</dt><dd>Diseño de muestreo con réplicas, marcaje isotópico (RNA-SIP), metagenómica y estadística multivariante para separar señal de ruido.</dd>
-        <dt>Resultado</dt><dd>Doctorado en la University of Western Australia y publicaciones que siguen citándose.</dd>
-      </dl>
-      <p class="go"><a href="#investigacion">Ver la investigación</a></p>
+      <a class="tarjeta" href="#investigacion">
+        <div class="arte"><svg viewBox="0 0 320 200" aria-hidden="true">
+<path class="ax" d="M28 168H304 M28 168V22 M30 168v4 M64 168v4 M98 168v4 M132 168v4 M166 168v4 M200 168v4 M234 168v4 M268 168v4 "/>
+<path class="a13" d="M30 168.0 L36 168.0 L42 168.0 L48 168.0 L54 168.0 L60 168.0 L66 168.0 L72 168.0 L78 168.0 L84 168.0 L90 168.0 L96 168.0 L102 167.9 L108 167.8 L114 167.6 L120 167.1 L126 166.3 L132 165.0 L138 162.9 L144 159.6 L150 154.7 L156 148.1 L162 139.5 L168 129.0 L174 117.0 L180 104.3 L186 92.1 L192 81.5 L198 73.9 L204 70.2 L210 71.0 L216 76.1 L222 84.8 L228 96.0 L234 108.6 L240 121.1 L246 132.7 L252 142.6 L258 150.5 L264 156.5 L270 160.8 L276 163.7 L282 165.5 L288 166.7 L294 167.3 L300 167.7 L300 168 L30 168 Z"/>
+<path class="c12" d="M30 167.6 L36 167.2 L42 166.4 L48 165.0 L54 162.6 L60 158.7 L66 152.8 L72 144.6 L78 133.7 L84 120.4 L90 105.3 L96 89.7 L102 75.3 L108 64.0 L114 57.3 L120 56.3 L126 61.2 L132 71.1 L138 84.7 L144 100.1 L150 115.5 L156 129.5 L162 141.2 L168 150.4 L174 157.0 L180 161.5 L186 164.3 L192 166.0 L198 167.0 L204 167.5 L210 167.8 L216 167.9 L222 168.0 L228 168.0 L234 168.0 L240 168.0 L246 168.0 L252 168.0 L258 168.0 L264 168.0 L270 168.0 L276 168.0 L282 168.0 L288 168.0 L294 168.0 L300 168.0"/>
+<path class="c13" d="M30 168.0 L36 168.0 L42 168.0 L48 168.0 L54 168.0 L60 168.0 L66 168.0 L72 168.0 L78 168.0 L84 168.0 L90 168.0 L96 168.0 L102 167.9 L108 167.8 L114 167.6 L120 167.1 L126 166.3 L132 165.0 L138 162.9 L144 159.6 L150 154.7 L156 148.1 L162 139.5 L168 129.0 L174 117.0 L180 104.3 L186 92.1 L192 81.5 L198 73.9 L204 70.2 L210 71.0 L216 76.1 L222 84.8 L228 96.0 L234 108.6 L240 121.1 L246 132.7 L252 142.6 L258 150.5 L264 156.5 L270 160.8 L276 163.7 L282 165.5 L288 166.7 L294 167.3 L300 167.7"/>
+<text x="118" y="46" text-anchor="middle">¹²C</text>
+<text class="t13" x="206" y="60" text-anchor="middle">¹³C</text>
+<text x="304" y="186" text-anchor="end">densidad</text>
+<text x="14" y="30">ARN</text>
+</svg></div>
+        <p class="kicker">Investigación</p>
+        <h2>Restauración de suelos mineros: medir si de verdad se recuperan</h2>
+        <p class="meta">Doctorado en la University of Western Australia. 738 citas, índice h 12.</p>
+      </a>
     </article>
     <article class="puerta">
-      <h2>Colegio</h2>
-      <p class="status">Ciencias en enseñanza media.</p>
-      <dl class="caso">
-        <dt>Problema</dt><dd>Enseñar Química, Biología y Ciencias para la Ciudadanía a cursos heterogéneos con poco tiempo de sala.</dd>
-        <dt>Qué había</dt><dd>Las bases curriculares, un proyector y estudiantes con celular.</dd>
-        <dt>Qué hice</dt><dd>Planificación por objetivo de aprendizaje y herramientas web propias que corren en el navegador, sin cuenta ni instalación.</dd>
-        <dt>Resultado</dt><dd>Dos herramientas publicadas y en uso en clases; una app de práctica PAES en desarrollo. Ver <a href="#recursos">Recursos de aprendizaje</a>.</dd>
-      </dl>
-      <p class="go"><a href="#aula">Ver el trabajo en el aula</a></p>
+      <a class="tarjeta" href="#aula">
+        <div class="arte"><svg viewBox="0 0 320 200" aria-hidden="true">
+<rect class="cel" x="12.0" y="12.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="294.2" y="12.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="12.0" y="28.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="28.6" y="28.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="211.2" y="28.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="227.8" y="28.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="244.4" y="28.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="261.0" y="28.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="277.6" y="28.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="294.2" y="28.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel hi" x="12.0" y="45.2" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="28.6" y="45.2" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="211.2" y="45.2" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="227.8" y="45.2" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="244.4" y="45.2" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="261.0" y="45.2" width="14.6" height="14.6" rx="1.5"/><rect class="cel hi" x="277.6" y="45.2" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="294.2" y="45.2" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="12.0" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="28.6" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="45.2" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="61.8" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="78.4" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="95.0" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="111.6" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="128.2" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="144.8" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="161.4" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="178.0" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="194.6" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="211.2" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="227.8" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="244.4" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="261.0" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="277.6" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="294.2" y="61.8" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="12.0" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="28.6" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="45.2" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="61.8" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="78.4" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="95.0" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="111.6" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="128.2" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="144.8" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="161.4" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="178.0" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="194.6" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="211.2" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="227.8" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="244.4" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="261.0" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="277.6" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="294.2" y="78.4" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="12.0" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="28.6" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="45.2" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="61.8" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="78.4" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="95.0" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="111.6" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="128.2" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="144.8" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="161.4" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="178.0" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="194.6" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="211.2" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="227.8" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="244.4" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="261.0" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="277.6" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="294.2" y="95.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="12.0" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="28.6" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="45.2" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="61.8" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="78.4" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="95.0" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="111.6" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="128.2" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="144.8" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="161.4" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="178.0" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="194.6" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="211.2" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="227.8" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="244.4" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="261.0" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="277.6" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="294.2" y="111.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="45.2" y="134.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="45.2" y="150.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="61.8" y="134.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="61.8" y="150.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="78.4" y="134.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="78.4" y="150.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="95.0" y="134.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="95.0" y="150.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="111.6" y="134.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="111.6" y="150.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="128.2" y="134.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="128.2" y="150.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="144.8" y="134.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="144.8" y="150.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="161.4" y="134.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="161.4" y="150.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="178.0" y="134.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="178.0" y="150.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="194.6" y="134.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="194.6" y="150.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="211.2" y="134.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="211.2" y="150.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="227.8" y="134.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="227.8" y="150.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="244.4" y="134.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="244.4" y="150.6" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="261.0" y="134.0" width="14.6" height="14.6" rx="1.5"/><rect class="cel" x="261.0" y="150.6" width="14.6" height="14.6" rx="1.5"/>
+<path class="cmp" d="M28.3 52.5 L275.9 52.5"/><path class="cmp" d="M270.9 48.5 L275.9 52.5 L270.9 56.5"/>
+<rect class="panel" x="54" y="82" width="180" height="42" rx="2"/>
+<path class="linea" d="M64 94H150 M64 104H196 M64 114H118"/>
+</svg></div>
+        <p class="kicker">Educación</p>
+        <h2>Herramientas para enseñar ciencias en enseñanza media</h2>
+        <p class="meta">En el navegador, sin cuenta ni instalación, sin guardar respuestas.</p>
+      </a>
     </article>
   </div>
 </section>
@@ -390,8 +483,20 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
     </div>
     <div class="wide"><p class="franja-nota">Esquema: cuatro tramas en un bus CAN, vistas en sus dos líneas diferenciales, con el CRC y el relleno de bits que exige el protocolo. Identificadores y datos inventados.</p></div>
   </div>
-  <div class="wrap cuerpo"><div class="col">
-    <p class="bridge">Empresa chilena de electrónica y telemetría para transporte público. Entré sin conocer el bus CAN ni los tacógrafos; hoy hay una plataforma de telemetría en piloto y un sistema de datos de conductores en construcción.</p>
+  <div class="wrap cuerpo"><figure class="sistema" data-nosnippet>
+<div class="lienzo"><svg viewBox="0 0 1200 215" role="img" aria-label="Esquema del sistema: del bus CAN y GNSS a la ingesta, la base de series temporales, la API y el mapa en vivo; una rama evalúa las señales con un detector de anomalías y produce alertas.">
+<rect class="nodo " x="0" y="50" width="200" height="64" rx="3"/><text x="100.0" y="78.0" text-anchor="middle">Bus CAN y GNSS</text><text class="sub" x="100.0" y="98.0" text-anchor="middle">en cada vehículo</text><path class="flujo " d="M200 82L236 82"/><path class="punta " d="M236 82l-9 -5v10z"/>
+<rect class="nodo " x="240" y="50" width="200" height="64" rx="3"/><text x="340.0" y="78.0" text-anchor="middle">Ingesta</text><text class="sub" x="340.0" y="98.0" text-anchor="middle">contrato de datos versionado</text><path class="flujo " d="M440 82L476 82"/><path class="punta " d="M476 82l-9 -5v10z"/>
+<rect class="nodo db" x="480" y="50" width="240" height="64" rx="3"/><text x="600.0" y="78.0" text-anchor="middle">PostgreSQL</text><text class="sub" x="600.0" y="98.0" text-anchor="middle">TimescaleDB y PostGIS</text><path class="flujo " d="M720 82L756 82"/><path class="punta " d="M756 82l-9 -5v10z"/>
+<rect class="nodo " x="760" y="50" width="160" height="64" rx="3"/><text x="840.0" y="78.0" text-anchor="middle">API</text><text class="sub" x="840.0" y="98.0" text-anchor="middle">FastAPI</text><path class="flujo " d="M920 82L956 82"/><path class="punta " d="M956 82l-9 -5v10z"/>
+<rect class="nodo " x="960" y="50" width="240" height="64" rx="3"/><text x="1080.0" y="78.0" text-anchor="middle">Mapa en vivo</text><text class="sub" x="1080.0" y="98.0" text-anchor="middle">reconstrucción de tramos</text>
+<path class="flujo" d="M600 114V170H636"/><path class="punta" d="M640 170l-9 -5v10z"/>
+<rect class="nodo " x="640" y="138" width="260" height="64" rx="3"/><text x="770.0" y="166.0" text-anchor="middle">Detector de anomalías</text><text class="sub" x="770.0" y="186.0" text-anchor="middle">reglas y modelos, evaluados a ciegas</text><path class="flujo al" d="M900 170L956 170"/><path class="punta al" d="M956 170l-9 -5v10z"/>
+<rect class="nodo alerta-n" x="960" y="138" width="240" height="64" rx="3"/><text x="1080.0" y="166.0" text-anchor="middle">Alerta</text><text class="sub" x="1080.0" y="186.0" text-anchor="middle">sólo lo que supera a las reglas</text>
+</svg></div>
+<figcaption>Esquema del sistema: de la señal del vehículo a la decisión. La rama inferior se evalúa contra reglas simples antes de llegar a producción.</figcaption>
+</figure><div class="col">
+    <dl class="caso caso-deep"><dt>Problema</dt><dd>Una flota sin visibilidad de lo que reportaban sus vehículos ni de qué fallas venían.</dd><dt>Qué había</dt><dd>Señales de bus CAN sin procesar, trámites por correo y una ley de datos personales por entrar en vigencia.</dd><dt>Qué hice</dt><dd>Plataforma de telemetría con series temporales, detección de fallas y un sistema de datos de conductores conforme a la Ley 21.719.</dd><dt>Resultado</dt><dd>Datos en tiempo real sobre los que se toman decisiones, en piloto. Un flujo de datos personales que antes iba por correo, ahora con resguardos.</dd></dl>
     <dl class="ficha">
       <dt>Agentes de IA en entornos controlados</dt>
       <dd>Es como trabajo a diario: agentes de IA sobre un contexto persistente y versionado, con protocolos de entrega entre agentes, trazabilidad de cada decisión y evaluación a ciegas antes de desplegar. Búsqueda vectorial y embeddings con pgvector en un asistente de gestión escolar; pipelines de detección evaluados contra reglas explícitas antes de pasar a producción.</dd>
@@ -418,7 +523,7 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
     <div class="wide"><p class="franja-nota">Esquema: ARN separado por densidad en un gradiente (RNA-SIP). El que incorporó ¹³C se desplaza hacia fracciones más pesadas, a la derecha; así se sabe qué organismos usaron el sustrato marcado. Curvas ilustrativas.</p></div>
   </div>
   <div class="wrap cuerpo"><div class="col">
-    <p class="bridge">Doctorado en la University of Western Australia sobre si un suelo destruido por la minería vuelve a funcionar cuando se le devuelven sus microorganismos. Una pregunta de medición antes que de biología.</p>
+    <dl class="caso caso-deep"><dt>Problema</dt><dd>Saber si un suelo degradado por la minería se recupera cuando se le devuelven microorganismos, o solo lo parece.</dd><dt>Qué había</dt><dd>Pocas muestras, datos de secuenciación ruidosos y ninguna referencia clara de suelo sano.</dd><dt>Qué hice</dt><dd>Diseño de muestreo con réplicas, marcaje isotópico (RNA-SIP), metagenómica y estadística multivariante para separar señal de ruido.</dd><dt>Resultado</dt><dd>Doctorado en la University of Western Australia y publicaciones que siguen citándose.</dd></dl>
     <dl class="ficha">
       <dt>Medir</dt>
       <dd>Muestreo en terreno en zonas áridas, secuenciación y metagenómica, marcaje isotópico para saber qué organismo hace qué. Con muestras caras y escasas, el diseño del muestreo decide más que el análisis.</dd>
@@ -484,7 +589,7 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
     <div class="wide"><p class="franja-nota">Esquema: el año 2026 de Química en 8.º básico, unidad por unidad, con el objetivo de aprendizaje de las bases curriculares que trabaja cada una; abajo, el proyecto de feria científica.</p></div>
   </div>
   <div class="wrap cuerpo"><div class="col">
-    <p class="bridge">Química, Biología y Ciencias para la Ciudadanía en enseñanza media, y jefatura de un cuarto medio. El mismo problema de siempre, ahora con 45 minutos por bloque y treinta personas que no eligieron estar ahí.</p>
+    <dl class="caso caso-deep"><dt>Problema</dt><dd>Enseñar Química, Biología y Ciencias para la Ciudadanía a cursos heterogéneos con poco tiempo de sala.</dd><dt>Qué había</dt><dd>Las bases curriculares, un proyector y estudiantes con celular.</dd><dt>Qué hice</dt><dd>Planificación por objetivo de aprendizaje y herramientas web propias que corren en el navegador, sin cuenta ni instalación.</dd><dt>Resultado</dt><dd>Dos herramientas publicadas y en uso en clases; una app de práctica PAES en desarrollo.</dd></dl>
     <dl class="ficha">
       <dt>Planificar y evaluar</dt>
       <dd>Unidades diseñadas contra las bases curriculares, con secuencia clase a clase, diagnóstico de prerrequisitos y evaluación formativa antes de la sumativa. Cronogramas que se ajustan por escrito cuando el calendario se mueve.</dd>
@@ -501,13 +606,11 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
     <div class="wide"><h2 id="h-rec" class="franja-titulo" data-depth="-0.45">Recursos de aprendizaje</h2></div>
   </div>
   <div class="wrap cuerpo"><div class="col">
-    <p class="lede">Herramientas web para mis clases de ciencias. Se abren en el navegador, sin cuenta ni instalación, y no guardan ni envían respuestas.</p>
+    <p class="lede">Herramientas web para mis clases de ciencias. Se abren en el navegador, sin cuenta ni instalación, y no guardan ni envían respuestas. Las imágenes son fragmentos de cada interfaz.</p>
   </div>
     <div class="recursos">
       <article class="recurso">
-        <a class="mini" href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/" tabindex="-1" aria-hidden="true">
-          <svg viewBox="-1 -1 89 78"><path class="c0" d="M0 11h10v10h-10zM0 22h10v10h-10zM0 33h10v10h-10zM11 33h10v10h-10zM0 44h10v10h-10zM11 44h10v10h-10zM0 55h10v10h-10zM11 55h10v10h-10zM0 66h10v10h-10zM11 66h10v10h-10z"/><path class="c1" d="M0 0h10v10h-10zM11 11h10v10h-10zM11 22h10v10h-10zM22 33h10v10h-10zM22 44h10v10h-10zM22 55h10v10h-10zM33 55h10v10h-10zM22 66h10v10h-10zM33 66h10v10h-10zM44 66h10v10h-10z"/><path class="c2" d="M22 11h10v10h-10zM22 22h10v10h-10zM33 33h10v10h-10zM33 44h10v10h-10zM44 44h10v10h-10zM44 55h10v10h-10zM55 55h10v10h-10zM55 66h10v10h-10zM66 66h10v10h-10zM77 66h10v10h-10z"/><path class="c3" d="M33 11h10v10h-10zM33 22h10v10h-10zM44 22h10v10h-10zM44 33h10v10h-10zM55 33h10v10h-10zM55 44h10v10h-10zM66 44h10v10h-10zM77 44h10v10h-10zM66 55h10v10h-10zM77 55h10v10h-10z"/><path class="c4" d="M77 0h10v10h-10zM44 11h10v10h-10zM55 11h10v10h-10zM66 11h10v10h-10zM77 11h10v10h-10zM55 22h10v10h-10zM66 22h10v10h-10zM77 22h10v10h-10zM66 33h10v10h-10zM77 33h10v10h-10z"/><path class="pair" d="M0.5 22.5h10v10h-10zM66.5 22.5h10v10h-10z"/></svg>
-        </a>
+        <a class="mini" href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/" tabindex="-1" aria-hidden="true"><img src="tabla-periodica.webp" width="1200" height="1000" alt="" loading="lazy" decoding="async"></a>
         <div>
           <h3><a href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/">Tabla periódica reactiva</a></h3>
           <p class="sub">Imán y Escudo</p>
@@ -522,9 +625,7 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
         </div>
       </article>
       <article class="recurso">
-        <a class="mini" href="https://bengrez.github.io/aula-herramientas/autodiagnostico-bienestar-salud/" tabindex="-1" aria-hidden="true">
-          <svg viewBox="0 0 120 76"><circle class="pista" cx="30" cy="38" r="24"/><circle class="arco" cx="30" cy="38" r="24" stroke-dasharray="108.6 150.8" transform="rotate(-90 30 38)"/><path class="fondo" d="M66 9h52v5h-52zM66 20h52v5h-52zM66 31h52v5h-52zM66 42h52v5h-52zM66 53h52v5h-52zM66 64h52v5h-52z"/><path class="barra" d="M66 9h40v5h-40zM66 20h27v5h-27zM66 31h45v5h-45zM66 42h35v5h-35zM66 53h22v5h-22zM66 64h43v5h-43z"/><path class="umbral" d="M97.2 5V73M107.6 5V73"/></svg>
-        </a>
+        <a class="mini" href="https://bengrez.github.io/aula-herramientas/autodiagnostico-bienestar-salud/" tabindex="-1" aria-hidden="true"><img src="autodiagnostico.webp" width="1400" height="386" alt="" loading="lazy" decoding="async"></a>
         <div>
           <h3><a href="https://bengrez.github.io/aula-herramientas/autodiagnostico-bienestar-salud/">Autodiagnóstico de Bienestar y Salud</a></h3>
           <dl class="campos">
