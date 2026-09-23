@@ -278,6 +278,8 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
 .paso{background:none;border:0;padding:.35rem 0;margin:0;font:inherit;color:inherit;cursor:pointer;text-align:left;
   display:inline-flex;align-items:baseline;gap:.45rem;font-family:var(--display);font-size:.88rem;color:var(--muted)}
 .paso .num{font-variant-numeric:tabular-nums;color:var(--muted)}
+.k-nota{margin-left:auto;font-family:var(--body);font-style:italic;font-size:.92rem;color:var(--muted)}
+@media (max-width:819px){.k-nota{margin-left:0;padding-top:.35rem}}
 .paso .nom{color:var(--ink);font-weight:500}
 .paso .sub{color:var(--muted)}
 .paso[aria-current="step"] .nom{color:var(--accent-ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.2em}
@@ -386,7 +388,7 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
         <span class="w" style="left:44.5%;top:62%">se recupera</span>
         <span class="w w-fin" style="left:73%;top:58%">pero no del todo</span>
       </div>
-      <span class="nota-plot">datos simulados: un suelo o un vehículo</span>
+      <span class="nota-plot">datos simulados</span>
       <div class="playhead" aria-hidden="true"><i class="linea"></i><i class="punto"></i>
         <span class="lectura"><span class="tramo">muestreo 1 de 36</span><span class="desvio">desvío 0,0 σ</span><span class="hit">no vuelve a la referencia</span></span>
       </div>
@@ -395,6 +397,7 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
       <button type="button" class="k k-medir paso" data-paso="1"><span class="num">01</span><span class="nom">Medir</span><span class="sub">réplicas por muestreo</span></button>
       <button type="button" class="k k-detectar paso" data-paso="2"><span class="num">02</span><span class="nom">Detectar</span><span class="sub">referencia previa ± 2σ</span></button>
       <button type="button" class="k k-explicar paso" data-paso="3"><span class="num">03</span><span class="nom">Explicar</span><span class="sub">se recupera, pero no del todo</span></button>
+      <span class="k-nota">La misma curva en un suelo restaurado o en un vehículo de una flota.</span>
     </figcaption>
   </figure>
   <script>
