@@ -468,8 +468,8 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
 <path class="linea" d="M64 94H150 M64 104H196 M64 114H118"/>
 </svg></div>
         <p class="kicker">Educación</p>
-        <h2>Herramientas para enseñar ciencias en enseñanza media</h2>
-        <p class="meta">En el navegador, sin cuenta ni instalación, sin guardar respuestas.</p>
+        <h2>Herramientas para enseñar ciencias y para dirigir un colegio con datos</h2>
+        <p class="meta">Apps en el navegador, sin cuenta ni instalación; y un asistente de gestión escolar local-first, en desarrollo.</p>
       </a>
     </article>
   </div>
@@ -496,7 +496,7 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
     <dl class="caso caso-deep"><dt>Problema</dt><dd>Una flota sin visibilidad de lo que reportaban sus vehículos ni de qué fallas venían.</dd><dt>Qué había</dt><dd>Señales de bus CAN sin procesar, trámites por correo y una ley de datos personales por entrar en vigencia.</dd><dt>Qué hice</dt><dd>Plataforma de telemetría con series temporales, detección de fallas y un sistema de datos de conductores conforme a la Ley 21.719.</dd><dt>Resultado</dt><dd>Datos en tiempo real sobre los que se toman decisiones, en piloto. Un flujo de datos personales que antes iba por correo, ahora con resguardos.</dd></dl>
     <dl class="ficha">
       <dt>Agentes de IA en entornos controlados</dt>
-      <dd>Es como trabajo a diario: agentes de IA sobre un contexto persistente y versionado, con protocolos de entrega entre agentes, trazabilidad de cada decisión y evaluación a ciegas antes de desplegar. Búsqueda vectorial y embeddings con pgvector en un asistente de gestión escolar; pipelines de detección evaluados contra reglas explícitas antes de pasar a producción.</dd>
+      <dd>Es como trabajo a diario: agentes de IA sobre un contexto persistente y versionado, con protocolos de entrega entre agentes, trazabilidad de cada decisión y evaluación a ciegas antes de desplegar. Búsqueda vectorial y embeddings con pgvector en un <a href="#aula">asistente de gestión escolar</a>; pipelines de detección evaluados contra reglas explícitas antes de pasar a producción.</dd>
       <dt>Analítica en tiempo real</dt>
       <dd>Dashboard de flota con mapa en vivo y reconstrucción de tramos, sobre series temporales en PostgreSQL con TimescaleDB y PostGIS. Contrato de datos versionado con el equipo que mantiene la base. En piloto, con monitoreo propio.</dd>
       <dt>Detección de anomalías</dt>
@@ -586,8 +586,10 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
     <div class="wide"><p class="franja-nota">Esquema: el año 2026 de Química en 8.º básico, unidad por unidad, con el objetivo de aprendizaje de las bases curriculares que trabaja cada una; abajo, el proyecto de feria científica.</p></div>
   </div>
   <div class="wrap cuerpo"><div class="col">
-    <dl class="caso caso-deep"><dt>Problema</dt><dd>Enseñar Química, Biología y Ciencias para la Ciudadanía a cursos heterogéneos con poco tiempo de sala.</dd><dt>Qué había</dt><dd>Las bases curriculares, un proyector y estudiantes con celular.</dd><dt>Qué hice</dt><dd>Planificación por objetivo de aprendizaje y herramientas web propias que corren en el navegador, sin cuenta ni instalación.</dd><dt>Resultado</dt><dd>Dos herramientas publicadas y en uso en clases; una app de práctica PAES en desarrollo.</dd></dl>
+    <dl class="caso caso-deep"><dt>Problema</dt><dd>Enseñar Química, Biología y Ciencias para la Ciudadanía a cursos heterogéneos con poco tiempo de sala.</dd><dt>Qué había</dt><dd>Las bases curriculares, un proyector y estudiantes con celular.</dd><dt>Qué hice</dt><dd>Planificación por objetivo de aprendizaje y herramientas web propias que corren en el navegador, sin cuenta ni instalación.</dd><dt>Resultado</dt><dd>Dos herramientas publicadas y en uso en clases; una app de práctica PAES y un asistente de gestión escolar en desarrollo.</dd></dl>
     <dl class="ficha">
+      <dt>Medir un colegio</dt>
+      <dd>Asistente de gestión escolar con IA para equipo directivo, UTP, convivencia y profesores jefe. Reúne las fuentes que el colegio ya tiene (notas, asistencia, convivencia, observaciones) y responde con evidencia: cada indicador dice de qué fuente sale y qué le falta, los agregados con pocos estudiantes se suprimen, y el riesgo de reprobación se entrega como categoría explicada, no como probabilidad. Patrones entre asignaturas con embeddings y búsqueda vectorial (pgvector). Corre en un equipo del propio colegio, con datos seudonimizados, diseñado para la Ley 21.719. Demo con datos sintéticos este año; piloto con datos reales desde 2027.</dd>
       <dt>Planificar y evaluar</dt>
       <dd>Unidades diseñadas contra las bases curriculares, con secuencia clase a clase, diagnóstico de prerrequisitos y evaluación formativa antes de la sumativa. Cronogramas que se ajustan por escrito cuando el calendario se mueve.</dd>
       <dt>Herramientas propias</dt>
