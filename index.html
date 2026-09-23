@@ -391,17 +391,20 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
     <div class="wide"><p class="franja-nota">Esquema: cuatro tramas en un bus CAN, vistas en sus dos líneas diferenciales, con el CRC y el relleno de bits que exige el protocolo. Identificadores y datos inventados.</p></div>
   </div>
   <div class="wrap cuerpo"><div class="col">
+    <p class="bridge">Trabajo con una empresa chilena de electrónica que instala tacógrafos y telemetría en flotas de transporte público. Llegué sin conocer el bus CAN ni los tacógrafos. Lo que traía era el método del doctorado: diseñar cómo medir, separar señal de ruido y explicar el resultado a quien decide. Eso es lo que se aplicó, en este orden.</p>
     <dl class="ficha">
       <dt>Analítica en tiempo real</dt>
-      <dd>Dashboard de telemetría de flota con reconstrucción forense de tramos. En piloto.</dd>
+      <dd>Los vehículos reportan posición y señales del bus CAN a la base de datos del sistema de tacógrafos. Construí la capa que la lee, la guarda como series temporales (PostgreSQL con TimescaleDB y PostGIS) y la muestra en un dashboard con mapa en vivo y reconstrucción de tramos pasados. Lo difícil no fue el código: fue acordar un contrato de datos con quien mantiene la base, versionarlo y trabajar contra él en vez de contra suposiciones. Está en piloto, con sondas de salud y un latido externo para saber que cayó antes de que lo diga el cliente.</dd>
       <dt>Detección de anomalías</dt>
-      <dd>Riesgo de falla sobre señales de bus CAN con redes triplet. Incluye un simulador de telemetría para generar los escenarios que la flota real todavía no produce.</dd>
+      <dd>El objetivo es anticipar fallas mecánicas desde las señales del bus. La flota real no había producido suficientes fallas para entrenar nada, así que construí un simulador de telemetría que genera escenarios con fallas inyectadas y un banco de evaluación a ciegas, donde quien evalúa no sabe qué corrida tiene la falla. Probé redes triplet y puntajes multivariantes contra reglas explícitas. Resultado a la fecha: las reglas detectan lo mismo con menos falsos positivos. Ese resultado se publica internamente en vez de esconderse; un modelo que no supera a las reglas no se despliega.</dd>
       <dt>Datos personales</dt>
-      <dd>Sistema de gestión de datos de conductores; reemplazó un flujo por correo sin resguardos. Autenticación sin contraseña, validación de documentos, diseñado contra la Ley 21.719 antes de su vigencia.</dd>
+      <dd>Las empresas de transporte enviaban por correo los datos y fotos de sus conductores para imprimir tarjetas con chip. Con la Ley 21.719 por entrar en vigencia, diseñé una plataforma multiempresa donde cada flota carga sus propios datos, un control de calidad rechaza en origen lo que no cumple, y la información sensible se separa de la traza durable: una vez purgada, no permite volver a identificar a nadie. Autenticación sin contraseña, validación de documentos y un entorno de pruebas que solo usa datos sintéticos.</dd>
       <dt>Infraestructura</dt>
-      <dd>Impresión de tarjetas con chip para tacógrafos, integrada con SACEL.</dd>
+      <dd>Impresión de tarjetas con chip para tacógrafos integrada con el sistema de la empresa, despliegues con Docker en servidores sin salida a internet y monitoreo propio. Cuando el camino público falla, se sabe cuánto duró y por qué.</dd>
+      <dt>Lo que tuve que aprender</dt>
+      <dd>Bus CAN y FMS, protocolos binarios de tacógrafos, telemetría GNSS, la ley chilena de datos personales y cómo operar servicios que no puedo tocar desde fuera. Ninguna de esas cosas estaba en el doctorado; la forma de abordarlas sí.</dd>
       <dt>Herramientas</dt>
-      <dd>Python, FastAPI, PostgreSQL con TimescaleDB y PostGIS, Docker, Linux y bash. Para los datos: pandas, numpy, scipy y estadística multivariante; R con vegan y phyloseq. Bus CAN, FMS, telemetría GNSS, tacógrafos y protocolos binarios. Interfaces con HTMX y React.</dd>
+      <dd>Python, FastAPI, PostgreSQL con TimescaleDB y PostGIS, Docker, Linux y bash. Para los datos: pandas, numpy, scipy y estadística multivariante; R con vegan y phyloseq. Interfaces con HTMX y React.</dd>
     </dl>
   </div></div>
 </section>
@@ -417,7 +420,17 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
     <div class="wide"><p class="franja-nota">Esquema: ARN separado por densidad en un gradiente (RNA-SIP). El que incorporó ¹³C se desplaza hacia fracciones más pesadas, a la derecha; así se sabe qué organismos usaron el sustrato marcado. Curvas ilustrativas.</p></div>
   </div>
   <div class="wrap cuerpo"><div class="col">
-    <p class="bridge">Doctorado en ecología microbiana: cómo responden las comunidades de microorganismos del suelo cuando el ecosistema se perturba, y cómo se mide si se recupera. Los mismos métodos estadísticos para datos ruidosos y de alta dimensión los uso hoy en telemetría de flotas.</p>
+    <p class="bridge">El doctorado preguntó si un suelo destruido por la minería puede volver a funcionar cuando se le devuelven los microorganismos que perdió, y cómo se sabría. Es una pregunta de medición antes que de biología, y así la trabajé.</p>
+    <dl class="ficha">
+      <dt>Medir</dt>
+      <dd>Muestreos en terreno en zonas áridas de Australia Occidental: costras biológicas del suelo, sustratos post-mineros y suelos de referencia. Secuenciación de amplicones y metagenómica para saber quién está y qué puede hacer; marcaje con isótopos estables (RNA-SIP) para saber quién usa realmente un sustrato. Cuando la muestra es cara y escasa, el diseño del muestreo decide más que el análisis.</dd>
+      <dt>Detectar</dt>
+      <dd>Datos de alta dimensión, ruidosos y con pocas réplicas. Estadística multivariante (ordenaciones, PERMANOVA, pruebas de Mantel) para separar el efecto del tratamiento de la variabilidad del sitio. Una parte del trabajo fue examinar los supuestos con que se monitorea la restauración: qué indicadores cambian por la intervención y cuáles cambiarían igual.</dd>
+      <dt>Explicar</dt>
+      <dd>Los resultados se entregaron a quienes deciden sobre restauración de sitios mineros, no solo a revisores. Un suelo que "se ve" recuperado y uno que funciona como el de referencia son cosas distintas, y hay que poder mostrar la diferencia con datos.</dd>
+      <dt>Después del doctorado</dt>
+      <dd>El mismo método sirvió en otros sistemas: metanógenos y metanótrofos en arroceras bajo distinta fertilización, simbiosis micorrízica y fijadores de nitrógeno en trigo, residuos de bauxita, arqueas oxidadoras de amonio en suelos pobres. Cambia el sustrato; el diseño, la estadística y la forma de explicar no.</dd>
+    </dl>
 
     <h3>Formación</h3>
     <ul class="plain">
@@ -475,10 +488,19 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
     <div class="wide"><p class="franja-nota">Esquema: el año 2026 de Química en 8.º básico, unidad por unidad, con el objetivo de aprendizaje de las bases curriculares que trabaja cada una; abajo, el proyecto de feria científica.</p></div>
   </div>
   <div class="wrap cuerpo"><div class="col">
-    <p>Química, Biología y Ciencias para la Ciudadanía en enseñanza media, en el Instituto Domingo Eyzaguirre, dos días a la semana. Profesor jefe de un cuarto medio.</p>
-    <p>Cada unidad se planifica según las bases curriculares vigentes, con objetivos de aprendizaje codificados y evaluación formativa y sumativa.</p>
-    <p>También desarrollo una aplicación web para que estudiantes de cuarto medio practiquen preguntas de habilidad científica de la PAES y para orientar la remediación posterior.</p>
-    <p>Dos herramientas más ya están publicadas: la tabla periódica reactiva y el autodiagnóstico de bienestar, en <a href="#recursos">Recursos de aprendizaje</a>.</p>
+    <p class="bridge">Química, Biología y Ciencias para la Ciudadanía en enseñanza media, dos días a la semana, y profesor jefe de un cuarto medio. Llegué a la sala desde el laboratorio y la empresa. El problema es el mismo de siempre: qué medir, cómo saber si funciona y cómo explicarlo, ahora con cuarenta y cinco minutos por bloque y treinta personas que no eligieron estar ahí.</p>
+    <dl class="ficha">
+      <dt>Planificar</dt>
+      <dd>Cada unidad se diseña contra las bases curriculares vigentes, con el objetivo de aprendizaje codificado, una secuencia clase a clase y evaluación formativa antes de la sumativa. Los cronogramas se ajustan cuando el calendario del colegio se mueve, y se ajustan por escrito: lo que se corrió y por qué.</dd>
+      <dt>Evaluar</dt>
+      <dd>Pruebas, guías y rúbricas con un formato propio e imprimible, pensadas para corregir rápido y devolver información útil. Un diagnóstico al inicio de cada bloque dice qué prerrequisitos faltan antes de enseñar lo nuevo.</dd>
+      <dt>Construir herramientas</dt>
+      <dd>Cuando una guía necesita algo que el papel no da, lo hago en el navegador. La tabla periódica reactiva salió de una guía de 8.º básico sobre tendencias periódicas; el autodiagnóstico de bienestar, de una unidad de Ciudadanía en tercero medio. Ambas corren sin cuenta ni instalación y no guardan respuestas.</dd>
+      <dt>Práctica PAES</dt>
+      <dd>Una aplicación para que estudiantes de cuarto medio practiquen preguntas de habilidad científica y para orientar la remediación posterior. Diseñada con la privacidad primero: nunca muestra nota, ranking ni nivel; si algún día se conecta a un servidor, este recibe conteos por unidad y nada más. No se usa con estudiantes hasta que el banco de preguntas esté revisado y el aviso de datos, resuelto.</dd>
+      <dt>Jefatura</dt>
+      <dd>Seguimiento del curso, comunicación con las familias, consejo de profesores y las actividades del último año de colegio. La misma disciplina de registro que en un proyecto: qué se acordó, con quién y cuándo.</dd>
+    </dl>
   </div></div>
 </section>
 
