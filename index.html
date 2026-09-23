@@ -348,6 +348,7 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
 .recurso .mini img{display:block;width:100%;height:auto;border:1px solid var(--rule)}
 .recurso h3 a::after{content:"";position:absolute;inset:0}
 .recurso:hover .mini img{border-color:var(--accent)}
+@media (max-width:640px){.recurso{grid-template-columns:1fr}.recurso .mini{padding:0 0 1rem}}
 
 /* Movimiento: will-change sólo en escenas cerca de pantalla. Con reduced-motion todo queda quieto. */
 .is-live [data-depth]{will-change:transform}
