@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Benjamín Moreira-Grez</title>
-<meta name="description" content="Ingeniería de datos para flotas de transporte, investigación en ecología microbiana y clases de ciencias en enseñanza media.">
+<meta name="description" content="Resuelvo problemas con lo que hay disponible. El doctorado me dio un método; lo he aplicado en una empresa de transporte, en investigación y en un colegio.">
 <meta property="og:title" content="Benjamín Moreira-Grez">
-<meta property="og:description" content="Ingeniería de datos para flotas de transporte, investigación en ecología microbiana y clases de ciencias en enseñanza media.">
+<meta property="og:description" content="Resuelvo problemas con lo que hay disponible. El doctorado me dio un método; lo he aplicado en una empresa de transporte, en investigación y en un colegio.">
 <meta property="og:type" content="profile">
 <meta property="og:locale" content="es_CL">
 <meta property="og:url" content="https://bengrez.github.io/">
 <meta property="og:image" content="https://bengrez.github.io/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Titular «Datos, investigación y docencia en ciencias» sobre un esquema: una serie que se perturba, cae y se recupera sin volver a su referencia.">
+<meta property="og:image:alt" content="Titular «Resuelvo problemas con lo que hay disponible» sobre un esquema: una serie que se perturba, cae y se recupera sin volver a su referencia.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#F6F8F6" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#111514" media="(prefers-color-scheme: dark)">
@@ -155,6 +155,9 @@ p+p{margin-top:1em}
 .puerta ul{margin:0;padding-left:1.1rem;font-size:.98rem}
 .puerta li+li{margin-top:.15rem}
 .puerta .go{margin-top:auto;padding-top:.5rem;font-family:var(--display);font-size:.95rem}
+.caso{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.4rem .75rem;font-size:.95rem;line-height:1.45}
+.caso dt{font-family:var(--display);font-size:.82rem;color:var(--muted);padding-top:.1rem}
+.caso dd{margin:0}
 .datarow{display:flex;gap:2rem;margin:0}
 .datarow div{display:flex;flex-direction:column-reverse}
 .datarow dt{font-family:var(--display);font-size:.8rem;color:var(--muted)}
@@ -292,8 +295,8 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
     </nav>
   </div>
   <div class="hero-type wide" data-depth="-0.4" data-fade>
-    <h1 class="display">Datos, investigación y docencia en ciencias.</h1>
-    <p class="facets"><span>Telemetría de flotas en Andes. </span><span>Doctorado en ecología microbiana. </span><span>Profesor de ciencias en enseñanza media.</span></p>
+    <h1 class="display">Resuelvo problemas con lo que hay disponible.</h1>
+    <p class="facets"><span>El doctorado me dio un método: medir, detectar, explicar. </span><span>Lo he aplicado en una empresa de transporte, en investigación y en un colegio. </span><span>Cambia el problema; el método no.</span></p>
   </div>
   <figure class="serie" id="serie" data-z="0 0 0 0 0 0 0 0 0.2 -5.8 -10.3 -12.9 -13.1 -11.6 -9.8 -8.2 -7.2 -6.6 -6.2 -5.7 -5.4 -5.1 -4.9 -4.7 -4.5 -4.5 -4.6 -4.7 -4.6 -4.5 -4.3 -4.1 -4.3 -4.7 -5.1 -5" data-hit="25">
     <div class="plot">
@@ -339,29 +342,39 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
 
 <main id="contenido">
 
-<section class="puertas" aria-label="Tres frentes de trabajo">
+<section class="puertas" aria-label="Tres casos">
   <div class="band">
     <article class="puerta">
-      <h2>Ingeniería</h2>
-      <p class="status">Plataforma de telemetría para flotas de transporte público en Andes.</p>
-      <p>Ingesta de bus CAN en tiempo real, series temporales con millones de filas, detección de fallas y cumplimiento de la Ley 21.719.</p>
+      <h2>Empresa de transporte</h2>
+      <p class="status">Telemetría y datos para una flota de buses.</p>
+      <dl class="caso">
+        <dt>Problema</dt><dd>Una flota sin visibilidad de lo que reportaban sus vehículos ni de qué fallas venían.</dd>
+        <dt>Qué había</dt><dd>Señales de bus CAN sin procesar, trámites por correo y una ley de datos personales por entrar en vigencia.</dd>
+        <dt>Qué hice</dt><dd>Plataforma de telemetría con series temporales, detección de fallas y un sistema de datos de conductores conforme a la Ley 21.719.</dd>
+        <dt>Resultado</dt><dd>Datos en tiempo real sobre los que se toman decisiones, en piloto. Un flujo de datos personales que antes iba por correo, ahora con resguardos.</dd>
+      </dl>
       <p class="go"><a href="#ingenieria">Ver el trabajo de ingeniería</a></p>
     </article>
     <article class="puerta">
       <h2>Investigación</h2>
       <dl class="datarow"><div><dt>citas</dt><dd>738</dd></div><div><dt>índice h</dt><dd>12</dd></div></dl>
-      <p>Ecología microbiana y restauración de ecosistemas degradados. Doctorado en la University of Western Australia; publicaciones sobre costras biológicas de zonas áridas, suelos post-mineros y metagenómica funcional.</p>
+      <dl class="caso">
+        <dt>Problema</dt><dd>Saber si un suelo degradado por la minería se recupera cuando se le devuelven microorganismos, o solo lo parece.</dd>
+        <dt>Qué había</dt><dd>Pocas muestras, datos de secuenciación ruidosos y ninguna referencia clara de suelo sano.</dd>
+        <dt>Qué hice</dt><dd>Diseño de muestreo con réplicas, marcaje isotópico (RNA-SIP), metagenómica y estadística multivariante para separar señal de ruido.</dd>
+        <dt>Resultado</dt><dd>Doctorado en la University of Western Australia y publicaciones que siguen citándose.</dd>
+      </dl>
       <p class="go"><a href="#investigacion">Ver la investigación</a></p>
     </article>
     <article class="puerta">
-      <h2>Aula</h2>
-      <ul>
-        <li>Química, 7.º y 8.º básico</li>
-        <li>Biología, 8.º básico y I medio</li>
-        <li>Ciencias para la Ciudadanía, III y IV medio</li>
-        <li>Jefatura de un cuarto medio</li>
-      </ul>
-      <p>Dos días a la semana, con planificación según las bases curriculares vigentes. Dos herramientas web propias en <a href="#recursos">Recursos de aprendizaje</a>.</p>
+      <h2>Colegio</h2>
+      <p class="status">Ciencias en enseñanza media, dos días a la semana.</p>
+      <dl class="caso">
+        <dt>Problema</dt><dd>Enseñar Química, Biología y Ciencias para la Ciudadanía a cursos heterogéneos con poco tiempo de sala.</dd>
+        <dt>Qué había</dt><dd>Las bases curriculares, un proyector y estudiantes con celular.</dd>
+        <dt>Qué hice</dt><dd>Planificación por objetivo de aprendizaje y herramientas web propias que corren en el navegador, sin cuenta ni instalación.</dd>
+        <dt>Resultado</dt><dd>Dos herramientas publicadas y en uso en clases; una app de práctica PAES en desarrollo. Ver <a href="#recursos">Recursos de aprendizaje</a>.</dd>
+      </dl>
       <p class="go"><a href="#aula">Ver el trabajo en el aula</a></p>
     </article>
   </div>
