@@ -33,8 +33,9 @@ Publicado con GitHub Pages desde la rama `main`, raíz del repositorio: https://
 
 - Las tres tarjetas de la portada llevan un arte SVG propio (mapa de telemetría, perfil RNA-SIP,
   fragmento de tabla periódica), dibujado en línea con las variables de color del sitio.
-- `Ingeniería` abre con un esquema del sistema (SVG en línea); en pantallas angostas se desplaza en
-  horizontal.
+- `Ingeniería` ya no abre con la banda de tramas CAN (2026-09-23: un solo gráfico al principio, la
+  serie de la portada, que la sección retoma como telemetría); el esquema del sistema (SVG en línea)
+  va dentro del cuerpo y en pantallas angostas se desplaza en horizontal.
 - `tabla-periodica.webp` y `autodiagnostico.webp` son recortes de las herramientas públicas de
   `aula-herramientas`, capturadas a 2x con Chrome headless y recortadas para no incluir cabeceras con
   nombres de instituciones. Regenerar: captura a 2560×1720, `convert … -crop 1200x1000+680+370` y

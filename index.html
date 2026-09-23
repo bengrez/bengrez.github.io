@@ -184,15 +184,11 @@ section.deep{border-bottom:1px solid var(--rule)}
 .franja-arte path{vector-effect:non-scaling-stroke;fill:none}
 .franja-nota{font-family:var(--display);font-size:.82rem;line-height:1.45;color:var(--muted);max-width:50.8em;
   padding-block:.9rem clamp(1.25rem,3vw,1.75rem)}
+.franja-titulo + .wide > .franja-nota,.wide + .wide > .franja-nota{padding-top:clamp(1.25rem,3vw,2rem)}
 .franja:not(.con-arte){padding-bottom:0}
 .eti{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font-family:var(--display);font-size:.8rem;line-height:1;color:var(--muted)}
 .eti.ini{transform:translateY(-50%)}
-/* Ingeniería: CAN_H sube y CAN_L baja en cada bit dominante. En pantallas angostas el
-   esquema se deja más ancho que la pantalla y se recorta, para que los bits no se empasten. */
-.franja-ing .franja-arte{width:max(108%,760px);margin-left:calc(50% - max(54%,380px))}   /* se mueve en x: sobra a ambos lados */
 .anio + .wide .franja-nota{padding-top:1.9rem}
-.can-h{stroke:var(--accent);stroke-width:1.3px;opacity:.8}
-.can-l{stroke:var(--signal-muted);stroke-width:1.3px}
 /* Investigación: perfiles de ARN por fracción de densidad. */
 .sip .l12{stroke:var(--signal-muted);stroke-width:1.3px}
 .sip .d12{stroke:var(--signal-muted);stroke-width:5px;stroke-linecap:round}
@@ -390,7 +386,7 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
         <span class="w" style="left:44.5%;top:62%">se recupera</span>
         <span class="w w-fin" style="left:73%;top:58%">pero no del todo</span>
       </div>
-      <span class="nota-plot">esquema con datos simulados</span>
+      <span class="nota-plot">datos simulados: un suelo o un vehículo</span>
       <div class="playhead" aria-hidden="true"><i class="linea"></i><i class="punto"></i>
         <span class="lectura"><span class="tramo">muestreo 1 de 36</span><span class="desvio">desvío 0,0 σ</span><span class="hit">no vuelve a la referencia</span></span>
       </div>
@@ -477,12 +473,9 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
 </section>
 
 <section class="deep" id="ingenieria" aria-labelledby="h-ing">
-  <div class="franja con-arte franja-ing" data-scene>
+  <div class="franja con-arte" data-scene>
     <div class="wide"><h2 id="h-ing" class="franja-titulo" data-depth="-0.45">Trabajo de ingeniería</h2></div>
-    <div class="franja-arte" data-depth="-0.6" data-axis="x" aria-hidden="true">
-      <svg viewBox="0 0 1200 100" preserveAspectRatio="none"><path class="can-l" d="M0 50H23.4V78H35.1V50H42.9V78H58.4V50H62.3V78H66.2V50H70.1V78H89.6V50H97.4V78H101.3V50H105.2V78H109.1V50H120.8V78H140.3V50H144.2V78H151.9V50H155.8V78H163.6V50H167.5V78H175.3V50H179.2V78H183.1V50H202.6V78H206.5V50H214.3V78H226V50H233.8V78H237.7V50H335.1V78H342.9V50H346.8V78H358.4V50H366.2V78H377.9V50H381.8V78H401.3V50H409.1V78H416.9V50H428.6V78H436.4V50H448.1V78H451.9V50H467.5V78H471.4V50H483.1V78H487V50H490.9V78H498.7V50H502.6V78H506.5V50H514.3V78H518.2V50H522.1V78H526V50H529.9V78H533.8V50H537.7V78H541.6V50H627.3V78H631.2V50H635.1V78H642.9V50H646.8V78H662.3V50H666.2V78H670.1V50H674V78H693.5V50H701.3V78H705.2V50H716.9V78H728.6V50H732.5V78H744.2V50H751.9V78H755.8V50H759.7V78H771.4V50H775.3V78H779.2V50H798.7V78H802.6V50H810.4V78H814.3V50H822.1V78H829.9V50H833.8V78H837.7V50H911.7V78H915.6V50H923.4V78H939V50H954.5V78H974V50H977.9V78H981.8V50H985.7V78H997.4V50H1009.1V78H1013V50H1016.9V78H1020.8V50H1024.7V78H1028.6V50H1036.4V78H1044.2V50H1048.1V78H1051.9V50H1055.8V78H1059.7V50H1063.6V78H1067.5V50H1075.3V78H1087V50H1090.9V78H1102.6V50H1114.3V78H1118.2V50H1200"/><path class="can-h" d="M0 50H23.4V22H35.1V50H42.9V22H58.4V50H62.3V22H66.2V50H70.1V22H89.6V50H97.4V22H101.3V50H105.2V22H109.1V50H120.8V22H140.3V50H144.2V22H151.9V50H155.8V22H163.6V50H167.5V22H175.3V50H179.2V22H183.1V50H202.6V22H206.5V50H214.3V22H226V50H233.8V22H237.7V50H335.1V22H342.9V50H346.8V22H358.4V50H366.2V22H377.9V50H381.8V22H401.3V50H409.1V22H416.9V50H428.6V22H436.4V50H448.1V22H451.9V50H467.5V22H471.4V50H483.1V22H487V50H490.9V22H498.7V50H502.6V22H506.5V50H514.3V22H518.2V50H522.1V22H526V50H529.9V22H533.8V50H537.7V22H541.6V50H627.3V22H631.2V50H635.1V22H642.9V50H646.8V22H662.3V50H666.2V22H670.1V50H674V22H693.5V50H701.3V22H705.2V50H716.9V22H728.6V50H732.5V22H744.2V50H751.9V22H755.8V50H759.7V22H771.4V50H775.3V22H779.2V50H798.7V22H802.6V50H810.4V22H814.3V50H822.1V22H829.9V50H833.8V22H837.7V50H911.7V22H915.6V50H923.4V22H939V50H954.5V22H974V50H977.9V22H981.8V50H985.7V22H997.4V50H1009.1V22H1013V50H1016.9V22H1020.8V50H1024.7V22H1028.6V50H1036.4V22H1044.2V50H1048.1V22H1051.9V50H1055.8V22H1059.7V50H1063.6V22H1067.5V50H1075.3V22H1087V50H1090.9V22H1102.6V50H1114.3V22H1118.2V50H1200"/></svg>
-    </div>
-    <div class="wide"><p class="franja-nota">Esquema: cuatro tramas en un bus CAN, vistas en sus dos líneas diferenciales, con el CRC y el relleno de bits que exige el protocolo. Identificadores y datos inventados.</p></div>
+    <div class="wide"><p class="franja-nota">La misma curva de la portada, leída como telemetría: la señal de un vehículo que se aparta de su referencia y hay que detectar a tiempo.</p></div>
   </div>
   <div class="wrap cuerpo"><figure class="sistema" data-nosnippet>
 <div class="lienzo"><svg viewBox="0 0 1200 215" role="img" aria-label="Esquema del sistema: del bus CAN y GNSS a la ingesta, la base de series temporales, la API y el mapa en vivo; una rama evalúa las señales con un detector de anomalías y produce alertas.">
