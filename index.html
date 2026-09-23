@@ -9,77 +9,144 @@
 <meta property="og:description" content="Mido sistemas complejos y construyo los instrumentos que los miden. Telemetría de flotas, ecología microbiana y ciencias en enseñanza media.">
 <meta property="og:type" content="profile">
 <meta property="og:locale" content="es_CL">
+<meta property="og:url" content="https://bengrez.github.io/">
+<meta property="og:image" content="https://bengrez.github.io/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Titular «Mido sistemas complejos y construyo los instrumentos que los miden» sobre un esquema: una serie que se perturba, cae y se recupera sin volver a su referencia.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#F6F8F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111514" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231F6F78'/%3E%3Cpath d='M5 11H11L14 22L18 19L27 16' fill='none' stroke='%23F6F8F6' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
+/* Respaldos locales ajustados al ancho de las fuentes web (medido: Bricolage ocupa el 95 % de
+   Arial; Source Serif, el 100,7 % de Georgia). Mientras carga la fuente real, el texto ocupa
+   casi lo mismo y la página no salta al cambiar. */
+@font-face{font-family:"Bricolage Respaldo";src:local("Arial"),local("Liberation Sans"),local("Helvetica Neue"),local("Helvetica");size-adjust:95%}
+@font-face{font-family:"Source Serif Respaldo";src:local("Georgia"),local("Liberation Serif"),local("Times New Roman");size-adjust:100.7%}
 :root{
-  --bg:#F6F8F6; --ink:#1A1F1C; --muted:#5B655F; --rule:#D6DDD8; --rule-strong:#B4BFB8;
-  --accent:#1F6F78; --accent-ink:#175961; --alert:#D6502A; --grid:#E3E9E5;
-  --display:"Bricolage Grotesque",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
-  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
-  --measure:68ch; --gutter:clamp(1rem,4vw,2.5rem);
+  --bg:#F6F8F6; --surface:#EDF2EF; --ink:#1A1F1C; --muted:#5B655F; --rule:#D6DDD8; --rule-strong:#B4BFB8;
+  --accent:#1F6F78; --accent-ink:#175961; --alert:#D6502A; --alert-ink:#B8431F; --grid:#E3E9E5;
+  --signal-muted:#7E8E86; --band-fill:rgba(31,111,120,.12);
+  --display:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+  --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
+  /* Anchos en rem/em, no en ch: ch depende de la fuente cargada y haría saltar la página al cambiarla. */
+  --measure:37.2rem; --wide:calc(var(--measure) * 1.5); --gutter:clamp(1rem,4vw,2.5rem);
+  --fs-hero:clamp(2.25rem,4.2vw + 1rem,5.25rem); --fs-band:clamp(2.1rem,3.6vw + 1rem,4.5rem);
+  --trace-h:clamp(8rem,19vw,17rem); --art-h:clamp(4.5rem,11vw,9rem);
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#111514; --ink:#E7EBE8; --muted:#98A39D; --rule:#273029; --rule-strong:#3C4842;
-    --accent:#63B7BF; --accent-ink:#8FD0D6; --alert:#F27A52; --grid:#1C2320; color-scheme:dark;
+    --bg:#111514; --surface:#161C1A; --ink:#E7EBE8; --muted:#98A39D; --rule:#273029; --rule-strong:#3C4842;
+    --accent:#63B7BF; --accent-ink:#8FD0D6; --alert:#F27A52; --alert-ink:#F27A52; --grid:#1C2320;
+    --signal-muted:#5F6D66; --band-fill:rgba(99,183,191,.2); color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#111514; --ink:#E7EBE8; --muted:#98A39D; --rule:#273029; --rule-strong:#3C4842;
-  --accent:#63B7BF; --accent-ink:#8FD0D6; --alert:#F27A52; --grid:#1C2320; color-scheme:dark;
+  --bg:#111514; --surface:#161C1A; --ink:#E7EBE8; --muted:#98A39D; --rule:#273029; --rule-strong:#3C4842;
+  --accent:#63B7BF; --accent-ink:#8FD0D6; --alert:#F27A52; --alert-ink:#F27A52; --grid:#1C2320;
+  --signal-muted:#5F6D66; --band-fill:rgba(99,183,191,.2); color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 var(--body);
   font-feature-settings:"onum" 0;-webkit-font-smoothing:antialiased}
-.wrap{max-width:var(--measure);margin-inline:auto;padding-inline:var(--gutter)}
+.wide,.wrap{max-width:var(--wide);margin-inline:auto;padding-inline:var(--gutter)}
+.col{max-width:var(--measure)}
 a{color:var(--accent-ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
 a:hover{text-decoration-thickness:2px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
-.skip{position:absolute;left:-999px;top:0;background:var(--bg);padding:.5rem 1rem;font-family:var(--display)}
+.skip{position:absolute;left:-999px;top:0;z-index:5;background:var(--bg);padding:.5rem 1rem;font-family:var(--display)}
 .skip:focus{left:var(--gutter)}
 h1,h2,h3{font-family:var(--display);font-weight:500;line-height:1.15;margin:0;text-wrap:balance;letter-spacing:-.005em}
 h2{font-size:1.65rem;margin-block:0 1.25rem}
 h3{font-size:1.05rem;margin-block:2rem .6rem;color:var(--muted);font-weight:500}
 p{margin:0}
 p+p{margin-top:1em}
-.num{font-family:var(--display);font-variant-numeric:tabular-nums}
 
-/* ---- hero ---- */
-.hero{padding-block:clamp(2.5rem,7vw,5rem) 0}
-.hero .wrap{max-width:calc(var(--measure) * 1.5)}
-.identity{font-family:var(--display);font-size:1rem;color:var(--muted);margin-bottom:clamp(1.5rem,4vw,2.75rem)}
-.display{font-size:clamp(2.1rem,5vw + .5rem,4rem);line-height:1.04;max-width:22ch;letter-spacing:-.015em;font-weight:480}
-.facets{font-family:var(--display);font-size:1.1rem;line-height:1.5;color:var(--muted);margin-top:clamp(1.25rem,3vw,2rem);max-width:36ch}
+/* ---- hero ----
+   Tres capas de lectura de una misma serie (medir, detectar, explicar). En reposo
+   coinciden; al salir del hero el motor de abajo las separa unos pocos píxeles. */
+.hero{position:relative;isolation:isolate;display:flex;flex-direction:column;
+  min-height:min(100vh,56rem);min-height:min(100svh,56rem);overflow:hidden;overflow:clip;
+  padding-top:clamp(1rem,2.5vw,1.75rem)}
+.hero-grid{position:absolute;inset:-64px 0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:52px 52px;background-position:center top;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 22%,#000 72%);mask-image:linear-gradient(to bottom,transparent 22%,#000 72%)}
+/* En una columna flex, margin:auto encoge al hijo a su contenido: se fuerza el ancho completo
+   para que nombre, titular y leyenda compartan el borde izquierdo del resto de la página. */
+.hero > .wide,.serie > .wide{width:100%}
+.masthead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:.35rem 2rem}
+.identity{font-family:var(--display);font-size:1rem;color:var(--muted)}
+.indice{display:flex;flex-wrap:wrap;gap:0 1.15rem;font-family:var(--display);font-size:.95rem}
+.indice a{color:var(--ink);text-decoration:none;padding-block:.3rem}
+.indice a:hover{text-decoration:underline;text-decoration-thickness:1px}
+.hero-type{flex-shrink:0;margin-block:auto;padding-block:clamp(2.25rem,6vw,4rem) clamp(1.5rem,4vw,2.5rem)}
+.display{font-size:var(--fs-hero);line-height:1.01;max-width:10.25em;letter-spacing:-.025em;font-weight:450}
+.facets{font-family:var(--display);font-size:clamp(1.05rem,.6vw + .9rem,1.3rem);line-height:1.5;color:var(--muted);
+  margin-top:clamp(1.25rem,3vw,2rem);max-width:25.9em}
 .facets span{display:inline}
 @media (max-width:640px){.facets span{display:block}}
-.trace{margin:clamp(1.5rem,4vw,3rem) 0 0;padding:0;border-block:1px solid var(--rule)}
-.trace svg{display:block;width:100%;height:auto;background:
-  repeating-linear-gradient(to bottom,transparent 0 51px,var(--grid) 51px 52px)}
-.trace .signal{fill:none;stroke:var(--accent);stroke-width:1.7px;stroke-linejoin:round;stroke-linecap:round;
-  vector-effect:non-scaling-stroke}
-/* Con non-scaling-stroke los guiones se miden en píxeles de pantalla y pathLength no
-   normaliza: el largo real lo fija el script de abajo. Sin JS, la traza se ve completa. */
-.trace.ready .signal{animation:draw 2.8s cubic-bezier(.25,.6,.2,1) .25s forwards}
-.trace.ready .anomaly{opacity:0;animation:appear .45s ease-out 3.05s forwards}
-.trace .anomaly circle{fill:none;stroke:var(--alert);stroke-width:1.6px;vector-effect:non-scaling-stroke}
-.trace .anomaly .dot{fill:var(--alert);stroke:none}
+
+.serie{margin:0;border-top:1px solid var(--rule);flex-shrink:0}
+.plot{position:relative;height:var(--trace-h);margin-block:clamp(1.25rem,3vw,2rem) clamp(.75rem,2vw,1.25rem)}
+.plot svg,.capa{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.plot path{vector-effect:non-scaling-stroke}
+.medir .dots{fill:none;stroke:var(--muted);stroke-width:4px;stroke-linecap:round}
+.detectar .ref{fill:var(--band-fill)}
+.detectar .ref-mid{fill:none;stroke:var(--accent);stroke-width:1px;stroke-dasharray:2 5;opacity:.7}
+.detectar .perturb{fill:none;stroke:var(--ink);stroke-width:1px;stroke-dasharray:3 4;opacity:.45}
+.detectar .trend{fill:none;stroke:var(--accent);stroke-width:1.8px;stroke-linejoin:round;stroke-linecap:round}
+.explicar .simple{fill:none;stroke:var(--ink);stroke-width:1.1px;stroke-linejoin:round;opacity:.55}
+.w{position:absolute;transform:translateY(-50%);white-space:nowrap;font:italic 400 clamp(.9rem,.4vw + .8rem,1.05rem)/1 var(--body);color:var(--ink)}
+.w.izq{transform:translate(-100%,-50%)}
+@media (max-width:640px){.w-estable,.w-cae{display:none}.w-fin{left:auto!important;right:3%}}
+.alerta{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border:1.6px solid var(--alert);border-radius:50%}
+.alerta::after{content:"";position:absolute;inset:6.4px;border-radius:50%;background:var(--alert)}
+/* Sin JS la figura se ve completa. Con JS, la tendencia se dibuja, después aparece la
+   alerta y al final las palabras: el orden narra medir, detectar, explicar. */
+.serie.ready .trend{animation:draw 2.4s cubic-bezier(.25,.6,.2,1) .2s forwards}
+.serie.ready .alerta{opacity:0;animation:appear .45s ease-out 2.6s forwards}
+.serie.ready .explicar{opacity:0;animation:appear .7s ease-out 3s forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes appear{to{opacity:1}}
-@media (prefers-reduced-motion:reduce){
-  .trace .signal{animation:none;stroke-dashoffset:0}
-  .trace .anomaly{animation:none;opacity:1}
-}
-.trace figcaption{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
-  font-family:var(--display);font-size:.85rem;color:var(--muted);padding:.55rem var(--gutter);border-top:1px solid var(--rule)}
+/* Cabezal de lectura: recorre la serie mientras la figura sube hacia el borde de la pantalla. */
+.playhead{position:absolute;top:-.5rem;bottom:-.5rem;left:0;width:0;pointer-events:none}
+.serie:not(.scrub) .playhead{visibility:hidden}
+.playhead .linea{position:absolute;inset:0 auto 0 0;width:1px;background:var(--ink);opacity:.4}
+.playhead .punto{position:absolute;top:.5rem;left:-4px;width:9px;height:9px;margin-top:-4.5px;border-radius:50%;
+  background:var(--bg);border:1.6px solid var(--accent)}
+.lectura{position:absolute;top:-.1rem;left:.6rem;display:flex;flex-direction:column;gap:.1rem;white-space:nowrap;
+  font-family:var(--display);font-size:.8rem;line-height:1.25;color:var(--muted);background:var(--bg);padding:.2rem .45rem;
+  font-variant-numeric:tabular-nums}
+.lectura.flip{left:auto;right:.6rem;text-align:right}
+.lectura .tramo{color:var(--ink)}
+.lectura .hit{display:none;color:var(--alert-ink)}
+.serie.seen .lectura .hit{display:block}
+.serie.alert .linea{background:var(--alert);opacity:1}
+.serie.alert .punto{border-color:var(--alert)}
+.serie.alert .desvio{color:var(--alert-ink)}
+@media (max-width:640px){.lectura{top:auto;bottom:calc(100% - .25rem)}}
+.leyenda{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem 1.6rem;padding-block:.65rem;border-top:1px solid var(--rule);
+  font-family:var(--display);font-size:.85rem;color:var(--muted)}
+.k::before{content:"";display:inline-block;vertical-align:middle;margin-right:.5rem}
+.k-medir::before{width:5px;height:5px;border-radius:50%;background:var(--muted);margin-right:1.25rem;
+  box-shadow:6px -3px 0 var(--muted),12px 1px 0 var(--muted)}
+.k-detectar::before{width:20px;height:9px;background:var(--band-fill);border-block:1px dashed var(--accent)}
+.k-explicar::before{width:20px;height:1.2px;background:var(--ink)}
+/* Bajo 820 px la leyenda va en columna: así su alto no depende de cuánto ocupe cada fuente. */
+@media (max-width:819px){.leyenda{flex-direction:column;align-items:flex-start}}
+.nota-plot{position:absolute;top:-.35rem;right:var(--gutter);font-family:var(--display);font-size:.8rem;color:var(--muted)}
 
 /* ---- puertas ---- */
-.puertas{border-bottom:1px solid var(--rule);padding-block:clamp(2rem,5vw,3.5rem)}
-.puertas .band{display:grid;grid-template-columns:repeat(3,1fr);max-width:calc(var(--measure) * 1.5);margin-inline:auto;padding-inline:var(--gutter)}
+.puertas{border-block:1px solid var(--rule);padding-block:clamp(2rem,5vw,3.5rem)}
+.puertas .band{display:grid;grid-template-columns:repeat(3,1fr);max-width:var(--wide);margin-inline:auto;padding-inline:var(--gutter)}
 .puerta{padding-inline:clamp(1rem,2.5vw,2rem);border-left:1px solid var(--rule-strong);display:flex;flex-direction:column;gap:.9rem}
 .puerta:first-child{border-left:0;padding-left:0}
 .puerta h2{font-size:1.25rem;margin:0}
@@ -98,9 +165,48 @@ p+p{margin-top:1em}
   .puerta:first-child{border-top:0;padding-top:0}
 }
 
-/* ---- secciones ---- */
-section.deep{padding-block:clamp(2.5rem,6vw,4.5rem);border-bottom:1px solid var(--rule)}
-.bridge{font-size:1.18rem;line-height:1.55;max-width:60ch}
+/* ---- franjas de sección ----
+   Cada sección abre con su título grande y, debajo, un esquema propio de su material.
+   Título y esquema se desplazan a distinto ritmo; el espacio entre ambos es mayor que
+   el desplazamiento relativo máximo, así que nunca se tocan. */
+section.deep{border-bottom:1px solid var(--rule)}
+.franja{position:relative;overflow:hidden;overflow:clip;padding-top:clamp(2.75rem,7vw,5.5rem)}
+.franja.con-arte{background:var(--surface);border-bottom:1px solid var(--rule)}
+.franja-titulo{font-size:var(--fs-band);font-weight:460;line-height:1;letter-spacing:-.022em;margin:0;max-width:9.8em}
+.franja-arte{position:relative;height:var(--art-h);margin-top:clamp(2rem,4.5vw,3.25rem)}
+.franja-arte svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.franja-arte path{vector-effect:non-scaling-stroke;fill:none}
+.franja-nota{font-family:var(--display);font-size:.82rem;line-height:1.45;color:var(--muted);max-width:50.8em;
+  padding-block:.9rem clamp(1.25rem,3vw,1.75rem)}
+.franja:not(.con-arte){padding-bottom:0}
+.eti{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font-family:var(--display);font-size:.8rem;line-height:1;color:var(--muted)}
+.eti.ini{transform:translateY(-50%)}
+/* Ingeniería: CAN_H sube y CAN_L baja en cada bit dominante. En pantallas angostas el
+   esquema se deja más ancho que la pantalla y se recorta, para que los bits no se empasten. */
+.franja-ing .franja-arte{width:max(108%,760px);margin-left:calc(50% - max(54%,380px))}   /* se mueve en x: sobra a ambos lados */
+.anio + .wide .franja-nota{padding-top:1.9rem}
+.can-h{stroke:var(--accent);stroke-width:1.3px;opacity:.8}
+.can-l{stroke:var(--signal-muted);stroke-width:1.3px}
+/* Investigación: perfiles de ARN por fracción de densidad. */
+.sip .l12{stroke:var(--signal-muted);stroke-width:1.3px}
+.sip .d12{stroke:var(--signal-muted);stroke-width:5px;stroke-linecap:round}
+.sip .a13{fill:var(--band-fill)!important}
+.sip .l13{stroke:var(--accent);stroke-width:1.6px}
+.sip .d13{stroke:var(--accent);stroke-width:5px;stroke-linecap:round}
+.sip-12{color:var(--muted)}
+.sip-13{color:var(--accent-ink)}
+/* Aula: el año en unidades. */
+.anio .axis{stroke:var(--rule-strong);stroke-width:1px}
+.anio .unit{fill:var(--accent)!important;opacity:.8}
+.anio .lev{fill:var(--signal-muted)!important}
+.anio .feria{stroke:var(--signal-muted);stroke-width:3px;stroke-dasharray:1 5;stroke-linecap:round}
+.eti.oa{color:var(--ink);font-variant-numeric:tabular-nums}
+.eti.tema{font-family:var(--body);font-style:italic;font-size:.85rem}
+@media (max-width:1023px){.eti.tema,.eti.mes{display:none}}
+@media (max-width:640px){.eti.feria-eti{display:none}}
+
+.cuerpo{padding-block:clamp(2.25rem,5vw,3.5rem) clamp(2.75rem,6vw,4.5rem)}
+.bridge{font-size:1.18rem;line-height:1.55;max-width:30.3em}
 .ficha{display:grid;grid-template-columns:11rem 1fr;margin:0}
 .ficha dt{font-family:var(--display);font-size:.95rem;color:var(--muted);padding:.9rem 1rem .9rem 0;border-top:1px solid var(--rule)}
 .ficha dd{margin:0;padding:.9rem 0;border-top:1px solid var(--rule)}
@@ -126,38 +232,106 @@ section.deep{padding-block:clamp(2.5rem,6vw,4.5rem);border-bottom:1px solid var(
 .plain{margin:0;padding-left:1.1rem}
 .plain li+li{margin-top:.3rem}
 .outlinks{font-family:var(--display)}
+
+/* ---- recursos ---- */
+.lede{font-size:1.12rem;line-height:1.55;max-width:29.6em}
+.recursos{margin-top:clamp(1.75rem,4vw,2.5rem);border-top:1px solid var(--rule)}
+.recurso{display:grid;grid-template-columns:11rem 1fr;gap:0 clamp(1rem,3vw,2rem);padding-block:clamp(1.5rem,3.5vw,2.25rem);border-bottom:1px solid var(--rule)}
+.recurso .mini{display:block;align-self:start;padding-top:.35rem}
+.recurso .mini svg{display:block;width:100%;height:auto;max-width:9.5rem}
+.recurso h3{margin:0;font-size:1.45rem;font-weight:480;color:var(--ink);letter-spacing:-.01em}
+.recurso h3 a{color:inherit;text-decoration-color:var(--accent);text-decoration-thickness:1px}
+.recurso h3 a:hover{text-decoration-thickness:2px}
+.recurso .sub{font-family:var(--display);color:var(--muted);margin-top:.2rem}
+.campos{display:grid;grid-template-columns:6.5rem 1fr;gap:.55rem 1rem;margin:1.1rem 0 0}
+.campos dt{font-family:var(--display);font-size:.9rem;color:var(--muted);padding-top:.12rem}
+.campos dd{margin:0}
+@media (max-width:640px){
+  .recurso{grid-template-columns:1fr}
+  .recurso .mini{padding:0 0 1rem}
+  .recurso .mini svg{max-width:7.5rem}
+  .campos{grid-template-columns:1fr;gap:.1rem}
+  .campos dd+dt{margin-top:.6rem}
+}
+.mini .c0{fill:var(--accent);opacity:.12}.mini .c1{fill:var(--accent);opacity:.3}.mini .c2{fill:var(--accent);opacity:.5}
+.mini .c3{fill:var(--accent);opacity:.72}.mini .c4{fill:var(--accent);opacity:.94}
+.mini .pair{fill:none;stroke:var(--ink);stroke-width:1.2px}
+.mini .pista{fill:none;stroke:var(--rule);stroke-width:7px}
+.mini .arco{fill:none;stroke:var(--accent);stroke-width:7px;stroke-linecap:butt}
+.mini .fondo{fill:var(--rule)}
+.mini .barra{fill:var(--accent);opacity:.75}
+.mini .umbral{fill:none;stroke:var(--ink);stroke-width:1px;stroke-dasharray:2 2;opacity:.6}
+
 .contact{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:9rem 1fr;gap:.35rem 1rem;font-family:var(--display)}
 .contact .k{color:var(--muted)}
-.contact .tbd{color:var(--muted)}
 @media (max-width:480px){.contact{grid-template-columns:1fr}.contact .k{margin-top:.4rem}}
+#contacto h2{font-size:clamp(1.8rem,2vw + 1rem,2.4rem);font-weight:460;letter-spacing:-.015em}
 footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:var(--muted)}
+
+/* Movimiento: will-change sólo en escenas cerca de pantalla. Con reduced-motion todo queda quieto. */
+.is-live [data-depth]{will-change:transform}
+@media (prefers-reduced-motion:reduce){
+  [data-depth]{transform:none!important;opacity:1!important}
+  .playhead{display:none}
+}
 </style>
 </head>
 <body>
 <a class="skip" href="#contenido">Saltar al contenido</a>
 
-<header class="hero">
-  <div class="wrap">
+<header class="hero" data-scene="hero">
+  <div class="hero-grid" data-depth="0.5" aria-hidden="true"></div>
+  <div class="masthead wide">
     <p class="identity">Benjamín Moreira-Grez</p>
+    <nav class="indice" aria-label="Secciones de la página">
+      <a href="#ingenieria">Ingeniería</a>
+      <a href="#investigacion">Investigación</a>
+      <a href="#aula">Aula</a>
+      <a href="#recursos">Recursos</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </div>
+  <div class="hero-type wide" data-depth="-0.4" data-fade>
     <h1 class="display">Mido sistemas complejos y construyo los instrumentos que los miden.</h1>
     <p class="facets"><span>Telemetría de flotas en Andes. </span><span>Ecología microbiana en investigación. </span><span>Ciencias en enseñanza media.</span></p>
   </div>
-  <figure class="trace">
-    <svg viewBox="0 0 1200 260" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Traza de una señal de motor muestreada a un hercio durante un ciclo de conducción: aceleraciones, mesetas y frenadas con ruido leve, y un pico brusco marcado como anomalía cerca del final del recorrido.">
-      <path class="signal" d="M0.0 217.4 L5.0 222.6 L10.0 225.4 L15.1 226.4 L20.1 221.4 L25.1 225.9 L30.1 224.4 L35.1 226.0 L40.2 220.6 L45.2 219.2 L50.2 221.5 L55.2 223.0 L60.3 223.4 L65.3 220.7 L70.3 215.9 L75.3 213.6 L80.3 205.5 L85.4 199.4 L90.4 200.2 L95.4 193.4 L100.4 190.4 L105.4 182.8 L110.5 173.3 L115.5 164.8 L120.5 168.0 L125.5 158.6 L130.5 150.3 L135.6 144.8 L140.6 136.2 L145.6 129.7 L150.6 126.2 L155.6 122.9 L160.7 124.1 L165.7 121.6 L170.7 120.5 L175.7 115.2 L180.8 116.3 L185.8 115.8 L190.8 120.2 L195.8 120.2 L200.8 120.0 L205.9 120.8 L210.9 116.7 L215.9 116.4 L220.9 117.2 L225.9 117.6 L231.0 121.9 L236.0 118.5 L241.0 118.9 L246.0 119.9 L251.0 117.3 L256.1 114.0 L261.1 115.8 L266.1 117.6 L271.1 121.1 L276.2 117.2 L281.2 117.7 L286.2 108.9 L291.2 120.1 L296.2 117.6 L301.3 123.2 L306.3 129.4 L311.3 137.4 L316.3 135.8 L321.3 149.2 L326.4 152.3 L331.4 164.3 L336.4 175.5 L341.4 185.3 L346.4 188.4 L351.5 192.5 L356.5 195.9 L361.5 201.4 L366.5 200.7 L371.5 204.1 L376.6 201.0 L381.6 199.8 L386.6 194.0 L391.6 198.2 L396.7 185.1 L401.7 188.6 L406.7 185.2 L411.7 179.2 L416.7 174.6 L421.8 169.7 L426.8 157.3 L431.8 155.2 L436.8 148.1 L441.8 144.0 L446.9 139.1 L451.9 129.3 L456.9 118.3 L461.9 111.7 L466.9 107.5 L472.0 96.2 L477.0 100.4 L482.0 93.9 L487.0 89.9 L492.1 82.2 L497.1 76.7 L502.1 73.6 L507.1 76.1 L512.1 72.1 L517.2 75.4 L522.2 69.6 L527.2 70.4 L532.2 69.5 L537.2 75.2 L542.3 70.3 L547.3 74.1 L552.3 75.7 L557.3 74.0 L562.3 72.4 L567.4 73.4 L572.4 73.7 L577.4 73.5 L582.4 82.5 L587.4 81.1 L592.5 81.3 L597.5 79.3 L602.5 75.8 L607.5 79.7 L612.6 81.5 L617.6 81.2 L622.6 84.1 L627.6 80.8 L632.6 83.2 L637.7 78.5 L642.7 80.1 L647.7 82.0 L652.7 86.3 L657.7 86.0 L662.8 84.9 L667.8 83.3 L672.8 86.0 L677.8 87.0 L682.8 97.9 L687.9 100.4 L692.9 112.9 L697.9 116.8 L702.9 125.8 L707.9 132.4 L713.0 142.1 L718.0 153.2 L723.0 159.1 L728.0 170.0 L733.1 170.6 L738.1 174.1 L743.1 176.3 L748.1 175.6 L753.1 181.1 L758.2 182.8 L763.2 180.7 L768.2 179.2 L773.2 172.5 L778.2 164.2 L783.3 165.4 L788.3 163.6 L793.3 164.5 L798.3 159.6 L803.3 152.1 L808.4 148.9 L813.4 145.7 L818.4 139.2 L823.4 137.4 L828.5 138.0 L833.5 134.3 L838.5 134.1 L843.5 77.1 L848.5 65.7 L853.6 118.9 L858.6 130.2 L863.6 130.2 L868.6 132.6 L873.6 126.7 L878.7 126.9 L883.7 130.7 L888.7 131.5 L893.7 133.1 L898.7 126.8 L903.8 130.5 L908.8 127.9 L913.8 127.9 L918.8 130.2 L923.8 130.3 L928.9 129.1 L933.9 130.8 L938.9 133.6 L943.9 129.6 L949.0 134.5 L954.0 129.6 L959.0 130.4 L964.0 133.3 L969.0 130.5 L974.1 134.3 L979.1 129.8 L984.1 128.7 L989.1 128.8 L994.1 132.5 L999.2 129.8 L1004.2 131.6 L1009.2 129.4 L1014.2 129.7 L1019.2 129.5 L1024.3 130.2 L1029.3 127.5 L1034.3 131.7 L1039.3 129.7 L1044.4 132.1 L1049.4 132.9 L1054.4 128.2 L1059.4 130.2 L1064.4 137.7 L1069.5 143.1 L1074.5 150.2 L1079.5 152.1 L1084.5 158.2 L1089.5 166.4 L1094.6 166.2 L1099.6 176.8 L1104.6 184.9 L1109.6 189.6 L1114.6 193.5 L1119.7 199.1 L1124.7 204.8 L1129.7 208.3 L1134.7 214.2 L1139.7 214.9 L1144.8 219.6 L1149.8 216.8 L1154.8 219.9 L1159.8 218.0 L1164.9 216.9 L1169.9 221.0 L1174.9 219.5 L1179.9 220.5 L1184.9 224.3 L1190.0 224.7 L1195.0 224.6 L1200.0 223.1"/>
-      <g class="anomaly"><circle cx="848.5" cy="65.7" r="11"/><circle class="dot" cx="848.5" cy="65.7" r="3.2"/></g>
-    </svg>
-    <figcaption><span>señal de motor, muestreo 1 Hz</span><span>anomalía detectada t+00:43</span></figcaption>
+  <figure class="serie" id="serie" data-z="0 0 0 0 0 0 0 0 0.2 -5.8 -10.3 -12.9 -13.1 -11.6 -9.8 -8.2 -7.2 -6.6 -6.2 -5.7 -5.4 -5.1 -4.9 -4.7 -4.5 -4.5 -4.6 -4.7 -4.6 -4.5 -4.3 -4.1 -4.3 -4.7 -5.1 -5" data-hit="25">
+    <div class="plot">
+      <svg class="capa medir" data-depth="0.3" viewBox="0 0 1200 260" preserveAspectRatio="none" aria-hidden="true"><path class="dots" d="M24 67.3h0 M24 33.2h0 M24 40.4h0 M56.9 51h0 M56.9 52.5h0 M56.9 42h0 M89.8 69.5h0 M89.8 70.8h0 M89.8 65.2h0 M122.7 55.3h0 M122.7 48.6h0 M122.7 55.9h0 M155.7 46.3h0 M155.7 45.7h0 M155.7 51.3h0 M188.6 47.4h0 M188.6 50.6h0 M188.6 58.1h0 M221.5 62.3h0 M221.5 60h0 M221.5 48.4h0 M254.4 58.6h0 M254.4 52.5h0 M254.4 57.7h0 M287.3 53.4h0 M287.3 53.4h0 M287.3 56.2h0 M320.2 105.6h0 M320.2 95.6h0 M320.2 106h0 M353.1 177h0 M353.1 161.7h0 M353.1 182.5h0 M386.1 189.2h0 M386.1 207.3h0 M386.1 192.6h0 M419 191.7h0 M419 174.8h0 M419 179.6h0 M451.9 159.7h0 M451.9 143.7h0 M451.9 189.1h0 M484.8 138.3h0 M484.8 136h0 M484.8 149.4h0 M517.7 116.3h0 M517.7 135.1h0 M517.7 130.1h0 M550.6 107h0 M550.6 114.7h0 M550.6 131.9h0 M583.5 112.6h0 M583.5 108.8h0 M583.5 114h0 M616.5 113.3h0 M616.5 105.7h0 M616.5 124.5h0 M649.4 113.4h0 M649.4 104.2h0 M649.4 113.5h0 M682.3 104.7h0 M682.3 79.8h0 M682.3 105.3h0 M715.2 105h0 M715.2 92.7h0 M715.2 118.4h0 M748.1 104.2h0 M748.1 95.1h0 M748.1 96.5h0 M781 106.6h0 M781 88.9h0 M781 100.1h0 M813.9 89.1h0 M813.9 91.8h0 M813.9 97h0 M846.9 100.6h0 M846.9 80.9h0 M846.9 108.8h0 M879.8 109.2h0 M879.8 83.6h0 M879.8 84.7h0 M912.7 97.6h0 M912.7 96.6h0 M912.7 116.2h0 M945.6 93.6h0 M945.6 96.5h0 M945.6 102.2h0 M978.5 90.4h0 M978.5 101.4h0 M978.5 85.8h0 M1011.4 85.3h0 M1011.4 104.6h0 M1011.4 100.4h0 M1044.3 82.4h0 M1044.3 101.2h0 M1044.3 101.8h0 M1077.3 78.1h0 M1077.3 87.2h0 M1077.3 76h0 M1110.2 107.6h0 M1110.2 90.9h0 M1110.2 103.7h0 M1143.1 118.1h0 M1143.1 107.6h0 M1143.1 109h0 M1176 97.5h0 M1176 109.4h0 M1176 85.7h0"/></svg>
+      <svg class="detectar" viewBox="0 0 1200 260" preserveAspectRatio="none" role="img" aria-label="Esquema con datos simulados: un sistema estable se perturba, cae y se recupera, pero se estabiliza por debajo de la banda que marcaba su estado previo. Se muestra tres veces a la vez: como réplicas medidas en cada muestreo, como una tendencia comparada con esa banda de referencia, con una alerta donde se confirma que no vuelve, y como la misma curva reducida a tramos con palabras: estable, perturbación, cae, se recupera, pero no del todo."><rect class="ref" x="0" y="35.1" width="1200" height="37.4"/><path class="ref-mid" d="M0 53.8H1200"/><path class="perturb" d="M270.9 6V254"/><path class="trend" d="M24 53.8 L56.9 53.8 L89.8 53.8 L122.7 53.8 L155.7 53.8 L188.6 53.8 L221.5 53.8 L254.4 53.8 L287.3 51.5 L320.2 107.7 L353.1 150.1 L386.1 174.3 L419 176.2 L451.9 162.4 L484.8 145.3 L517.7 130.6 L550.6 120.7 L583.5 115.5 L616.5 111.3 L649.4 107.5 L682.3 104.4 L715.2 101.2 L748.1 99.5 L781 97.5 L813.9 95.8 L846.9 95.4 L879.8 96.9 L912.7 97.3 L945.6 97.2 L978.5 96.2 L1011.4 93.7 L1044.3 92.1 L1077.3 94.2 L1110.2 97.4 L1143.1 101.9 L1176 100.5"/></svg>
+      <span class="alerta" style="left:70.57%;top:36.71%" aria-hidden="true"></span>
+      <div class="capa explicar" data-depth="-0.35" aria-hidden="true">
+        <svg viewBox="0 0 1200 260" preserveAspectRatio="none"><path class="simple" d="M24 53.8 L287.3 51.5 L353.1 150.1 L386.1 174.3 L419 176.2 L550.6 120.7 L649.4 107.5 L1044.3 92.1 L1176 100.5"/></svg>
+        <span class="w w-estable" style="left:6%;top:7%">estable</span>
+        <span class="w" style="left:23.3%;top:3%">perturbación</span>
+        <span class="w w-cae izq" style="left:26.4%;top:47%">cae</span>
+        <span class="w" style="left:44.5%;top:62%">se recupera</span>
+        <span class="w w-fin" style="left:73%;top:58%">pero no del todo</span>
+      </div>
+      <span class="nota-plot">esquema con datos simulados</span>
+      <div class="playhead" aria-hidden="true"><i class="linea"></i><i class="punto"></i>
+        <span class="lectura"><span class="tramo">muestreo 1 de 36</span><span class="desvio">desvío 0,0 σ</span><span class="hit">no vuelve a la referencia</span></span>
+      </div>
+    </div>
+    <figcaption class="leyenda wide">
+      <span class="k k-medir">medir: réplicas por muestreo</span>
+      <span class="k k-detectar">detectar: referencia previa ± 2σ</span>
+      <span class="k k-explicar">explicar: la curva en palabras</span>
+    </figcaption>
   </figure>
   <script>
   (function(){
-    var fig=document.querySelector('.trace'); if(!fig) return;
-    var svg=fig.querySelector('svg'), p=fig.querySelector('.signal');
-    if(!svg||!p||!p.getTotalLength) return;
+    var fig=document.getElementById('serie'); if(!fig) return;
+    var plot=fig.querySelector('.plot'), p=fig.querySelector('.trend');
+    if(!plot||!p) return;
     if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    var scale=svg.getBoundingClientRect().width/1200;
-    var len=Math.ceil(p.getTotalLength()*scale)+2;
-    p.style.strokeDasharray=len; p.style.strokeDashoffset=len;
+    // El SVG se estira distinto en x y en y (preserveAspectRatio="none") y el trazo no escala:
+    // el largo se mide en píxeles de pantalla sumando los tramos entre puntos.
+    var n=p.getAttribute('d').match(/[\d.]+/g).map(Number), sx=plot.clientWidth/1200, sy=plot.clientHeight/260, len=2;
+    for(var k=2;k<n.length;k+=2) len+=Math.sqrt(Math.pow((n[k]-n[k-2])*sx,2)+Math.pow((n[k+1]-n[k-1])*sy,2));
+    len=Math.ceil(len); p.style.strokeDasharray=len; p.style.strokeDashoffset=len;
+    // Terminado el dibujo se quitan los guiones: si la ventana cambia de ancho, la línea sigue entera.
+    p.addEventListener('animationend',function(){ p.style.strokeDasharray=''; p.style.strokeDashoffset=''; fig.classList.add('drawn'); });
     fig.classList.add('ready');
   })();
   </script>
@@ -187,15 +361,21 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
         <li>Ciencias para la Ciudadanía, III y IV medio</li>
         <li>Jefatura de un cuarto medio</li>
       </ul>
-      <p>Enseñanza media, dos días a la semana. Diseño instruccional alineado a las bases curriculares vigentes.</p>
+      <p>Enseñanza media, dos días a la semana. Diseño instruccional alineado a las bases curriculares vigentes. Dos herramientas web propias, publicadas y abiertas, en <a href="#recursos">Recursos de aprendizaje</a>.</p>
       <p class="go"><a href="#aula">Ver el trabajo en el aula</a></p>
     </article>
   </div>
 </section>
 
 <section class="deep" id="ingenieria" aria-labelledby="h-ing">
-  <div class="wrap">
-    <h2 id="h-ing">Trabajo de ingeniería</h2>
+  <div class="franja con-arte franja-ing" data-scene>
+    <div class="wide"><h2 id="h-ing" class="franja-titulo" data-depth="-0.45">Trabajo de ingeniería</h2></div>
+    <div class="franja-arte" data-depth="-0.6" data-axis="x" aria-hidden="true">
+      <svg viewBox="0 0 1200 100" preserveAspectRatio="none"><path class="can-l" d="M0 50H23.4V78H35.1V50H42.9V78H58.4V50H62.3V78H66.2V50H70.1V78H89.6V50H97.4V78H101.3V50H105.2V78H109.1V50H120.8V78H140.3V50H144.2V78H151.9V50H155.8V78H163.6V50H167.5V78H175.3V50H179.2V78H183.1V50H202.6V78H206.5V50H214.3V78H226V50H233.8V78H237.7V50H335.1V78H342.9V50H346.8V78H358.4V50H366.2V78H377.9V50H381.8V78H401.3V50H409.1V78H416.9V50H428.6V78H436.4V50H448.1V78H451.9V50H467.5V78H471.4V50H483.1V78H487V50H490.9V78H498.7V50H502.6V78H506.5V50H514.3V78H518.2V50H522.1V78H526V50H529.9V78H533.8V50H537.7V78H541.6V50H627.3V78H631.2V50H635.1V78H642.9V50H646.8V78H662.3V50H666.2V78H670.1V50H674V78H693.5V50H701.3V78H705.2V50H716.9V78H728.6V50H732.5V78H744.2V50H751.9V78H755.8V50H759.7V78H771.4V50H775.3V78H779.2V50H798.7V78H802.6V50H810.4V78H814.3V50H822.1V78H829.9V50H833.8V78H837.7V50H911.7V78H915.6V50H923.4V78H939V50H954.5V78H974V50H977.9V78H981.8V50H985.7V78H997.4V50H1009.1V78H1013V50H1016.9V78H1020.8V50H1024.7V78H1028.6V50H1036.4V78H1044.2V50H1048.1V78H1051.9V50H1055.8V78H1059.7V50H1063.6V78H1067.5V50H1075.3V78H1087V50H1090.9V78H1102.6V50H1114.3V78H1118.2V50H1200"/><path class="can-h" d="M0 50H23.4V22H35.1V50H42.9V22H58.4V50H62.3V22H66.2V50H70.1V22H89.6V50H97.4V22H101.3V50H105.2V22H109.1V50H120.8V22H140.3V50H144.2V22H151.9V50H155.8V22H163.6V50H167.5V22H175.3V50H179.2V22H183.1V50H202.6V22H206.5V50H214.3V22H226V50H233.8V22H237.7V50H335.1V22H342.9V50H346.8V22H358.4V50H366.2V22H377.9V50H381.8V22H401.3V50H409.1V22H416.9V50H428.6V22H436.4V50H448.1V22H451.9V50H467.5V22H471.4V50H483.1V22H487V50H490.9V22H498.7V50H502.6V22H506.5V50H514.3V22H518.2V50H522.1V22H526V50H529.9V22H533.8V50H537.7V22H541.6V50H627.3V22H631.2V50H635.1V22H642.9V50H646.8V22H662.3V50H666.2V22H670.1V50H674V22H693.5V50H701.3V22H705.2V50H716.9V22H728.6V50H732.5V22H744.2V50H751.9V22H755.8V50H759.7V22H771.4V50H775.3V22H779.2V50H798.7V22H802.6V50H810.4V22H814.3V50H822.1V22H829.9V50H833.8V22H837.7V50H911.7V22H915.6V50H923.4V22H939V50H954.5V22H974V50H977.9V22H981.8V50H985.7V22H997.4V50H1009.1V22H1013V50H1016.9V22H1020.8V50H1024.7V22H1028.6V50H1036.4V22H1044.2V50H1048.1V22H1051.9V50H1055.8V22H1059.7V50H1063.6V22H1067.5V50H1075.3V22H1087V50H1090.9V22H1102.6V50H1114.3V22H1118.2V50H1200"/></svg>
+    </div>
+    <div class="wide"><p class="franja-nota">Esquema: cuatro tramas en un bus CAN, vistas en sus dos líneas diferenciales, con el CRC y el relleno de bits que exige el protocolo. Identificadores y datos inventados.</p></div>
+  </div>
+  <div class="wrap cuerpo"><div class="col">
     <dl class="ficha">
       <dt>Analítica en tiempo real</dt>
       <dd>Dashboard de telemetría de flota con reconstrucción forense de tramos. En piloto.</dd>
@@ -208,12 +388,20 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
       <dt>Herramientas</dt>
       <dd>Python, FastAPI, PostgreSQL con TimescaleDB y PostGIS, Docker, Linux y bash. Para los datos: pandas, numpy, scipy y estadística multivariante; R con vegan y phyloseq. Bus CAN, FMS, telemetría GNSS, tacógrafos y protocolos binarios. Interfaces con HTMX y React.</dd>
     </dl>
-  </div>
+  </div></div>
 </section>
 
 <section class="deep" id="investigacion" aria-labelledby="h-inv">
-  <div class="wrap">
-    <h2 id="h-inv">Investigación</h2>
+  <div class="franja con-arte" data-scene>
+    <div class="wide"><h2 id="h-inv" class="franja-titulo" data-depth="-0.45">Investigación</h2></div>
+    <div class="franja-arte sip" data-depth="0.4" aria-hidden="true">
+      <svg viewBox="0 0 1200 100" preserveAspectRatio="none"><path class="l12" d="M30 91.5 L106 89.4 L182 80.7 L258 60.5 L334 29.3 L410 10.3 L486 19.1 L562 47.4 L638 74 L714 86.4 L790 90.9 L866 91.8 L942 92 L1018 92 L1094 92 L1170 92"/><path class="dots d12" d="M30 91.5h0 M106 89.4h0 M182 80.7h0 M258 60.5h0 M334 29.3h0 M410 10.3h0 M486 19.1h0 M562 47.4h0 M638 74h0 M714 86.4h0 M790 90.9h0 M866 91.8h0 M942 92h0 M1018 92h0 M1094 92h0 M1170 92h0"/><path class="a13" d="M30 91.6 L106 89.5 L182 82.3 L258 64.5 L334 36.3 L410 17.7 L486 21.1 L562 40.1 L638 46.1 L714 34.2 L790 24.7 L866 34.7 L942 51.5 L1018 72.7 L1094 85.6 L1170 90.3 L1170 92 L30 92Z"/><path class="l13" d="M30 91.6 L106 89.5 L182 82.3 L258 64.5 L334 36.3 L410 17.7 L486 21.1 L562 40.1 L638 46.1 L714 34.2 L790 24.7 L866 34.7 L942 51.5 L1018 72.7 L1094 85.6 L1170 90.3"/><path class="dots d13" d="M30 91.6h0 M106 89.5h0 M182 82.3h0 M258 64.5h0 M334 36.3h0 M410 17.7h0 M486 21.1h0 M562 40.1h0 M638 46.1h0 M714 34.2h0 M790 24.7h0 M866 34.7h0 M942 51.5h0 M1018 72.7h0 M1094 85.6h0 M1170 90.3h0"/></svg>
+      <span class="eti sip-12" style="left:34.2%;top:-4%">¹²C</span>
+      <span class="eti sip-13" style="left:65.8%;top:8%">¹³C</span>
+    </div>
+    <div class="wide"><p class="franja-nota">Esquema: ARN separado por densidad en un gradiente (RNA-SIP). El que incorporó ¹³C se desplaza hacia fracciones más pesadas, a la derecha; así se sabe qué organismos usaron el sustrato marcado. Curvas ilustrativas.</p></div>
+  </div>
+  <div class="wrap cuerpo"><div class="col">
     <p class="bridge">Un doctorado midiendo cómo responden las comunidades microbianas cuando su ecosistema se perturba: qué señales cambian primero, cuáles son ruido, cuándo un sistema se está recuperando y cuándo solo lo parece. Detectar una desviación temprana en datos ruidosos y de alta dimensión es el mismo problema estadístico en un suelo degradado que en una flota de buses; cambia el sustrato, no el método.</p>
 
     <h3>Formación</h3>
@@ -241,20 +429,93 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
       <li><span class="year">2019</span><span><a href="https://doi.org/10.1007/978-1-4939-9721-3_3">RNA Stable Isotope Probing (RNA-SIP)</a><span class="venue">Stable Isotope Probing: Methods and Protocols <span class="note">(capítulo de métodos)</span></span></span></li>
     </ol>
     <p class="outlinks" style="margin-top:1.25rem">Trayectoria completa en <a href="https://orcid.org/0000-0001-5030-5484">ORCID</a>, <a href="https://scholar.google.com/citations?user=K4uAEBoAAAAJ&amp;hl=en">Google Scholar</a> y <a href="https://www.researchgate.net/profile/Benjamin-Moreira-Grez">ResearchGate</a>.</p>
-  </div>
+  </div></div>
 </section>
 
 <section class="deep" id="aula" aria-labelledby="h-aula">
-  <div class="wrap">
-    <h2 id="h-aula">Aula</h2>
+  <div class="franja con-arte" data-scene>
+    <div class="wide"><h2 id="h-aula" class="franja-titulo" data-depth="-0.45">Aula</h2></div>
+    <div class="franja-arte anio" data-depth="0.35" aria-hidden="true">
+      <svg viewBox="0 0 1200 100" preserveAspectRatio="none"><path class="axis" d="M12 89H1188M12 86v6M145.1 86v6M273.8 86v6M406.9 86v6M535.6 86v6M668.7 86v6M801.7 86v6M930.5 86v6M1063.5 86v6"/><path class="lev" d="M24.9 40H88V46H24.9Z"/><path class="unit" d="M115 34H208.1V52H115ZM235.2 34H448.5V52H235.2ZM565.7 34H688.8V52H565.7ZM776 34H839.1V52H776Z"/><path class="feria" d="M836.1 72H1049.4"/></svg>
+      <span class="eti oa ini" style="left:9.58%;top:17%">OA 12</span>
+      <span class="eti tema ini" style="left:9.58%;top:66%">modelos atómicos</span>
+      <span class="eti oa ini" style="left:19.60%;top:17%">OA 13</span>
+      <span class="eti tema ini" style="left:19.60%;top:66%">átomos e interacciones</span>
+      <span class="eti oa ini" style="left:47.14%;top:17%">OA 14</span>
+      <span class="eti tema ini" style="left:47.14%;top:66%">tabla periódica</span>
+      <span class="eti oa ini" style="left:64.66%;top:17%">OA 15</span>
+      <span class="eti tema ini" style="left:64.66%;top:66%">bioelementos</span>
+      <span class="eti tema ini" style="left:2.07%;top:66%">nivelación</span>
+      <span class="eti tema ini feria-eti" style="left:88.25%;top:72%">feria científica</span>
+      <span class="eti mes ini" style="left:calc(1.00% + 4px);top:102%">mar</span>
+      <span class="eti mes ini" style="left:calc(12.09% + 4px);top:102%">abr</span>
+      <span class="eti mes ini" style="left:calc(22.82% + 4px);top:102%">may</span>
+      <span class="eti mes ini" style="left:calc(33.91% + 4px);top:102%">jun</span>
+      <span class="eti mes ini" style="left:calc(44.64% + 4px);top:102%">jul</span>
+      <span class="eti mes ini" style="left:calc(55.72% + 4px);top:102%">ago</span>
+      <span class="eti mes ini" style="left:calc(66.81% + 4px);top:102%">sep</span>
+      <span class="eti mes ini" style="left:calc(77.54% + 4px);top:102%">oct</span>
+      <span class="eti mes ini" style="left:calc(88.63% + 4px);top:102%">nov</span>
+    </div>
+    <div class="wide"><p class="franja-nota">Esquema: el año 2026 de Química en 8.º básico, unidad por unidad, con el objetivo de aprendizaje de las bases curriculares que trabaja cada una; abajo, el proyecto de feria científica.</p></div>
+  </div>
+  <div class="wrap cuerpo"><div class="col">
     <p>Química, Biología y Ciencias para la Ciudadanía en enseñanza media, en el Instituto Domingo Eyzaguirre, dos días a la semana. Profesor jefe de un cuarto medio.</p>
     <p>Cada unidad se diseña contra las bases curriculares vigentes, con objetivos de aprendizaje codificados y evaluación formativa y sumativa. El modelo tiene que sostenerse frente a alguien de dieciséis años, con el tiempo y la atención que hay: es la misma exigencia que explicarle un sistema a una contraparte que no lo construyó.</p>
     <p>Donde el aula y la ingeniería se cruzan: una aplicación web para que estudiantes de cuarto medio practiquen preguntas de habilidad científica de la PAES y para orientar la remediación posterior. Software propio, con fin pedagógico y criterio científico.</p>
+    <p>Otras dos herramientas, más acotadas, ya están publicadas y se usan desde el navegador: la tabla periódica reactiva y el autodiagnóstico de bienestar, en <a href="#recursos">Recursos de aprendizaje</a>.</p>
+  </div></div>
+</section>
+
+<section class="deep" id="recursos" aria-labelledby="h-rec">
+  <div class="franja" data-scene>
+    <div class="wide"><h2 id="h-rec" class="franja-titulo" data-depth="-0.45">Recursos de aprendizaje</h2></div>
+  </div>
+  <div class="wrap cuerpo"><div class="col">
+    <p class="lede">Herramientas web que hago para mis clases de ciencias. Se abren en el navegador, sin cuenta ni instalación, y ninguna guarda ni envía respuestas. Las miniaturas son esquemas de cada interfaz.</p>
+  </div>
+    <div class="recursos">
+      <article class="recurso">
+        <a class="mini" href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/" tabindex="-1" aria-hidden="true">
+          <svg viewBox="-1 -1 89 78"><path class="c0" d="M0 11h10v10h-10zM0 22h10v10h-10zM0 33h10v10h-10zM11 33h10v10h-10zM0 44h10v10h-10zM11 44h10v10h-10zM0 55h10v10h-10zM11 55h10v10h-10zM0 66h10v10h-10zM11 66h10v10h-10z"/><path class="c1" d="M0 0h10v10h-10zM11 11h10v10h-10zM11 22h10v10h-10zM22 33h10v10h-10zM22 44h10v10h-10zM22 55h10v10h-10zM33 55h10v10h-10zM22 66h10v10h-10zM33 66h10v10h-10zM44 66h10v10h-10z"/><path class="c2" d="M22 11h10v10h-10zM22 22h10v10h-10zM33 33h10v10h-10zM33 44h10v10h-10zM44 44h10v10h-10zM44 55h10v10h-10zM55 55h10v10h-10zM55 66h10v10h-10zM66 66h10v10h-10zM77 66h10v10h-10z"/><path class="c3" d="M33 11h10v10h-10zM33 22h10v10h-10zM44 22h10v10h-10zM44 33h10v10h-10zM55 33h10v10h-10zM55 44h10v10h-10zM66 44h10v10h-10zM77 44h10v10h-10zM66 55h10v10h-10zM77 55h10v10h-10z"/><path class="c4" d="M77 0h10v10h-10zM44 11h10v10h-10zM55 11h10v10h-10zM66 11h10v10h-10zM77 11h10v10h-10zM55 22h10v10h-10zM66 22h10v10h-10zM77 22h10v10h-10zM66 33h10v10h-10zM77 33h10v10h-10z"/><path class="pair" d="M0.5 22.5h10v10h-10zM66.5 22.5h10v10h-10z"/></svg>
+        </a>
+        <div>
+          <h3><a href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/">Tabla periódica reactiva</a></h3>
+          <p class="sub">Imán y Escudo</p>
+          <dl class="campos">
+            <dt>Para</dt>
+            <dd>Química, 8.º básico, objetivo CN08 OA14. Se usa en clases de 8.º básico, en la unidad de tabla periódica.</dd>
+            <dt>Entrena</dt>
+            <dd>Razonar las tendencias periódicas por posición, sin memorizar valores. El Escudo (los niveles de electrones, que crecen hacia abajo) compite con el Imán (el tirón del núcleo, que crece hacia la derecha); quién gana decide el radio atómico, la energía de ionización, la electronegatividad y, de ahí, el tipo de enlace.</dd>
+            <dt>Modos</dt>
+            <dd>Comparación guiada paso a paso, práctica con pistas de menos a más y un modo docente para proyectar los casos de la guía.</dd>
+          </dl>
+        </div>
+      </article>
+      <article class="recurso">
+        <a class="mini" href="https://bengrez.github.io/aula-herramientas/autodiagnostico-bienestar-salud/" tabindex="-1" aria-hidden="true">
+          <svg viewBox="0 0 120 76"><circle class="pista" cx="30" cy="38" r="24"/><circle class="arco" cx="30" cy="38" r="24" stroke-dasharray="108.6 150.8" transform="rotate(-90 30 38)"/><path class="fondo" d="M66 9h52v5h-52zM66 20h52v5h-52zM66 31h52v5h-52zM66 42h52v5h-52zM66 53h52v5h-52zM66 64h52v5h-52z"/><path class="barra" d="M66 9h40v5h-40zM66 20h27v5h-27zM66 31h45v5h-45zM66 42h35v5h-35zM66 53h22v5h-22zM66 64h43v5h-43z"/><path class="umbral" d="M97.2 5V73M107.6 5V73"/></svg>
+        </a>
+        <div>
+          <h3><a href="https://bengrez.github.io/aula-herramientas/autodiagnostico-bienestar-salud/">Autodiagnóstico de Bienestar y Salud</a></h3>
+          <dl class="campos">
+            <dt>Para</dt>
+            <dd>Ciencias para la Ciudadanía, tercero medio, unidad 4.</dd>
+            <dt>Entrena</dt>
+            <dd>Reconocer los factores biológicos, ambientales y sociales que influyen en la salud (alimentación, estrés y sueño, consumo, actividad física, entorno) y elegir uno para investigar en grupo.</dd>
+            <dt>Resultado</dt>
+            <dd>Veinticuatro preguntas en seis bloques, con un semáforo por bloque y uno global. Es una guía para reflexionar, no un diagnóstico.</dd>
+            <dt>Datos</dt>
+            <dd>El cálculo ocurre en el dispositivo: no se guardan ni se envían respuestas.</dd>
+          </dl>
+        </div>
+      </article>
+    </div>
   </div>
 </section>
 
 <section class="deep" id="contacto" aria-labelledby="h-con">
-  <div class="wrap">
+  <div class="wrap cuerpo"><div class="col">
     <h2 id="h-con">Contacto</h2>
     <ul class="contact">
       <li class="k">Correo</li><li><a href="mailto:benja.moreira.grez@gmail.com">benja.moreira.grez@gmail.com</a></li>
@@ -264,10 +525,113 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
       <li class="k">ResearchGate</li><li><a href="https://www.researchgate.net/profile/Benjamin-Moreira-Grez">Benjamin-Moreira-Grez</a></li>
     </ul>
     <p style="margin-top:1.25rem">Santiago, Chile.</p>
-  </div>
+  </div></div>
 </section>
 
 </main>
-<footer><div class="wrap">Santiago, Chile. Métricas de citación de Google Scholar al 26 de mayo de 2026.</div></footer>
+<footer><div class="wide">Santiago, Chile. Métricas de citación de Google Scholar al 26 de mayo de 2026.</div></footer>
+
+<script>
+/* Motor de parallax y cabezal de lectura.
+   Cada escena [data-scene] tiene capas [data-depth]. Al hacer scroll, cada capa se
+   desplaza progreso × depth × máximo píxeles: depth positivo se queda atrás (fondo),
+   negativo se adelanta (frente). Sólo se calculan las escenas cerca de la pantalla, sólo
+   se usa transform y todo el trabajo se agrupa en un cuadro de requestAnimationFrame.
+   Con prefers-reduced-motion no se mueve nada; sin JS la página queda completa y quieta. */
+(function(){
+  if(!('IntersectionObserver' in window)||!window.requestAnimationFrame||!window.matchMedia) return;
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
+  var scenes=[].map.call(document.querySelectorAll('[data-scene]'),function(el){
+    return {el:el, hero:el.getAttribute('data-scene')==='hero', live:false,
+      layers:[].slice.call(el.querySelectorAll('[data-depth]'))};
+  });
+  var fig=document.getElementById('serie'), plot=fig&&fig.querySelector('.plot');
+  var max=0, queued=false;
+
+  function setMax(){ var w=window.innerWidth; max=w>=1024?56:w>=640?32:18; }   // desplazamiento máximo, px
+  function clamp(v,a,b){ return v<a?a:v>b?b:v; }
+  // Progreso de una escena: el hero va de 0 (en reposo) a 1 (fuera por arriba);
+  // una franja va de -1 (asomando abajo) a 0 (centrada) a 1 (saliendo arriba).
+  function progress(s,r){
+    if(s.hero) return clamp(-r.top/r.height,0,1);
+    var vh=window.innerHeight;
+    return clamp((vh/2-(r.top+r.height/2))/((vh+r.height)/2),-1,1);
+  }
+
+  // ---- cabezal: recorre la serie mientras la figura sube hasta el borde superior ----
+  // Lee dos capas: qué muestreo (medir) y cuánto se aparta de la referencia (detectar).
+  var ph=plot&&plot.querySelector('.playhead');
+  var pts=[], z=[], HIT=0, restTop=1, W=1, H=1, flipAt=1200, lectura, tOut, zOut, punto;
+  if(ph){
+    pts=fig.querySelector('.trend').getAttribute('d').match(/[\d.]+/g).map(Number);   // x0,y0,x1,y1…
+    z=fig.getAttribute('data-z').split(' ').map(Number);
+    HIT=+fig.getAttribute('data-hit');
+    lectura=ph.querySelector('.lectura'); tOut=ph.querySelector('.tramo'); zOut=ph.querySelector('.desvio'); punto=ph.querySelector('.punto');
+  }
+  function measure(){
+    if(!ph) return;
+    restTop=Math.max(1,plot.getBoundingClientRect().top+window.pageYOffset);
+    W=plot.clientWidth; H=plot.clientHeight;
+    flipAt=1200*(1-(lectura.offsetWidth+24)/W);                 // desde aquí la lectura va a la izquierda
+  }
+  function playhead(top){
+    // Mientras dibuja, el cabezal espera. Sin animación inicial (no .ready) queda disponible de inmediato.
+    if(fig.classList.contains('ready')&&!fig.classList.contains('drawn')) return;
+    var q=clamp(1-top/restTop,0,1), n=pts.length/2, i=Math.round(q*(n-1)), x=pts[2*i], y=pts[2*i+1];
+    fig.classList.toggle('scrub',q>0.01&&q<0.995);
+    ph.style.transform='translate3d('+(x/1200*W).toFixed(1)+'px,0,0)';
+    punto.style.transform='translate3d(0,'+(y/260*H).toFixed(1)+'px,0)';
+    lectura.classList.toggle('flip',x>flipAt);
+    tOut.textContent='muestreo '+(i+1)+' de '+n;
+    zOut.textContent='desvío '+z[i].toFixed(1).replace('.',',').replace('-','−')+' σ';
+    fig.classList.toggle('alert',i>=HIT&&Math.abs(z[i])>2);    // misma regla que la alerta de la figura
+    fig.classList.toggle('seen',i>=HIT);                         // pasada la confirmación, queda anotada
+  }
+
+  function frame(){
+    queued=false;
+    if(reduce.matches) return;
+    // Primero todas las lecturas de layout, después todas las escrituras: mezclarlas
+    // obligaría al navegador a recalcular la página varias veces por cuadro.
+    var live=scenes.filter(function(s){ return s.live; });
+    var ps=live.map(function(s){ return progress(s,s.el.getBoundingClientRect()); });
+    var heroLive=live.some(function(s){ return s.hero; });
+    var top=ph&&heroLive?plot.getBoundingClientRect().top:null;
+    live.forEach(function(s,k){
+      s.layers.forEach(function(l){
+        var v=Math.round(ps[k]*parseFloat(l.getAttribute('data-depth'))*max);   // px enteros: texto nítido
+        l.style.transform=l.getAttribute('data-axis')==='x'?'translate3d('+v+'px,0,0)':'translate3d(0,'+v+'px,0)';
+        if(l.hasAttribute('data-fade')) l.style.opacity=(1-0.55*Math.max(0,ps[k])).toFixed(3);
+      });
+    });
+    if(top!==null) playhead(top);
+  }
+  function queue(){ if(!queued){ queued=true; window.requestAnimationFrame(frame); } }
+
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      for(var k=0;k<scenes.length;k++) if(scenes[k].el===e.target){ scenes[k].live=e.isIntersecting; }
+      e.target.classList.toggle('is-live',e.isIntersecting);
+    });
+    queue();
+  },{rootMargin:'20% 0px'});
+  scenes.forEach(function(s){ io.observe(s.el); });
+
+  function onReduce(){
+    if(reduce.matches){
+      scenes.forEach(function(s){ s.layers.forEach(function(l){ l.style.transform=''; l.style.opacity=''; }); });
+      if(fig) fig.classList.remove('scrub','alert','seen');
+    }
+    queue();
+  }
+  if(reduce.addEventListener) reduce.addEventListener('change',onReduce); else if(reduce.addListener) reduce.addListener(onReduce);
+  if(fig) fig.addEventListener('animationend',function(e){ if(e.target.classList.contains('trend')) queue(); });
+  window.addEventListener('scroll',queue,{passive:true});
+  window.addEventListener('resize',function(){ setMax(); measure(); queue(); },{passive:true});
+  window.addEventListener('load',function(){ measure(); queue(); });
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){ measure(); queue(); });   // la fuente cambia la altura del hero
+  setMax(); measure(); queue();
+})();
+</script>
 </body>
 </html>

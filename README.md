@@ -4,7 +4,27 @@ Página única, HTML autocontenido (`index.html`): CSS y JS en línea, tipograf�
 Fonts, sin otras dependencias. Pensada para GitHub Pages u hosting estático equivalente.
 
 Guía normativa: el plan de diseño del 2026-09-17 (artifact `claude.ai/artifact/Biv24tvWaomvxFeu8jFvLs`)
-y el brief `~/LLM-context/_vault/25_AGENT_COMMS/msg-030-2026-09-18-…`. Contexto del proyecto en
-`~/LLM-context/Personal/sitio-personal/`.
+y el brief `~/LLM-context/_vault/25_AGENT_COMMS/msg-030-2026-09-18-…`, con la decisión del dueño del
+2026-09-22 (rediseño expresivo: parallax, esquemas por sección, sección de recursos). Contexto del
+proyecto en `~/LLM-context/Personal/sitio-personal/`.
 
 Publicado con GitHub Pages desde la rama `main`, raíz del repositorio: https://bengrez.github.io/
+
+## Movimiento y esquemas
+
+- **Todas las figuras son esquemas**, con datos simulados y semilla fija, y lo dicen en su rótulo.
+  Las genera `scripts/senales.py` (numpy): la serie del hero (medir, detectar, explicar), las tramas
+  CAN, el perfil RNA-SIP, la línea del año de Química de 8.º básico y la miniatura de la tabla
+  periódica. `python3 scripts/senales.py` imprime bloques rotulados que se pegan a mano en
+  `index.html`; no hay paso de build. La salida es idéntica en cada corrida.
+- Si cambia la serie del hero, hay que actualizar juntos: los paths de las tres capas, `data-z`,
+  `data-hit`, la posición de `.alerta` y la de las palabras de la capa *explicar*.
+- Los paths que lee el JS (`.trend`) sólo usan comandos absolutos `M`/`L` con números positivos:
+  el script los parsea con una expresión regular.
+- **Parallax**: capas `[data-depth]` dentro de escenas `[data-scene]`, movidas sólo con `transform`
+  en un cuadro de `requestAnimationFrame`, hasta 56 px en escritorio y 18 px en móvil. Con
+  `prefers-reduced-motion` no se mueve nada; sin JS la página queda completa y quieta.
+- `og.png` (1200×630) es una captura del hero con movimiento reducido; se rehace si cambia el hero.
+- Anchos en `rem`/`em`, no en `ch`: `ch` depende de la fuente y hacía saltar la página al cargar
+  Bricolage. Los respaldos `Bricolage Respaldo` y `Source Serif Respaldo` usan `size-adjust`
+  medido contra Arial y Georgia por la misma razón.
