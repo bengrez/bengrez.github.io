@@ -155,9 +155,9 @@ p+p{margin-top:1em}
 .puerta ul{margin:0;padding-left:1.1rem;font-size:.98rem}
 .puerta li+li{margin-top:.15rem}
 .puerta .go{margin-top:auto;padding-top:.5rem;font-family:var(--display);font-size:.95rem}
-.caso{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.4rem .75rem;font-size:.95rem;line-height:1.45}
-.caso dt{font-family:var(--display);font-size:.82rem;color:var(--muted);padding-top:.1rem}
-.caso dd{margin:0}
+.caso{margin:0;display:grid;grid-template-columns:1fr;gap:.1rem 0;font-size:.95rem;line-height:1.45}
+.caso dt{font-family:var(--display);font-size:.82rem;color:var(--muted)}
+.caso dd{margin:0 0 .55rem}
 .datarow{display:flex;gap:2rem;margin:0}
 .datarow div{display:flex;flex-direction:column-reverse}
 .datarow dt{font-family:var(--display);font-size:.8rem;color:var(--muted)}
@@ -166,6 +166,8 @@ p+p{margin-top:1em}
   .puertas .band{grid-template-columns:1fr;gap:0}
   .puerta{border-left:0;padding-inline:0;padding-block:1.5rem;border-top:1px solid var(--rule-strong)}
   .puerta:first-child{border-top:0;padding-top:0}
+  .caso{grid-template-columns:auto 1fr;gap:.4rem .75rem}
+  .caso dd{margin:0}
 }
 
 /* ---- franjas de sección ----
