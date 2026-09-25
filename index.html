@@ -155,9 +155,6 @@ p+p{margin-top:1em}
 .puerta ul{margin:0;padding-left:1.1rem;font-size:.98rem}
 .puerta li+li{margin-top:.15rem}
 .puerta .go{margin-top:auto;padding-top:.5rem;font-family:var(--display);font-size:.95rem}
-.caso{margin:0;display:grid;grid-template-columns:1fr;gap:.1rem 0;font-size:.95rem;line-height:1.45}
-.caso dt{font-family:var(--display);font-size:.82rem;color:var(--muted)}
-.caso dd{margin:0 0 .55rem}
 .datarow{display:flex;gap:2rem;margin:0}
 .datarow div{display:flex;flex-direction:column-reverse}
 .datarow dt{font-family:var(--display);font-size:.8rem;color:var(--muted)}
@@ -167,8 +164,6 @@ p+p{margin-top:1em}
   .puerta{padding-block:1.5rem;border-top:1px solid var(--rule-strong)}
   .puerta:first-child{border-top:0;padding-top:0}
   .puerta+.puerta::before{display:none}
-  .caso{grid-template-columns:auto 1fr;gap:.4rem .75rem}
-  .caso dd{margin:0}
 }
 
 /* ---- franjas de sección ----
@@ -225,7 +220,7 @@ section.deep{border-bottom:1px solid var(--rule)}
 .metrics dd{margin:0;font-family:var(--display);font-size:1.3rem;font-variant-numeric:tabular-nums;font-weight:500;line-height:1.2}
 .metrics .when{align-self:flex-end;font-family:var(--display);font-size:.82rem;color:var(--muted);margin-left:auto}
 .pubs{list-style:none;margin:0;padding:0}
-.pubs li{display:grid;grid-template-columns:4.5rem 1fr;gap:0 1rem;padding:.85rem 0;border-top:1px solid var(--rule)}
+.pubs li{display:grid;grid-template-columns:4.5rem 1fr;gap:0 1rem;padding:.6rem 0;border-top:1px solid var(--rule)}
 .pubs li:last-child{border-bottom:1px solid var(--rule)}
 .pubs .year{font-family:var(--display);font-variant-numeric:tabular-nums;color:var(--muted);padding-top:.15rem}
 .pubs .venue{display:block;font-style:italic;color:var(--muted);font-size:.95rem;margin-top:.15rem}
@@ -319,12 +314,6 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
 .puerta:hover h2{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
 @media (max-width:760px){.arte{aspect-ratio:16/8}}
 
-/* ---- caso en cada sección ---- */
-.caso-deep{grid-template-columns:11rem 1fr;gap:.55rem 1rem;margin-bottom:clamp(1.5rem,3vw,2.25rem);font-size:1.02rem}
-.caso-deep dt{font-size:.9rem;padding-top:.15rem}
-.caso-deep dd{margin:0}
-@media (max-width:560px){.caso-deep{grid-template-columns:1fr;gap:.1rem}.caso-deep dd{margin-bottom:.5rem}}
-
 /* ---- esquema del sistema (ingeniería) ---- */
 .sistema{margin:0 0 clamp(1.5rem,3vw,2.25rem)}
 .sistema .lienzo{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -347,6 +336,47 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
 .recurso h3 a::after{content:"";position:absolute;inset:0}
 .recurso:hover .mini img{border-color:var(--accent)}
 @media (max-width:640px){.recurso{grid-template-columns:1fr}.recurso .mini{padding:0 0 1rem}}
+
+/* ---- rutas: estaciones sobre una línea (el caso de cada sección; formación) ----
+   Escritorio: regla continua con un nodo por estación. Bajo 760 px: espina vertical. */
+.ruta{margin:0 0 clamp(1.5rem,3vw,2.25rem);display:grid;font-size:.95rem;line-height:1.45}
+.ruta-4{grid-template-columns:repeat(4,1fr)}
+.ruta-2{grid-template-columns:repeat(2,1fr)}
+.ruta>div{position:relative;padding:.9rem clamp(1rem,2.5vw,1.75rem) 0 0;border-top:1px solid var(--rule-strong)}
+.ruta>div:last-child{padding-right:0}
+.ruta>div::before{content:"";position:absolute;left:0;top:-5px;width:9px;height:9px;border-radius:50%;background:var(--bg);border:1.6px solid var(--accent)}
+.ruta dt{font-family:var(--display);font-size:.82rem;color:var(--muted);margin-bottom:.3rem}
+.ruta dd{margin:0}
+.ruta .sub{display:block;font-family:var(--display);font-size:.85rem;color:var(--muted);margin-top:.35rem}
+@media (max-width:760px){
+  .ruta-4,.ruta-2{grid-template-columns:1fr}
+  .ruta>div{border-top:0;border-left:1px solid var(--rule-strong);padding:0 0 1.1rem 1.1rem}
+  .ruta>div:last-child{padding-bottom:0}
+  .ruta>div::before{top:.3rem;left:-5px}
+}
+
+/* ---- tres lecturas (investigación): mismos glifos que la leyenda de la portada ---- */
+.tres{margin:0 0 clamp(1.75rem,4vw,2.75rem);display:grid;grid-template-columns:repeat(3,1fr);gap:0 clamp(1rem,2.5vw,1.75rem);font-size:.95rem;line-height:1.45}
+.tres>div{padding-top:.8rem;border-top:1px solid var(--rule)}
+.tres dt{font-family:var(--display);font-size:.9rem;font-weight:500;color:var(--ink);margin-bottom:.4rem}
+.tres dd{margin:0}
+@media (max-width:640px){.tres{grid-template-columns:1fr;gap:1rem 0}}
+.col>h3:first-child{margin-top:0}
+
+/* ---- esquema fijo que guía la lectura (ingeniería) ----
+   En escritorio la banda se queda arriba mientras pasan los bloques, y el bloque que cruza el
+   centro de la pantalla ilumina su nodo (script al final). En pantallas angostas o bajas, y sin
+   JS, el esquema es estático y cada rótulo nombra su nodo. */
+.sistema.pegado figcaption{font-size:.75rem;padding-top:.45rem}
+@media (min-width:1024px) and (min-height:640px){
+  .sistema.pegado{position:sticky;top:0;z-index:2;background:var(--bg);padding-block:.6rem .7rem;border-bottom:1px solid var(--rule)}
+}
+.sistema .nodo,.sistema text,.ficha.nodos dt{transition:stroke .25s ease,fill .25s ease,color .25s ease}
+.sistema g.on .nodo{stroke-width:2px}
+.sistema g.on .nodo:not(.alerta-n){stroke:var(--accent)}
+.sistema g.on text{fill:var(--accent-ink)}
+.ficha.nodos dt.on{color:var(--accent-ink)}
+@media (prefers-reduced-motion:reduce){.sistema .nodo,.sistema text,.ficha.nodos dt{transition:none}}
 
 /* Movimiento: will-change sólo en escenas cerca de pantalla. Con reduced-motion todo queda quieto. */
 .is-live [data-depth]{will-change:transform}
@@ -478,33 +508,47 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
 <section class="deep" id="ingenieria" aria-labelledby="h-ing">
   <div class="franja con-arte" data-scene>
     <div class="wide"><h2 id="h-ing" class="franja-titulo" data-depth="-0.45">Trabajo de ingeniería</h2></div>
-    <div class="wide"><p class="franja-nota">La misma curva de la portada, leída como telemetría: la señal de un vehículo que se aparta de su referencia y hay que detectar a tiempo.</p></div>
+    <div class="wide"><p class="franja-nota">La curva de la portada, leída como telemetría: un vehículo se aparta de su referencia y hay que detectarlo a tiempo.</p></div>
   </div>
-  <div class="wrap cuerpo"><figure class="sistema" data-nosnippet>
+  <div class="wrap cuerpo"><figure class="sistema pegado" data-nosnippet>
 <div class="lienzo"><svg viewBox="0 0 1200 215" role="img" aria-label="Esquema del sistema: del bus CAN y GNSS a la ingesta, la base de series temporales, la API y el mapa en vivo; una rama evalúa las señales con un detector de anomalías y produce alertas.">
-<rect class="nodo " x="0" y="50" width="200" height="64" rx="3"/><text x="100.0" y="78.0" text-anchor="middle">Bus CAN y GNSS</text><text class="sub" x="100.0" y="98.0" text-anchor="middle">en cada vehículo</text><path class="flujo " d="M200 82L236 82"/><path class="punta " d="M236 82l-9 -5v10z"/>
-<rect class="nodo " x="240" y="50" width="200" height="64" rx="3"/><text x="340.0" y="78.0" text-anchor="middle">Ingesta</text><text class="sub" x="340.0" y="98.0" text-anchor="middle">contrato de datos versionado</text><path class="flujo " d="M440 82L476 82"/><path class="punta " d="M476 82l-9 -5v10z"/>
-<rect class="nodo db" x="480" y="50" width="240" height="64" rx="3"/><text x="600.0" y="78.0" text-anchor="middle">PostgreSQL</text><text class="sub" x="600.0" y="98.0" text-anchor="middle">TimescaleDB y PostGIS</text><path class="flujo " d="M720 82L756 82"/><path class="punta " d="M756 82l-9 -5v10z"/>
-<rect class="nodo " x="760" y="50" width="160" height="64" rx="3"/><text x="840.0" y="78.0" text-anchor="middle">API</text><text class="sub" x="840.0" y="98.0" text-anchor="middle">FastAPI</text><path class="flujo " d="M920 82L956 82"/><path class="punta " d="M956 82l-9 -5v10z"/>
-<rect class="nodo " x="960" y="50" width="240" height="64" rx="3"/><text x="1080.0" y="78.0" text-anchor="middle">Mapa en vivo</text><text class="sub" x="1080.0" y="98.0" text-anchor="middle">reconstrucción de tramos</text>
+<g data-nodo="can"><rect class="nodo" x="0" y="50" width="200" height="64" rx="3"/><text x="100" y="78" text-anchor="middle">Bus CAN y GNSS</text><text class="sub" x="100" y="98" text-anchor="middle">en cada vehículo</text></g><path class="flujo" d="M200 82L236 82"/><path class="punta" d="M236 82l-9 -5v10z"/>
+<g data-nodo="ingesta"><rect class="nodo" x="240" y="50" width="200" height="64" rx="3"/><text x="340" y="78" text-anchor="middle">Ingesta</text><text class="sub" x="340" y="98" text-anchor="middle">contrato de datos versionado</text></g><path class="flujo" d="M440 82L476 82"/><path class="punta" d="M476 82l-9 -5v10z"/>
+<g data-nodo="db"><rect class="nodo db" x="480" y="50" width="240" height="64" rx="3"/><text x="600" y="78" text-anchor="middle">PostgreSQL</text><text class="sub" x="600" y="98" text-anchor="middle">TimescaleDB y PostGIS</text></g><path class="flujo" d="M720 82L756 82"/><path class="punta" d="M756 82l-9 -5v10z"/>
+<g data-nodo="api"><rect class="nodo" x="760" y="50" width="160" height="64" rx="3"/><text x="840" y="78" text-anchor="middle">API</text><text class="sub" x="840" y="98" text-anchor="middle">FastAPI</text></g><path class="flujo" d="M920 82L956 82"/><path class="punta" d="M956 82l-9 -5v10z"/>
+<g data-nodo="mapa"><rect class="nodo" x="960" y="50" width="240" height="64" rx="3"/><text x="1080" y="78" text-anchor="middle">Mapa en vivo</text><text class="sub" x="1080" y="98" text-anchor="middle">reconstrucción de tramos</text></g>
 <path class="flujo" d="M600 114V170H636"/><path class="punta" d="M640 170l-9 -5v10z"/>
-<rect class="nodo " x="640" y="138" width="260" height="64" rx="3"/><text x="770.0" y="166.0" text-anchor="middle">Detector de anomalías</text><text class="sub" x="770.0" y="186.0" text-anchor="middle">reglas y modelos, evaluados a ciegas</text><path class="flujo al" d="M900 170L956 170"/><path class="punta al" d="M956 170l-9 -5v10z"/>
-<rect class="nodo alerta-n" x="960" y="138" width="240" height="64" rx="3"/><text x="1080.0" y="166.0" text-anchor="middle">Alerta</text><text class="sub" x="1080.0" y="186.0" text-anchor="middle">sólo lo que supera a las reglas</text>
+<g data-nodo="detector"><rect class="nodo" x="640" y="138" width="260" height="64" rx="3"/><text x="770" y="166" text-anchor="middle">Detector de anomalías</text><text class="sub" x="770" y="186" text-anchor="middle">reglas y modelos, evaluados a ciegas</text></g><path class="flujo al" d="M900 170L956 170"/><path class="punta al" d="M956 170l-9 -5v10z"/>
+<g data-nodo="alerta"><rect class="nodo alerta-n" x="960" y="138" width="240" height="64" rx="3"/><text x="1080" y="166" text-anchor="middle">Alerta</text><text class="sub" x="1080" y="186" text-anchor="middle">sólo lo que supera a las reglas</text></g>
 </svg></div>
-<figcaption>Esquema del sistema: de la señal del vehículo a la decisión. La rama inferior se evalúa contra reglas simples antes de llegar a producción.</figcaption>
-</figure><div class="col">
-    <dl class="caso caso-deep"><dt>Problema</dt><dd>Una flota sin visibilidad de lo que reportaban sus vehículos ni de qué fallas venían.</dd><dt>Qué había</dt><dd>Señales de bus CAN sin procesar, trámites por correo y una ley de datos personales por entrar en vigencia.</dd><dt>Qué hice</dt><dd>Plataforma de telemetría con series temporales, detección de fallas y un sistema de datos de conductores conforme a la Ley 21.719.</dd><dt>Resultado</dt><dd>Datos en tiempo real sobre los que se toman decisiones, en piloto. Un flujo de datos personales que antes iba por correo, ahora con resguardos.</dd></dl>
-    <dl class="ficha">
+<figcaption>Esquema del sistema, de la señal a la decisión; la rama inferior se evalúa contra reglas simples antes de producción.</figcaption>
+</figure>
+    <dl class="ruta ruta-4">
+      <div><dt>Problema</dt><dd>Una flota sin visibilidad de sus vehículos ni de las fallas que venían.</dd></div>
+      <div><dt>Qué había</dt><dd>Señales CAN sin procesar, trámites por correo, una ley de datos personales por entrar en vigencia.</dd></div>
+      <div><dt>Qué hice</dt><dd>Telemetría con series temporales, detección de fallas, datos de conductores conforme a la Ley 21.719.</dd></div>
+      <div><dt>Resultado</dt><dd>Decisiones sobre datos en tiempo real, en piloto; datos personales con resguardos, no por correo.</dd></div>
+    </dl>
+    <div class="col">
+    <dl class="ficha nodos">
       <dt>Agentes de IA en entornos controlados</dt>
-      <dd>Es como trabajo a diario: agentes de IA sobre un contexto persistente y versionado, con protocolos de entrega entre agentes, trazabilidad de cada decisión y evaluación a ciegas antes de desplegar. Búsqueda vectorial y embeddings con pgvector en un <a href="#aula">asistente de gestión escolar</a>; pipelines de detección evaluados contra reglas explícitas antes de pasar a producción.</dd>
-      <dt>Analítica en tiempo real</dt>
-      <dd>Dashboard de flota con mapa en vivo y reconstrucción de tramos, sobre series temporales en PostgreSQL con TimescaleDB y PostGIS. Contrato de datos versionado con el equipo que mantiene la base. En piloto, con monitoreo propio.</dd>
-      <dt>Detección de anomalías</dt>
-      <dd>Riesgo de falla a partir de las señales del bus. Como la flota no tenía suficientes fallas registradas, construí un simulador de telemetría y un banco de evaluación a ciegas. Se despliega lo que demuestra superar a las reglas simples; lo demás no.</dd>
+      <dd>A diario: agentes sobre un contexto persistente y versionado, protocolos de entrega entre agentes, trazabilidad y evaluación a ciegas antes de desplegar. Búsqueda vectorial y embeddings con pgvector en un <a href="#aula">asistente de gestión escolar</a>; detección evaluada contra reglas explícitas.</dd>
+      <dt>Bus CAN y GNSS</dt>
+      <dd data-nodo="can">FMS, protocolos de tacógrafos y telemetría GNSS, aprendidos sobre la marcha.</dd>
+      <dt>Ingesta</dt>
+      <dd data-nodo="ingesta">Contrato versionado con el equipo que mantiene la base.</dd>
+      <dt>PostgreSQL</dt>
+      <dd data-nodo="db">TimescaleDB para series temporales, PostGIS para posiciones, pgvector para embeddings.</dd>
+      <dt>API y mapa en vivo</dt>
+      <dd data-nodo="api mapa">FastAPI sirve el dashboard de flota con reconstrucción de tramos. En piloto, con monitoreo propio.</dd>
+      <dt>Detector de anomalías</dt>
+      <dd data-nodo="detector">Riesgo de falla desde las señales del bus. Sin fallas registradas suficientes: simulador de telemetría y banco de evaluación a ciegas.</dd>
+      <dt>Alerta</dt>
+      <dd data-nodo="alerta">Se despliega sólo lo que supera a las reglas simples; lo demás, no.</dd>
       <dt>Datos personales</dt>
-      <dd>Plataforma multiempresa que reemplazó el envío por correo de datos y fotos de conductores: control de calidad en origen, información sensible separada de la traza durable, diseño conforme a la Ley 21.719 antes de su vigencia.</dd>
-      <dt>Lo que aprendí sobre la marcha</dt>
-      <dd>Bus CAN y FMS, protocolos de tacógrafos, telemetría GNSS, la ley de datos personales, despliegues con Docker en servidores sin internet. Herramientas: Python, FastAPI, PostgreSQL con pgvector y TimescaleDB, Docker, Linux, MCP, HTMX y React.</dd>
+      <dd>Plataforma multiempresa para datos y fotos de conductores, en vez del correo: calidad en origen, lo sensible separado de la traza durable, diseñada antes de que la ley entrara en vigencia.</dd>
+      <dt>Herramientas y despliegue</dt>
+      <dd>También Python, Docker, Linux, MCP, HTMX y React. Sobre la marcha: despliegues sin internet y la ley de datos personales.</dd>
     </dl>
   </div></div>
 </section>
@@ -517,25 +561,26 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
       <span class="eti sip-12" style="left:34.2%;top:-4%">¹²C</span>
       <span class="eti sip-13" style="left:65.8%;top:8%">¹³C</span>
     </div>
-    <div class="wide"><p class="franja-nota">Esquema: ARN separado por densidad en un gradiente (RNA-SIP). El que incorporó ¹³C se desplaza hacia fracciones más pesadas, a la derecha; así se sabe qué organismos usaron el sustrato marcado. Curvas ilustrativas.</p></div>
+    <div class="wide"><p class="franja-nota">Esquema: ARN separado por densidad (RNA-SIP). El que incorporó ¹³C se desplaza a las fracciones pesadas, a la derecha: así se sabe qué organismos usaron el sustrato. Curvas ilustrativas.</p></div>
   </div>
-  <div class="wrap cuerpo"><div class="col">
-    <dl class="caso caso-deep"><dt>Problema</dt><dd>Saber si un suelo degradado por la minería se recupera cuando se le devuelven microorganismos, o solo lo parece.</dd><dt>Qué había</dt><dd>Pocas muestras, datos de secuenciación ruidosos y ninguna referencia clara de suelo sano.</dd><dt>Qué hice</dt><dd>Diseño de muestreo con réplicas, marcaje isotópico (RNA-SIP), metagenómica y estadística multivariante para separar señal de ruido.</dd><dt>Resultado</dt><dd>Doctorado en la University of Western Australia y publicaciones que siguen citándose.</dd></dl>
-    <dl class="ficha">
-      <dt>Medir</dt>
-      <dd>Muestreo en terreno en zonas áridas, secuenciación y metagenómica, marcaje isotópico para saber qué organismo hace qué. Con muestras caras y escasas, el diseño del muestreo decide más que el análisis.</dd>
-      <dt>Detectar</dt>
-      <dd>Datos ruidosos, de alta dimensión y con pocas réplicas. Estadística multivariante para separar el efecto de la intervención de la variabilidad del sitio, y una revisión de los supuestos con que se monitorea la restauración.</dd>
-      <dt>Explicar</dt>
-      <dd>Resultados entregados a quienes deciden sobre restauración minera, no solo a revisores académicos. El mismo enfoque sirvió después en arroceras, trigo y residuos de bauxita.</dd>
+  <div class="wrap cuerpo">
+    <dl class="ruta ruta-4">
+      <div><dt>Problema</dt><dd>Saber si un suelo minero degradado se recupera al devolverle microorganismos, o solo lo parece.</dd></div>
+      <div><dt>Qué había</dt><dd>Pocas muestras, secuenciación ruidosa y ninguna referencia clara de suelo sano.</dd></div>
+      <div><dt>Qué hice</dt><dd>Muestreo con réplicas, marcaje isotópico (RNA-SIP), metagenómica y estadística multivariante para separar señal de ruido.</dd></div>
+      <div><dt>Resultado</dt><dd>Doctorado en la University of Western Australia y publicaciones que siguen citándose.</dd></div>
     </dl>
-
+    <dl class="tres">
+      <div><dt class="k k-medir">Medir</dt><dd>Terreno en zonas áridas; marcaje isotópico para saber qué organismo hace qué. Con muestras caras y escasas, el diseño del muestreo decide más que el análisis.</dd></div>
+      <div><dt class="k k-detectar">Detectar</dt><dd>Alta dimensión y pocas réplicas: separar la intervención de la variabilidad del sitio, y revisar los supuestos con que se monitorea la restauración.</dd></div>
+      <div><dt class="k k-explicar">Explicar</dt><dd>Resultados para quienes deciden sobre restauración minera, no solo para revisores. El mismo enfoque sirvió en arroceras, trigo y residuos de bauxita.</dd></div>
+    </dl>
+    <div class="col">
     <h3>Formación</h3>
-    <ul class="plain">
-      <li>Ph.D. in Environmental Geosciences, The University of Western Australia, Perth. Beca de Doctorado Becas Chile, 2014–2018.</li>
-      <li>Licenciado en Biología y título profesional de Biólogo, Pontificia Universidad Católica de Valparaíso.</li>
-    </ul>
-    <p style="margin-top:.8rem">Enfoque doctoral: reacondicionamiento de suelos degradados, dinámica de comunidades microbianas y restauración ecológica post-minera.</p>
+    <dl class="ruta ruta-2">
+      <div><dt>Pontificia Universidad Católica de Valparaíso</dt><dd>Licenciado en Biología y título profesional de Biólogo.</dd></div>
+      <div><dt>The University of Western Australia, Perth</dt><dd>Ph.D. in Environmental Geosciences. Beca de Doctorado Becas Chile, 2014–2018.<span class="sub">Enfoque: reacondicionamiento de suelos degradados, dinámica de comunidades microbianas y restauración ecológica post-minera.</span></dd></div>
+    </dl>
 
     <h3>Citas</h3>
     <dl class="metrics">
@@ -583,19 +628,35 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
       <span class="eti mes ini" style="left:calc(77.54% + 4px);top:102%">oct</span>
       <span class="eti mes ini" style="left:calc(88.63% + 4px);top:102%">nov</span>
     </div>
-    <div class="wide"><p class="franja-nota">Esquema: el año 2026 de Química en 8.º básico, unidad por unidad, con el objetivo de aprendizaje de las bases curriculares que trabaja cada una; abajo, el proyecto de feria científica.</p></div>
+    <div class="wide"><p class="franja-nota">Esquema: el año 2026 de Química en 8.º básico, unidad por unidad, con el objetivo de aprendizaje que trabaja cada una; abajo, la feria científica.</p></div>
   </div>
-  <div class="wrap cuerpo"><div class="col">
-    <dl class="caso caso-deep"><dt>Problema</dt><dd>Enseñar Química, Biología y Ciencias para la Ciudadanía a cursos heterogéneos con poco tiempo de sala.</dd><dt>Qué había</dt><dd>Las bases curriculares, un proyector y estudiantes con celular.</dd><dt>Qué hice</dt><dd>Planificación por objetivo de aprendizaje y herramientas web propias que corren en el navegador, sin cuenta ni instalación.</dd><dt>Resultado</dt><dd>Dos herramientas publicadas y en uso en clases; una app de práctica PAES y un asistente de gestión escolar en desarrollo.</dd></dl>
+  <div class="wrap cuerpo">
+    <dl class="ruta ruta-4">
+      <div><dt>Problema</dt><dd>Química, Biología y Ciencias para la Ciudadanía en cursos heterogéneos, con poco tiempo de sala.</dd></div>
+      <div><dt>Qué había</dt><dd>Las bases curriculares, un proyector y estudiantes con celular.</dd></div>
+      <div><dt>Qué hice</dt><dd>Planificación por objetivo de aprendizaje y herramientas web propias: en el navegador, sin cuenta ni instalación.</dd></div>
+      <div><dt>Resultado</dt><dd>Dos herramientas publicadas y en uso; app de práctica PAES y asistente de gestión escolar en desarrollo.</dd></div>
+    </dl>
+    <figure class="sistema colegio" data-nosnippet>
+<div class="lienzo"><svg viewBox="0 0 1200 215" role="img" aria-label="Esquema del asistente de gestión escolar: las fuentes que el colegio ya tiene (notas, asistencia, convivencia, observaciones) alimentan un asistente con IA que busca patrones entre asignaturas con embeddings y búsqueda vectorial, y responde con evidencia: cada indicador dice de qué fuente sale y qué le falta. Dos reglas acotan la respuesta: los agregados con pocos estudiantes se suprimen y el riesgo de reprobación se entrega como categoría explicada, no como probabilidad. Lo usan el equipo directivo, UTP, convivencia y profesores jefe.">
+<g><rect class="nodo" x="0" y="44" width="350" height="76" rx="3"/><text x="175" y="72" text-anchor="middle">Fuentes que el colegio ya tiene</text><text class="sub" x="175" y="94" text-anchor="middle">notas, asistencia, convivencia, observaciones</text></g><path class="flujo" d="M350 82L386 82"/><path class="punta" d="M386 82l-9 -5v10z"/>
+<g><rect class="nodo db" x="390" y="44" width="360" height="76" rx="3"/><text x="570" y="66" text-anchor="middle">Asistente con IA</text><text class="sub" x="570" y="88" text-anchor="middle">patrones entre asignaturas</text><text class="sub" x="570" y="106" text-anchor="middle">embeddings y búsqueda vectorial, pgvector</text></g><path class="flujo" d="M750 82L786 82"/><path class="punta" d="M786 82l-9 -5v10z"/>
+<g><rect class="nodo" x="790" y="44" width="410" height="76" rx="3"/><text x="995" y="72" text-anchor="middle">Respuestas con evidencia</text><text class="sub" x="995" y="94" text-anchor="middle">cada indicador dice de qué fuente sale y qué le falta</text></g>
+<path class="flujo" d="M995 120V129"/><path class="punta" d="M995 138l-5 -9h10z"/>
+<g><rect class="nodo" x="720" y="138" width="480" height="72" rx="3"/><text x="960" y="160" text-anchor="middle">Reglas de la respuesta</text><text class="sub" x="960" y="180" text-anchor="middle">los agregados con pocos estudiantes se suprimen</text><text class="sub" x="960" y="198" text-anchor="middle">riesgo de reprobación: categoría explicada, no probabilidad</text></g>
+<path class="flujo" d="M400 174H570V130"/><path class="punta" d="M570 120l-5 9h10z"/>
+<g><rect class="nodo" x="0" y="138" width="400" height="72" rx="3"/><text x="200" y="168" text-anchor="middle">Para quién</text><text class="sub" x="200" y="190" text-anchor="middle">equipo directivo, UTP, convivencia y profesores jefe</text></g>
+</svg></div>
+<figcaption>Esquema de «medir un colegio»: asistente de gestión escolar con IA en un equipo del propio colegio, con datos seudonimizados, diseñado para la Ley 21.719. Demo con datos sintéticos este año; piloto con datos reales desde 2027.</figcaption>
+</figure>
+    <div class="col">
     <dl class="ficha">
-      <dt>Medir un colegio</dt>
-      <dd>Asistente de gestión escolar con IA para equipo directivo, UTP, convivencia y profesores jefe. Reúne las fuentes que el colegio ya tiene (notas, asistencia, convivencia, observaciones) y responde con evidencia: cada indicador dice de qué fuente sale y qué le falta, los agregados con pocos estudiantes se suprimen, y el riesgo de reprobación se entrega como categoría explicada, no como probabilidad. Patrones entre asignaturas con embeddings y búsqueda vectorial (pgvector). Corre en un equipo del propio colegio, con datos seudonimizados, diseñado para la Ley 21.719. Demo con datos sintéticos este año; piloto con datos reales desde 2027.</dd>
       <dt>Planificar y evaluar</dt>
-      <dd>Unidades diseñadas contra las bases curriculares, con secuencia clase a clase, diagnóstico de prerrequisitos y evaluación formativa antes de la sumativa. Cronogramas que se ajustan por escrito cuando el calendario se mueve.</dd>
-      <dt>Herramientas propias</dt>
-      <dd>Cuando el papel no alcanza, lo hago en el navegador: una tabla periódica reactiva y un autodiagnóstico de bienestar, en uso en clases, sin cuenta ni instalación y sin guardar respuestas.</dd>
+      <dd>Unidades contra las bases curriculares, clase a clase, con diagnóstico de prerrequisitos y evaluación formativa antes de la sumativa; cronogramas ajustados por escrito cuando el calendario se mueve.</dd>
       <dt>Práctica PAES</dt>
-      <dd>Aplicación para practicar preguntas de habilidad científica y orientar la remediación. Privacidad primero: no muestra nota ni ranking; no se usa con estudiantes hasta que el banco esté revisado.</dd>
+      <dd>Práctica de habilidad científica con orientación para la remediación. Sin nota ni ranking; no se usa con estudiantes hasta revisar el banco.</dd>
+      <dt>Herramientas propias</dt>
+      <dd>Tabla periódica reactiva y autodiagnóstico de bienestar, en uso en clases: ver <a href="#recursos">Recursos de aprendizaje</a>.</dd>
     </dl>
   </div></div>
 </section>
@@ -605,7 +666,7 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
     <div class="wide"><h2 id="h-rec" class="franja-titulo" data-depth="-0.45">Recursos de aprendizaje</h2></div>
   </div>
   <div class="wrap cuerpo"><div class="col">
-    <p class="lede">Herramientas web para mis clases de ciencias. Se abren en el navegador, sin cuenta ni instalación, y no guardan ni envían respuestas. Las imágenes son fragmentos de cada interfaz.</p>
+    <p class="lede">Herramientas web para mis clases: en el navegador, sin cuenta ni instalación, sin guardar ni enviar respuestas. Las imágenes son fragmentos de cada interfaz.</p>
   </div>
     <div class="recursos">
       <article class="recurso">
@@ -615,11 +676,11 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
           <p class="sub">Imán y Escudo</p>
           <dl class="campos">
             <dt>Para</dt>
-            <dd>Química, 8.º básico, objetivo CN08 OA14. Se usa en clases de 8.º básico, en la unidad de tabla periódica.</dd>
+            <dd>Química, 8.º básico, objetivo CN08 OA14. En uso en clases, en la unidad de tabla periódica.</dd>
             <dt>Entrena</dt>
-            <dd>Razonar las tendencias periódicas por posición en la tabla, sin memorizar valores: radio atómico, energía de ionización, electronegatividad y tipo de enlace.</dd>
+            <dd>Tendencias periódicas por posición, sin memorizar valores: radio atómico, energía de ionización, electronegatividad y tipo de enlace.</dd>
             <dt>Modos</dt>
-            <dd>Comparación guiada paso a paso, práctica con pistas de menos a más y un modo docente para proyectar los casos de la guía.</dd>
+            <dd>Comparación guiada paso a paso, práctica con pistas de menos a más y modo docente para proyectar los casos de la guía.</dd>
           </dl>
         </div>
       </article>
@@ -631,11 +692,11 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
             <dt>Para</dt>
             <dd>Ciencias para la Ciudadanía, tercero medio, unidad 4.</dd>
             <dt>Entrena</dt>
-            <dd>Reconocer los factores biológicos, ambientales y sociales que influyen en la salud (alimentación, estrés y sueño, consumo, actividad física, entorno) y elegir uno para investigar en grupo.</dd>
+            <dd>Factores biológicos, ambientales y sociales de la salud (alimentación, estrés y sueño, consumo, actividad física, entorno); elegir uno para investigar en grupo.</dd>
             <dt>Resultado</dt>
-            <dd>Veinticuatro preguntas en seis bloques, con un semáforo por bloque y uno global. Es una guía para reflexionar, no un diagnóstico.</dd>
+            <dd>Veinticuatro preguntas en seis bloques, semáforo por bloque y global. Guía para reflexionar, no diagnóstico.</dd>
             <dt>Datos</dt>
-            <dd>El cálculo ocurre en el dispositivo: no se guardan ni se envían respuestas.</dd>
+            <dd>Cálculo en el dispositivo; no guarda ni envía respuestas.</dd>
           </dl>
         </div>
       </article>
@@ -760,6 +821,31 @@ footer{padding-block:2rem 3rem;font-family:var(--display);font-size:.9rem;color:
   window.addEventListener('load',function(){ measure(); queue(); });
   if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){ measure(); queue(); });   // la fuente cambia la altura del hero
   setMax(); measure(); queue();
+})();
+</script>
+<script>
+/* Esquema fijo que guía la lectura (ingeniería): el bloque de la ficha que cruza el centro de la
+   pantalla ilumina su nodo. Sólo en escritorio; sin JS o en pantallas angostas, cada rótulo
+   nombra su nodo y el esquema es estático. */
+(function(){
+  if(!('IntersectionObserver' in window)||!window.matchMedia||!window.matchMedia('(min-width:1024px)').matches) return;
+  var fig=document.querySelector('.sistema.pegado'), rows=[].slice.call(document.querySelectorAll('.ficha.nodos dd[data-nodo]'));
+  if(!fig||!rows.length) return;
+  function apagar(){
+    [].forEach.call(fig.querySelectorAll('g.on'),function(g){ g.classList.remove('on'); });
+    rows.forEach(function(r){ r.previousElementSibling.classList.remove('on'); });
+  }
+  var io=new IntersectionObserver(function(entries){
+    var hit=null;
+    entries.forEach(function(e){ if(e.isIntersecting) hit=e.target; });
+    if(!hit) return;
+    apagar();
+    hit.getAttribute('data-nodo').split(' ').forEach(function(id){
+      var g=fig.querySelector('g[data-nodo="'+id+'"]'); if(g) g.classList.add('on');
+    });
+    hit.previousElementSibling.classList.add('on');
+  },{rootMargin:'-35% 0px -45% 0px',threshold:0});
+  rows.forEach(function(r){ io.observe(r); });
 })();
 </script>
 </body>

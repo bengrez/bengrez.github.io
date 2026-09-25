@@ -41,3 +41,17 @@ Publicado con GitHub Pages desde la rama `main`, raíz del repositorio: https://
   nombres de instituciones. Regenerar: captura a 2560×1720, `convert … -crop 1200x1000+680+370` y
   `-crop 1960x540+300+810 -resize 1400x`, calidad WebP 80.
 
+## Menos texto, misma información (2026-09-24)
+
+- El caso de cada sección (Problema, Qué había, Qué hice, Resultado) y la formación son **rutas**
+  (`.ruta`): estaciones sobre una regla continua en escritorio, espina vertical bajo 760 px.
+- **Ingeniería**: el esquema del sistema (`.sistema.pegado`) queda fijo arriba desde 1024 px de ancho
+  y 640 px de alto, y el bloque de la ficha que cruza el centro de la pantalla ilumina su nodo
+  (`dd[data-nodo]` y `g[data-nodo]`, script al final del archivo). Sin JS, o con pantalla angosta o
+  baja, el esquema es estático y cada rótulo nombra su nodo. Con `prefers-reduced-motion` no hay
+  transiciones de color.
+- **Aula**: el asistente de gestión escolar («medir un colegio») es un esquema escrito a mano con las
+  mismas clases que el esquema del sistema; `scripts/senales.py` no lo genera.
+- Las tres lecturas de Investigación (medir, detectar, explicar; `.tres`) reutilizan los glifos de
+  la leyenda de la portada.
+
