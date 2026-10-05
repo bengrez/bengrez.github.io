@@ -1,2 +1,7 @@
 .DS_Store
 Thumbs.db
+
+# Adaptadores de agentes: los genera install-agent-adapters.sh desde ~/LLM-context
+AGENTS.md
+CLAUDE.md
+GEMINI.md
