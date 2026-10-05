@@ -37,7 +37,7 @@
   --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
   --page:72rem; --gutter:clamp(1rem,4vw,2.5rem); --bar:3.25rem;
-  --trace-h:clamp(10rem,24vw,18rem);
+  --trace-h:clamp(5.75rem,10vw,8.5rem);
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
@@ -53,7 +53,7 @@
   --panel:#161E1C; --p-rule:#2C3936; color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar) + 1rem)}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar) + var(--fig-h,0px) + 1rem);overflow-anchor:none}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
 .pagina{max-width:var(--page);margin-inline:auto;padding-inline:var(--gutter)}
@@ -80,11 +80,13 @@ img{max-width:100%;height:auto}
 .tema i{width:1.05rem;height:1.05rem;border-radius:50%;border:1.5px solid var(--ink);background:linear-gradient(90deg,var(--ink) 50%,transparent 50%)}
 
 /* ---- portada ---- */
-.hero{padding-block:clamp(2.25rem,6vw,4.5rem) clamp(2rem,4.5vw,3.25rem)}
+/* El título se encoge con el scroll: el script fija --k (0 arriba, 1 compacto) y el tamaño de letra, el
+   interlineado, los márgenes y el relleno de la portada van de su valor grande al compacto. Sin JS, --k es 0. */
+.hero{--k:0;padding-block:calc(clamp(2.25rem,6vw,4.5rem)*(1 - var(--k)) + 1.25rem*var(--k)) calc(clamp(2rem,4.5vw,3.25rem)*(1 - var(--k)) + 1.25rem*var(--k))}
 .lugar{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
-h1{font-size:clamp(2.5rem,5.4vw + 1rem,5.9rem);line-height:.98;letter-spacing:-.035em;max-width:11.5em;margin-top:.9rem}
-.lede{font-size:clamp(1.12rem,.5vw + 1rem,1.32rem);line-height:1.5;max-width:35em;margin-top:clamp(1.25rem,3vw,2rem)}
-.acciones{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:clamp(1.25rem,3vw,1.9rem);font-family:var(--display)}
+h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75rem,1.4vw + 1.3rem,2.6rem)*var(--k));line-height:calc(.98 + .04*var(--k));letter-spacing:-.035em;max-width:calc(11.5em + 11em*var(--k));margin-top:calc(.9rem - .45rem*var(--k))}
+.lede{font-size:clamp(1.12rem,.5vw + 1rem,1.32rem);line-height:1.5;max-width:35em;margin-top:calc(clamp(1.25rem,3vw,2rem)*(1 - var(--k)) + .9rem*var(--k))}
+.acciones{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:calc(clamp(1.25rem,3vw,1.9rem)*(1 - var(--k)) + .9rem*var(--k));font-family:var(--display)}
 .btn{display:inline-block;padding:.7rem 1.15rem;border:1px solid var(--ink);border-radius:2px;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:500;line-height:1.2}
 .btn.sec{background:none;color:var(--ink)}
 .btn:hover{text-decoration:underline;text-decoration-thickness:1px}
@@ -105,7 +107,7 @@ h1{font-size:clamp(2.5rem,5.4vw + 1rem,5.9rem);line-height:.98;letter-spacing:-.
 .lectura .hit{color:var(--p-alert)}
 .serie:not(.scrub) .lectura :not(.pista),.serie.scrub .pista,.serie:not(.alert) .hit{display:none}
 @media (max-width:640px){.lectura{margin-left:0;flex-basis:100%;min-height:3.9em}}
-.plot{position:relative;height:var(--trace-h);margin-block:1.4rem 1rem;
+.plot{position:relative;height:var(--trace-h);margin-block:.9rem .6rem;
   background-image:linear-gradient(var(--p-grid) 1px,transparent 1px),linear-gradient(90deg,var(--p-grid) 1px,transparent 1px);background-size:48px 48px}
 .plot svg,.capa{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .plot path{vector-effect:non-scaling-stroke}
@@ -155,6 +157,64 @@ h1{font-size:clamp(2.5rem,5.4vw + 1rem,5.9rem);line-height:.98;letter-spacing:-.
 .k-nota{margin-left:auto;font-family:var(--body);font-style:italic;font-size:.95rem}
 @media (max-width:899px){.pasos{flex-direction:column;align-items:flex-start;gap:0}.k-nota{margin:.4rem 0 0}}
 
+/* ---- la serie fija arriba (iteración 010) ----
+   Con JS, la figura queda pegada bajo la barra mientras se recorren los tres casos (todo lo que hay
+   dentro de .escena) y el script le cambia el escenario según la sección. Sin JS no se pega y se ve
+   como antes: el escenario 1, completo y quieto. */
+.escena{position:relative}
+.serie.fijo{position:sticky;top:var(--bar);z-index:6;border-bottom-color:var(--p-muted);box-shadow:0 10px 16px -12px rgba(0,0,0,.55)}
+.serie.fijo>.pagina{padding-top:.3rem}
+.serie.fijo .escenarios{padding-top:.1rem}
+.serie.fijo .esc{padding-block:.4rem}
+.serie.fijo .serie-top{padding-top:.1rem;gap:.1rem 1.25rem}
+.serie.fijo .plot{margin-block:.5rem .25rem}
+.serie.fijo .pasos{padding-block:.1rem .4rem}
+.serie.fijo .paso{padding-block:.35rem}
+.paso-act{display:none}
+/* Cambio de escenario: los textos se funden y los datos se desplazan (el script mueve las curvas). */
+.serie .serie-var,.serie .k-nota,.serie .paso>span:last-child,.serie .paso-act{transition:opacity .22s ease}
+.serie.cambiando .serie-var,.serie.cambiando .k-nota,.serie.cambiando .paso>span:last-child,.serie.cambiando .paso-act{opacity:0}
+@media (prefers-reduced-motion:reduce){.serie .serie-var,.serie .k-nota,.serie .paso>span:last-child,.serie .paso-act{transition:none}}
+/* Escritorio: botones y rótulo en una fila. */
+@media (min-width:900px){
+  .serie.fijo>.pagina{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:2rem;align-items:center}
+  .serie.fijo .escenarios,.serie.fijo .serie-top{padding-top:0}
+  .serie.fijo .plot,.serie.fijo .pasos{grid-column:1 / -1}
+  .serie.fijo .pasos{flex-direction:row;align-items:center;gap:.1rem 1.75rem}
+  .serie.fijo .k-nota{margin:0 0 0 auto}
+}
+@media (min-width:900px) and (max-width:1199px){.serie.fijo .serie-tit{display:none}}
+/* Hasta 1099 px: los pasos van con su nombre y el texto del paso activo en una línea. */
+@media (max-width:1099px){
+  .serie.fijo .pasos{flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 1.5rem}
+  .serie.fijo .paso>span:last-child{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .serie.fijo .k-nota{display:none}
+  .serie.fijo .paso-act{display:block;flex:1 0 100%;font-style:italic;font-size:.86rem;line-height:1.35;color:var(--p-muted)}
+}
+/* Celular: lo mínimo para dejar a la vista el texto de la página. */
+@media (max-width:639px){
+  .serie.fijo .serie-tit{display:none}
+  .serie.fijo .serie-top{font-size:.75rem;line-height:1.35}
+  .serie.fijo .serie-var{flex:1 1 auto}
+  .serie.fijo .lectura{flex-basis:auto;min-height:0;margin:0;gap:0 .8rem}
+  .serie.fijo:not(.scrub) .lectura,.serie.fijo.scrub .serie-var{display:none}
+  .serie.fijo .escenarios{gap:0 1.25rem;font-size:.9rem}
+  .serie.fijo .pasos{gap:0 1rem;font-size:.86rem}
+  .serie.fijo .paso{gap:.35rem}
+  .serie.fijo .paso-act{font-size:.78rem}
+  .k-medir::before{margin-right:.7rem}
+}
+/* Pantallas bajas (celular de lado): se quitan los pasos y el rótulo de la serie. */
+@media (max-height:520px){
+  .serie.fijo{--trace-h:4.5rem}
+  .serie.fijo .pasos,.serie.fijo .serie-tit,.serie.fijo:not(.scrub) .lectura{display:none}
+}
+@media (max-height:520px) and (min-width:560px){
+  .serie.fijo>.pagina{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:1.5rem;align-items:center}
+  .serie.fijo .escenarios{padding-top:0}
+  .serie.fijo .plot{grid-column:1 / -1;margin-bottom:.4rem}
+}
+
 /* ---- estados: cada cosa de la página dice en qué está ---- */
 .estado{font-family:var(--mono);font-size:.8rem;line-height:1.4;color:var(--ink);white-space:nowrap}
 .estado::before{content:"";display:inline-block;width:.66em;height:.66em;margin-right:.5em;border-radius:50%;border:1.5px solid var(--accent)}
@@ -182,7 +242,7 @@ h1{font-size:clamp(2.5rem,5.4vw + 1rem,5.9rem);line-height:.98;letter-spacing:-.
 .riel .estado{display:block}
 @media (min-width:960px){
   .caso-grid{grid-template-columns:16.5rem minmax(0,1fr);gap:clamp(2rem,4vw,3.5rem)}
-  .riel{position:sticky;top:calc(var(--bar) + 1.5rem);align-self:start}
+  .riel{position:sticky;top:calc(var(--bar) + var(--fig-h,0px) + 1.5rem);align-self:start}
 }
 .problema{font-family:var(--display);font-size:clamp(1.2rem,.9vw + 1rem,1.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;max-width:28em;text-wrap:balance}
 .libro{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 clamp(1.25rem,2.5vw,2rem);margin-top:clamp(1.5rem,3vw,2.25rem)}
@@ -318,6 +378,9 @@ h1{font-size:clamp(2.5rem,5.4vw + 1rem,5.9rem);line-height:.98;letter-spacing:-.
   .ruta>div::before{top:.3rem;left:-5.5px}
 }
 
+/* Con la serie fija, el borde de salto ya lleva su alto (scroll-padding); lo que está fuera de .escena no. */
+#recorrido,#contacto{scroll-margin-top:calc(0px - var(--fig-h,0px))}
+
 /* ---- contacto ---- */
 .correo{display:inline-block;margin-top:1rem;font-family:var(--display);font-weight:600;font-size:clamp(1.3rem,3.6vw,2.6rem);letter-spacing:-.02em;line-height:1.15;color:var(--ink);text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:.16em}
 .perfiles{display:flex;flex-wrap:wrap;gap:.2rem 1.75rem;margin-top:1.4rem;font-family:var(--display)}
@@ -332,10 +395,10 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
   <div class="pagina barra-in">
     <a class="marca" href="#contenido">Benjamín Moreira-Grez</a>
     <nav class="indice" aria-label="Secciones de la página">
-      <a href="#ingenieria">Ingeniería</a>
+      <a href="#ingenieria">Data science</a>
       <a href="#agentes">Agentes de IA</a>
-      <a href="#educacion">Educación</a>
-      <a href="#investigacion">Investigación</a>
+      <a href="#educacion">Docencia</a>
+      <a href="#investigacion">Ecología</a>
       <a href="#recorrido">Recorrido</a>
       <a class="fijo" href="#contacto">Contacto</a>
     </nav>
@@ -352,6 +415,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
   <p class="acciones"><a class="btn" href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a><a class="btn sec" href="#casos">Ver los tres casos</a></p>
 </div>
 
+<div class="escena" id="escena">
 <figure class="serie" id="serie">
   <div class="pagina">
     <div class="escenarios" role="group" aria-label="Escenario de la serie" hidden>
@@ -398,16 +462,16 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
     <li class="estado e-dev">en desarrollo</li>
   </ul>
   <ol class="lista">
-    <li><a href="#ingenieria"><span class="kicker">Ingeniería</span><span class="tit">Telemetría y detección de fallas para una flota de buses</span><span class="est"><span class="estado e-piloto">en piloto</span></span></a></li>
-    <li><a href="#educacion"><span class="kicker">Educación</span><span class="tit">Herramientas para enseñar ciencias y para dirigir un colegio con datos</span><span class="est"><span class="estado e-uso">en uso en clases</span><span class="estado e-dev">asistente en desarrollo</span></span></a></li>
-    <li><a href="#investigacion"><span class="kicker">Investigación</span><span class="tit">Restauración de suelos mineros: medir si de verdad se recuperan</span><span class="est"><span class="estado e-uso">publicado</span></span></a></li>
+    <li><a href="#ingenieria"><span class="kicker">Data science</span><span class="tit">Telemetría y detección de fallas para una flota de buses</span><span class="est"><span class="estado e-piloto">en piloto</span></span></a></li>
+    <li><a href="#educacion"><span class="kicker">Docencia</span><span class="tit">Herramientas para enseñar ciencias y para dirigir un colegio con datos</span><span class="est"><span class="estado e-uso">en uso en clases</span><span class="estado e-dev">asistente en desarrollo</span></span></a></li>
+    <li><a href="#investigacion"><span class="kicker">Ecología</span><span class="tit">Restauración de suelos mineros: medir si de verdad se recuperan</span><span class="est"><span class="estado e-uso">publicado</span></span></a></li>
   </ol>
 </section>
 
 <section class="caso" id="ingenieria" aria-labelledby="h-ing">
   <div class="pagina caso-grid">
     <header class="riel">
-      <p class="kicker">Ingeniería</p>
+      <p class="kicker">Data science</p>
       <h2 id="h-ing">Telemetría y detección de fallas para una flota de buses</h2>
       <p class="estado e-piloto">en piloto</p>
       <p class="donde">Para una empresa de transporte.</p>
@@ -489,7 +553,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 <section class="caso" id="educacion" aria-labelledby="h-edu" style="border-top:0">
   <div class="pagina caso-grid">
     <header class="riel">
-      <p class="kicker">Educación</p>
+      <p class="kicker">Docencia</p>
       <h2 id="h-edu">Herramientas para enseñar ciencias y para dirigir un colegio con datos</h2>
       <p class="estado e-uso">en uso en clases</p>
       <p class="estado e-dev">asistente en desarrollo</p>
@@ -577,7 +641,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 <section class="caso" id="investigacion" aria-labelledby="h-inv">
   <div class="pagina caso-grid">
     <header class="riel">
-      <p class="kicker">Investigación</p>
+      <p class="kicker">Ecología</p>
       <h2 id="h-inv">Restauración de suelos mineros: medir si de verdad se recuperan</h2>
       <p class="estado e-uso">publicado</p>
       <p class="donde">Doctorado en la University of Western Australia.</p>
@@ -638,6 +702,8 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
   </div>
 </section>
 
+</div>
+
 <section class="caso recorrido" id="recorrido" aria-labelledby="h-rec">
   <div class="pagina">
     <h2 id="h-rec">Recorrido</h2>
@@ -667,12 +733,49 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 <footer><div class="pagina">Santiago, Chile. Métricas de citación de Google Scholar al 26 de mayo de 2026. Los esquemas usan datos simulados o curvas ilustrativas, y lo dicen.</div></footer>
 
 <script>
+/* El título de la portada se encoge con el scroll: --k va de 0 (grande) a 1 (compacto) en los primeros
+   píxeles, de forma continua (con una curva suave), y se queda compacto. Sólo depende de la posición,
+   salvo al saltar a una sección: la portada se compacta antes de medir, porque si no se encogiera en
+   pleno salto la sección quedaría más arriba de lo calculado y escondida tras la figura fija. */
+var portada=(function(){
+  var hero=document.querySelector('.hero'); if(!hero) return {saltar:function(el){ el.scrollIntoView(); }};
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var D=160, ult=-1, raf=0, forzado=false, ft=0;
+  function poner(v){ if(v!==0&&v!==1&&Math.abs(v-ult)<.004) return; ult=v; hero.style.setProperty('--k',v.toFixed(3)); }
+  function aplicar(){ raf=0; var t=Math.min(1,Math.max(0,(window.pageYOffset||0)/D)); poner(forzado?1:t*t*(3-2*t)); }
+  function soltar(){ forzado=false; aplicar(); }
+  function saltar(el){
+    forzado=true; poner(1); clearTimeout(ft); ft=setTimeout(soltar,500);
+    el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+  }
+  window.addEventListener('scroll',function(){ if(forzado){ clearTimeout(ft); ft=setTimeout(soltar,160); } if(!raf) raf=requestAnimationFrame(aplicar); },{passive:true});
+  // Los enlaces con ancla pasan por saltar() (salvo «saltar al contenido» y el nombre, que van arriba).
+  document.addEventListener('click',function(e){
+    if(e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey) return;
+    var a=e.target.closest&&e.target.closest('a[href^="#"]'); if(!a) return;
+    var id=a.getAttribute('href').slice(1), el=id&&id!=='contenido'&&document.getElementById(id); if(!el) return;
+    e.preventDefault(); saltar(el);
+    if(window.history&&history.pushState) history.pushState(null,'',a.getAttribute('href'));
+  });
+  // Con un enlace con ancla ya compacto: el salto se calcula con la portada chica y no queda desfasado.
+  // Las tipografías llegan tarde y mueven el texto: se vuelve a la sección en la carga y al llegar las fuentes,
+  // mientras la persona no haya movido la página.
+  var h=location.hash, movio=false;
+  if(h.length>1) poner(1);
+  ['wheel','touchstart','keydown','mousedown'].forEach(function(ev){ window.addEventListener(ev,function(){ movio=true; },{once:true,passive:true}); });
+  function reanclar(){ var t=h.length>1&&document.getElementById(decodeURIComponent(h.slice(1))); if(t&&!movio) t.scrollIntoView({behavior:'instant',block:'start'}); }
+  window.addEventListener('load',function(){ aplicar(); reanclar(); if(document.fonts&&document.fonts.ready) document.fonts.ready.then(reanclar); });
+  return {saltar:saltar};
+})();
+
 /* La serie de la portada: un mismo gráfico con tres escenarios (data science, docencia, ecología),
    que cambian de variables, datos y palabras pero cuentan lo mismo: medir, ver la desviación a
    tiempo, actuar. Los datos son simulados (scripts/serie.py) y están en el JSON de la figura.
-   Sin JS se ve el primer escenario, completo y quieto. Con JS: se dibuja en tres pasos, los pasos
-   y los escenarios se eligen a mano, y un cursor de lectura recorre los muestreos con el puntero,
-   el dedo o las flechas. Con prefers-reduced-motion no hay animación: parte completa. */
+   Sin JS se ve el primer escenario, completo y quieto, y no se pega. Con JS: se dibuja en tres pasos,
+   los pasos se eligen a mano, un cursor de lectura recorre los muestreos con el puntero, el dedo o las
+   flechas, y la figura queda fija bajo la barra mientras se recorren los tres casos: al entrar en cada
+   uno (Data science, Docencia, Ecología) los datos se desplazan al escenario correspondiente. Con
+   prefers-reduced-motion el cambio es instantáneo y no hay animación: parte completa. */
 (function(){
   var fig=document.getElementById('serie'), dat=document.getElementById('escenarios'); if(!fig||!dat) return;
   var esc; try{ esc=JSON.parse(dat.textContent); }catch(e){ return; }
@@ -681,36 +784,107 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       tOut=lec.querySelector('.tramo'), vOut=lec.querySelector('.valor'), zOut=lec.querySelector('.desvio'), hOut=lec.querySelector('.hit'),
       pasos=[].slice.call(fig.querySelectorAll('.paso')), tabs=[].slice.call(fig.querySelectorAll('.esc')),
       det=fig.querySelector('.detectar'), alerta=fig.querySelector('.alerta'), expl=fig.querySelector('.explicar'),
+      dots=fig.querySelector('.medir .dots'), ref=det.querySelector('.ref'), refMid=det.querySelector('.ref-mid'), simple,
+      act=document.createElement('span'),
       reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-      manual=false, timers=[], sc, pts, n, z, HIT, i;
+      manual=false, timers=[], sc, pts, n, z, HIT, i, est, tween=null;
   var svgNS='http://www.w3.org/2000/svg';
+  // Las secciones que mandan el escenario, en el orden de la serie. Agentes de IA queda entre la primera y la segunda.
+  var secs=['ingenieria','educacion','investigacion'].map(function(id){ return document.getElementById(id); });
+  var bar=document.querySelector('.barra');
 
-  function setStep(s){ fig.setAttribute('data-step',s); pasos.forEach(function(b){ b.setAttribute('aria-current',b.getAttribute('data-paso')===String(s)?'step':'false'); }); }
+  act.className='paso-act'; act.setAttribute('aria-hidden','true'); fig.querySelector('.pasos').insertBefore(act,fig.querySelector('.k-nota'));
+  function setStep(s){ fig.setAttribute('data-step',s); pasos.forEach(function(b){ b.setAttribute('aria-current',b.getAttribute('data-paso')===String(s)?'step':'false'); }); actTxt(); }
+  function actTxt(){ var s=+fig.getAttribute('data-step')||3; act.textContent=pasos[s-1].lastElementChild.textContent; }
   function aMano(){ manual=true; fig.classList.add('manual'); }
   pasos.forEach(function(b){ b.addEventListener('click',function(){ aMano(); setStep(+b.getAttribute('data-paso')); }); });
   p.addEventListener('animationend',function(){ p.style.strokeDasharray=''; p.style.strokeDashoffset=''; });  // si la ventana cambia de ancho, la línea sigue entera
   function txt(sel,t){ fig.querySelector(sel).textContent=t; }
   function nuevo(tag,cls,ns){ var e=ns?document.createElementNS(svgNS,tag):document.createElement(tag); if(cls) e.setAttribute('class',cls); return e; }
 
-  // Pone los datos del escenario k en la figura (mismo marcado que el HTML inicial).
-  function cargar(k){
+  // Textos, marcas, palabras y proyección del escenario k (lo que no se desplaza: se funde).
+  function cargarTextos(k){
     sc=esc[k];
-    fig.querySelector('.medir .dots').setAttribute('d',sc.dots);
-    var ref=det.querySelector('.ref'); ref.setAttribute('y',sc.ref.y); ref.setAttribute('height',sc.ref.h);
-    det.querySelector('.ref-mid').setAttribute('d','M0 '+sc.ref.mid+'H1200');
     [].slice.call(det.querySelectorAll('.perturb')).forEach(function(e){ e.parentNode.removeChild(e); });
     sc.marks.forEach(function(x){ var m=nuevo('path','perturb',1); m.setAttribute('d','M'+x+' 6V254'); det.insertBefore(m,p); });
-    p.setAttribute('d',sc.trend); det.setAttribute('aria-label',sc.aria);
-    alerta.style.left=sc.alert.l+'%'; alerta.style.top=sc.alert.t+'%';
-    var sv=expl.querySelector('svg'); sv.innerHTML=(sc.proy?'<path class="proy" d="'+sc.proy+'"/>':'')+'<path class="simple" d="'+sc.simple+'"/>';
+    det.setAttribute('aria-label',sc.aria);
+    var sv=expl.querySelector('svg'), old=sv.querySelector('.proy'); if(old) sv.removeChild(old);
+    if(sc.proy){ var pr=nuevo('path','proy',1); pr.setAttribute('d',sc.proy); sv.insertBefore(pr,simple); }
     [].slice.call(expl.querySelectorAll('.w')).forEach(function(e){ expl.removeChild(e); });
     sc.words.forEach(function(w){ var s=nuevo('span','w'+(w.izq?' izq':'')+(w.m===0?' sm':'')+(w.fin?' fin':'')); s.style.left=w.l+'%'; s.style.top=w.tp+'%'; s.textContent=w.txt; expl.appendChild(s); });
     txt('.serie-var',sc.titulo); txt('.k-nota',sc.nota); hOut.textContent=sc.hit_txt;
-    pasos.forEach(function(b,j){ b.lastElementChild.textContent=sc.pasos[j]; });
+    pasos.forEach(function(b,j){ b.lastElementChild.textContent=sc.pasos[j]; }); actTxt();
     tabs.forEach(function(b,j){ b.setAttribute('aria-pressed',j===k?'true':'false'); });
     // Los paths que lee el script sólo usan M/L absolutos con números positivos (README).
     pts=sc.trend.match(/[\d.]+/g).map(Number); n=sc.n; z=sc.z; HIT=sc.hit;
     cur.setAttribute('aria-valuemax',n);
+  }
+  // Geometría exacta del escenario k.
+  function cargarGeom(k){
+    var c=esc[k];
+    dots.setAttribute('d',c.dots);
+    ref.setAttribute('y',c.ref.y); ref.setAttribute('height',c.ref.h); refMid.setAttribute('d','M0 '+c.ref.mid+'H1200');
+    p.setAttribute('d',c.trend); simple.setAttribute('d',c.simple);
+    alerta.style.left=c.alert.l+'%'; alerta.style.top=c.alert.t+'%';
+    est=geom(c);
+  }
+  function cargar(k){ simple=expl.querySelector('.simple'); cargarTextos(k); cargarGeom(k); }
+  simple=expl.querySelector('.simple');
+
+  // ---- cambio de escenario con los datos en movimiento ----
+  function pares(d){ var m=d.match(/[\d.]+/g).map(Number), o=[]; for(var j=0;j<m.length;j+=2) o.push([m[j],m[j+1]]); return o; }
+  function puntos(d){ var o=[], re=/M([\d.]+) ([\d.]+)h0/g, m; while((m=re.exec(d))) o.push([+m[1],+m[2]]); return o; }
+  function geom(c){ return {dots:puntos(c.dots), trend:pares(c.trend), simple:pares(c.simple), ry:+c.ref.y, rh:+c.ref.h, rm:+c.ref.mid, al:+c.alert.l, at:+c.alert.t}; }
+  function yEn(q,x){ var m=q.length; if(x<=q[0][0]) return q[0][1];
+    for(var j=1;j<m;j++) if(x<=q[j][0]){ var a=q[j-1], b=q[j], w=b[0]>a[0]?(x-a[0])/(b[0]-a[0]):0; return a[1]+(b[1]-a[1])*w; }
+    return q[m-1][1]; }
+  function f1(v){ return Math.round(v*10)/10; }
+  // Las dos curvas se muestrean en la unión de sus x: la curva en e=1 es exactamente la de destino.
+  function lineaEntre(A,B){ var xs=[], vistos={}; A.concat(B).forEach(function(q){ if(!vistos[q[0]]){ vistos[q[0]]=1; xs.push(q[0]); } });
+    xs.sort(function(a,b){ return a-b; });
+    var ya=xs.map(function(x){ return yEn(A,x); }), yb=xs.map(function(x){ return yEn(B,x); });
+    return function(e){ var d=''; for(var j=0;j<xs.length;j++) d+=(j?'L':'M')+f1(xs[j])+' '+f1(ya[j]+(yb[j]-ya[j])*e)+' '; return d; }; }
+  // Las réplicas se emparejan por posición: la que sobra se junta con otra, la que falta sale de otra.
+  function puntosEntre(A,B){ var m=Math.max(A.length,B.length), pa=[], pb=[];
+    for(var j=0;j<m;j++){ pa.push(A[Math.floor(j*A.length/m)]); pb.push(B[Math.floor(j*B.length/m)]); }
+    return function(e){ var d=''; for(var j=0;j<m;j++) d+='M'+f1(pa[j][0]+(pb[j][0]-pa[j][0])*e)+' '+f1(pa[j][1]+(pb[j][1]-pa[j][1])*e)+'h0 '; return d; }; }
+  function fundir(f){
+    [].slice.call(expl.querySelectorAll('.w')).forEach(function(e){ e.style.opacity=f; });
+    var pr=expl.querySelector('.proy'); if(pr) pr.style.opacity=f*.8;
+    [].slice.call(det.querySelectorAll('.perturb')).forEach(function(e){ e.style.opacity=f*.45; });
+  }
+  function limpiarFundido(){
+    [].slice.call(expl.querySelectorAll('.w')).forEach(function(e){ e.style.opacity=''; });
+    var pr=expl.querySelector('.proy'); if(pr) pr.style.opacity='';
+    [].slice.call(det.querySelectorAll('.perturb')).forEach(function(e){ e.style.opacity=''; });
+  }
+  function terminar(k){ tween=null; cargarGeom(k); limpiarFundido(); fig.classList.remove('morph','cambiando'); leer(HIT,false); }
+  function ir(k){
+    if(esc[k]===sc&&!tween) return;
+    if(tween&&tween.k===k) return;
+    // Un paso a medias o la animación inicial se dan por terminadas: lo que sigue es el cambio.
+    timers.forEach(clearTimeout); timers=[]; fig.classList.remove('ready'); p.style.strokeDasharray=''; p.style.strokeDashoffset='';
+    if(!manual){ aMano(); setStep(3); }
+    fig.classList.remove('scrub','alert');
+    if(tween){ cancelAnimationFrame(tween.raf); limpiarFundido(); }
+    if(reduce){ cargar(k); tween=null; fig.classList.remove('morph','cambiando'); leer(HIT,false); return; }
+    var B=geom(esc[k]), A=est, t0=null, DUR=800, textos=false,
+        fD=puntosEntre(A.dots,B.dots), fT=lineaEntre(A.trend,B.trend), fS=lineaEntre(A.simple,B.simple);
+    tabs.forEach(function(b,j){ b.setAttribute('aria-pressed',j===k?'true':'false'); });
+    fig.classList.add('morph','cambiando');
+    tween={k:k,raf:0};
+    function cuadro(ts){
+      if(t0===null) t0=ts;
+      var t=Math.min(1,(ts-t0)/DUR), e=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2, mez=function(a,b){ return a+(b-a)*e; };
+      dots.setAttribute('d',fD(e)); p.setAttribute('d',fT(e)); simple.setAttribute('d',fS(e));
+      ref.setAttribute('y',mez(A.ry,B.ry)); ref.setAttribute('height',mez(A.rh,B.rh)); refMid.setAttribute('d','M0 '+mez(A.rm,B.rm)+'H1200');
+      alerta.style.left=mez(A.al,B.al)+'%'; alerta.style.top=mez(A.at,B.at)+'%';
+      est={dots:A.dots,trend:A.trend,simple:A.simple,ry:mez(A.ry,B.ry),rh:mez(A.rh,B.rh),rm:mez(A.rm,B.rm),al:mez(A.al,B.al),at:mez(A.at,B.at)};
+      if(!textos&&t>=.4){ textos=true; cargarTextos(k); fig.classList.remove('cambiando'); }
+      fundir(t<.4?1-t/.4:(t-.4)/.6);
+      if(t<1) tween.raf=requestAnimationFrame(cuadro); else terminar(k);
+    }
+    tween.raf=requestAnimationFrame(cuadro);
   }
   // Arranca (o reinicia) la animación de los tres pasos.
   function animar(){
@@ -739,6 +913,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
     if(usuario){ fig.classList.add('scrub'); if(!manual){ aMano(); setStep(3); } }
   }
   function desdePuntero(e){
+    if(tween) return;
     var r=plot.getBoundingClientRect(), x=(e.clientX-r.left)/r.width*1200;
     leer(Math.round((x-pts[0])/(pts[pts.length-2]-pts[0])*(n-1)),true);
   }
@@ -749,16 +924,53 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
   cur.addEventListener('pointerdown',desdePuntero);
   cur.addEventListener('keydown',function(e){
     var d={ArrowLeft:-1,ArrowDown:-1,ArrowRight:1,ArrowUp:1,PageDown:-6,PageUp:6}[e.key];
+    if(tween) return;
     if(d!==undefined) leer(i+d,true); else if(e.key==='Home') leer(0,true); else if(e.key==='End') leer(n-1,true); else return;
     e.preventDefault();
   });
 
+  // ---- la figura fija y el escenario que manda el scroll ----
+  // Umbral: el escenario es el de la última sección cuyo borde superior ya pasó la «línea de lectura»,
+  // que está al 35 % del espacio visible bajo la figura fija (barra + figura). Agentes de IA no cuenta:
+  // mientras se la recorre sigue el escenario de Data science. Antes de Data science (portada, índice) y
+  // después de Ecología (Recorrido, Contacto) no cambia nada: se queda el primero y el último.
+  var deseado=0, tm=0, bloqueado=false, unl=0, raf=0;
+  function medir(){ document.documentElement.style.setProperty('--fig-h',fig.offsetHeight+'px'); }
+  function actual(){
+    var base=(bar?bar.offsetHeight:52)+fig.offsetHeight, linea=base+.35*(window.innerHeight-base), k=0;
+    secs.forEach(function(s,j){ if(s&&s.getBoundingClientRect().top<=linea) k=j; });
+    return k;
+  }
+  function evaluar(){
+    raf=0; if(bloqueado) return;
+    var k=actual(); if(k===deseado) return;
+    deseado=k; clearTimeout(tm); tm=setTimeout(function(){ ir(deseado); },reduce?0:90);
+  }
+  function pedir(){ if(!raf) raf=requestAnimationFrame(evaluar); }
+  // Al saltar con un enlace o con los botones, el desplazamiento pasa por secciones intermedias:
+  // se espera a que termine para no parpadear por ellas.
+  function bloquear(k){
+    bloqueado=true; clearTimeout(unl); unl=setTimeout(soltar,450);
+    if(k!==undefined){ deseado=k; clearTimeout(tm); ir(k); }
+  }
+  function soltar(){ bloqueado=false; pedir(); }
+  window.addEventListener('scroll',function(){ if(bloqueado){ clearTimeout(unl); unl=setTimeout(soltar,160); } pedir(); },{passive:true});
+  window.addEventListener('resize',function(){ medir(); pedir(); });
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[href^="#"]'); if(!a) return;
+    var id=a.getAttribute('href').slice(1), j=['ingenieria','educacion','investigacion'].indexOf(id);
+    bloquear(j>=0?j:(id==='recorrido'||id==='contacto'?2:undefined));
+  });
   tabs.forEach(function(b){ b.addEventListener('click',function(){
-    var k=+b.getAttribute('data-esc'); if(esc[k]===sc) return;
-    cargar(k); animar(); leer(HIT,false);
+    var k=+b.getAttribute('data-esc'); bloquear(k);
+    if(secs[k]) portada.saltar(secs[k]);
   }); });
+
   fig.querySelector('.escenarios').hidden=false;
   cargar(0); animar(); cur.hidden=false; lec.hidden=false; leer(HIT,false);
+  fig.classList.add('fijo'); medir();
+  if(window.ResizeObserver) new ResizeObserver(medir).observe(fig);
+  window.addEventListener('load',function(){ medir(); deseado=-1; pedir(); });
 })();
 
 /* Tema claro u oscuro: parte del sistema; el botón lo cambia y lo recuerda en este navegador. */

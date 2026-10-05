@@ -17,11 +17,15 @@ la página: cada caso es un libro de tres columnas, **Había / Hice / Quedó**, 
 el glifo siempre va con su texto).
 
 1. **Barra** fija: nombre, secciones (bajo 900 px sólo Contacto) y botón de tema.
-2. **Portada**: titular, una frase que dice quién es y qué hace, y dos acciones.
-3. **La serie** (`#serie`): panel oscuro en los dos temas, con la curva en tres lecturas.
+2. **Portada**: titular, una frase que dice quién es y qué hace, y dos acciones. El titular se encoge
+   con el scroll (ver «La serie fija y la portada que se encoge»).
+3. **La serie** (`#serie`): panel oscuro en los dos temas, con la curva en tres lecturas. Con JS queda
+   fija bajo la barra mientras se recorren los tres casos.
 4. **Índice de casos** (`#casos`) con la leyenda de estados.
-5. **Casos**, en el orden de la serie (data science, docencia, ecología): `#ingenieria`, `#educacion`, `#investigacion`. Título y estado en un riel (fijo desde
-   960 px); en el cuerpo, el problema, el libro, la evidencia y el detalle plegado (`details.mas`).
+5. **Casos**, en el orden de la serie: **Data science** (`#ingenieria`), **Docencia** (`#educacion`) y
+   **Ecología** (`#investigacion`); los títulos son esos, los id no cambiaron. Título y estado en un riel
+   (fijo desde 960 px, bajo la serie fija); en el cuerpo, el problema, el libro, la evidencia y el detalle
+   plegado (`details.mas`).
 6. **Agentes de IA** (`#agentes`): franja oscura entre Ingeniería y Educación.
 7. **Recorrido** (`.ruta`) y **Contacto**.
 
@@ -46,14 +50,45 @@ la proyección «sin actuar» (línea punteada) y la marca del momento de la acc
   (`proy`, opcional), palabras posicionadas en % (`m:0` las oculta bajo 640 px; `fin` las ancla a la
   derecha) y los textos de los pasos y de la nota.
 - El path que lee el JS (`.trend`) sólo usa comandos absolutos `M`/`L` con números positivos.
-- **Escenarios**: botones `.esc` (`aria-pressed`) sobre la figura; sólo existen con JS. Cambiar de
-  escenario reinicia la animación (salvo con movimiento reducido).
+- **Escenarios**: botones `.esc` (`aria-pressed`) sobre la figura; sólo existen con JS. Desde la 010 el
+  escenario lo manda el scroll y los botones llevan a la sección correspondiente.
 - **Pasos** (Medir, Detectar, Explicar y actuar): se dibujan solos al cargar y se pueden elegir a mano.
 - **Cursor de lectura** (`.cursor`, `role="slider"`): recorre los muestreos con el puntero, el dedo
   (`touch-action:pan-y`) o las flechas, y muestra muestreo, valor y desvío; desde el muestreo `hit`, si
   el desvío supera 2σ, muestra la alerta del escenario.
 - Sin JS la figura (escenario 1) se ve completa y quieta. Con `prefers-reduced-motion` no hay
   animación: parte completa, y los pasos, los escenarios y el cursor siguen funcionando.
+
+## La serie fija y la portada que se encoge (iteración 010)
+
+Todo lo que va de la serie al final de Ecología está dentro de `div.escena`; con JS la figura gana la
+clase `fijo` (`position:sticky` bajo la barra) y queda pegada hasta que termina la escena (antes de
+Recorrido). Sin JS no se pega y se ve como en la 009.
+
+- **Escenario por scroll.** El escenario es el de la última sección (`#ingenieria`, `#educacion`,
+  `#investigacion`) cuyo borde superior ya pasó la «línea de lectura»: el 35 % del espacio visible bajo la
+  barra y la figura. Agentes de IA no tiene escenario propio y sigue el de Data science; Recorrido y
+  Contacto siguen el de Ecología. El cambio espera 90 ms de calma, así un scroll rápido no parpadea.
+- **Transición.** Los datos se desplazan (800 ms, curva suave): réplicas emparejadas por posición, la
+  tendencia y la curva reducida muestreadas en la unión de sus x, la banda de referencia y la alerta
+  interpoladas. Las palabras, la proyección punteada y las marcas se funden; los textos (título, pasos,
+  nota) cambian a los 320 ms. Con `prefers-reduced-motion` el cambio es instantáneo.
+- **Botones de escenario.** Mantienen su lugar: al pulsarlos cambian el escenario y llevan a la sección
+  (`portada.saltar`), así el gráfico y el texto no se contradicen. Los enlaces con ancla esperan a que
+  termine el desplazamiento antes de evaluar, para no pasar por los escenarios intermedios.
+- **Alto de la figura.** El script publica `--fig-h` (alto medido); de él cuelgan `scroll-padding-top`, el
+  riel de cada caso y las anclas, para que nada quede tapado (también al enfocar con teclado).
+  `#recorrido` y `#contacto` lo restan porque ya no hay figura fija ahí.
+- **Tamaños.** El trazo mide `clamp(5.75rem, 10vw, 8.5rem)` (antes `clamp(10rem, 24vw, 18rem)`). En
+  celular (< 640 px) la figura fija se reduce a botones, el rótulo de la variable, el trazo y los tres
+  pasos con el texto del paso activo; el rótulo se reemplaza por la lectura del cursor mientras se arrastra.
+  Hasta 1099 px los pasos van con su nombre y el texto del paso activo en una línea; la nota del escenario
+  sólo se ve desde 1100 px. En pantallas bajas (< 520 px de alto) se quitan los pasos.
+- **Titular que se encoge.** `.hero` define `--k` (0 a 1) y el tamaño de letra, el interlineado, los
+  márgenes y el relleno van de su valor grande al compacto. `--k` depende sólo del scroll (los primeros
+  160 px, con curva suave) y se queda en 1. Al saltar con un ancla, la portada se compacta antes de medir
+  (si no, se encogería en pleno salto y la sección quedaría tapada); `overflow-anchor:none` evita que el
+  navegador compense el cambio de alto.
 
 ## Esquemas de flujo
 
@@ -74,6 +109,6 @@ bajo 820 px todas apuntan hacia abajo). El texto de los nodos es texto real.
 - `og.png` (1200×630) es una captura de la portada con movimiento reducido, a 1200×630, tema claro,
   ocultando `.lede, .acciones, .lugar, .indice, .tema, .lectura, .escenarios` y con
   `.hero{padding-block:1.25rem 1.75rem}` para que quepan el nombre, el titular y la serie. Muestra el primer
-  escenario (data science). Se rehace si cambia la portada.
+  escenario (data science). Se rehace si cambia la portada (la 010 achicó el gráfico).
 - Anchos en `rem`/`em`, no en `ch`. Los respaldos `Bricolage Respaldo` y `Source Serif Respaldo`
   usan `size-adjust` medido contra Arial y Georgia para que la página no salte al cargar la fuente.
