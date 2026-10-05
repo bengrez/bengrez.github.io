@@ -25,6 +25,9 @@ Publicado con GitHub Pages desde la rama `main`, raíz del repositorio: https://
   en un cuadro de `requestAnimationFrame`, hasta 56 px en escritorio y 18 px en móvil. Con
   `prefers-reduced-motion` no se mueve nada; sin JS la página queda completa y quieta.
 - `og.png` (1200×630) es una captura del hero con movimiento reducido; se rehace si cambia el hero.
+  Regenerar (2026-10-05): copia temporal de `index.html` con `nav{display:none}`, Chrome headless
+  `--force-prefers-reduced-motion --window-size=1200,780 --virtual-time-budget=8000`, y
+  `convert … -crop 1200x630+0+88` (titular, subtítulo y serie completa).
 - Anchos en `rem`/`em`, no en `ch`: `ch` depende de la fuente y hacía saltar la página al cargar
   Bricolage. Los respaldos `Bricolage Respaldo` y `Source Serif Respaldo` usan `size-adjust`
   medido contra Arial y Georgia por la misma razón.
