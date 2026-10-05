@@ -20,27 +20,40 @@ el glifo siempre va con su texto).
 2. **Portada**: titular, una frase que dice quién es y qué hace, y dos acciones.
 3. **La serie** (`#serie`): panel oscuro en los dos temas, con la curva en tres lecturas.
 4. **Índice de casos** (`#casos`) con la leyenda de estados.
-5. **Casos**: `#ingenieria`, `#investigacion`, `#educacion`. Título y estado en un riel (fijo desde
+5. **Casos**, en el orden de la serie (data science, docencia, ecología): `#ingenieria`, `#educacion`, `#investigacion`. Título y estado en un riel (fijo desde
    960 px); en el cuerpo, el problema, el libro, la evidencia y el detalle plegado (`details.mas`).
-6. **Agentes de IA** (`#agentes`): franja oscura entre Ingeniería e Investigación.
+6. **Agentes de IA** (`#agentes`): franja oscura entre Ingeniería y Educación.
 7. **Recorrido** (`.ruta`) y **Contacto**.
 
 ## La serie de la portada
 
-- Es un **esquema con datos simulados** y semilla fija, y lo dice. La genera `scripts/senales.py`
-  (numpy); `python3 scripts/senales.py` imprime bloques rotulados que se pegan a mano en
-  `index.html`. Del script se usan hoy la serie y el perfil RNA-SIP; las demás salidas (tramas CAN,
-  año de Química, miniatura de la tabla periódica) quedaron sin uso.
-- Si cambia la serie hay que actualizar juntos: los paths de las tres capas, `data-z`, `data-hit`,
-  la posición de `.alerta` y la de las palabras de la capa *explicar*.
-- El path que lee el JS (`.trend`) sólo usa comandos absolutos `M`/`L` con números positivos: el
-  script lo parsea con una expresión regular.
-- **Pasos** (Medir, Detectar, Explicar): se dibujan solos al cargar y se pueden elegir a mano.
-- **Cursor de lectura** (`.cursor`, `role="slider"`): recorre los 36 muestreos con el puntero, el
-  dedo (`touch-action:pan-y`: el scroll vertical sigue libre) o las flechas, y muestra muestreo y
-  desvío; desde el muestreo `data-hit`, si el desvío supera 2σ, marca «no vuelve a la referencia».
-- Sin JS la figura se ve completa y quieta. Con `prefers-reduced-motion` no hay animación: parte
-  completa, y los pasos y el cursor siguen funcionando.
+Un mismo gráfico con **tres escenarios**, en este orden: Data science (temperatura del refrigerante
+de un bus, por día), Docencia (logro agregado de un curso en un tema, por ensayo) y Ecología (función
+microbiana de un suelo post-minería frente a su referencia). Cambian variables, datos y palabras; el
+mensaje es el mismo: medir, ver la desviación a tiempo, actuar. Los escenarios 1 y 2 muestran además
+la proyección «sin actuar» (línea punteada) y la marca del momento de la acción.
+
+- Es un **esquema con datos simulados** y semilla fija, y lo dice. Nada es dato de estudiantes, de una
+  empresa ni de un sitio real; Docencia usa sólo promedios del curso.
+- La genera `scripts/serie.py` (numpy): `python3 scripts/serie.py json` imprime el JSON de los tres
+  escenarios (va en `<script type="application/json" id="escenarios">`), `html` imprime el escenario
+  inicial (el bloque dentro de `.plot`, para que sin JS la figura se vea completa y quieta) y `meta`
+  imprime umbrales y alertas. Para cambiar un escenario: editar `serie.py`, volver a pegar el JSON y
+  el HTML. El escenario Ecología reproduce, con la semilla original, la serie de la 008
+  (`senales.py` ya no genera la serie).
+- Cada escenario trae: réplicas por muestreo (`dots`), tendencia (`trend`), banda de referencia
+  (previa ± 2σ), marcas verticales, alerta, la curva reducida a tramos (`simple`), la proyección
+  (`proy`, opcional), palabras posicionadas en % (`m:0` las oculta bajo 640 px; `fin` las ancla a la
+  derecha) y los textos de los pasos y de la nota.
+- El path que lee el JS (`.trend`) sólo usa comandos absolutos `M`/`L` con números positivos.
+- **Escenarios**: botones `.esc` (`aria-pressed`) sobre la figura; sólo existen con JS. Cambiar de
+  escenario reinicia la animación (salvo con movimiento reducido).
+- **Pasos** (Medir, Detectar, Explicar y actuar): se dibujan solos al cargar y se pueden elegir a mano.
+- **Cursor de lectura** (`.cursor`, `role="slider"`): recorre los muestreos con el puntero, el dedo
+  (`touch-action:pan-y`) o las flechas, y muestra muestreo, valor y desvío; desde el muestreo `hit`, si
+  el desvío supera 2σ, muestra la alerta del escenario.
+- Sin JS la figura (escenario 1) se ve completa y quieta. Con `prefers-reduced-motion` no hay
+  animación: parte completa, y los pasos, los escenarios y el cursor siguen funcionando.
 
 ## Esquemas de flujo
 
@@ -59,8 +72,8 @@ bajo 820 px todas apuntan hacia abajo). El texto de los nodos es texto real.
   instituciones. Regenerar: captura a 2560×1720, `convert … -crop 1200x1000+680+370` y
   `-crop 1960x540+300+810 -resize 1400x`, calidad WebP 80.
 - `og.png` (1200×630) es una captura de la portada con movimiento reducido, a 1200×630, tema claro,
-  ocultando `.lede, .acciones, .lugar, .indice, .tema, .lectura` y con
-  `.hero{padding-block:1.75rem 2rem}` para que quepan el nombre, el titular y la serie. Se rehace
-  si cambia la portada.
+  ocultando `.lede, .acciones, .lugar, .indice, .tema, .lectura, .escenarios` y con
+  `.hero{padding-block:1.25rem 1.75rem}` para que quepan el nombre, el titular y la serie. Muestra el primer
+  escenario (data science). Se rehace si cambia la portada.
 - Anchos en `rem`/`em`, no en `ch`. Los respaldos `Bricolage Respaldo` y `Source Serif Respaldo`
   usan `size-adjust` medido contra Arial y Georgia para que la página no salte al cargar la fuente.
