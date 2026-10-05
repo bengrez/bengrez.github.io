@@ -1,60 +1,66 @@
 # Sitio personal — Benjamín Moreira-Grez
 
 Página única, HTML autocontenido (`index.html`): CSS y JS en línea, tipografías desde Google
-Fonts, sin otras dependencias. Pensada para GitHub Pages u hosting estático equivalente.
+Fonts (Bricolage Grotesque, Source Serif 4, IBM Plex Mono), sin otras dependencias ni paso de
+build. Pensada para GitHub Pages u hosting estático equivalente.
 
-Guía normativa: el plan de diseño del 2026-09-17 (artifact `claude.ai/artifact/Biv24tvWaomvxFeu8jFvLs`)
-y el brief `~/LLM-context/_vault/25_AGENT_COMMS/msg-030-2026-09-18-…`, con la decisión del dueño del
-2026-09-22 (rediseño expresivo: parallax, esquemas por sección, sección de recursos). Contexto del
-proyecto en `~/LLM-context/Personal/sitio-personal/`.
+Contexto del proyecto, guía normativa y guardrails (privacidad, no nombrar cliente ni colegio,
+DOI verificados) en `~/LLM-context/Personal/sitio-personal/`.
 
 Publicado con GitHub Pages desde la rama `main`, raíz del repositorio: https://bengrez.github.io/
 
-## Movimiento y esquemas
+## Estructura (rediseño del 2026-10-05, handoff 008)
 
-- **Todas las figuras son esquemas**, con datos simulados y semilla fija, y lo dicen en su rótulo.
-  Las genera `scripts/senales.py` (numpy): la serie del hero (medir, detectar, explicar), las tramas
-  CAN, el perfil RNA-SIP, la línea del año de Química de 8.º básico y la miniatura de la tabla
-  periódica. `python3 scripts/senales.py` imprime bloques rotulados que se pegan a mano en
-  `index.html`; no hay paso de build. La salida es idéntica en cada corrida.
-- Si cambia la serie del hero, hay que actualizar juntos: los paths de las tres capas, `data-z`,
-  `data-hit`, la posición de `.alerta` y la de las palabras de la capa *explicar*.
-- Los paths que lee el JS (`.trend`) sólo usan comandos absolutos `M`/`L` con números positivos:
-  el script los parsea con una expresión regular.
-- **Parallax**: capas `[data-depth]` dentro de escenas `[data-scene]`, movidas sólo con `transform`
-  en un cuadro de `requestAnimationFrame`, hasta 56 px en escritorio y 18 px en móvil. Con
-  `prefers-reduced-motion` no se mueve nada; sin JS la página queda completa y quieta.
-- `og.png` (1200×630) es una captura del hero con movimiento reducido; se rehace si cambia el hero.
-  Regenerar (2026-10-05): copia temporal de `index.html` con `nav{display:none}`, Chrome headless
-  `--force-prefers-reduced-motion --window-size=1200,780 --virtual-time-budget=8000`, y
-  `convert … -crop 1200x630+0+88` (titular, subtítulo y serie completa).
-- Anchos en `rem`/`em`, no en `ch`: `ch` depende de la fuente y hacía saltar la página al cargar
-  Bricolage. Los respaldos `Bricolage Respaldo` y `Source Serif Respaldo` usan `size-adjust`
-  medido contra Arial y Georgia por la misma razón.
+La tesis de la portada («Resuelvo problemas con lo que hay disponible») se prueba con la forma de
+la página: cada caso es un libro de tres columnas, **Había / Hice / Quedó**, y cada cosa lleva su
+**estado real** (`.estado`: `e-uso` publicado o en uso, `e-piloto` en piloto, `e-dev` en desarrollo;
+el glifo siempre va con su texto).
 
-## Tarjetas, esquema del sistema y capturas (2026-09-23)
+1. **Barra** fija: nombre, secciones (bajo 900 px sólo Contacto) y botón de tema.
+2. **Portada**: titular, una frase que dice quién es y qué hace, y dos acciones.
+3. **La serie** (`#serie`): panel oscuro en los dos temas, con la curva en tres lecturas.
+4. **Índice de casos** (`#casos`) con la leyenda de estados.
+5. **Casos**: `#ingenieria`, `#investigacion`, `#educacion`. Título y estado en un riel (fijo desde
+   960 px); en el cuerpo, el problema, el libro, la evidencia y el detalle plegado (`details.mas`).
+6. **Agentes de IA** (`#agentes`): franja oscura entre Ingeniería e Investigación.
+7. **Recorrido** (`.ruta`) y **Contacto**.
 
-- Las tres tarjetas de la portada llevan un arte SVG propio (mapa de telemetría, perfil RNA-SIP,
-  fragmento de tabla periódica), dibujado en línea con las variables de color del sitio.
-- `Ingeniería` ya no abre con la banda de tramas CAN (2026-09-23: un solo gráfico al principio, la
-  serie de la portada, que la sección retoma como telemetría); el esquema del sistema (SVG en línea)
-  va dentro del cuerpo y en pantallas angostas se desplaza en horizontal.
+## La serie de la portada
+
+- Es un **esquema con datos simulados** y semilla fija, y lo dice. La genera `scripts/senales.py`
+  (numpy); `python3 scripts/senales.py` imprime bloques rotulados que se pegan a mano en
+  `index.html`. Del script se usan hoy la serie y el perfil RNA-SIP; las demás salidas (tramas CAN,
+  año de Química, miniatura de la tabla periódica) quedaron sin uso.
+- Si cambia la serie hay que actualizar juntos: los paths de las tres capas, `data-z`, `data-hit`,
+  la posición de `.alerta` y la de las palabras de la capa *explicar*.
+- El path que lee el JS (`.trend`) sólo usa comandos absolutos `M`/`L` con números positivos: el
+  script lo parsea con una expresión regular.
+- **Pasos** (Medir, Detectar, Explicar): se dibujan solos al cargar y se pueden elegir a mano.
+- **Cursor de lectura** (`.cursor`, `role="slider"`): recorre los 36 muestreos con el puntero, el
+  dedo (`touch-action:pan-y`: el scroll vertical sigue libre) o las flechas, y muestra muestreo y
+  desvío; desde el muestreo `data-hit`, si el desvío supera 2σ, marca «no vuelve a la referencia».
+- Sin JS la figura se ve completa y quieta. Con `prefers-reduced-motion` no hay animación: parte
+  completa, y los pasos y el cursor siguen funcionando.
+
+## Esquemas de flujo
+
+`ol.flujo` (sistema de la flota, asistente del colegio) es HTML, no SVG: una fila con ramas desde
+820 px y una columna en móvil (la flota se bifurca en dos columnas bajo la base de datos). Cada
+flecha es un pseudo-elemento recortado con `clip-path` (`fd` a la derecha, `fb`/`fb2` hacia abajo;
+bajo 820 px todas apuntan hacia abajo). El texto de los nodos es texto real.
+
+## Temas, capturas y og.png
+
+- Tema claro y oscuro por `prefers-color-scheme`; el botón de la barra fija `data-theme` en `<html>`
+  y lo recuerda en `localStorage` (clave `tema`). Los colores del panel (`--panel`, `--p-*`) son
+  propios y casi iguales en ambos temas.
 - `tabla-periodica.webp` y `autodiagnostico.webp` son recortes de las herramientas públicas de
-  `aula-herramientas`, capturadas a 2x con Chrome headless y recortadas para no incluir cabeceras con
-  nombres de instituciones. Regenerar: captura a 2560×1720, `convert … -crop 1200x1000+680+370` y
+  `aula-herramientas`, capturadas a 2x y recortadas para no incluir cabeceras con nombres de
+  instituciones. Regenerar: captura a 2560×1720, `convert … -crop 1200x1000+680+370` y
   `-crop 1960x540+300+810 -resize 1400x`, calidad WebP 80.
-
-## Menos texto, misma información (2026-09-24)
-
-- El caso de cada sección (Problema, Qué había, Qué hice, Resultado) y la formación son **rutas**
-  (`.ruta`): estaciones sobre una regla continua en escritorio, espina vertical bajo 760 px.
-- **Ingeniería**: el esquema del sistema (`.sistema.pegado`) queda fijo arriba desde 1024 px de ancho
-  y 640 px de alto, y el bloque de la ficha que cruza el centro de la pantalla ilumina su nodo
-  (`dd[data-nodo]` y `g[data-nodo]`, script al final del archivo). Sin JS, o con pantalla angosta o
-  baja, el esquema es estático y cada rótulo nombra su nodo. Con `prefers-reduced-motion` no hay
-  transiciones de color.
-- **Aula**: el asistente de gestión escolar («medir un colegio») es un esquema escrito a mano con las
-  mismas clases que el esquema del sistema; `scripts/senales.py` no lo genera.
-- Las tres lecturas de Investigación (medir, detectar, explicar; `.tres`) reutilizan los glifos de
-  la leyenda de la portada.
-
+- `og.png` (1200×630) es una captura de la portada con movimiento reducido, a 1200×630, tema claro,
+  ocultando `.lede, .acciones, .lugar, .indice, .tema, .lectura` y con
+  `.hero{padding-block:1.75rem 2rem}` para que quepan el nombre, el titular y la serie. Se rehace
+  si cambia la portada.
+- Anchos en `rem`/`em`, no en `ch`. Los respaldos `Bricolage Respaldo` y `Source Serif Respaldo`
+  usan `size-adjust` medido contra Arial y Georgia para que la página no salte al cargar la fuente.
