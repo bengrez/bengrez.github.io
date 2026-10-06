@@ -35,7 +35,7 @@
   --bg:#FAF9F6; --surface:#F0EEE8; --ink:#1B1A17; --muted:#5B5955; --rule:#DAD7CF; --rule-strong:#B5B1A6;
   --accent:#900008; --accent-ink:#7A0007; --alert:#D9481F;
   --panel:#231B1A; --p-ink:#ECE9E2; --p-muted:#C9C3B8; --p-rule:#3B312F; --p-accent:#FF9A82;
-  --serie-a:#F86848; --serie-b:#900008;
+  --serie-a:#EF5536; --serie-b:#900008;
   --display:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
   --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
@@ -113,25 +113,27 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .fig.w{display:none}
 @media (min-width:900px){.plot{height:clamp(10rem,28vh,14rem)}.fig.w{display:block}.fig.n{display:none}}
 @media (max-width:639px){.plot{height:auto;aspect-ratio:400/220;max-height:30vh}.fig{width:100%;height:auto;max-height:100%}}
-@media (max-height:520px){.plot{height:5.5rem;aspect-ratio:auto}.fig{width:auto;height:100%}}
+@media (max-height:520px){.plot{height:5.5rem;aspect-ratio:auto}.fig{width:auto;height:100%}.fig .tick,.fig .nota,.fig .sello,.fig .leyenda{display:none}}
 .fig text{font-family:var(--mono);font-size:13px;fill:var(--muted)}
 .fig .titulo{font-family:var(--display);font-size:15px;font-weight:500;fill:var(--ink)}
 .fig.n .titulo{font-size:14px}
-.fig .sello{font-size:11.5px;fill:var(--muted);opacity:.85}
+.fig .sello{font-size:12.5px;fill:var(--muted)}
 .fig .eje{fill:none;stroke:var(--ink);stroke-width:1.1}
 .fig .banda{fill:var(--ink);opacity:.07}
 .fig .ref{fill:none;stroke:var(--muted);stroke-width:1;stroke-dasharray:5 4}
-.fig .nota{font-size:11px}
+.fig .nota{font-size:12px}
 .fig .linea{fill:none;stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
 .fig .linea.a,.fig .a circle,.fig .leyenda .a{stroke:var(--serie-a);fill:none}
 .fig .a circle,.fig .leyenda .a{fill:var(--serie-a)}
+/* La serie b se distingue también por forma (marcador hueco, línea más fina): en oscuro los dos rojos se parecen. */
 .fig .linea.b,.fig .b circle,.fig .leyenda .b{stroke:var(--serie-b);fill:none}
-.fig .b circle,.fig .leyenda .b{fill:var(--serie-b)}
+.fig .b circle,.fig .leyenda .b{fill:var(--bg);stroke-width:2}
+.fig .linea.b{stroke-width:1.7}
 .fig .linea.ink{stroke:var(--ink)}
 .fig .pt path{fill:none;stroke-width:1.5}
 .fig .pt.a path{stroke:var(--serie-a)}
 .fig .pt.b path{stroke:var(--serie-b)}
-.fig .pt circle{stroke:none}
+.fig .pt.a circle{stroke:none}
 .fig .alerta .guia{fill:none;stroke:var(--serie-b);stroke-width:1;stroke-dasharray:3 3}
 .fig .alerta circle{fill:none;stroke:var(--serie-b);stroke-width:2}
 .fig .alerta text,.fig .acento text{font-family:var(--display);font-size:13px;fill:var(--accent-ink)}
@@ -404,10 +406,10 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
   <rect class="banda" x="58" y="149.2" width="568" height="39.1"/>
   <path class="ref" d="M58 168.7H626"/>
   <text class="nota" x="64" y="201.2">referencia ± 2σ</text>
-  <path class="linea b" pathLength="1" d="M58 165.3 L77.6 172.3 L97.2 189.2 L116.8 167.4 L136.3 193.3 L155.9 179.8 L175.5 178.1 L195.1 178 L214.7 182.6 L234.3 180.4 L253.9 174.8 L273.4 174 L293 185.2 L312.6 179.9 L332.2 175.8 L351.8 180.1 L371.4 182.6 L391 167.4 L410.6 169 L430.1 181.1 L449.7 180.6 L469.3 182.8 L488.9 160.8 L508.5 182.1 L528.1 195.8 L547.7 180.4 L567.2 182.5 L586.8 176.9 L606.4 179.4 L626 156.9"/>
-  <path class="linea a" pathLength="1" d="M58 175.6 L77.6 164.2 L97.2 166.6 L116.8 170.4 L136.3 167.5 L155.9 188.7 L175.5 158.6 L195.1 152.6 L214.7 169.3 L234.3 173.3 L253.9 168.9 L273.4 174.5 L293 163.9 L312.6 154.2 L332.2 132.2 L351.8 119.7 L371.4 96 L391 84.6 L410.6 69.1 L430.1 60.8 L449.7 82.1 L469.3 84.7 L488.9 121.1 L508.5 131.8 L528.1 125.5 L547.7 137.6 L567.2 156.6 L586.8 181.4 L606.4 184.5 L626 190.2"/>
+  <path class="linea b" pathLength="1" d="M58 165.2 L77.6 169.4 L97.2 179.5 L116.8 166.4 L136.3 182 L155.9 173.9 L175.5 172.9 L195.1 172.8 L214.7 175.6 L234.3 174.2 L253.9 170.9 L273.4 170.4 L293 177.1 L312.6 173.9 L332.2 171.5 L351.8 174.1 L371.4 175.6 L391 166.5 L410.6 167.4 L430.1 174.6 L449.7 174.4 L469.3 175.7 L488.9 162.5 L508.5 175.3 L528.1 183.5 L547.7 174.2 L567.2 175.5 L586.8 172.2 L606.4 173.6 L626 160.1"/>
+  <path class="linea a" pathLength="1" d="M58 175.6 L77.6 164.2 L97.2 166.6 L116.8 170.4 L136.3 167.5 L155.9 188.7 L175.5 158.6 L195.1 152.6 L214.7 169.3 L234.3 173.3 L253.9 168.9 L273.4 174.5 L293 163.9 L312.6 154.2 L332.2 132.2 L351.8 119.7 L371.4 96 L391 84.6 L410.6 69.1 L430.1 60.8 L449.7 82.1 L469.3 84.7 L488.9 121.1 L508.5 131.8 L528.1 125.5 L547.7 137.6 L567.2 156.6 L586.8 181.4 L606.4 182.3 L626 188"/>
   <g class="alerta"><path class="guia" d="M332.2 24V234"/><circle cx="332.2" cy="132.2" r="5"/><text x="340.2" y="37">alerta</text></g>
-  <g class="leyenda"><circle class="a" cx="72" cy="38" r="4"/><text x="81" y="42">bus con falla</text><circle class="b" cx="72" cy="56" r="4"/><text x="81" y="60">otro bus</text></g>
+  <g class="leyenda"><circle class="a" cx="72" cy="38" r="4"/><text x="81" y="42">bus que deriva</text><circle class="b" cx="72" cy="56" r="4"/><text x="81" y="60">otro bus</text></g>
 </svg>
 <svg class="fig n ds" viewBox="0 0 400 220" role="img" aria-label="Gráfico con datos simulados: temperatura del refrigerante de dos buses durante 30 días. Un bus, en burdeos, se mantiene dentro de la banda normal. El otro, en coral, deriva hacia arriba desde el día 13, sale de la banda el día 15, donde está la alerta, y vuelve a lo normal tras la revisión.">
   <path class="eje" d="M50 22V176H388"/>
@@ -433,10 +435,10 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
   <rect class="banda" x="50" y="113.8" width="338" height="28.7"/>
   <path class="ref" d="M50 128.1H388"/>
   <text class="nota" x="56" y="155.4">referencia ± 2σ</text>
-  <path class="linea b" pathLength="1" d="M50 125.6 L61.7 130.8 L73.3 143.1 L85 127.2 L96.6 146.2 L108.3 136.2 L119.9 135 L131.6 134.9 L143.2 138.3 L154.9 136.7 L166.6 132.6 L178.2 132 L189.9 140.2 L201.5 136.3 L213.2 133.3 L224.8 136.5 L236.5 138.3 L248.1 127.2 L259.8 128.3 L271.4 137.2 L283.1 136.8 L294.8 138.5 L306.4 122.3 L318.1 137.9 L329.7 148 L341.4 136.7 L353 138.3 L364.7 134.2 L376.3 136 L388 119.5"/>
-  <path class="linea a" pathLength="1" d="M50 133.2 L61.7 124.8 L73.3 126.6 L85 129.4 L96.6 127.3 L108.3 142.8 L119.9 120.7 L131.6 116.3 L143.2 128.6 L154.9 131.5 L166.6 128.3 L178.2 132.4 L189.9 124.6 L201.5 117.5 L213.2 101.3 L224.8 92.2 L236.5 74.8 L248.1 66.4 L259.8 55.1 L271.4 49 L283.1 64.6 L294.8 66.5 L306.4 93.2 L318.1 101 L329.7 96.4 L341.4 105.3 L353 119.3 L364.7 137.4 L376.3 139.7 L388 143.9"/>
+  <path class="linea b" pathLength="1" d="M50 125.5 L61.7 128.6 L73.3 136 L85 126.5 L96.6 137.9 L108.3 131.9 L119.9 131.2 L131.6 131.1 L143.2 133.1 L154.9 132.2 L166.6 129.7 L178.2 129.3 L189.9 134.3 L201.5 131.9 L213.2 130.2 L224.8 132.1 L236.5 133.2 L248.1 126.5 L259.8 127.1 L271.4 132.5 L283.1 132.3 L294.8 133.3 L306.4 123.6 L318.1 132.9 L329.7 139 L341.4 132.2 L353 133.1 L364.7 130.7 L376.3 131.7 L388 121.8"/>
+  <path class="linea a" pathLength="1" d="M50 133.2 L61.7 124.8 L73.3 126.6 L85 129.4 L96.6 127.3 L108.3 142.8 L119.9 120.7 L131.6 116.3 L143.2 128.6 L154.9 131.5 L166.6 128.3 L178.2 132.4 L189.9 124.6 L201.5 117.5 L213.2 101.3 L224.8 92.2 L236.5 74.8 L248.1 66.4 L259.8 55.1 L271.4 49 L283.1 64.6 L294.8 66.5 L306.4 93.2 L318.1 101 L329.7 96.4 L341.4 105.3 L353 119.3 L364.7 137.4 L376.3 138.1 L388 142.2"/>
   <g class="alerta"><path class="guia" d="M213.2 22V176"/><circle cx="213.2" cy="101.3" r="5"/><text x="221.2" y="35">alerta</text></g>
-  <g class="leyenda"><circle class="a" cx="64" cy="36" r="4"/><text x="73" y="40">bus con falla</text><circle class="b" cx="64" cy="54" r="4"/><text x="73" y="58">otro bus</text></g>
+  <g class="leyenda"><circle class="a" cx="64" cy="36" r="4"/><text x="73" y="40">bus que deriva</text><circle class="b" cx="64" cy="54" r="4"/><text x="73" y="58">otro bus</text></g>
 </svg>
 <!-- /fig:ds -->
     </div></div>
@@ -556,7 +558,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
   <text class="titulo" transform="translate(14 129) rotate(-90)" text-anchor="middle">Logro del curso (%)</text>
   <text class="sello" x="626" y="15" text-anchor="end">Datos simulados</text>
   <path class="linea ink" pathLength="1" d="M93.5 81.3 L164.5 72.1 L235.5 78.6 L306.5 74 L377.5 167.2 L448.5 139.3 L519.5 96.2 L590.5 75.2"/>
-  <g class="acento"><circle cx="377.5" cy="167.2" r="5.5"/><text x="386.5" y="171.2">tema nuevo</text></g>
+  <g class="acento"><circle cx="377.5" cy="167.2" r="5.5"/><text x="377.5" y="187.2" text-anchor="middle">tema nuevo</text></g>
 </svg>
 <svg class="fig n do" viewBox="0 0 400 220" role="img" aria-label="Gráfico con datos simulados y sólo promedios del curso: logro en un tema a lo largo de ocho ensayos. Se mantiene cerca del 70 por ciento, cae al 48 en el quinto ensayo, marcado en burdeos porque aparece un tema nuevo, y vuelve al 70 tras el refuerzo.">
   <path class="eje" d="M50 22V176H388"/>
@@ -586,7 +588,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
   <text class="titulo" transform="translate(13 99) rotate(-90)" text-anchor="middle">Logro del curso (%)</text>
   <text class="sello" x="388" y="13" text-anchor="end">Datos simulados</text>
   <path class="linea ink" pathLength="1" d="M71.1 64 L113.4 57.3 L155.6 62 L197.9 58.7 L240.1 127 L282.4 106.6 L324.6 74.9 L366.9 59.5"/>
-  <g class="acento"><circle cx="240.1" cy="127" r="5.5"/><text x="249.1" y="131">tema nuevo</text></g>
+  <g class="acento"><circle cx="240.1" cy="127" r="5.5"/><text x="240.1" y="147" text-anchor="middle">tema nuevo</text></g>
 </svg>
 <!-- /fig:do -->
     </div></div>
@@ -884,26 +886,31 @@ var portada=(function(){
    se muestra sale de en qué sección está la «línea de lectura» (35 % del espacio visible bajo la figura):
    Data science → 1; Ecología → 2; Docencia → 3; antes de la primera, 1. Cada vez que cambia, la figura nueva
    se traza (clase .traza, que se quita y se vuelve a poner para reiniciar las animaciones del CSS; con
-   prefers-reduced-motion el CSS no anima). Sin JS se ve la Figura 1, suelta y completa, y no hay botones. */
+   prefers-reduced-motion el CSS no anima), pero sólo cuando la figura está a la vista: si al cargar queda
+   bajo el pliegue, se traza al llegar a ella. Cuando la escena sale por arriba (Agentes, Recorrido, Contacto)
+   se olvida la figura mostrada, así que al volver a un caso se vuelve a trazar. Sin JS se ve el gráfico de
+   Data science, suelto y completo, y no hay botones. */
 (function(){
   var fig=document.getElementById('serie'); if(!fig) return;
   var hojas=[].slice.call(fig.querySelectorAll('.hoja')), tabs=[].slice.call(fig.querySelectorAll('.esc')),
       bar=document.querySelector('.barra'), escena=document.getElementById('escena'),
       secs=['ingenieria','investigacion','educacion'].map(function(id){ return document.getElementById(id); }),
-      kAct=-1, raf=0;
+      kAct=-1, raf=0, pendiente=false;
   if(hojas.length!==3||tabs.length!==3||!escena||secs.some(function(x){ return !x; })) return;
   function medir(){ document.documentElement.style.setProperty('--fig-h',fig.offsetHeight+'px'); }
   function trazar(h){
+    // Sólo la variante visible (.w o .n): si la otra se activara al cambiar de ancho, arrancaría sola.
     var svgs=[].slice.call(h.querySelectorAll('svg.fig'));
     svgs.forEach(function(s){ s.classList.remove('traza'); });
     void h.offsetWidth; // reinicia las animaciones
-    svgs.forEach(function(s){ s.classList.add('traza'); });
+    svgs.forEach(function(s){ if(s.getClientRects().length) s.classList.add('traza'); });
   }
+  function aLaVista(){ var r=fig.getBoundingClientRect(); return r.bottom<=window.innerHeight+2; }
   function mostrar(k){
-    if(k===kAct) return; kAct=k;
+    if(k===kAct) return; kAct=k; pendiente=true;
     hojas.forEach(function(h,j){ h.hidden=j!==k; });
     tabs.forEach(function(b,j){ b.setAttribute('aria-pressed',j===k?'true':'false'); });
-    fig.setAttribute('data-figura',k+1); medir(); trazar(hojas[k]);
+    fig.setAttribute('data-figura',k+1); medir();
   }
   // dónde está la lectura: la última sección cuyo borde superior pasó la línea de lectura
   function estado(){
@@ -911,7 +918,13 @@ var portada=(function(){
     secs.forEach(function(s,j){ if(s.getBoundingClientRect().top<=linea) k=j; });
     return k;
   }
-  function evaluar(){ raf=0; mostrar(estado()); }
+  function evaluar(){
+    raf=0;
+    var base=(bar?bar.offsetHeight:52)+fig.offsetHeight;
+    if(escena.getBoundingClientRect().bottom<=base){ kAct=-1; pendiente=false; return; } // la escena salió por arriba
+    mostrar(estado());
+    if(pendiente&&aLaVista()){ pendiente=false; trazar(hojas[kAct]); }
+  }
   function pedirEval(){ if(!raf) raf=requestAnimationFrame(evaluar); }
   window.addEventListener('scroll',pedirEval,{passive:true});
   window.addEventListener('resize',function(){ medir(); pedirEval(); });

@@ -43,11 +43,12 @@ def datos_ds():
     dias = np.arange(1, 31)
     base = 86.0
     mu = base + np.where(dias >= 13, 0.9 * np.clip(dias - 12, 0, 8), 0) - np.where(dias >= 21, 0.85 * np.clip(dias - 20, 0, 9), 0)
-    mu = np.clip(mu, base - 0.5, None)
+    mu = np.clip(mu, base - 0.3, None)
     bus_a = (mu[:, None] + rng.normal(0, 1.1, (30, 3))).mean(1)          # el bus que deriva
-    bus_b = (base - 0.4 + rng.normal(0, 1.0, (30, 3))).mean(1)          # un bus de referencia
+    bus_b = (base + rng.normal(0, 0.6, (30, 3))).mean(1)                # otro bus, que se queda dentro
     mu_ref, sd_ref = bus_a[:10].mean(), bus_a[:10].std(ddof=1)
     lo, hi = mu_ref - 2 * sd_ref, mu_ref + 2 * sd_ref
+    assert ((bus_b >= lo) & (bus_b <= hi)).all(), "el otro bus debe quedarse dentro de la banda"
     alerta = int(dias[bus_a > hi][0])
     return dict(dias=dias, a=bus_a, b=bus_b, lo=lo, hi=hi, mu=mu_ref, alerta=alerta)
 
@@ -128,7 +129,7 @@ def figura_ds(var):
     p.partes.append(f'<g class="alerta"><path class="guia" d="M{f(xa)} {f(p.T)}V{f(p.B)}"/><circle cx="{f(xa)}" cy="{f(ya)}" r="5"/>'
                     f'<text x="{f(xa + 8)}" y="{f(p.T + 13)}">alerta</text></g>')
     lx, ly = p.L + 14, p.T + 14
-    p.partes.append(f'<g class="leyenda"><circle class="a" cx="{f(lx)}" cy="{f(ly)}" r="4"/><text x="{f(lx + 9)}" y="{f(ly + 4)}">bus con falla</text>'
+    p.partes.append(f'<g class="leyenda"><circle class="a" cx="{f(lx)}" cy="{f(ly)}" r="4"/><text x="{f(lx + 9)}" y="{f(ly + 4)}">bus que deriva</text>'
                     f'<circle class="b" cx="{f(lx)}" cy="{f(ly + 18)}" r="4"/><text x="{f(lx + 9)}" y="{f(ly + 22)}">otro bus</text></g>')
     return p.svg("ds", ARIA_DS)
 
@@ -158,7 +159,7 @@ def figura_do(var):
     p.linea(d["ensayos"], d["logro"], "ink")
     k = d["caida"]
     cx, cy = p.X(k), p.Y(d["logro"][k - 1])
-    p.partes.append(f'<g class="acento"><circle cx="{f(cx)}" cy="{f(cy)}" r="5.5"/><text x="{f(cx + 9)}" y="{f(cy + 4)}">tema nuevo</text></g>')
+    p.partes.append(f'<g class="acento"><circle cx="{f(cx)}" cy="{f(cy)}" r="5.5"/><text x="{f(cx)}" y="{f(cy + 20)}" text-anchor="middle">tema nuevo</text></g>')
     return p.svg("do", ARIA_DO)
 
 
