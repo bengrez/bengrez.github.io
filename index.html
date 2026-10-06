@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Benjamín Moreira-Grez</title>
-<meta name="description" content="Resuelvo problemas con lo que hay disponible. Medir, ver la desviación, explicar y actuar: el mismo método en una empresa de transporte, en investigación y en un colegio. Agentes de IA en entornos controlados.">
+<meta name="description" content="Resuelvo problemas con lo que hay disponible. Medir, ver la desviación a tiempo, explicar y actuar: el mismo método en una empresa de transporte, en investigación y en un colegio. Trabajo con agentes de IA en entornos controlados, con búsqueda vectorial y embeddings.">
 <meta property="og:title" content="Benjamín Moreira-Grez">
-<meta property="og:description" content="Resuelvo problemas con lo que hay disponible. Medir, ver la desviación, explicar y actuar: el mismo método en una empresa de transporte, en investigación y en un colegio. Agentes de IA en entornos controlados.">
+<meta property="og:description" content="Resuelvo problemas con lo que hay disponible. Medir, ver la desviación a tiempo, explicar y actuar: el mismo método en una empresa de transporte, en investigación y en un colegio. Trabajo con agentes de IA en entornos controlados, con búsqueda vectorial y embeddings.">
 <meta property="og:type" content="profile">
 <meta property="og:locale" content="es_CL">
 <meta property="og:url" content="https://bengrez.github.io/">
@@ -39,7 +39,7 @@
   --display:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
   --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
-  --page:72rem; --gutter:clamp(1rem,4vw,2.5rem); --bar:3.25rem;
+  --page:72rem; --gutter:clamp(1rem,4vw,2.5rem); --bar:3.25rem; --riel:16.5rem;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
@@ -56,7 +56,6 @@
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar) + var(--fig-h,0px) + 1rem);overflow-anchor:none}
-.pie{font-family:var(--mono);font-size:.78rem;line-height:1.55;color:var(--muted);max-width:36em}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
 .pagina{max-width:var(--page);margin-inline:auto;padding-inline:var(--gutter)}
@@ -98,29 +97,23 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
    Las genera scripts/figuras.py (dos variantes: .w desde 900 px, .n en celular y tablet) y las pinta este CSS
    con las variables del sitio, así que se integran al fondo en los dos temas. Gradiente de detalle por
    elementos: Data science, dos series, banda ± 2σ y la alerta; Ecología, dos series con barras de error;
-   Docencia, una línea y un acento. Desde la 015, en escritorio (≥ 960 px) cada gráfico vive en el riel de su
-   sección (.riel-fig, variante .w), fijo a la izquierda sobre el título; bajo 960 px la franja fija de arriba
-   (.serie, variante .n) muestra el del caso que se está leyendo. Se traza al entrar a la sección (clase
-   .traza, que pone el JS cada vez); con movimiento reducido, o sin JS, aparece completo. */
+   Docencia, una línea y un acento. Se ve una a la vez, la del caso que se está leyendo, y se traza al entrar
+   a la sección (clase .traza, que pone el JS cada vez); con movimiento reducido, o sin JS, aparece completa. */
 .serie{background:var(--bg);color:var(--ink);border-block:1px solid var(--rule-strong)}
 .agentes :focus-visible{outline-color:var(--p-accent)}
-.hoja{margin-block:.5rem .7rem}
+.escenarios{display:flex;flex-wrap:wrap;gap:0 1.5rem;padding-top:.2rem;font-family:var(--display);font-size:.92rem}
+.escenarios[hidden]{display:none}
+.esc{margin:0;padding:.45rem 0;border:0;border-bottom:2px solid transparent;background:none;font:inherit;color:var(--muted);cursor:pointer}
+.esc:hover{color:var(--ink)}
+.esc[aria-pressed="true"]{color:var(--ink);font-weight:600;border-bottom-color:var(--accent)}
+.hoja{margin-block:.4rem .7rem}
 .hoja[hidden]{display:none}
 .plot{position:relative;height:clamp(8rem,24vh,11rem)}
-.fig{display:block;height:100%;width:auto;max-width:100%;margin-inline:auto}
-@media (min-width:960px){
-  .serie{display:none}
-  .riel-fig{margin-bottom:1rem}
-  .riel-fig .plot{height:auto;aspect-ratio:640/280;max-height:38vh}
-  .riel-fig .fig{width:100%;height:auto;max-height:100%;margin:0}
-  /* En la columna del 50 % el viewBox de 640 se dibuja a 420–560 px: el texto sube para seguir legible. */
-  .riel-fig .fig text{font-size:15.5px}
-  .riel-fig .fig .titulo{font-size:17px}
-  .riel-fig .fig .sello,.riel-fig .fig .nota{font-size:14px}
-}
-@media (max-width:959px){.riel-fig{display:none}}
+.fig{display:block;height:100%;width:auto;max-width:100%}
+.fig.w{display:none}
+@media (min-width:900px){.plot{height:clamp(10rem,28vh,14rem)}.fig.w{display:block}.fig.n{display:none}}
 @media (max-width:639px){.plot{height:auto;aspect-ratio:400/220;max-height:30vh}.fig{width:100%;height:auto;max-height:100%}}
-@media (max-height:520px) and (max-width:959px){.plot{height:5.5rem;aspect-ratio:auto}.fig{width:auto;height:100%}.fig .tick,.fig .nota,.fig .sello,.fig .leyenda{display:none}}
+@media (max-height:520px){.plot{height:5.5rem;aspect-ratio:auto}.fig{width:auto;height:100%}.fig .tick,.fig .nota,.fig .sello,.fig .leyenda{display:none}}
 .fig text{font-family:var(--mono);font-size:13px;fill:var(--muted)}
 .fig .titulo{font-family:var(--display);font-size:15px;font-weight:500;fill:var(--ink)}
 .fig.n .titulo{font-size:14px}
@@ -167,7 +160,9 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
    dentro de .escena, hasta el final de Docencia) y cambia al pasar de sección. Sin JS no se pega. */
 .escena{position:relative}
 .serie.fijo{position:sticky;top:var(--bar);z-index:6;box-shadow:0 10px 16px -12px rgba(0,0,0,.35)}
-@media (max-height:520px) and (max-width:959px){.serie.fijo .hoja{margin-bottom:.4rem}}
+.serie.fijo>.pagina{padding-top:.2rem}
+@media (max-width:639px){.serie.fijo .escenarios{gap:0 1.1rem;font-size:.86rem}.serie.fijo .esc{padding-block:.35rem}}
+@media (max-height:520px){.serie.fijo .hoja{margin-bottom:.4rem}}
 
 /* ---- estados: cada cosa de la página dice en qué está ---- */
 .estado{font-family:var(--mono);font-size:.8rem;line-height:1.4;color:var(--ink);white-space:nowrap}
@@ -175,10 +170,10 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .e-uso::before{background:var(--accent)}
 .e-piloto::before{background:linear-gradient(90deg,var(--accent) 50%,transparent 50%)}
 
-/* ---- dos columnas (iteración 012; 50/50 y gráfico en el riel desde la 015) ----
-   Cada sección es un riel a la izquierda (el gráfico del caso, el título y el estado, fijos mientras dura
-   la sección) y el contenido a la derecha, que avanza con el scroll. En celular el riel se parte: el título
-   queda fijo y chico bajo la franja del gráfico, y el estado y el lugar pasan al flujo, sobre el contenido. */
+/* ---- dos columnas bajo el gráfico (iteración 012) ----
+   Cada sección es un riel a la izquierda (título, fijo mientras dura la sección) y el contenido a la
+   derecha, que avanza con el scroll. En celular el riel se parte: el título queda fijo y chico bajo
+   el gráfico, y el estado y el lugar pasan al flujo, sobre el contenido. */
 .seccion{border-top:1px solid var(--rule-strong);padding-block:clamp(2.25rem,5.5vw,4rem)}
 #casos{border-top:0}
 .dos{display:grid;grid-template-columns:minmax(0,1fr);gap:1.1rem 0}
@@ -187,9 +182,9 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .riel .estado{display:block}
 .kicker{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
 @media (min-width:960px){
-  .dos{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(2rem,4vw,4rem)}
-  .riel{position:sticky;top:calc(var(--bar) + 1.5rem);align-self:start}
-  .riel h2{font-size:clamp(1.5rem,1.4vw + 1rem,2.1rem);max-width:16em}
+  .dos{grid-template-columns:var(--riel) minmax(0,1fr);gap:clamp(2rem,4vw,3.5rem)}
+  .riel{position:sticky;top:calc(var(--bar) + var(--fig-h,0px) + 1.5rem);align-self:start}
+  .fuera .riel{top:calc(var(--bar) + 1.5rem)}
 }
 @media (max-width:959px){
   /* El título es lo primero de la sección y el salto con ancla lo deja justo bajo la figura. */
@@ -213,57 +208,138 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .lista .tit{font-family:var(--display);font-weight:500;font-size:clamp(1.12rem,.8vw + 1rem,1.4rem);line-height:1.2;letter-spacing:-.01em}
 .lista a:hover .tit{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em;text-decoration-color:var(--accent)}
 .lista .est{display:flex;flex-direction:column;align-items:flex-start}
-@media (max-width:1149px){.lista a{grid-template-columns:1fr}}
+@media (max-width:760px){.lista a{grid-template-columns:1fr}}
 
-/* ---- un caso como slide: un titular y tres viñetas (problema, qué hice, resultado) ---- */
-.problema{font-family:var(--display);font-size:clamp(1.25rem,1vw + 1rem,1.75rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;max-width:22em;text-wrap:balance}
-.vinetas{margin-top:clamp(1.25rem,2.5vw,2rem);max-width:30em}
-.vinetas li{position:relative;padding:.75rem 0 .85rem 1.1rem;border-top:1px solid var(--rule);font-size:1.0625rem;line-height:1.45}
-.vinetas li:last-child{border-bottom:1px solid var(--rule)}
-.vinetas li::before{content:"";position:absolute;left:0;top:1.3rem;width:.45rem;height:.45rem;border-radius:50%;background:var(--accent)}
-.vinetas b{display:block;font-family:var(--mono);font-weight:500;font-size:.78rem;color:var(--muted);margin-bottom:.15rem}
-.agentes .vinetas li{border-color:var(--p-rule)}
-.agentes .vinetas li::before{background:var(--p-accent)}
-.agentes .vinetas b{color:var(--p-muted)}
-.agentes .problema{color:var(--p-ink)}
-@media (min-width:960px){.slide{padding-top:.35rem}}
+/* ---- un caso: el problema, el método en tres pasos, la evidencia y el detalle plegado ---- */
+.problema{font-family:var(--display);font-size:clamp(1.2rem,.9vw + 1rem,1.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;max-width:28em;text-wrap:balance}
+.grafico{max-width:44rem;margin-top:.9rem;font-family:var(--mono);font-size:.78rem;line-height:1.55;color:var(--muted)}
+.grafico b{font-weight:500;color:var(--ink)}
+.metodo{margin-top:clamp(1.5rem,3vw,2.25rem);border-top:2px solid var(--ink)}
+.metodo li{display:grid;grid-template-columns:minmax(0,1fr);gap:.35rem 1.5rem;padding-block:.9rem 1.1rem;border-bottom:1px solid var(--rule)}
+.metodo h3{font-size:1rem;font-weight:600;line-height:1.3;margin:0;padding-top:.1rem}
+.metodo li:nth-child(2) h3{color:var(--accent-ink)}
+.metodo p{font-size:1rem;line-height:1.5;max-width:40em}
+@media (min-width:700px){.metodo li{grid-template-columns:9.5rem minmax(0,1fr)}}
+.con-que{font-family:var(--mono);font-size:.82rem;line-height:1.6;color:var(--muted);margin-top:1.25rem}
+.con-que b{font-weight:500;color:var(--ink)}
+.evidencia{margin-top:clamp(1.75rem,4vw,2.75rem)}
+.evidencia figcaption,.pie{font-family:var(--mono);font-size:.78rem;line-height:1.55;color:var(--muted);margin-top:.8rem;max-width:62em}
+.seccion h3.titulo{font-size:1.2rem;margin-top:clamp(2rem,4.5vw,3rem)}
+.seccion h3.titulo + .estado{display:block;margin-top:.35rem}
+.nota{max-width:36em}
 
-/* ---- recorrido: árbol al estilo de tree, con ramas que se abren ---- */
-.arbol{margin-top:1rem;font-size:1rem;line-height:1.45}
-.arbol ul,.arbol ol{margin:0;padding:0;list-style:none}
-.arbol li{position:relative;padding-left:1.6rem}
-/* Líneas de rama: una vertical por nivel y un conector horizontal por nodo; el último nodo corta la vertical. */
-.arbol li::before{content:"";position:absolute;left:.45rem;top:0;bottom:0;border-left:1px solid var(--rule-strong)}
-.arbol li::after{content:"";position:absolute;left:.45rem;top:.85em;width:.75rem;border-top:1px solid var(--rule-strong)}
-.arbol li:last-child::before{bottom:auto;height:.85em}
-.arbol>li{padding-left:0;margin-top:1.1rem}
-.arbol>li::before,.arbol>li::after{display:none}
-.arbol>li>ul{margin-top:.35rem}
-.arbol .nodo{font-family:var(--display);font-weight:600;font-size:1.1rem;line-height:1.3}
-.arbol .cuando{display:inline-block;font-family:var(--mono);font-weight:400;font-size:.78rem;color:var(--muted);margin-right:.7em}
-.arbol li li{padding-block:.2rem}
-.abrir{margin:0;padding:0;border:0;background:none;font:inherit;font-family:var(--display);font-weight:500;color:var(--ink)}
-button.abrir{color:var(--accent-ink);cursor:pointer;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
-button.abrir::before{content:"−";display:inline-block;width:1.1em;font-family:var(--mono);color:var(--muted);text-decoration:none}
-button.abrir[aria-expanded="false"]::before{content:"+"}
-.abrir .n{font-family:var(--mono);font-weight:400;font-size:.8rem;color:var(--muted);margin-left:.35em}
-.hojas{margin-top:.25rem}
-.hojas[hidden]{display:none}
-.hojas .year{font-family:var(--mono);font-size:.82rem;color:var(--muted);margin-right:.6em}
-.hojas .venue{display:block;font-family:var(--display);font-size:.86rem;color:var(--muted)}
-.hojas b{font-family:var(--mono);font-weight:500;font-size:.78rem;color:var(--muted);margin-right:.6em}
-@media (max-width:560px){.arbol li{padding-left:1.2rem}.arbol li::after{width:.5rem}}
+/* ---- esquemas de flujo, en HTML: fila con ramas en escritorio, columna en móvil ---- */
+.flujo{--fg:1.6rem;display:grid;gap:var(--fg);font-family:var(--display);
+  --fh:polygon(0 4px,calc(100% - 7px) 4px,calc(100% - 7px) 0,100% 4.5px,calc(100% - 7px) 9px,calc(100% - 7px) 5px,0 5px);
+  --fv:polygon(4px 0,5px 0,5px calc(100% - 7px),9px calc(100% - 7px),4.5px 100%,0 calc(100% - 7px),4px calc(100% - 7px))}
+.flujo li{position:relative;min-width:0;padding:.65rem .7rem .7rem;border:1px solid var(--rule-strong);background:var(--surface)}
+.flujo b{display:block;font-weight:600;font-size:.95rem;line-height:1.2}
+.flujo span{display:block;margin-top:.25rem;font-size:.82rem;line-height:1.35;color:var(--muted)}
+.flujo .db{border-color:var(--accent);border-width:1.5px}
+.flujo .ale{border-color:var(--alert);border-width:1.5px}
+.flujo .aparte{border-style:dashed;background:none;align-self:start}
+.flujo li::before,.flujo li::after{position:absolute;background:var(--rule-strong)}
+.flujo .det::after{background:var(--alert)}
+/* Flecha a la derecha / flecha hacia abajo, cada una en un solo pseudo-elemento recortado. */
+.flujo .fd::after,.flujo .fb::after,.flujo .fb2::before{content:""}
+@media (min-width:1100px){
+  .flujo .fd::after{left:calc(100% + 1.5px);top:50%;width:var(--fg);height:9px;margin-top:-4.5px;clip-path:var(--fh)}
+  .flujo .fb::after,.flujo .fb2::before{left:50%;top:calc(100% + 1.5px);width:9px;height:var(--fg);margin-left:-4.5px;clip-path:var(--fv)}
+  .flota{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .flota .det{grid-area:2 / 3}
+  .flota .ale{grid-area:2 / 4}
+  .colegio{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .colegio .aparte{grid-area:2 / 1 / auto / span 2}
+  .colegio .reg{grid-area:2 / 3}
+}
+@media (max-width:1099px){
+  .flujo .fd::after,.flujo .fb::after,.flujo .fb2::before{left:50%;top:calc(100% + 1.5px);width:9px;height:var(--fg);margin-left:-4.5px;clip-path:var(--fv)}
+  /* La flota se bifurca en la base: a la izquierda sigue al mapa, a la derecha va al detector. */
+  .flota{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .flota .can,.flota .ing,.flota .db{grid-column:1 / -1}
+  .flota .db::after{left:25%}
+  .flota .db::before{left:75%}
+  .flota .api{grid-area:4 / 1}.flota .map{grid-area:5 / 1}
+  .flota .det{grid-area:4 / 2}.flota .ale{grid-area:5 / 2}
+  .colegio .aparte{margin-top:-.6rem}
+}
+
+/* ---- más detalle, plegado ---- */
+.mas{margin-top:clamp(1.5rem,3vw,2rem);border-block:1px solid var(--rule-strong)}
+.mas summary{display:flex;align-items:baseline;gap:.7rem;padding-block:.85rem;font-family:var(--display);font-weight:500;cursor:pointer;list-style:none}
+.mas summary::-webkit-details-marker{display:none}
+.mas summary::before{content:"+";font-family:var(--mono);color:var(--accent-ink);width:.7em}
+.mas[open] summary::before{content:"−"}
+.mas summary:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
+.mas>:last-child{margin-bottom:1.25rem}
+.ficha{display:grid;grid-template-columns:11.5rem 1fr}
+.ficha dt{font-family:var(--display);font-size:.95rem;color:var(--muted);padding:.75rem 1rem .75rem 0;border-top:1px solid var(--rule)}
+.ficha dd{padding:.75rem 0;border-top:1px solid var(--rule)}
+.ficha .estado{display:block;margin-top:.3rem}
+@media (max-width:560px){.ficha{grid-template-columns:1fr}.ficha dd{border-top:0;padding-top:0}.ficha dt{padding-bottom:.2rem}}
+.pubs li{display:grid;grid-template-columns:3.5rem 1fr;gap:0 1rem;padding:.6rem 0;border-top:1px solid var(--rule)}
+.pubs .year{font-family:var(--mono);font-size:.85rem;color:var(--muted);padding-top:.2rem}
+.pubs .venue{display:block;font-style:italic;color:var(--muted);font-size:.95rem;margin-top:.1rem}
+.pubs .note{font-style:normal;font-family:var(--display);font-size:.85rem}
+.outlinks{font-family:var(--display);padding-top:.9rem;border-top:1px solid var(--rule)}
+
+/* ---- investigación: perfil RNA-SIP junto a la nota ---- */
+.sip{display:grid;grid-template-columns:minmax(0,22rem) minmax(0,1fr);gap:1.25rem clamp(1.5rem,3vw,2.5rem);align-items:start}
+.sip .arte{border:1px solid var(--rule);background:var(--surface)}
+.sip svg{display:block;width:100%;height:auto}
+.arte .ax{fill:none;stroke:var(--rule-strong);stroke-width:1px}
+.arte .c12{fill:none;stroke:var(--muted);stroke-width:1.6px}
+.arte .c13{fill:none;stroke:var(--accent);stroke-width:1.8px}
+.arte .a13{fill:var(--accent);opacity:.14}
+.arte text{font-family:var(--display);font-size:11px;fill:var(--muted)}
+.arte .t13{fill:var(--accent-ink)}
+@media (max-width:700px){.sip{grid-template-columns:1fr}}
+.metricas{display:flex;flex-wrap:wrap;align-items:flex-end;gap:.9rem 2.25rem;margin-top:clamp(1.5rem,3vw,2rem);padding-block:.9rem;border-block:1px solid var(--rule)}
+.metricas div{display:flex;flex-direction:column-reverse}
+.metricas dt{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+.metricas dd{font-family:var(--display);font-size:1.5rem;font-weight:600;line-height:1.15;font-variant-numeric:tabular-nums}
+.metricas .cuando{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-left:auto}
+
+/* ---- herramientas publicadas: dos piezas distintas, cada una con su captura ---- */
+.herr{position:relative;display:grid;gap:1rem clamp(1.25rem,3vw,2rem);margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--rule)}
+.herr-a{grid-template-columns:minmax(0,17rem) minmax(0,1fr)}
+.herr img{display:block;width:100%;border:1px solid var(--rule)}
+.herr:hover img{border-color:var(--accent)}
+.herr h4{margin:0;font-family:var(--display);font-size:1.3rem;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+.herr h4 a{color:inherit;text-decoration-color:var(--accent)}
+.herr h4 a::after{content:"";position:absolute;inset:0}
+.herr .sub{font-family:var(--display);color:var(--muted);margin-top:.15rem}
+.herr .estado{display:block;margin-top:.4rem}
+.campos{display:grid;grid-template-columns:5.5rem 1fr;gap:.45rem 1rem;margin-top:.9rem;font-size:.98rem;line-height:1.45}
+.campos dt{font-family:var(--display);font-size:.9rem;color:var(--muted);padding-top:.08rem}
+@media (max-width:640px){.herr-a{grid-template-columns:1fr}.campos{grid-template-columns:1fr;gap:.1rem}.campos dd+dt{margin-top:.5rem}}
+
 /* ---- agentes de IA: franja oscura ---- */
 .agentes{background:var(--panel);color:var(--p-ink);border-block:1px solid var(--p-rule)}
 .agentes a{color:var(--p-accent)}
-.agentes .kicker{color:var(--p-muted)}
+.agentes .kicker,.agentes .riel .donde{color:var(--p-muted)}
 .agentes .riel-top{background:var(--panel);border-bottom-color:var(--p-rule)}
+.agentes .lede{color:var(--p-ink);margin-top:0;font-size:1.12rem;max-width:30em}
+.practicas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(1.25rem,3vw,2rem);align-content:start;margin-top:1.25rem}
+.practicas div{padding-block:.85rem 1.1rem;border-top:1px solid var(--p-rule)}
+.practicas dt{font-family:var(--mono);font-size:.8rem;color:var(--p-accent);margin-bottom:.3rem}
+.practicas dd{font-size:1rem;line-height:1.45}
+@media (max-width:520px){.practicas{grid-template-columns:1fr}}
+
+/* ---- recorrido: estaciones sobre una línea vertical ---- */
+.ruta{display:grid;font-size:.98rem;line-height:1.45}
+.ruta>div{position:relative;border-left:1px solid var(--rule-strong);padding:0 0 1.25rem 1.2rem}
+.ruta>div:last-child{padding-bottom:0}
+.ruta>div::before{content:"";position:absolute;left:-5.5px;top:.3rem;width:10px;height:10px;border-radius:50%;background:var(--bg);border:1.6px solid var(--accent)}
+.ruta>div:last-child::before{background:var(--accent)}
+.ruta dt{font-family:var(--display);font-weight:600;line-height:1.25;margin-bottom:.35rem}
+.ruta .sub{display:block;font-family:var(--display);font-size:.86rem;color:var(--muted);margin-top:.4rem}
 
 /* Con la serie fija, el borde de salto ya lleva su alto (scroll-padding); lo que está fuera de .escena no. */
 #agentes,#recorrido,#contacto{scroll-margin-top:calc(0px - var(--fig-h,0px))}
 
 /* ---- contacto ---- */
-.correo{display:inline-block;font-family:var(--display);font-weight:600;font-size:clamp(1.25rem,2.1vw,2.2rem);letter-spacing:-.02em;line-height:1.15;color:var(--ink);text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:.16em;overflow-wrap:anywhere}
+.correo{display:inline-block;font-family:var(--display);font-weight:600;font-size:clamp(1.3rem,3.6vw,2.6rem);letter-spacing:-.02em;line-height:1.15;color:var(--ink);text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:.16em}
 .perfiles{display:flex;flex-wrap:wrap;gap:.2rem 1.75rem;margin-top:1.4rem;font-family:var(--display)}
 .perfiles a{display:inline-block;padding-block:.4rem}
 footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line-height:1.6;color:var(--muted)}
@@ -292,15 +368,49 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 <div class="hero pagina">
   <p class="lugar">Santiago, Chile</p>
   <h1>Resuelvo problemas con lo que hay disponible.</h1>
-  <p class="lede">Ecólogo microbiano (Ph.D.). Sistemas de datos para una empresa de transporte, agentes de IA en entornos controlados y clases de ciencias en un colegio. El método: medir, ver la desviación, explicar y actuar.</p>
+  <p class="lede">Soy Benjamín Moreira-Grez, ecólogo microbiano (Ph.D.). Hoy construyo sistemas de datos para una empresa de transporte, trabajo con agentes de IA en entornos controlados y enseño ciencias en un colegio. El método viene del doctorado: medir, ver la desviación a tiempo, explicar y actuar.</p>
   <p class="acciones"><a class="btn" href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a><a class="btn sec" href="#casos">Ver los tres casos</a></p>
 </div>
 
 <div class="escena" id="escena">
 <div class="serie" id="serie" data-figura="1">
   <div class="pagina">
+    <div class="escenarios" role="group" aria-label="Figura que se muestra" hidden>
+      <button type="button" class="esc" data-esc="0" aria-pressed="true">Data science</button>
+      <button type="button" class="esc" data-esc="1" aria-pressed="false">Ecología</button>
+      <button type="button" class="esc" data-esc="2" aria-pressed="false">Docencia</button>
+    </div>
     <div class="hoja" id="fig-1"><div class="plot">
 <!-- fig:ds -->
+<svg class="fig w ds" viewBox="0 0 640 280" role="img" aria-label="Gráfico con datos simulados: temperatura del refrigerante de dos buses durante 30 días. Un bus, en burdeos, se mantiene dentro de la banda normal. El otro, en coral, deriva hacia arriba desde el día 13, sale de la banda el día 15, donde está la alerta, y vuelve a lo normal tras la revisión.">
+  <path class="eje" d="M58 24V234H626"/>
+  <path class="eje" d="M58 234v4"/>
+  <text class="tick" x="58" y="250" text-anchor="middle">1</text>
+  <path class="eje" d="M234.3 234v4"/>
+  <text class="tick" x="234.3" y="250" text-anchor="middle">10</text>
+  <path class="eje" d="M430.1 234v4"/>
+  <text class="tick" x="430.1" y="250" text-anchor="middle">20</text>
+  <path class="eje" d="M626 234v4"/>
+  <text class="tick" x="626" y="250" text-anchor="middle">30</text>
+  <path class="eje" d="M58 204h-4"/>
+  <text class="tick" x="51" y="208" text-anchor="end">84</text>
+  <path class="eje" d="M58 144h-4"/>
+  <text class="tick" x="51" y="148" text-anchor="end">88</text>
+  <path class="eje" d="M58 84h-4"/>
+  <text class="tick" x="51" y="88" text-anchor="end">92</text>
+  <path class="eje" d="M58 24h-4"/>
+  <text class="tick" x="51" y="28" text-anchor="end">96</text>
+  <text class="titulo" x="342" y="273" text-anchor="middle">Día</text>
+  <text class="titulo" transform="translate(14 129) rotate(-90)" text-anchor="middle">Refrigerante (°C)</text>
+  <text class="sello" x="626" y="15" text-anchor="end">Datos simulados</text>
+  <rect class="banda" x="58" y="149.2" width="568" height="39.1"/>
+  <path class="ref" d="M58 168.7H626"/>
+  <text class="nota" x="64" y="201.2">referencia ± 2σ</text>
+  <path class="linea b" pathLength="1" d="M58 165.2 L77.6 169.4 L97.2 179.5 L116.8 166.4 L136.3 182 L155.9 173.9 L175.5 172.9 L195.1 172.8 L214.7 175.6 L234.3 174.2 L253.9 170.9 L273.4 170.4 L293 177.1 L312.6 173.9 L332.2 171.5 L351.8 174.1 L371.4 175.6 L391 166.5 L410.6 167.4 L430.1 174.6 L449.7 174.4 L469.3 175.7 L488.9 162.5 L508.5 175.3 L528.1 183.5 L547.7 174.2 L567.2 175.5 L586.8 172.2 L606.4 173.6 L626 160.1"/>
+  <path class="linea a" pathLength="1" d="M58 175.6 L77.6 164.2 L97.2 166.6 L116.8 170.4 L136.3 167.5 L155.9 188.7 L175.5 158.6 L195.1 152.6 L214.7 169.3 L234.3 173.3 L253.9 168.9 L273.4 174.5 L293 163.9 L312.6 154.2 L332.2 132.2 L351.8 119.7 L371.4 96 L391 84.6 L410.6 69.1 L430.1 60.8 L449.7 82.1 L469.3 84.7 L488.9 121.1 L508.5 131.8 L528.1 125.5 L547.7 137.6 L567.2 156.6 L586.8 181.4 L606.4 182.3 L626 188"/>
+  <g class="alerta"><path class="guia" d="M332.2 24V234"/><circle cx="332.2" cy="132.2" r="5"/><text x="340.2" y="37">alerta</text></g>
+  <g class="leyenda"><circle class="a" cx="72" cy="38" r="4"/><text x="81" y="42">bus que deriva</text><circle class="b" cx="72" cy="56" r="4"/><text x="81" y="60">otro bus</text></g>
+</svg>
 <svg class="fig n ds" viewBox="0 0 400 220" role="img" aria-label="Gráfico con datos simulados: temperatura del refrigerante de dos buses durante 30 días. Un bus, en burdeos, se mantiene dentro de la banda normal. El otro, en coral, deriva hacia arriba desde el día 13, sale de la banda el día 15, donde está la alerta, y vuelve a lo normal tras la revisión.">
   <path class="eje" d="M50 22V176H388"/>
   <path class="eje" d="M50 176v4"/>
@@ -334,6 +444,47 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
     </div></div>
     <div class="hoja" id="fig-2" hidden><div class="plot">
 <!-- fig:ec -->
+<svg class="fig w ec" viewBox="0 0 640 280" role="img" aria-label="Gráfico con datos simulados: función microbiana de un suelo minero inoculado, como porcentaje de la referencia, a lo largo de 24 meses, en superficie (coral) y en profundidad (burdeos), con barras de error. Las dos series suben, pero a los 24 meses quedan en 74 y 60 por ciento, bajo la línea de referencia.">
+  <path class="eje" d="M58 24V234H626"/>
+  <path class="eje" d="M89.6 234v4"/>
+  <text class="tick" x="89.6" y="250" text-anchor="middle">0</text>
+  <path class="eje" d="M215.8 234v4"/>
+  <text class="tick" x="215.8" y="250" text-anchor="middle">6</text>
+  <path class="eje" d="M342 234v4"/>
+  <text class="tick" x="342" y="250" text-anchor="middle">12</text>
+  <path class="eje" d="M468.2 234v4"/>
+  <text class="tick" x="468.2" y="250" text-anchor="middle">18</text>
+  <path class="eje" d="M594.4 234v4"/>
+  <text class="tick" x="594.4" y="250" text-anchor="middle">24</text>
+  <path class="eje" d="M58 234h-4"/>
+  <text class="tick" x="51" y="238" text-anchor="end">0</text>
+  <path class="eje" d="M58 186.3h-4"/>
+  <text class="tick" x="51" y="190.3" text-anchor="end">25</text>
+  <path class="eje" d="M58 138.5h-4"/>
+  <text class="tick" x="51" y="142.5" text-anchor="end">50</text>
+  <path class="eje" d="M58 90.8h-4"/>
+  <text class="tick" x="51" y="94.8" text-anchor="end">75</text>
+  <path class="eje" d="M58 43.1h-4"/>
+  <text class="tick" x="51" y="47.1" text-anchor="end">100</text>
+  <text class="titulo" x="342" y="273" text-anchor="middle">Meses desde la inoculación</text>
+  <text class="titulo" transform="translate(14 129) rotate(-90)" text-anchor="middle">Función (% de la referencia)</text>
+  <text class="sello" x="626" y="15" text-anchor="end">Datos simulados</text>
+  <path class="ref" d="M58 43.1H626"/>
+  <text class="nota" x="622" y="38.1" text-anchor="end">referencia</text>
+  <g class="pt a" style="--i:0"><path d="M80.1 176.7V161.5M76.1 176.7h8M76.1 161.5h8"/><circle cx="80.1" cy="169.1" r="4.5"/></g>
+  <g class="pt a" style="--i:1"><path d="M143.2 157.6V142.4M139.2 157.6h8M139.2 142.4h8"/><circle cx="143.2" cy="150" r="4.5"/></g>
+  <g class="pt a" style="--i:2"><path d="M206.3 144.3V125.2M202.3 144.3h8M202.3 125.2h8"/><circle cx="206.3" cy="134.7" r="4.5"/></g>
+  <g class="pt a" style="--i:3"><path d="M332.5 117.5V98.5M328.5 117.5h8M328.5 98.5h8"/><circle cx="332.5" cy="108" r="4.5"/></g>
+  <g class="pt a" style="--i:4"><path d="M458.8 104.2V88.9M454.8 104.2h8M454.8 88.9h8"/><circle cx="458.8" cy="96.5" r="4.5"/></g>
+  <g class="pt a" style="--i:5"><path d="M585 100.4V85.1M581 100.4h8M581 85.1h8"/><circle cx="585" cy="92.7" r="4.5"/></g>
+  <g class="pt b" style="--i:6"><path d="M99 184.4V169.1M95 184.4h8M95 169.1h8"/><circle cx="99" cy="176.7" r="4.5"/></g>
+  <g class="pt b" style="--i:7"><path d="M162.1 174.8V155.7M158.1 174.8h8M158.1 155.7h8"/><circle cx="162.1" cy="165.3" r="4.5"/></g>
+  <g class="pt b" style="--i:8"><path d="M225.2 165.3V146.2M221.2 165.3h8M221.2 146.2h8"/><circle cx="225.2" cy="155.7" r="4.5"/></g>
+  <g class="pt b" style="--i:9"><path d="M351.5 142.4V119.5M347.5 142.4h8M347.5 119.5h8"/><circle cx="351.5" cy="130.9" r="4.5"/></g>
+  <g class="pt b" style="--i:10"><path d="M477.7 132.8V113.7M473.7 132.8h8M473.7 113.7h8"/><circle cx="477.7" cy="123.3" r="4.5"/></g>
+  <g class="pt b" style="--i:11"><path d="M603.9 129V109.9M599.9 129h8M599.9 109.9h8"/><circle cx="603.9" cy="119.5" r="4.5"/></g>
+  <g class="leyenda"><circle class="a" cx="72" cy="54" r="4"/><text x="80" y="58">superficie</text><circle class="b" cx="72" cy="72" r="4"/><text x="80" y="76">profundo</text></g>
+</svg>
 <svg class="fig n ec" viewBox="0 0 400 220" role="img" aria-label="Gráfico con datos simulados: función microbiana de un suelo minero inoculado, como porcentaje de la referencia, a lo largo de 24 meses, en superficie (coral) y en profundidad (burdeos), con barras de error. Las dos series suben, pero a los 24 meses quedan en 74 y 60 por ciento, bajo la línea de referencia.">
   <path class="eje" d="M50 22V176H388"/>
   <path class="eje" d="M68.8 176v4"/>
@@ -379,6 +530,36 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
     </div></div>
     <div class="hoja" id="fig-3" hidden><div class="plot">
 <!-- fig:do -->
+<svg class="fig w do" viewBox="0 0 640 280" role="img" aria-label="Gráfico con datos simulados y sólo promedios del curso: logro en un tema a lo largo de ocho ensayos. Se mantiene cerca del 70 por ciento, cae al 48 en el quinto ensayo, marcado en burdeos porque aparece un tema nuevo, y vuelve al 70 tras el refuerzo.">
+  <path class="eje" d="M58 24V234H626"/>
+  <path class="eje" d="M93.5 234v4"/>
+  <text class="tick" x="93.5" y="250" text-anchor="middle">1</text>
+  <path class="eje" d="M164.5 234v4"/>
+  <text class="tick" x="164.5" y="250" text-anchor="middle">2</text>
+  <path class="eje" d="M235.5 234v4"/>
+  <text class="tick" x="235.5" y="250" text-anchor="middle">3</text>
+  <path class="eje" d="M306.5 234v4"/>
+  <text class="tick" x="306.5" y="250" text-anchor="middle">4</text>
+  <path class="eje" d="M377.5 234v4"/>
+  <text class="tick" x="377.5" y="250" text-anchor="middle">5</text>
+  <path class="eje" d="M448.5 234v4"/>
+  <text class="tick" x="448.5" y="250" text-anchor="middle">6</text>
+  <path class="eje" d="M519.5 234v4"/>
+  <text class="tick" x="519.5" y="250" text-anchor="middle">7</text>
+  <path class="eje" d="M590.5 234v4"/>
+  <text class="tick" x="590.5" y="250" text-anchor="middle">8</text>
+  <path class="eje" d="M58 234h-4"/>
+  <text class="tick" x="51" y="238" text-anchor="end">30</text>
+  <path class="eje" d="M58 157.6h-4"/>
+  <text class="tick" x="51" y="161.6" text-anchor="end">50</text>
+  <path class="eje" d="M58 81.3h-4"/>
+  <text class="tick" x="51" y="85.3" text-anchor="end">70</text>
+  <text class="titulo" x="342" y="273" text-anchor="middle">Ensayo</text>
+  <text class="titulo" transform="translate(14 129) rotate(-90)" text-anchor="middle">Logro del curso (%)</text>
+  <text class="sello" x="626" y="15" text-anchor="end">Datos simulados</text>
+  <path class="linea ink" pathLength="1" d="M93.5 81.3 L164.5 72.1 L235.5 78.6 L306.5 74 L377.5 167.2 L448.5 139.3 L519.5 96.2 L590.5 75.2"/>
+  <g class="acento"><circle cx="377.5" cy="167.2" r="5.5"/><text x="377.5" y="187.2" text-anchor="middle">tema nuevo</text></g>
+</svg>
 <svg class="fig n do" viewBox="0 0 400 220" role="img" aria-label="Gráfico con datos simulados y sólo promedios del curso: logro en un tema a lo largo de ocho ensayos. Se mantiene cerca del 70 por ciento, cae al 48 en el quinto ensayo, marcado en burdeos porque aparece un tema nuevo, y vuelve al 70 tras el refuerzo.">
   <path class="eje" d="M50 22V176H388"/>
   <path class="eje" d="M71.1 176v4"/>
@@ -420,7 +601,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <div class="riel-top"><p class="kicker">Tres casos</p><h2 id="h-casos">Un método, tres lugares</h2></div>
     </header>
     <div>
-      <p class="intro">Medir, ver la desviación a tiempo, explicar y actuar. En una empresa de transporte, en el doctorado y en un colegio. Cada cosa dice en qué estado está.</p>
+      <p class="intro">Medir, ver la desviación a tiempo, explicar y actuar. Lo hice en una empresa de transporte, en la investigación del doctorado y en un colegio. Cada caso lleva arriba su gráfico, con el detalle que su evidencia permite: dos series con su banda y su alerta, dos series con barras de error, una línea y un acento. Cada cosa dice en qué estado está de verdad.</p>
       <ul class="estados" aria-label="Estados que usa esta página">
         <li class="estado e-uso">publicado o en uso</li>
         <li class="estado e-piloto">en piloto</li>
@@ -438,49 +619,51 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 <section class="seccion" id="ingenieria" aria-labelledby="h-ing">
   <div class="pagina dos">
     <header class="riel">
-      <div class="riel-fig"><div class="plot">
-<!-- figw:ds -->
-<svg class="fig w ds" viewBox="0 0 640 280" role="img" aria-label="Gráfico con datos simulados: temperatura del refrigerante de dos buses durante 30 días. Un bus, en burdeos, se mantiene dentro de la banda normal. El otro, en coral, deriva hacia arriba desde el día 13, sale de la banda el día 15, donde está la alerta, y vuelve a lo normal tras la revisión.">
-  <path class="eje" d="M58 24V234H626"/>
-  <path class="eje" d="M58 234v4"/>
-  <text class="tick" x="58" y="250" text-anchor="middle">1</text>
-  <path class="eje" d="M234.3 234v4"/>
-  <text class="tick" x="234.3" y="250" text-anchor="middle">10</text>
-  <path class="eje" d="M430.1 234v4"/>
-  <text class="tick" x="430.1" y="250" text-anchor="middle">20</text>
-  <path class="eje" d="M626 234v4"/>
-  <text class="tick" x="626" y="250" text-anchor="middle">30</text>
-  <path class="eje" d="M58 204h-4"/>
-  <text class="tick" x="51" y="208" text-anchor="end">84</text>
-  <path class="eje" d="M58 144h-4"/>
-  <text class="tick" x="51" y="148" text-anchor="end">88</text>
-  <path class="eje" d="M58 84h-4"/>
-  <text class="tick" x="51" y="88" text-anchor="end">92</text>
-  <path class="eje" d="M58 24h-4"/>
-  <text class="tick" x="51" y="28" text-anchor="end">96</text>
-  <text class="titulo" x="342" y="273" text-anchor="middle">Día</text>
-  <text class="titulo" transform="translate(14 129) rotate(-90)" text-anchor="middle">Refrigerante (°C)</text>
-  <text class="sello" x="626" y="15" text-anchor="end">Datos simulados</text>
-  <rect class="banda" x="58" y="149.2" width="568" height="39.1"/>
-  <path class="ref" d="M58 168.7H626"/>
-  <text class="nota" x="64" y="201.2">referencia ± 2σ</text>
-  <path class="linea b" pathLength="1" d="M58 165.2 L77.6 169.4 L97.2 179.5 L116.8 166.4 L136.3 182 L155.9 173.9 L175.5 172.9 L195.1 172.8 L214.7 175.6 L234.3 174.2 L253.9 170.9 L273.4 170.4 L293 177.1 L312.6 173.9 L332.2 171.5 L351.8 174.1 L371.4 175.6 L391 166.5 L410.6 167.4 L430.1 174.6 L449.7 174.4 L469.3 175.7 L488.9 162.5 L508.5 175.3 L528.1 183.5 L547.7 174.2 L567.2 175.5 L586.8 172.2 L606.4 173.6 L626 160.1"/>
-  <path class="linea a" pathLength="1" d="M58 175.6 L77.6 164.2 L97.2 166.6 L116.8 170.4 L136.3 167.5 L155.9 188.7 L175.5 158.6 L195.1 152.6 L214.7 169.3 L234.3 173.3 L253.9 168.9 L273.4 174.5 L293 163.9 L312.6 154.2 L332.2 132.2 L351.8 119.7 L371.4 96 L391 84.6 L410.6 69.1 L430.1 60.8 L449.7 82.1 L469.3 84.7 L488.9 121.1 L508.5 131.8 L528.1 125.5 L547.7 137.6 L567.2 156.6 L586.8 181.4 L606.4 182.3 L626 188"/>
-  <g class="alerta"><path class="guia" d="M332.2 24V234"/><circle cx="332.2" cy="132.2" r="5"/><text x="340.2" y="37">alerta</text></g>
-  <g class="leyenda"><circle class="a" cx="72" cy="38" r="4"/><text x="81" y="42">bus que deriva</text><circle class="b" cx="72" cy="56" r="4"/><text x="81" y="60">otro bus</text></g>
-</svg>
-<!-- /figw:ds -->
-      </div></div>
       <div class="riel-top"><p class="kicker">Data science</p><h2 id="h-ing">Telemetría y detección de fallas en una flota de buses</h2></div>
       <div class="riel-meta"><p class="estado e-piloto">en piloto</p><p class="donde">Para una empresa de transporte.</p></div>
     </header>
-    <div class="slide">
-      <p class="problema">Una flota de buses sin visibilidad ni aviso de las fallas que venían.</p>
-      <ul class="vinetas">
-        <li><b>Problema</b>Señales del bus CAN sin procesar y fallas sin registro suficiente.</li>
-        <li><b>Qué hice</b>Telemetría de punta a punta y un detector de anomalías evaluado a ciegas.</li>
-        <li><b>Resultado</b>En piloto con datos en tiempo real; datos de conductores con resguardos (Ley 21.719).</li>
-      </ul>
+    <div>
+      <p class="problema">Una flota de buses sin visibilidad de sus vehículos ni de las fallas que venían.</p>
+      <p class="grafico"><b>Arriba, el gráfico de Data science</b>, con datos simulados: temperatura del refrigerante de dos buses, día a día. La banda es la referencia de los primeros 10 días ± 2σ; un bus se queda dentro y el otro deriva hasta salir de ella. Ahí salta la alerta, y la revisión lo devuelve a lo normal antes de la falla. Es el gráfico con más elementos porque es donde hay más datos.</p>
+      <ol class="metodo">
+        <li><h3>Medir</h3><p>Las señales llegaban del bus CAN sin procesar. Monté la telemetría de punta a punta: del bus CAN y el GNSS a una base de series temporales, con un contrato de datos versionado en la ingesta, una API y un mapa en vivo que reconstruye los tramos. FMS, protocolos de tacógrafo y GNSS los aprendí sobre la marcha.</p></li>
+        <li><h3>Ver la desviación</h3><p>No había fallas registradas suficientes para aprender de ellas. Construí un simulador de telemetría y un banco de evaluación a ciegas, y sobre eso un detector de anomalías, con reglas y modelos, que estima el riesgo de falla desde las señales del bus.</p></li>
+        <li><h3>Explicar y actuar</h3><p>Se despliega sólo lo que supera a las reglas simples; lo demás, no. Hoy el sistema decide sobre datos en tiempo real, en piloto y con monitoreo propio. Los datos de conductores, que iban por correo, pasaron a una plataforma con resguardos, diseñada para la Ley 21.719, vigente desde diciembre de 2026.</p></li>
+      </ol>
+      <figure class="evidencia" data-nosnippet>
+        <ol class="flujo flota" aria-label="Esquema del sistema: del bus CAN y GNSS a la ingesta, la base de series temporales, la API y el mapa en vivo; desde la base, una rama evalúa las señales con un detector de anomalías y produce alertas.">
+          <li class="can fd"><b>Bus CAN y GNSS</b><span>en cada vehículo</span></li>
+          <li class="ing fd"><b>Ingesta</b><span>contrato de datos versionado</span></li>
+          <li class="db fd fb2"><b>PostgreSQL</b><span>TimescaleDB y PostGIS</span></li>
+          <li class="api fd"><b>API</b><span>FastAPI</span></li>
+          <li class="map"><b>Mapa en vivo</b><span>reconstrucción de tramos</span></li>
+          <li class="det fd"><b>Detector de anomalías</b><span>reglas y modelos, evaluados a ciegas</span></li>
+          <li class="ale"><b>Alerta</b><span>sólo lo que supera a las reglas</span></li>
+        </ol>
+        <figcaption>Esquema del sistema, de la señal a la decisión; la rama del detector se evalúa contra reglas simples antes de producción.</figcaption>
+      </figure>
+      <p class="con-que"><b>Con qué:</b> Python, FastAPI, PostgreSQL con TimescaleDB, PostGIS y pgvector, Docker, Linux, MCP, HTMX y React.</p>
+      <details class="mas">
+        <summary>El sistema, pieza por pieza</summary>
+        <dl class="ficha">
+          <dt>Bus CAN y GNSS</dt>
+          <dd>FMS, protocolos de tacógrafos y telemetría GNSS, aprendidos sobre la marcha.</dd>
+          <dt>Ingesta</dt>
+          <dd>Contrato versionado con el equipo que mantiene la base.</dd>
+          <dt>PostgreSQL</dt>
+          <dd>TimescaleDB para series temporales, PostGIS para posiciones, pgvector para embeddings.</dd>
+          <dt>API y mapa en vivo</dt>
+          <dd>FastAPI sirve el dashboard de flota con reconstrucción de tramos. En piloto, con monitoreo propio.</dd>
+          <dt>Detector de anomalías</dt>
+          <dd>Riesgo de falla desde las señales del bus. Sin fallas registradas suficientes: simulador de telemetría y banco de evaluación a ciegas.</dd>
+          <dt>Alerta</dt>
+          <dd>Se despliega sólo lo que supera a las reglas simples; lo demás, no.</dd>
+          <dt>Datos personales</dt>
+          <dd>Plataforma multiempresa para datos y fotos de conductores, en vez del correo: calidad en origen, lo sensible separado de la traza durable, diseñada para cumplir la Ley 21.719.</dd>
+          <dt>Sobre la marcha</dt>
+          <dd>Despliegues sin internet y la ley de datos personales.</dd>
+        </dl>
+      </details>
     </div>
   </div>
 </section>
@@ -488,61 +671,51 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 <section class="seccion" id="investigacion" aria-labelledby="h-inv">
   <div class="pagina dos">
     <header class="riel">
-      <div class="riel-fig"><div class="plot">
-<!-- figw:ec -->
-<svg class="fig w ec" viewBox="0 0 640 280" role="img" aria-label="Gráfico con datos simulados: función microbiana de un suelo minero inoculado, como porcentaje de la referencia, a lo largo de 24 meses, en superficie (coral) y en profundidad (burdeos), con barras de error. Las dos series suben, pero a los 24 meses quedan en 74 y 60 por ciento, bajo la línea de referencia.">
-  <path class="eje" d="M58 24V234H626"/>
-  <path class="eje" d="M89.6 234v4"/>
-  <text class="tick" x="89.6" y="250" text-anchor="middle">0</text>
-  <path class="eje" d="M215.8 234v4"/>
-  <text class="tick" x="215.8" y="250" text-anchor="middle">6</text>
-  <path class="eje" d="M342 234v4"/>
-  <text class="tick" x="342" y="250" text-anchor="middle">12</text>
-  <path class="eje" d="M468.2 234v4"/>
-  <text class="tick" x="468.2" y="250" text-anchor="middle">18</text>
-  <path class="eje" d="M594.4 234v4"/>
-  <text class="tick" x="594.4" y="250" text-anchor="middle">24</text>
-  <path class="eje" d="M58 234h-4"/>
-  <text class="tick" x="51" y="238" text-anchor="end">0</text>
-  <path class="eje" d="M58 186.3h-4"/>
-  <text class="tick" x="51" y="190.3" text-anchor="end">25</text>
-  <path class="eje" d="M58 138.5h-4"/>
-  <text class="tick" x="51" y="142.5" text-anchor="end">50</text>
-  <path class="eje" d="M58 90.8h-4"/>
-  <text class="tick" x="51" y="94.8" text-anchor="end">75</text>
-  <path class="eje" d="M58 43.1h-4"/>
-  <text class="tick" x="51" y="47.1" text-anchor="end">100</text>
-  <text class="titulo" x="342" y="273" text-anchor="middle">Meses desde la inoculación</text>
-  <text class="titulo" transform="translate(14 129) rotate(-90)" text-anchor="middle">Función (% de la referencia)</text>
-  <text class="sello" x="626" y="15" text-anchor="end">Datos simulados</text>
-  <path class="ref" d="M58 43.1H626"/>
-  <text class="nota" x="622" y="38.1" text-anchor="end">referencia</text>
-  <g class="pt a" style="--i:0"><path d="M80.1 176.7V161.5M76.1 176.7h8M76.1 161.5h8"/><circle cx="80.1" cy="169.1" r="4.5"/></g>
-  <g class="pt a" style="--i:1"><path d="M143.2 157.6V142.4M139.2 157.6h8M139.2 142.4h8"/><circle cx="143.2" cy="150" r="4.5"/></g>
-  <g class="pt a" style="--i:2"><path d="M206.3 144.3V125.2M202.3 144.3h8M202.3 125.2h8"/><circle cx="206.3" cy="134.7" r="4.5"/></g>
-  <g class="pt a" style="--i:3"><path d="M332.5 117.5V98.5M328.5 117.5h8M328.5 98.5h8"/><circle cx="332.5" cy="108" r="4.5"/></g>
-  <g class="pt a" style="--i:4"><path d="M458.8 104.2V88.9M454.8 104.2h8M454.8 88.9h8"/><circle cx="458.8" cy="96.5" r="4.5"/></g>
-  <g class="pt a" style="--i:5"><path d="M585 100.4V85.1M581 100.4h8M581 85.1h8"/><circle cx="585" cy="92.7" r="4.5"/></g>
-  <g class="pt b" style="--i:6"><path d="M99 184.4V169.1M95 184.4h8M95 169.1h8"/><circle cx="99" cy="176.7" r="4.5"/></g>
-  <g class="pt b" style="--i:7"><path d="M162.1 174.8V155.7M158.1 174.8h8M158.1 155.7h8"/><circle cx="162.1" cy="165.3" r="4.5"/></g>
-  <g class="pt b" style="--i:8"><path d="M225.2 165.3V146.2M221.2 165.3h8M221.2 146.2h8"/><circle cx="225.2" cy="155.7" r="4.5"/></g>
-  <g class="pt b" style="--i:9"><path d="M351.5 142.4V119.5M347.5 142.4h8M347.5 119.5h8"/><circle cx="351.5" cy="130.9" r="4.5"/></g>
-  <g class="pt b" style="--i:10"><path d="M477.7 132.8V113.7M473.7 132.8h8M473.7 113.7h8"/><circle cx="477.7" cy="123.3" r="4.5"/></g>
-  <g class="pt b" style="--i:11"><path d="M603.9 129V109.9M599.9 129h8M599.9 109.9h8"/><circle cx="603.9" cy="119.5" r="4.5"/></g>
-  <g class="leyenda"><circle class="a" cx="72" cy="54" r="4"/><text x="80" y="58">superficie</text><circle class="b" cx="72" cy="72" r="4"/><text x="80" y="76">profundo</text></g>
-</svg>
-<!-- /figw:ec -->
-      </div></div>
       <div class="riel-top"><p class="kicker">Ecología</p><h2 id="h-inv">Suelos mineros: saber si de verdad se recuperan</h2></div>
       <div class="riel-meta"><p class="estado e-uso">publicado</p><p class="donde">Doctorado en la University of Western Australia.</p></div>
     </header>
-    <div class="slide">
-      <p class="problema">Saber si un suelo minero se recupera al devolverle microorganismos, o sólo lo parece.</p>
-      <ul class="vinetas">
-        <li><b>Problema</b>Muestras pocas y caras, secuenciación ruidosa, sin referencia de suelo sano.</li>
-        <li><b>Qué hice</b>Muestreo con réplicas, RNA-SIP, metagenómica y estadística multivariante.</li>
-        <li><b>Resultado</b>Doctorado y publicaciones que siguen citándose: 738 citas, índice h 12.</li>
-      </ul>
+    <div>
+      <p class="problema">Saber si un suelo minero degradado se recupera al devolverle microorganismos, o sólo lo parece.</p>
+      <p class="grafico"><b>Arriba, el gráfico de Ecología</b>, con datos simulados y el estilo de mis figuras publicadas: función microbiana de un suelo inoculado, en superficie y en profundidad, media ± EE en cada muestreo. Lo que da un muestreo caro con pocas réplicas. Las dos series suben, pero a los dos años siguen bajo la referencia: no se da por restaurado.</p>
+      <ol class="metodo">
+        <li><h3>Medir</h3><p>Muestras pocas, caras y escasas; secuenciación ruidosa; ninguna referencia clara de suelo sano. Con eso, el diseño del muestreo decide más que el análisis: réplicas en cada muestreo, en terreno, en zonas áridas de Western Australia; marcaje isotópico (RNA-SIP) para saber qué organismo hace qué; metagenómica.</p></li>
+        <li><h3>Ver la desviación</h3><p>Estadística multivariante para separar señal de ruido y la intervención de la variabilidad del sitio: si la comunidad vuelve a su referencia o se estabiliza por debajo.</p></li>
+        <li><h3>Explicar y actuar</h3><p>Revisé los supuestos con que se monitorea la restauración y escribí los resultados para quienes deciden sobre restauración minera, no sólo para revisores. El mismo enfoque sirvió después en arroceras, trigo y residuos de bauxita. Quedó un doctorado y publicaciones que siguen citándose.</p></li>
+      </ol>
+      <dl class="metricas">
+        <div><dt>citas totales</dt><dd>738</dd></div>
+        <div><dt>índice h</dt><dd>12</dd></div>
+        <div><dt>índice i10</dt><dd>14</dd></div>
+        <span class="cuando">Google Scholar, mayo de 2026</span>
+      </dl>
+      <figure class="evidencia sip">
+        <div class="arte"><svg viewBox="0 0 320 200" role="img" aria-label="Esquema con curvas ilustrativas: dos perfiles de ARN según la densidad; el marcado con carbono 13 queda desplazado hacia las fracciones pesadas.">
+<path class="ax" d="M28 168H304 M28 168V22 M30 168v4 M64 168v4 M98 168v4 M132 168v4 M166 168v4 M200 168v4 M234 168v4 M268 168v4 "/>
+<path class="a13" d="M30 168.0 L36 168.0 L42 168.0 L48 168.0 L54 168.0 L60 168.0 L66 168.0 L72 168.0 L78 168.0 L84 168.0 L90 168.0 L96 168.0 L102 167.9 L108 167.8 L114 167.6 L120 167.1 L126 166.3 L132 165.0 L138 162.9 L144 159.6 L150 154.7 L156 148.1 L162 139.5 L168 129.0 L174 117.0 L180 104.3 L186 92.1 L192 81.5 L198 73.9 L204 70.2 L210 71.0 L216 76.1 L222 84.8 L228 96.0 L234 108.6 L240 121.1 L246 132.7 L252 142.6 L258 150.5 L264 156.5 L270 160.8 L276 163.7 L282 165.5 L288 166.7 L294 167.3 L300 167.7 L300 168 L30 168 Z"/>
+<path class="c12" d="M30 167.6 L36 167.2 L42 166.4 L48 165.0 L54 162.6 L60 158.7 L66 152.8 L72 144.6 L78 133.7 L84 120.4 L90 105.3 L96 89.7 L102 75.3 L108 64.0 L114 57.3 L120 56.3 L126 61.2 L132 71.1 L138 84.7 L144 100.1 L150 115.5 L156 129.5 L162 141.2 L168 150.4 L174 157.0 L180 161.5 L186 164.3 L192 166.0 L198 167.0 L204 167.5 L210 167.8 L216 167.9 L222 168.0 L228 168.0 L234 168.0 L240 168.0 L246 168.0 L252 168.0 L258 168.0 L264 168.0 L270 168.0 L276 168.0 L282 168.0 L288 168.0 L294 168.0 L300 168.0"/>
+<path class="c13" d="M30 168.0 L36 168.0 L42 168.0 L48 168.0 L54 168.0 L60 168.0 L66 168.0 L72 168.0 L78 168.0 L84 168.0 L90 168.0 L96 168.0 L102 167.9 L108 167.8 L114 167.6 L120 167.1 L126 166.3 L132 165.0 L138 162.9 L144 159.6 L150 154.7 L156 148.1 L162 139.5 L168 129.0 L174 117.0 L180 104.3 L186 92.1 L192 81.5 L198 73.9 L204 70.2 L210 71.0 L216 76.1 L222 84.8 L228 96.0 L234 108.6 L240 121.1 L246 132.7 L252 142.6 L258 150.5 L264 156.5 L270 160.8 L276 163.7 L282 165.5 L288 166.7 L294 167.3 L300 167.7"/>
+<text x="118" y="46" text-anchor="middle">¹²C</text>
+<text class="t13" x="206" y="60" text-anchor="middle">¹³C</text>
+<text x="304" y="186" text-anchor="end">densidad</text>
+<text x="14" y="30">ARN</text>
+</svg></div>
+        <div>
+          <p class="nota">Con muestras caras y escasas, el diseño del muestreo decide más que el análisis. Parte del trabajo fue separar la intervención de la variabilidad del sitio y revisar los supuestos con que se monitorea la restauración; los resultados se escribieron para quienes deciden sobre restauración minera, no sólo para revisores.</p>
+          <figcaption>Esquema: ARN separado por densidad (RNA-SIP). El que incorporó ¹³C se desplaza a las fracciones pesadas, a la derecha: así se sabe qué organismos usaron el sustrato. Curvas ilustrativas.</figcaption>
+        </div>
+      </figure>
+      <details class="mas">
+        <summary>Seis publicaciones seleccionadas</summary>
+        <ol class="pubs">
+          <li><span class="year">2019</span><span><a href="https://doi.org/10.3389/fmicb.2019.02143">The Bacterial Microbiome Associated With Arid Biocrusts and the Biogeochemical Influence of Biocrusts Upon the Underlying Soil</a><span class="venue">Frontiers in Microbiology</span></span></li>
+          <li><span class="year">2019</span><span><a href="https://doi.org/10.3389/fmicb.2019.01617">Reconditioning Degraded Mine Site Soils With Exogenous Soil Microbes: Plant Fitness and Soil Microbiome Outcomes</a><span class="venue">Frontiers in Microbiology</span></span></li>
+          <li><span class="year">2017</span><span><a href="https://doi.org/10.1038/s41598-017-00650-6">Microbial Functional Capacity Is Preserved Within Engineered Soil Formulations Used In Mine Site Restoration</a><span class="venue">Scientific Reports</span></span></li>
+          <li><span class="year">2022</span><span><a href="https://doi.org/10.1111/1462-2920.15994">From rags to enriched: metagenomic insights into ammonia-oxidizing archaea following ammonia enrichment of a denuded oligotrophic soil ecosystem</a><span class="venue">Environmental Microbiology</span></span></li>
+          <li><span class="year">2020</span><span><a href="https://doi.org/10.1002/2688-8319.12031">Examining assumptions of soil microbial ecology in the monitoring of ecological restoration</a><span class="venue">Ecological Solutions and Evidence</span></span></li>
+          <li><span class="year">2019</span><span><a href="https://doi.org/10.1007/978-1-4939-9721-3_3">RNA Stable Isotope Probing (RNA-SIP)</a><span class="venue">Stable Isotope Probing: Methods and Protocols <span class="note">(capítulo de métodos)</span></span></span></li>
+        </ol>
+        <p class="outlinks">Publicaciones en <a href="https://scholar.google.com/citations?user=K4uAEBoAAAAJ&amp;hl=en">Google Scholar</a>; también en <a href="https://orcid.org/0000-0001-5030-5484">ORCID</a> y <a href="https://www.researchgate.net/profile/Benjamin-Moreira-Grez">ResearchGate</a>.</p>
+      </details>
     </div>
   </div>
 </section>
@@ -550,50 +723,71 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 <section class="seccion" id="educacion" aria-labelledby="h-edu">
   <div class="pagina dos">
     <header class="riel">
-      <div class="riel-fig"><div class="plot">
-<!-- figw:do -->
-<svg class="fig w do" viewBox="0 0 640 280" role="img" aria-label="Gráfico con datos simulados y sólo promedios del curso: logro en un tema a lo largo de ocho ensayos. Se mantiene cerca del 70 por ciento, cae al 48 en el quinto ensayo, marcado en burdeos porque aparece un tema nuevo, y vuelve al 70 tras el refuerzo.">
-  <path class="eje" d="M58 24V234H626"/>
-  <path class="eje" d="M93.5 234v4"/>
-  <text class="tick" x="93.5" y="250" text-anchor="middle">1</text>
-  <path class="eje" d="M164.5 234v4"/>
-  <text class="tick" x="164.5" y="250" text-anchor="middle">2</text>
-  <path class="eje" d="M235.5 234v4"/>
-  <text class="tick" x="235.5" y="250" text-anchor="middle">3</text>
-  <path class="eje" d="M306.5 234v4"/>
-  <text class="tick" x="306.5" y="250" text-anchor="middle">4</text>
-  <path class="eje" d="M377.5 234v4"/>
-  <text class="tick" x="377.5" y="250" text-anchor="middle">5</text>
-  <path class="eje" d="M448.5 234v4"/>
-  <text class="tick" x="448.5" y="250" text-anchor="middle">6</text>
-  <path class="eje" d="M519.5 234v4"/>
-  <text class="tick" x="519.5" y="250" text-anchor="middle">7</text>
-  <path class="eje" d="M590.5 234v4"/>
-  <text class="tick" x="590.5" y="250" text-anchor="middle">8</text>
-  <path class="eje" d="M58 234h-4"/>
-  <text class="tick" x="51" y="238" text-anchor="end">30</text>
-  <path class="eje" d="M58 157.6h-4"/>
-  <text class="tick" x="51" y="161.6" text-anchor="end">50</text>
-  <path class="eje" d="M58 81.3h-4"/>
-  <text class="tick" x="51" y="85.3" text-anchor="end">70</text>
-  <text class="titulo" x="342" y="273" text-anchor="middle">Ensayo</text>
-  <text class="titulo" transform="translate(14 129) rotate(-90)" text-anchor="middle">Logro del curso (%)</text>
-  <text class="sello" x="626" y="15" text-anchor="end">Datos simulados</text>
-  <path class="linea ink" pathLength="1" d="M93.5 81.3 L164.5 72.1 L235.5 78.6 L306.5 74 L377.5 167.2 L448.5 139.3 L519.5 96.2 L590.5 75.2"/>
-  <g class="acento"><circle cx="377.5" cy="167.2" r="5.5"/><text x="377.5" y="187.2" text-anchor="middle">tema nuevo</text></g>
-</svg>
-<!-- /figw:do -->
-      </div></div>
       <div class="riel-top"><p class="kicker">Docencia</p><h2 id="h-edu">Enseñar ciencias y medir un colegio</h2></div>
       <div class="riel-meta"><p class="estado e-uso">en uso en clases</p><p class="estado e-dev">asistente en desarrollo</p><p class="donde">En un colegio.</p></div>
     </header>
-    <div class="slide">
+    <div>
       <p class="problema">Química, Biología y Ciencias para la Ciudadanía en cursos heterogéneos, con poco tiempo de sala.</p>
-      <ul class="vinetas">
-        <li><b>Problema</b>Cursos heterogéneos, poco tiempo de sala y sin práctica sin nota.</li>
-        <li><b>Qué hice</b>Formativa antes de la sumativa y dos herramientas web propias, en uso en clases: <a href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/">Tabla periódica reactiva</a> y <a href="https://bengrez.github.io/aula-herramientas/autodiagnostico-bienestar-salud/">Autodiagnóstico de Bienestar y Salud</a>.</li>
-        <li><b>Resultado</b>Un asistente de gestión escolar con IA, en desarrollo: demo con datos sintéticos; piloto previsto para 2027.</li>
-      </ul>
+      <p class="grafico"><b>Arriba, el gráfico de Docencia</b>, con datos simulados y sólo promedios del curso: una línea, el logro en un tema ensayo a ensayo, y un solo acento. Es el más simple de los tres y el más difícil de lograr, porque hay que decidir qué no mostrar. El tema nuevo hace caer el logro; el refuerzo lo devuelve antes de la evaluación.</p>
+      <ol class="metodo">
+        <li><h3>Medir</h3><p>Lo disponible: las bases curriculares, un proyector y estudiantes con celular. Planifico por objetivo de aprendizaje, clase a clase, con diagnóstico de prerrequisitos al inicio y evaluación formativa antes de la sumativa; cuando el calendario se mueve, el cronograma se ajusta por escrito.</p></li>
+        <li><h3>Ver la desviación</h3><p>La formativa muestra qué tema no se entendió mientras todavía hay tiempo de reforzarlo. Para practicar sin nota hice herramientas web propias, en el navegador, sin cuenta ni instalación, que no guardan ni envían respuestas: dos están publicadas y en uso en clases.</p></li>
+        <li><h3>Explicar y actuar</h3><p>Lo mismo, a escala del colegio: un asistente de gestión escolar con IA que cruza las fuentes que el colegio ya tiene, busca patrones entre asignaturas y responde con evidencia. Local-first, con datos seudonimizados. Hoy es una demo con datos sintéticos; el piloto con datos reales está previsto desde 2027.</p></li>
+      </ol>
+
+      <h3 class="titulo">Herramientas publicadas</h3>
+      <p class="pie">En el navegador, sin cuenta ni instalación, sin guardar ni enviar respuestas. Las imágenes son fragmentos de cada interfaz.</p>
+      <article class="herr herr-a">
+        <img src="tabla-periodica.webp" width="1200" height="1000" alt="" loading="lazy" decoding="async">
+        <div>
+          <h4><a href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/">Tabla periódica reactiva</a></h4>
+          <p class="sub">Imán y Escudo</p>
+          <dl class="campos">
+            <dt>Para</dt>
+            <dd>Química, 8.º básico, objetivo CN08 OA14. En uso en clases, en la unidad de tabla periódica.</dd>
+            <dt>Entrena</dt>
+            <dd>Tendencias periódicas por posición, sin memorizar valores: radio atómico, energía de ionización, electronegatividad y tipo de enlace.</dd>
+            <dt>Modos</dt>
+            <dd>Comparación guiada paso a paso, práctica con pistas de menos a más y modo docente para proyectar los casos de la guía.</dd>
+          </dl>
+        </div>
+      </article>
+      <article class="herr">
+        <img src="autodiagnostico.webp" width="1400" height="386" alt="" loading="lazy" decoding="async">
+        <div>
+          <h4><a href="https://bengrez.github.io/aula-herramientas/autodiagnostico-bienestar-salud/">Autodiagnóstico de Bienestar y Salud</a></h4>
+          <dl class="campos">
+            <dt>Para</dt>
+            <dd>Ciencias para la Ciudadanía, tercero medio, unidad 4.</dd>
+            <dt>Entrena</dt>
+            <dd>Factores biológicos, ambientales y sociales de la salud (alimentación, estrés y sueño, consumo, actividad física, entorno); elegir uno para investigar en grupo.</dd>
+            <dt>Resultado</dt>
+            <dd>Veinticuatro preguntas en seis bloques, semáforo por bloque y global. Guía para reflexionar, no diagnóstico.</dd>
+            <dt>Datos</dt>
+            <dd>Cálculo en el dispositivo; no guarda ni envía respuestas.</dd>
+          </dl>
+        </div>
+      </article>
+
+      <h3 class="titulo" id="colegio">Medir un colegio</h3>
+      <p class="estado e-dev">en desarrollo</p>
+      <figure class="evidencia" data-nosnippet style="margin-top:1.25rem">
+        <ol class="flujo colegio" aria-label="Esquema del asistente de gestión escolar: las fuentes que el colegio ya tiene alimentan un asistente con IA que busca patrones entre asignaturas y responde con evidencia; dos reglas acotan la respuesta. Lo usan el equipo directivo, UTP, convivencia y profesores jefe.">
+          <li class="fd"><b>Fuentes que el colegio ya tiene</b><span>notas, asistencia, convivencia, observaciones</span></li>
+          <li class="db fd"><b>Asistente con IA</b><span>patrones entre asignaturas; embeddings y búsqueda vectorial, pgvector</span></li>
+          <li class="fb"><b>Respuestas con evidencia</b><span>cada indicador dice de qué fuente sale y qué le falta</span></li>
+          <li class="reg"><b>Reglas de la respuesta</b><span>los agregados con pocos estudiantes se suprimen; el riesgo de reprobación es una categoría explicada, no una probabilidad</span></li>
+          <li class="aparte"><b>Para quién</b><span>equipo directivo, UTP, convivencia y profesores jefe</span></li>
+        </ol>
+        <figcaption>Esquema de «medir un colegio»: asistente de gestión escolar con IA en un equipo del propio colegio, con datos seudonimizados, diseñado para la Ley 21.719. Demo con datos sintéticos desde 2026; piloto con datos reales previsto desde 2027.</figcaption>
+      </figure>
+      <details class="mas">
+        <summary>Práctica PAES</summary>
+        <dl class="ficha">
+          <dt>Práctica PAES</dt>
+          <dd>Una app de práctica de habilidad científica con orientación para la remediación. Sin nota ni ranking; no se usa con estudiantes hasta revisar el banco.<span class="estado e-dev">en desarrollo</span></dd>
+        </dl>
+      </details>
     </div>
   </div>
 </section>
@@ -605,13 +799,14 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
     <header class="riel">
       <div class="riel-top"><p class="kicker">Cómo trabajo</p><h2 id="h-ia">Agentes de IA, en entornos controlados</h2></div>
     </header>
-    <div class="slide">
-      <p class="problema">Uso agentes de IA a diario, y nada se despliega sin evaluarlo antes.</p>
-      <ul class="vinetas">
-        <li><b>Contexto</b>Persistente y versionado, con protocolos de entrega entre agentes.</li>
-        <li><b>Búsqueda</b>Vectorial, con embeddings.</li>
-        <li><b>Evaluación</b>A ciegas antes de desplegar; la detección de fallas, contra reglas explícitas.</li>
-      </ul>
+    <div>
+      <p class="lede">Uso agentes de IA a diario. Trabajan sobre un contexto que persiste y se versiona, y nada se despliega sin evaluarlo antes.</p>
+      <dl class="practicas">
+        <div><dt>contexto</dt><dd>Persistente y versionado.</dd></div>
+        <div><dt>entrega</dt><dd>Protocolos de entrega entre agentes, con trazabilidad.</dd></div>
+        <div><dt>búsqueda</dt><dd>Vectorial, con embeddings en pgvector, en un <a href="#colegio">asistente de gestión escolar</a>.</dd></div>
+        <div><dt>evaluación</dt><dd>A ciegas antes de desplegar; la detección de fallas, contra reglas explícitas.</dd></div>
+      </dl>
     </div>
   </div>
 </section>
@@ -621,81 +816,12 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
     <header class="riel">
       <div class="riel-top"><p class="kicker">Hasta hoy</p><h2 id="h-rec">Recorrido</h2></div>
     </header>
-    <div class="slide">
-      <p class="pie">Cuatro etapas. Las ramas de publicaciones y herramientas se abren con un clic.</p>
-      <ul class="arbol" id="arbol">
-        <li class="etapa">
-          <p class="nodo"><span class="cuando">Pregrado</span><b>Pontificia Universidad Católica de Valparaíso</b></p>
-          <ul>
-            <li>Licenciado en Biología y título profesional de Biólogo.</li>
-          </ul>
-        </li>
-        <li class="etapa">
-          <p class="nodo"><span class="cuando">2014–2020</span><b>Doctorado, The University of Western Australia, Perth</b></p>
-          <ul>
-            <li>Ph.D.; tesis de 2020 (<a href="https://doi.org/10.26182/5e995c216ca93">doi:10.26182/5e995c216ca93</a>). Beca de Doctorado Becas Chile, 2014–2018.</li>
-            <li>Tema: reacondicionamiento de suelos degradados, comunidades microbianas y restauración post-minera.</li>
-            <li class="rama"><span class="abrir" data-controls="r-doc-pub">Publicaciones <span class="n">8</span></span>
-              <ol class="hojas" id="r-doc-pub">
-                <li><span class="year">2017</span><a href="https://doi.org/10.1038/s41598-017-00650-6">Microbial Functional Capacity Is Preserved Within Engineered Soil Formulations Used In Mine Site Restoration</a><span class="venue">Scientific Reports</span></li>
-                <li><span class="year">2019</span><a href="https://doi.org/10.3389/fmicb.2019.02143">The Bacterial Microbiome Associated With Arid Biocrusts and the Biogeochemical Influence of Biocrusts Upon the Underlying Soil</a><span class="venue">Frontiers in Microbiology</span></li>
-                <li><span class="year">2019</span><a href="https://doi.org/10.3389/fmicb.2019.01617">Reconditioning Degraded Mine Site Soils With Exogenous Soil Microbes: Plant Fitness and Soil Microbiome Outcomes</a><span class="venue">Frontiers in Microbiology</span></li>
-                <li><span class="year">2019</span><a href="https://doi.org/10.1007/978-1-4939-9721-3_3">RNA Stable Isotope Probing (RNA-SIP)</a><span class="venue">Methods in Molecular Biology, capítulo de métodos</span></li>
-                <li><span class="year">2019</span><a href="https://doi.org/10.1038/s41564-019-0494-6">Global phylogeography and ancient evolution of the widespread human gut virus crAssphage</a><span class="venue">Nature Microbiology, coautoría de consorcio</span></li>
-                <li><span class="year">2020</span><a href="https://doi.org/10.1002/2688-8319.12031">Examining assumptions of soil microbial ecology in the monitoring of ecological restoration</a><span class="venue">Ecological Solutions and Evidence</span></li>
-                <li><span class="year">2020</span><a href="https://doi.org/10.1016/j.geoderma.2020.114312">Effect of phosphorus amendments on rice rhizospheric methanogens and methanotrophs in a phosphorus deficient soil</a><span class="venue">Geoderma</span></li>
-                <li><span class="year">2021</span><a href="https://doi.org/10.1007/s11104-018-3876-2">Compromised root development constrains the establishment potential of native plants in unamended alkaline post-mining substrates</a><span class="venue">Plant and Soil, en línea desde 2018</span></li>
-              </ol>
-            </li>
-            <li class="rama"><span class="abrir" data-controls="r-doc-herr">Herramientas</span>
-              <ul class="hojas" id="r-doc-herr">
-                <li><b>Laboratorio</b>Metagenómica, RNA-SIP, amplicones 16S e ITS, qPCR.</li>
-                <li><b>Análisis</b>R (vegan, phyloseq), PRIMER-E; NMDS, PCoA, PERMANOVA, Mantel.</li>
-                <li><b>Figuras y sistema</b>Inkscape; Linux y Bash.</li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li class="etapa">
-          <p class="nodo"><b>Research Associate, The University of Western Australia</b></p>
-          <ul>
-            <li>El mismo enfoque en arroceras, trigo, residuos de bauxita, nematodos como bioindicadores y suelos de Western Australia.</li>
-            <li class="rama"><span class="abrir" data-controls="r-ra-pub">Publicaciones <span class="n">7</span></span>
-              <ol class="hojas" id="r-ra-pub">
-                <li><span class="year">2021</span><a href="https://doi.org/10.1016/j.soilbio.2021.108162">Effects of ecosystem disturbance on nematode communities in calcareous and red soils: Comparison of taxonomic methods</a><span class="venue">Soil Biology and Biochemistry</span></li>
-                <li><span class="year">2022</span><a href="https://doi.org/10.1007/s00374-021-01616-7">Synergism between feremycorrhizal symbiosis and free-living diazotrophs leads to improved growth and nutrition of wheat under nitrogen deficiency conditions</a><span class="venue">Biology and Fertility of Soils</span></li>
-                <li><span class="year">2022</span><a href="https://doi.org/10.1111/1462-2920.15994">From rags to enriched: metagenomic insights into ammonia-oxidizing archaea following ammonia enrichment of a denuded oligotrophic soil ecosystem</a><span class="venue">Environmental Microbiology</span></li>
-                <li><span class="year">2022</span><a href="https://doi.org/10.1111/rec.13738">Evaluating biological properties of topsoil for post-mining ecological restoration: different assessment methods give different results</a><span class="venue">Restoration Ecology</span></li>
-                <li><span class="year">2022</span><a href="https://doi.org/10.1016/j.apsoil.2021.104265">Influences of phosphorus and potassium deficiencies on the methanotrophic communities in rice rhizosphere</a><span class="venue">Applied Soil Ecology</span></li>
-                <li><span class="year">2023</span><a href="https://doi.org/10.1016/j.scitotenv.2023.162699">Coupling microbial and abiotic amendments accelerates in situ remediation of bauxite residue at field scale</a><span class="venue">Science of The Total Environment</span></li>
-                <li><span class="year">2023</span><a href="https://doi.org/10.1128/aem.00379-23">Biogeographic distribution and molecular epidemiology of Clostridioides (Clostridium) difficile in Western Australian soils</a><span class="venue">Applied and Environmental Microbiology</span></li>
-              </ol>
-            </li>
-            <li class="rama"><span class="abrir" data-controls="r-ra-herr">Herramientas</span>
-              <ul class="hojas" id="r-ra-herr">
-                <li><b>Laboratorio</b>Metagenómica, amplicones 16S e ITS, qPCR.</li>
-                <li><b>Análisis</b>R (vegan, phyloseq), estadística multivariante, biostatística.</li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li class="etapa">
-          <p class="nodo"><span class="cuando">desde 2022</span><b>Santiago, hoy</b></p>
-          <ul>
-            <li>Docencia de ciencias en un colegio, desde 2023.</li>
-            <li>Desarrollo y análisis de datos para una empresa de transporte: telemetría, detección de fallas, datos de conductores.</li>
-            <li>Agentes de IA en entornos controlados, a diario.</li>
-            <li class="rama"><span class="abrir" data-controls="r-hoy-herr">Herramientas</span>
-              <ul class="hojas" id="r-hoy-herr">
-                <li><b>Lenguajes</b>Python (FastAPI, pandas, numpy, scipy), SQL, Bash; React básico.</li>
-                <li><b>Datos</b>PostgreSQL con TimescaleDB y PostGIS; búsqueda vectorial y embeddings; telemetría por bus CAN; redes de sensores IoT.</li>
-                <li><b>Operación</b>Docker, Linux, n8n, Supabase; evaluación a ciegas antes de desplegar.</li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <dl class="ruta">
+      <div><dt>Pontificia Universidad Católica de Valparaíso</dt><dd>Licenciado en Biología y título profesional de Biólogo.</dd></div>
+      <div><dt>The University of Western Australia, Perth</dt><dd>Ph.D., tesis de 2020 (<a href="https://doi.org/10.26182/5e995c216ca93">doi:10.26182/5e995c216ca93</a>). Financiado con la beca de Doctorado Becas Chile, 2014–2018.<span class="sub">Enfoque: reacondicionamiento de suelos degradados, dinámica de comunidades microbianas y restauración ecológica post-minera.</span></dd></div>
+      <div><dt>The University of Western Australia</dt><dd>Research Associate.</dd></div>
+      <div><dt>Santiago, hoy</dt><dd>Desarrollo y análisis de datos para una empresa de transporte; docencia de ciencias en un colegio.</dd></div>
+    </dl>
   </div>
 </section>
 
@@ -704,7 +830,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
     <header class="riel">
       <div class="riel-top"><p class="kicker">Escríbeme</p><h2 id="h-con">Contacto</h2></div>
     </header>
-    <div class="slide">
+    <div>
       <p><a class="correo" href="mailto:benja.moreira.grez@gmail.com">benja.moreira.grez@gmail.com</a></p>
       <ul class="perfiles">
         <li><a href="https://github.com/bengrez">GitHub</a></li>
@@ -717,7 +843,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 </section>
 
 </main>
-<footer><div class="pagina">Santiago, Chile. Métricas de citación de Google Scholar al 26 de mayo de 2026. Los gráficos usan datos simulados y lo dicen.</div></footer>
+<footer><div class="pagina">Santiago, Chile. Métricas de citación de Google Scholar al 26 de mayo de 2026. Los gráficos usan datos simulados y lo dicen; los esquemas, curvas ilustrativas.</div></footer>
 
 <script>
 /* El título de la portada se encoge con el scroll: --k va de 0 (grande) a 1 (compacto) en los primeros
@@ -755,36 +881,35 @@ var portada=(function(){
   return {saltar:saltar};
 })();
 
-/* Las figuras (un panel por caso desde la 014; en el riel desde la 015). En escritorio (≥ 960 px) cada caso
-   tiene su gráfico en el riel de la sección, fijo a la izquierda; bajo 960 px la franja fija de arriba (.serie)
-   muestra el del caso que se está leyendo. Cuál es el caso actual sale de en qué sección está la «línea de
-   lectura» (35 % del espacio visible bajo la barra y la franja): Data science → 1; Ecología → 2; Docencia → 3;
-   antes de la primera, 1. Cada vez que cambia, el gráfico nuevo se traza (clase .traza, que se quita y se vuelve
-   a poner para reiniciar las animaciones del CSS; con prefers-reduced-motion el CSS no anima), pero sólo cuando
-   está a la vista. Cuando la escena sale por arriba (Agentes, Recorrido, Contacto) se olvida el caso mostrado,
-   así que al volver se vuelve a trazar. Sin JS se ven todos los gráficos completos y la franja no se pega. */
+/* Las figuras, desde la 013 (un panel por caso desde la 014): tres SVG en línea (.hoja) y se ve la del caso
+   que se está leyendo. La figura queda fija bajo la barra mientras se recorren los tres casos (.escena). Cuál
+   se muestra sale de en qué sección está la «línea de lectura» (35 % del espacio visible bajo la figura):
+   Data science → 1; Ecología → 2; Docencia → 3; antes de la primera, 1. Cada vez que cambia, la figura nueva
+   se traza (clase .traza, que se quita y se vuelve a poner para reiniciar las animaciones del CSS; con
+   prefers-reduced-motion el CSS no anima), pero sólo cuando la figura está a la vista: si al cargar queda
+   bajo el pliegue, se traza al llegar a ella. Cuando la escena sale por arriba (Agentes, Recorrido, Contacto)
+   se olvida la figura mostrada, así que al volver a un caso se vuelve a trazar. Sin JS se ve el gráfico de
+   Data science, suelto y completo, y no hay botones. */
 (function(){
   var fig=document.getElementById('serie'); if(!fig) return;
-  var hojas=[].slice.call(fig.querySelectorAll('.hoja')),
+  var hojas=[].slice.call(fig.querySelectorAll('.hoja')), tabs=[].slice.call(fig.querySelectorAll('.esc')),
       bar=document.querySelector('.barra'), escena=document.getElementById('escena'),
       secs=['ingenieria','investigacion','educacion'].map(function(id){ return document.getElementById(id); }),
-      rieles=secs.map(function(s){ return s&&s.querySelector('.riel-fig'); }),
       kAct=-1, raf=0, pendiente=false;
-  if(hojas.length!==3||!escena||secs.some(function(x){ return !x; })||rieles.some(function(x){ return !x; })) return;
+  if(hojas.length!==3||tabs.length!==3||!escena||secs.some(function(x){ return !x; })) return;
   function medir(){ document.documentElement.style.setProperty('--fig-h',fig.offsetHeight+'px'); }
-  function franja(){ return fig.getClientRects().length>0; } // la franja sólo existe bajo 960 px
-  function lugar(k){ return franja()?hojas[k]:rieles[k]; }
   function trazar(h){
-    // Sólo la variante visible: si la otra se activara al cambiar de ancho, arrancaría sola.
+    // Sólo la variante visible (.w o .n): si la otra se activara al cambiar de ancho, arrancaría sola.
     var svgs=[].slice.call(h.querySelectorAll('svg.fig'));
     svgs.forEach(function(s){ s.classList.remove('traza'); });
     void h.offsetWidth; // reinicia las animaciones
     svgs.forEach(function(s){ if(s.getClientRects().length) s.classList.add('traza'); });
   }
-  function aLaVista(k){ var r=lugar(k).getBoundingClientRect(); return r.top>=0&&r.bottom<=window.innerHeight+2; }
+  function aLaVista(){ var r=fig.getBoundingClientRect(); return r.bottom<=window.innerHeight+2; }
   function mostrar(k){
     if(k===kAct) return; kAct=k; pendiente=true;
     hojas.forEach(function(h,j){ h.hidden=j!==k; });
+    tabs.forEach(function(b,j){ b.setAttribute('aria-pressed',j===k?'true':'false'); });
     fig.setAttribute('data-figura',k+1); medir();
   }
   // dónde está la lectura: la última sección cuyo borde superior pasó la línea de lectura
@@ -798,28 +923,17 @@ var portada=(function(){
     var base=(bar?bar.offsetHeight:52)+fig.offsetHeight;
     if(escena.getBoundingClientRect().bottom<=base){ kAct=-1; pendiente=false; return; } // la escena salió por arriba
     mostrar(estado());
-    if(pendiente&&aLaVista(kAct)){ pendiente=false; trazar(lugar(kAct)); }
+    if(pendiente&&aLaVista()){ pendiente=false; trazar(hojas[kAct]); }
   }
   function pedirEval(){ if(!raf) raf=requestAnimationFrame(evaluar); }
   window.addEventListener('scroll',pedirEval,{passive:true});
   window.addEventListener('resize',function(){ medir(); pedirEval(); });
+  tabs.forEach(function(b){ b.addEventListener('click',function(){ var k=+b.getAttribute('data-esc'); if(secs[k]) portada.saltar(secs[k]); }); });
+  fig.querySelector('.escenarios').hidden=false;
   fig.classList.add('fijo'); medir();
   if(window.ResizeObserver) new ResizeObserver(medir).observe(fig);
   window.addEventListener('load',function(){ medir(); pedirEval(); });
   evaluar();
-})();
-
-/* El recorrido: al cargar se ve abierto hasta el nivel 2 y las ramas del nivel 3 (publicaciones, herramientas)
-   se abren por rama con un botón (clic o teclado). Sin JS, todo abierto y sin controles: el rótulo de cada rama
-   es un span en el HTML y aquí se reemplaza por el button con aria-expanded y aria-controls. */
-(function(){
-  [].slice.call(document.querySelectorAll('.arbol span.abrir')).forEach(function(sp){
-    var lista=document.getElementById(sp.getAttribute('data-controls')); if(!lista) return;
-    var b=document.createElement('button'); b.type='button'; b.className='abrir'; b.innerHTML=sp.innerHTML;
-    b.setAttribute('aria-controls',lista.id); b.setAttribute('aria-expanded','false'); lista.hidden=true;
-    b.addEventListener('click',function(){ var abierto=b.getAttribute('aria-expanded')==='true'; b.setAttribute('aria-expanded',abierto?'false':'true'); lista.hidden=abierto; });
-    sp.parentNode.replaceChild(b,sp);
-  });
 })();
 
 /* Tema claro u oscuro: parte del sistema; el botón lo cambia y lo recuerda en este navegador. */
