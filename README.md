@@ -71,23 +71,27 @@ de cada imagen, además del pie.
   escribe `fig/{ds,ec,do}-{w,n}.svg`. `w` es el tamaño de escritorio (900 px o más; la Figura 1 mide
   11,6 × 3,2 pulgadas) y `n` el de celular y tablet (la Figura 1 en 2 × 2, 5,6 × 3,6 pulgadas, con letra más
   grande y rótulos más cortos). `--png <carpeta>` deja PNG de revisión. Las SVG llevan el texto como texto
-  (`svg.fonttype none`), así que pesan poco (9–90 KB) y se ven nítidas a cualquier escala.
+  (`svg.fonttype none`, familia Liberation Sans / Arial / Helvetica), así que pesan poco (9–90 KB) y se ven
+  nítidas a cualquier escala; `width`/`height` de `<img>` y `<source>` son el `viewBox` recortado que
+  imprime el script.
 - **En la página**: cada `.hoja` tiene un `<picture>` que elige `-w` o `-n` por `min-width:900px`, un `alt`
   que describe la figura y un `<figcaption>` «Figura N | …». La imagen se contiene en un alto fijo (`.plot`:
-  14 rem en escritorio, `clamp(8rem,26vh,12rem)` en celular) para que la figura fija no cambie de alto al
-  pasar de una a otra. Desde 1200 px el pie va al costado, como en la revista; bajo eso va debajo, recortado
-  a dos líneas (una en celular): el texto completo está en el párrafo `.grafico` de cada caso. Las hojas
-  son claras también en tema oscuro (`--paper`), porque son figuras de paper.
+  `clamp(9rem,28vh,14rem)` desde 900 px, `clamp(9rem,31vh,14.5rem)` entre 640 y 899, `clamp(8rem,26vh,12rem)`
+  bajo 640) para que la figura fija no cambie de alto al pasar de una a otra. Desde 1200 px el pie va al
+  costado, como en la revista, y la hoja mide lo que mide su figura; bajo eso va debajo, recortado a dos
+  líneas (una en celular): el pie completo está en el `alt` y en escritorio, y lo esencial en el párrafo
+  `.grafico` de cada caso. Las hojas son claras también en tema oscuro (`--paper`), porque son figuras de
+  paper; las SVG tienen fondo transparente y el color lo pone la hoja.
 - **Cuál se muestra** (JS de `index.html`): «línea de lectura» al 35 % del espacio visible bajo la barra y
   la figura; la figura es la de la última sección cuyo borde superior la pasó (Data science, incluida la
   franja de agentes → 1; Ecología → 2; Docencia → 3; antes de la primera, 1). El cambio es instantáneo. Los
   botones `.esc` llevan a la sección. Sin JS: Figura 1, suelta, sin botones.
-- Lo que salió en la 013: los cuadros de Manim (`anim/`, `scripts/animacion.py`, `scripts/empaquetar_cuadros.py`)
-  y `scripts/serie.py`. El entorno de Manim (`~/.local/share/manim-env`) queda fuera del repo y no se usa.
+- Lo que salió en la 013: los cuadros de Manim (`anim/`, `scripts/animacion.py`, `scripts/empaquetar_cuadros.py`),
+  `scripts/serie.py` y `scripts/senales.py` (los esquemas de la 004, que ya no existían en la página). El entorno de Manim (`~/.local/share/manim-env`) queda fuera del repo y no se usa.
 
 ## La serie fija y la portada que se encoge (iteración 010)
 
-Todo lo que va de la serie al final de Ecología está dentro de `div.escena`; con JS la figura gana la
+Todo lo que va de las figuras al final de Docencia está dentro de `div.escena`; con JS la figura gana la
 clase `fijo` (`position:sticky` bajo la barra) y queda pegada hasta que termina la escena (antes de
 Recorrido). Sin JS no se pega.
 
@@ -105,9 +109,9 @@ Recorrido). Sin JS no se pega.
 ## Esquemas de flujo
 
 `ol.flujo` (sistema de la flota, asistente del colegio) es HTML, no SVG: una fila con ramas desde
-820 px y una columna en móvil (la flota se bifurca en dos columnas bajo la base de datos). Cada
+1100 px y una columna en móvil (la flota se bifurca en dos columnas bajo la base de datos). Cada
 flecha es un pseudo-elemento recortado con `clip-path` (`fd` a la derecha, `fb`/`fb2` hacia abajo;
-bajo 820 px todas apuntan hacia abajo). El texto de los nodos es texto real.
+bajo 1100 px todas apuntan hacia abajo). El texto de los nodos es texto real.
 
 ## Temas, capturas y og.png
 

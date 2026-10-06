@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Benjamín Moreira-Grez</title>
-<meta name="description" content="Resuelvo problemas con lo que hay disponible. Medir, ver la desviación a tiempo, explicar y actuar: el mismo método en una empresa de transporte, en un colegio y en investigación. Trabajo con agentes de IA en entornos controlados, con búsqueda vectorial y embeddings.">
+<meta name="description" content="Resuelvo problemas con lo que hay disponible. Medir, ver la desviación a tiempo, explicar y actuar: el mismo método en una empresa de transporte, en investigación y en un colegio. Trabajo con agentes de IA en entornos controlados, con búsqueda vectorial y embeddings.">
 <meta property="og:title" content="Benjamín Moreira-Grez">
-<meta property="og:description" content="Resuelvo problemas con lo que hay disponible. Medir, ver la desviación a tiempo, explicar y actuar: el mismo método en una empresa de transporte, en un colegio y en investigación. Trabajo con agentes de IA en entornos controlados, con búsqueda vectorial y embeddings.">
+<meta property="og:description" content="Resuelvo problemas con lo que hay disponible. Medir, ver la desviación a tiempo, explicar y actuar: el mismo método en una empresa de transporte, en investigación y en un colegio. Trabajo con agentes de IA en entornos controlados, con búsqueda vectorial y embeddings.">
 <meta property="og:type" content="profile">
 <meta property="og:locale" content="es_CL">
 <meta property="og:url" content="https://bengrez.github.io/">
@@ -34,7 +34,7 @@
 :root{
   --bg:#FAF9F6; --surface:#F0EEE8; --ink:#1B1A17; --muted:#5B5955; --rule:#DAD7CF; --rule-strong:#B5B1A6;
   --accent:#900008; --accent-ink:#7A0007; --alert:#D9481F;
-  --panel:#231B1A; --p-ink:#ECE9E2; --p-muted:#C9C3B8; --p-rule:#3B312F; --p-accent:#FF9A82; --p-alert:#F86848;
+  --panel:#231B1A; --p-ink:#ECE9E2; --p-muted:#C9C3B8; --p-rule:#3B312F; --p-accent:#FF9A82;
   --paper:#FFFFFF; --paper-ink:#1A1A1A; --paper-rule:#CFCBC3;
   --display:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
   --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
@@ -123,7 +123,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
   .hoja figcaption{margin-top:.1rem;max-height:14rem;overflow:hidden}
 }
 @media (max-width:1199px){
-  /* Pie en dos líneas; el texto completo está en el párrafo de cada caso. */
+  /* Pie en dos líneas (una en celular); el pie completo está en escritorio y en el alt de la imagen. */
   .hoja figcaption{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:.76rem}
 }
 @media (max-width:639px){
@@ -135,7 +135,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 
 /* ---- la figura fija arriba (desde la 010) ----
    Con JS, la figura queda pegada bajo la barra mientras se recorren los tres casos (todo lo que hay
-   dentro de .escena) y cambia al pasar de sección. Sin JS no se pega. */
+   dentro de .escena, hasta el final de Docencia) y cambia al pasar de sección. Sin JS no se pega. */
 .escena{position:relative}
 .serie.fijo{position:sticky;top:var(--bar);z-index:6;box-shadow:0 10px 16px -12px rgba(0,0,0,.35)}
 .serie.fijo>.pagina{padding-top:.2rem}
@@ -362,29 +362,29 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
     <figure class="hoja cuatro-paneles" id="fig-1">
       <div class="plot">
         <picture>
-          <source media="(min-width:900px)" srcset="fig/ds-w.svg">
-          <img src="fig/ds-n.svg" width="560" height="360" alt="Figura 1, cuatro paneles con datos simulados de una flota de buses. A: temperatura del refrigerante de un bus por día, media y error estándar de tres lecturas; se mantiene dentro de la banda de referencia, sube y sale de ella el día 16, donde está la alerta, y vuelve a lo normal tras la revisión. B: heatmap de riesgo de falla por bus y semana, con las filas agrupadas por similitud; tres buses muestran rachas de riesgo alto. C: anticipación a la falla en horas por método (reglas, modelo, reglas y modelo) y tipo de falla; el modelo y la combinación anticipan más que las reglas solas. D: falsas alertas por método, en escala logarítmica; el modelo solo produce muchas más que las reglas o la combinación.">
+          <source media="(min-width:900px)" srcset="fig/ds-w.svg" width="772" height="246">
+          <img src="fig/ds-n.svg" width="429" height="279" alt="Figura 1, cuatro paneles con datos simulados de una flota de buses. A: temperatura del refrigerante de un bus por día, media y error estándar de tres lecturas; se mantiene dentro de la banda de referencia, sube y sale de ella a mitad del mes, donde está la alerta, y vuelve a lo normal tras la revisión. B: heatmap de riesgo de falla por bus y semana, con las filas agrupadas por similitud; tres buses muestran rachas de varias semanas de riesgo alto. C: anticipación a la falla en horas por método (reglas, modelo, reglas y modelo) y tipo de falla; el modelo y la combinación anticipan más que las reglas solas. D: falsas alertas por método, en escala logarítmica; el modelo solo produce muchas más que las reglas o la combinación.">
         </picture>
       </div>
-      <figcaption><b>Figura 1 |</b> Datos simulados: telemetría de una flota de buses. <b>(A)</b> Temperatura del refrigerante de un bus, media ± EE de tres lecturas por día; la banda gris es la referencia de los primeros 10 días ± 2σ y la línea punteada, la alerta. <b>(B)</b> Riesgo de falla (puntaje z) por bus y semana, filas agrupadas por similitud. <b>(C)</b> Anticipación a la falla y <b>(D)</b> falsas alertas por método y tipo de falla, media ± EE en un banco de evaluación a ciegas. Letras distintas indican diferencias con p &lt; 0,05.</figcaption>
+      <figcaption><b>Figura 1 |</b> Datos simulados: telemetría de una flota de buses. <b>(A)</b> Temperatura del refrigerante de un bus, media ± EE de tres lecturas por día; la banda gris es la referencia de los primeros 10 días ± 2σ y la vertical punteada, la alerta. <b>(B)</b> Riesgo de falla (puntaje z) por bus y semana, filas agrupadas por similitud. <b>(C)</b> Anticipación a la falla y <b>(D)</b> falsas alertas por método y tipo de falla, media ± EE de n = 30 fallas simuladas por tipo en un banco de evaluación a ciegas. Letras distintas, diferencias con p &lt; 0,05 dentro de cada tipo de falla.</figcaption>
     </figure>
     <figure class="hoja dos-paneles" id="fig-2" hidden>
       <div class="plot">
         <picture>
-          <source media="(min-width:900px)" srcset="fig/ec-w.svg">
-          <img src="fig/ec-n.svg" width="560" height="275" alt="Figura 2, dos paneles con datos simulados de un suelo minero. A: índice de diversidad de Shannon por tratamiento (referencia, degradado, inoculado, inoculado con materia orgánica) y profundidad (superficie en coral, profundo en burdeos), media y error estándar con letras de significancia; el degradado es el más bajo y los inoculados quedan entre medio. B: función microbiana como porcentaje de la referencia a 0, 6, 12 y 24 meses desde la inoculación; sube con el tiempo pero a los 24 meses sigue por debajo de la línea de referencia.">
+          <source media="(min-width:900px)" srcset="fig/ec-w.svg" width="571" height="244">
+          <img src="fig/ec-n.svg" width="411" height="226" alt="Figura 2, dos paneles con datos simulados de un suelo minero. A: índice de diversidad de Shannon por tratamiento (referencia, degradado, inoculado, inoculado con materia orgánica) y profundidad (superficie en coral, profundo en burdeos), media y error estándar con letras de significancia comparadas dentro de cada profundidad; el degradado es el más bajo y los inoculados quedan entre medio. B: función microbiana como porcentaje de la referencia a 0, 6, 12 y 24 meses desde la inoculación; sube con el tiempo pero a los 24 meses sigue por debajo de la línea de referencia.">
         </picture>
       </div>
-      <figcaption><b>Figura 2 |</b> Datos simulados: restauración de un suelo minero. <b>(A)</b> Diversidad de Shannon por tratamiento y profundidad, media ± EE. <b>(B)</b> Función microbiana como porcentaje de la referencia, meses después de la inoculación. Letras distintas indican diferencias con p &lt; 0,05.</figcaption>
+      <figcaption><b>Figura 2 |</b> Datos simulados: restauración de un suelo minero. <b>(A)</b> Diversidad de Shannon por tratamiento y profundidad, media ± EE (n = 5 parcelas por tratamiento). <b>(B)</b> Función microbiana como porcentaje de la referencia, meses después de la inoculación. Letras distintas, diferencias con p &lt; 0,05 dentro de cada profundidad.</figcaption>
     </figure>
     <figure class="hoja un-panel" id="fig-3" hidden>
       <div class="plot">
         <picture>
-          <source media="(min-width:900px)" srcset="fig/do-w.svg">
-          <img src="fig/do-n.svg" width="340" height="275" alt="Figura 3, un panel con datos simulados y sólo promedios del curso: logro en porcentaje de acierto en tres momentos. Antes del tema nuevo, alrededor del 71 por ciento; con el tema nuevo cae al 48, marcado en burdeos; tras el refuerzo vuelve al 68. Letras de significancia: a, b, a.">
+          <source media="(min-width:900px)" srcset="fig/do-w.svg" width="239" height="201">
+          <img src="fig/do-n.svg" width="227" height="181" alt="Figura 3, un panel con datos simulados y sólo promedios del curso: logro en porcentaje de acierto en tres momentos. Antes del tema nuevo, alrededor del 71 por ciento; con el tema nuevo cae al 48, marcado en burdeos; tras el refuerzo vuelve al 68. Letras de significancia: a, b, a.">
         </picture>
       </div>
-      <figcaption><b>Figura 3 |</b> Datos simulados, sólo promedios del curso: logro en un tema antes del tema nuevo, con el tema nuevo y tras el refuerzo (media ± EE de los ensayos). Letras distintas indican diferencias con p &lt; 0,05.</figcaption>
+      <figcaption><b>Figura 3 |</b> Datos simulados, sólo promedios del curso: logro en un tema antes del tema nuevo, con el tema nuevo (en burdeos) y tras el refuerzo; media ± EE de n = 4 ensayos formativos. Letras distintas, diferencias con p &lt; 0,05.</figcaption>
     </figure>
   </div>
 </div>

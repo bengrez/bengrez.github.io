@@ -20,8 +20,9 @@ dato de estudiantes, de una empresa ni de un sitio real; Docencia usa sólo prom
     python3 scripts/figuras.py              # escribe fig/{ds,ec,do}-{w,n}.svg (w: escritorio, n: celular)
     python3 scripts/figuras.py --png /tmp   # además, PNG de revisión en esa carpeta
 
-Las SVG llevan el texto como texto (svg.fonttype none) con la familia Arial / Helvetica / Liberation
-Sans, métricamente compatibles entre sí, como las figuras de ggplot del paper.
+Las SVG llevan el texto como texto (svg.fonttype none) con la familia Liberation Sans / Arial /
+Helvetica, métricamente compatibles entre sí, como las figuras de ggplot del paper, y fondo
+transparente: el color de la hoja lo pone el CSS (--paper).
 """
 import argparse
 import json
@@ -36,7 +37,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
 from scipy.cluster import hierarchy  # noqa: E402
 
-CORAL, BURDEOS, INK, GRIS = "#F86848", "#900008", "#1A1A1A", "#8A8A8A"
+CORAL, BURDEOS, INK, GRIS = "#F86848", "#900008", "#1A1A1A", "#6A6A6A"
 SELLO = "Datos simulados"
 AQUI = os.path.dirname(os.path.abspath(__file__))
 DESTINO = os.path.join(os.path.dirname(AQUI), "fig")
@@ -51,8 +52,8 @@ def estilo(pt):
         "axes.spines.top": False, "axes.spines.right": False, "axes.edgecolor": INK, "axes.linewidth": 0.9,
         "axes.labelcolor": INK, "xtick.color": INK, "ytick.color": INK, "text.color": INK,
         "xtick.direction": "out", "ytick.direction": "out", "xtick.major.size": 3, "ytick.major.size": 3,
-        "xtick.major.width": 0.9, "ytick.major.width": 0.9, "axes.grid": False, "figure.facecolor": "white",
-        "axes.facecolor": "white", "savefig.facecolor": "white", "svg.fonttype": "none", "svg.hashsalt": "sitio-013",
+        "xtick.major.width": 0.9, "ytick.major.width": 0.9, "axes.grid": False, "figure.facecolor": "none",
+        "axes.facecolor": "none", "savefig.facecolor": "none", "figure.edgecolor": "none", "svg.fonttype": "none", "svg.hashsalt": "sitio-013",
         "legend.frameon": True, "legend.edgecolor": INK, "legend.fancybox": False, "legend.framealpha": 1,
         "legend.borderpad": 0.45, "legend.handletextpad": 0.3, "legend.labelspacing": 0.25,
         "lines.markersize": 7, "errorbar.capsize": 4, "path.simplify": True,
@@ -100,8 +101,7 @@ def datos_ds():
     mu = np.clip(mu, base - 0.5, None)
     lecturas = mu[:, None] + rng.normal(0, 1.1, (30, 3))
     media, ee = lecturas.mean(1), lecturas.std(1, ddof=1) / np.sqrt(3)
-    ref = lecturas[:10].ravel()
-    mu_ref, sd_ref = ref.mean(), ref.std(ddof=1)
+    mu_ref, sd_ref = media[:10].mean(), media[:10].std(ddof=1)  # referencia: medias diarias de los primeros 10 días
     fuera = media > mu_ref + 2 * sd_ref
     alerta = int(dias[fuera][0])
     # B: puntaje de riesgo (z) por bus y semana.
@@ -113,7 +113,7 @@ def datos_ds():
     z[9, 7:] += np.array([0.9, 1.5, 2.2])
     z[4, :] -= 0.6
     z[11, 3:7] -= 0.9
-    z = (z - z.mean(1, keepdims=True)) / z.std(1, keepdims=True)
+    z = (z - z.mean()) / z.std()  # z contra la flota entera: las rachas se ven; por fila se diluían
     enlace = hierarchy.linkage(z, "average")
     orden = hierarchy.leaves_list(enlace)
     # C y D: anticipación y falsas alertas por método y tipo de falla (banco de evaluación a ciegas).
@@ -128,7 +128,7 @@ def datos_ds():
 
 def datos_ec():
     tratamientos = ["Referencia", "Degradado", "Inoculado", "Inoculado\n+ mat. orgánica"]
-    shannon = {"Superficie": ([3.9, 3.0, 3.35, 3.55], [0.08, 0.12, 0.14, 0.11], ["a", "b", "b", "ab"]),
+    shannon = {"Superficie": ([3.9, 3.0, 3.35, 3.55], [0.08, 0.12, 0.14, 0.11], ["a", "c", "bc", "ab"]),
                "Profundo": ([3.75, 2.8, 2.95, 3.3], [0.09, 0.1, 0.13, 0.12], ["a", "b", "b", "ab"])}
     meses = [0, 6, 12, 24]
     funcion = {"Superficie": ([34, 52, 68, 74], [4, 5, 5, 4], ["a", "b", "c", "c"]),
@@ -146,10 +146,10 @@ def datos_do():
 def figura_ds(conjunto, pt):
     d = datos_ds()
     if conjunto == "w":
-        fig, axs = plt.subplots(1, 4, figsize=(11.6, 3.2), gridspec_kw=dict(width_ratios=[1.25, 1.25, 1, 1], wspace=0.5))
+        fig, axs = plt.subplots(1, 4, figsize=(11.6, 3.2), gridspec_kw=dict(width_ratios=[1.25, 1.3, 1, 1], wspace=0.62))
         a, b, c, dd = axs
     else:
-        fig, axs = plt.subplots(2, 2, figsize=(5.6, 3.6), gridspec_kw=dict(hspace=0.8, wspace=0.55))
+        fig, axs = plt.subplots(2, 2, figsize=(5.6, 3.6), gridspec_kw=dict(hspace=1.0, wspace=0.6))
         (a, b), (c, dd) = axs
     # A: serie con réplicas, referencia ± 2σ y alerta
     lo, hi = d["mu_ref"] - 2 * d["sd_ref"], d["mu_ref"] + 2 * d["sd_ref"]
@@ -160,9 +160,9 @@ def figura_ds(conjunto, pt):
     for xi, yi, ei, ci in zip(d["dias"], d["media"], d["ee"], col):
         a.errorbar([xi], [yi], yerr=[ei], fmt="o", color=ci, ecolor=ci, elinewidth=0.8, capsize=2, capthick=0.8, markersize=4.2, zorder=3)
     a.axvline(d["alerta"], color=BURDEOS, lw=0.9, ls=(0, (2, 2)), zorder=1)
-    a.set_ylim(min(lo, d["media"].min() - 1.5) - 0.6, d["media"].max() + 3.2)
+    a.set_ylim(lo - (3.0 if conjunto == "w" else 3.8), d["media"].max() + 3.2)
     a.text(d["alerta"] - 0.5, a.get_ylim()[1], "alerta", color=BURDEOS, fontsize=pt - 0.5, ha="right", va="top")
-    a.text(30.4, hi - 0.03 * (hi - lo), "referencia ± 2σ", color=GRIS, fontsize=pt - 2, ha="right", va="top")
+    a.text(1, lo - 1.3, "referencia ± 2σ" if conjunto == "w" else "referencia\n± 2σ", color=GRIS, fontsize=pt - 2, ha="left", va="top", linespacing=1.0)
     a.set_xlabel("Día")
     a.set_ylabel("Temperatura del refrigerante (°C)" if conjunto == "w" else "Refrigerante (°C)")
     a.set_xticks([1, 10, 20, 30])
@@ -184,8 +184,7 @@ def figura_ds(conjunto, pt):
         s.set_visible(False)
     b.set_xlabel("Semana")
     if conjunto == "n":
-        b.set_yticklabels([d["buses"][i].replace("Bus ", "") for i in orden])
-        b.tick_params(axis="y", labelsize=pt - 4, pad=1)
+        b.set_yticks([])
         b.tick_params(axis="x", labelsize=pt - 3)
         b.set_xlabel("")
     fig.tight_layout(pad=0.6, rect=(0, 0.03, 1, 1))
@@ -208,15 +207,21 @@ def figura_ds(conjunto, pt):
     # C: anticipación, media ± EE por método y tipo de falla, con letras
     x = np.arange(3)
     c.set_xlim(-0.5, 2.5)
-    c.set_ylim(0, 40 if conjunto == "w" else 92)
-    c.set_yticks([0, 10, 20, 30, 40] if conjunto == "w" else [0, 30, 60, 90])
+    c.set_ylim(0, 48)
+    c.set_yticks([0, 10, 20, 30, 40])
     puntos_ee(c, x, *d["antic"]["Refrigeración"], CORAL, dodge=-0.14, pt=pt)
     puntos_ee(c, x, *d["antic"]["Eléctrica"], BURDEOS, dodge=0.14, pt=pt)
     c.set_xticks(x)
     c.set_xticklabels(["Reglas", "Modelo", "Reglas +\nmodelo"])
     c.set_ylabel("Anticipación a la falla (h)" if conjunto == "w" else "Anticipación (h)")
     c.set_xlabel("Método")
-    leyenda(c, "Tipo de falla", ["Refrigeración", "Eléctrica"], [CORAL, BURDEOS], "lower right" if conjunto == "w" else "upper left", pt, chica=conjunto == "n")
+    if conjunto == "w":
+        leyenda(c, "Tipo de falla", ["Refrigeración", "Eléctrica"], [CORAL, BURDEOS], "upper left", pt)
+    else:  # en celular no cabe el recuadro dentro del panel: va en una fila sobre C, sin título
+        manejos = [Line2D([0], [0], marker="o", color="none", markerfacecolor=col, markeredgecolor=col, markersize=5.5) for col in (CORAL, BURDEOS)]
+        lg = c.legend(manejos, ["Refrigeración", "Eléctrica"], loc="lower left", bbox_to_anchor=(-0.3, 1.0), ncol=2,
+                      fontsize=pt - 3, handlelength=0.9, columnspacing=0.7, handletextpad=0.25, borderaxespad=0.0, frameon=True)
+        lg.get_frame().set_linewidth(0.9)
     # D: falsas alertas, eje y logarítmico (como la Fig. 6B)
     dd.set_xlim(-0.5, 2.5)
     dd.set_yscale("log")
@@ -234,7 +239,7 @@ def figura_ds(conjunto, pt):
     dd.set_yticklabels(["1", "3", "10", "30"])
     dd.yaxis.set_minor_locator(matplotlib.ticker.NullLocator())
     for ax, L in zip((a, b, c, dd), "ABCD"):
-        letra_panel(ax, L, pt, dx=(-0.3 if ax is b else -0.24) if conjunto == "w" else (-0.3 if ax is b else -0.36), dy=1.03)
+        letra_panel(ax, L, pt, dx=(-0.3 if ax is b else -0.24) if conjunto == "w" else (-0.3 if ax is b else -0.5), dy=1.03)
     for ax in (c, dd):
         for lab in ax.get_xticklabels():
             lab.set_fontsize(pt - 1)
@@ -251,10 +256,11 @@ def figura_ec(conjunto, pt):
     x = np.arange(4)
     a.set_xlim(-0.5, 3.5)
     a.set_ylim(2.2 if conjunto == "w" else 2.0, 4.3)
-    puntos_ee(a, x, *d["shannon"]["Superficie"], CORAL, dodge=-0.15, pt=pt)
-    puntos_ee(a, x, *d["shannon"]["Profundo"], BURDEOS, dodge=0.15, pt=pt)
+    dg = 0.15 if conjunto == "w" else 0.2
+    puntos_ee(a, x, *d["shannon"]["Superficie"], CORAL, dodge=-dg, pt=pt)
+    puntos_ee(a, x, *d["shannon"]["Profundo"], BURDEOS, dodge=dg, pt=pt)
     a.set_xticks(x)
-    a.set_xticklabels(d["tratamientos"] if conjunto == "w" else ["Ref.", "Degr.", "Inoc.", "Inoc.\n+ MO"])
+    a.set_xticklabels(d["tratamientos"] if conjunto == "w" else ["Ref.", "Degr.", "Inoc.", "Inoc.\n+ m. org."])
     a.set_xlabel("Tratamiento del suelo")
     a.set_ylabel("Índice de diversidad de Shannon")
     leyenda(a, "Profundidad", ["Superficie", "Profundo"], [CORAL, BURDEOS], "lower right", pt, chica=conjunto == "n")
@@ -264,12 +270,12 @@ def figura_ec(conjunto, pt):
     b.set_ylim(0, 110)
     b.axhline(100, color=GRIS, lw=0.9, ls=(0, (4, 3)), zorder=1)
     b.text(3.45, 101.5, "referencia", color=GRIS, fontsize=pt - 1.5, ha="right", va="bottom")
-    puntos_ee(b, x, *d["funcion"]["Superficie"], CORAL, dodge=-0.15, pt=pt)
-    puntos_ee(b, x, *d["funcion"]["Profundo"], BURDEOS, dodge=0.15, pt=pt)
+    puntos_ee(b, x, *d["funcion"]["Superficie"], CORAL, dodge=-dg, pt=pt)
+    puntos_ee(b, x, *d["funcion"]["Profundo"], BURDEOS, dodge=dg, pt=pt)
     b.set_xticks(x)
     b.set_xticklabels([str(m) for m in d["meses"]])
     b.set_xlabel("Meses desde la inoculación")
-    b.set_ylabel("Función microbiana (% de la referencia)")
+    b.set_ylabel("Función microbiana (% de la referencia)" if conjunto == "w" else "Función microbiana\n(% de la referencia)")
     b.set_yticks([0, 25, 50, 75, 100])
     for ax, L in zip((a, b), "AB"):
         letra_panel(ax, L, pt, dx=-0.2 if conjunto == "w" else -0.3, dy=1.03)
@@ -281,10 +287,10 @@ def figura_do(conjunto, pt):
     d = datos_do()
     if conjunto == "w":
         fig, a = plt.subplots(figsize=(3.7, 3.15))
-        fig.subplots_adjust(left=0.24, right=0.96, bottom=0.26, top=0.9)
+        fig.subplots_adjust(left=0.24, right=0.96, bottom=0.3, top=0.9)
     else:
         fig, a = plt.subplots(figsize=(3.4, 2.75))
-        fig.subplots_adjust(left=0.24, right=0.96, bottom=0.3, top=0.9)
+        fig.subplots_adjust(left=0.3, right=0.96, bottom=0.34, top=0.88)
     x = np.arange(3)
     a.set_xlim(-0.5, 2.5)
     a.set_ylim(30, 85)
@@ -292,19 +298,20 @@ def figura_do(conjunto, pt):
     for xi, m, e, l, c in zip(x, d["media"], d["ee"], d["letras"], cols):
         puntos_ee(a, [xi], [m], [e], [l], c, pt=pt)
     a.set_xticks(x)
-    a.set_xticklabels(d["etapas"])
-    a.set_ylabel("Logro del curso (% de acierto)")
+    a.set_xticklabels(d["etapas"] if conjunto == "w" else ["Antes del\ntema", "Tema\nnuevo", "Tras el\nrefuerzo"])
+    a.get_xticklabels()[1].set_color(BURDEOS)
+    a.set_xlabel("Momento del curso")
+    a.set_ylabel("Logro del curso (% de acierto)" if conjunto == "w" else "Logro del curso\n(% de acierto)")
     a.set_yticks([30, 50, 70])
     sello(fig, pt)
     return fig
 
 
 def arreglar_svg(ruta):
-    """Familia tipográfica portable (Arial y Liberation Sans son métricamente compatibles) y sin
-    metadatos que cambien entre corridas."""
+    """Sin metadatos que cambien entre corridas. (La familia tipográfica ya sale portable: matplotlib
+    escribe la lista completa de rcParams, 'Liberation Sans', 'Arial', 'Helvetica', …, métricamente
+    compatibles entre sí.)"""
     s = open(ruta, encoding="utf-8").read()
-    s = re.sub(r"font-family: ?'?Liberation Sans'?", "font-family: Arial, Helvetica, 'Liberation Sans', sans-serif", s)
-    s = re.sub(r"font-family: ?'?DejaVu Sans'?", "font-family: Arial, Helvetica, 'Liberation Sans', sans-serif", s)
     s = re.sub(r"<dc:date>[^<]*</dc:date>", "<dc:date></dc:date>", s)
     s = re.sub(r"<metadata>.*?</metadata>\s*", "", s, flags=re.S)
     open(ruta, "w", encoding="utf-8").write(s)
@@ -317,19 +324,21 @@ def main():
     args = ap.parse_args()
     os.makedirs(args.destino, exist_ok=True)
     medidas = {}
-    for conjunto, pt in (("w", 9.0), ("n", 10.0)):
+    for conjunto, pt in (("w", 9.0), ("n", 11.5)):
         estilo(pt)
         for nombre, fn in (("ds", figura_ds), ("ec", figura_ec), ("do", figura_do)):
             fig = fn(conjunto, pt)
             if nombre == "ec":
                 fig.tight_layout(pad=0.6, rect=(0, 0.03, 1, 1))
             ruta = os.path.join(args.destino, f"{nombre}-{conjunto}.svg")
-            fig.savefig(ruta, format="svg", bbox_inches="tight", pad_inches=0.06)
+            fig.savefig(ruta, format="svg", bbox_inches="tight", pad_inches=0.06, transparent=True)
             arreglar_svg(ruta)
             if args.png:
-                fig.savefig(os.path.join(args.png, f"{nombre}-{conjunto}.png"), dpi=200, bbox_inches="tight", pad_inches=0.06)
+                fig.savefig(os.path.join(args.png, f"{nombre}-{conjunto}.png"), dpi=200, bbox_inches="tight", pad_inches=0.06, facecolor="white")
             w, h = fig.get_size_inches()
-            medidas[f"{nombre}-{conjunto}"] = dict(ancho_in=round(float(w), 2), alto_in=round(float(h), 2), bytes=os.path.getsize(ruta))
+            vb = re.search(r'viewBox="0 0 ([\d.]+) ([\d.]+)"', open(ruta, encoding="utf-8").read())
+            medidas[f"{nombre}-{conjunto}"] = dict(ancho_in=round(float(w), 2), alto_in=round(float(h), 2), bytes=os.path.getsize(ruta),
+                                                   viewbox=[round(float(vb.group(1))), round(float(vb.group(2)))] if vb else None)
             plt.close(fig)
     print(json.dumps(medidas, indent=1, ensure_ascii=False))
 
