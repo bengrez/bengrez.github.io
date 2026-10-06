@@ -75,7 +75,8 @@ def build(*, seed, n, rep, curve, sd_pre, sd_post, t_ref, t_split, top, bot, hit
     }
     d["_meta"] = dict(mu_ref=float(mu_ref), sd_ref=float(sd_ref), lo=float(lo), hi=float(hi),
                       hit=int(h), z_hit=float(z[h]), trend_hit=float(trend[h]),
-                      trend_min=float(trend.min()), trend_max=float(trend.max()))
+                      trend_min=float(trend.min()), trend_max=float(trend.max()),
+                      top=float(top), bot=float(bot), xs=[float(X(x)) for x in t], ys=[float(Y(v)) for v in trend])
     return d
 
 

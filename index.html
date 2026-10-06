@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Benjamín Moreira-Grez</title>
-<meta name="description" content="Resuelvo problemas con lo que hay disponible. Trabajo con agentes de IA en entornos controlados, con búsqueda vectorial y embeddings; el método viene del doctorado y lo he aplicado en una empresa de transporte, en un colegio y en investigación.">
+<meta name="description" content="Resuelvo problemas con lo que hay disponible. Medir, ver la desviación a tiempo, explicar y actuar: el mismo método en una empresa de transporte, en un colegio y en investigación. Trabajo con agentes de IA en entornos controlados, con búsqueda vectorial y embeddings.">
 <meta property="og:title" content="Benjamín Moreira-Grez">
-<meta property="og:description" content="Resuelvo problemas con lo que hay disponible. Trabajo con agentes de IA en entornos controlados, con búsqueda vectorial y embeddings; el método viene del doctorado y lo he aplicado en una empresa de transporte, en un colegio y en investigación.">
+<meta property="og:description" content="Resuelvo problemas con lo que hay disponible. Medir, ver la desviación a tiempo, explicar y actuar: el mismo método en una empresa de transporte, en un colegio y en investigación. Trabajo con agentes de IA en entornos controlados, con búsqueda vectorial y embeddings.">
 <meta property="og:type" content="profile">
 <meta property="og:locale" content="es_CL">
 <meta property="og:url" content="https://bengrez.github.io/">
 <meta property="og:image" content="https://bengrez.github.io/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Titular «Resuelvo problemas con lo que hay disponible» sobre un gráfico mínimo: una línea de telemetría que empieza a derivar y una alerta a tiempo (datos simulados).">
+<meta property="og:image:alt" content="Titular «Resuelvo problemas con lo que hay disponible» sobre un gráfico con ejes finos: una línea de telemetría que empieza a derivar y, desde la alerta, cambia de color (datos simulados).">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#F5F2EA" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0E1312" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%2311201E'/%3E%3Cpath d='M5 11H11L14 22L18 19L27 16' fill='none' stroke='%236CC3CB' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='27' cy='16' r='2.6' fill='%23F27A52'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#F5F5F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1115" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23141826'/%3E%3Cpath d='M5 11H11L14 22L18 19L27 16' fill='none' stroke='%23A7B5FF' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='27' cy='16' r='2.6' fill='%23FF8B57'/%3E%3C/svg%3E">
 <script>try{var t=localStorage.getItem('tema');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,30 +27,29 @@
    Arial; Source Serif, el 100,7 % de Georgia): la página no salta al cargar la fuente real. */
 @font-face{font-family:"Bricolage Respaldo";src:local("Arial"),local("Liberation Sans"),local("Helvetica Neue"),local("Helvetica");size-adjust:95%}
 @font-face{font-family:"Source Serif Respaldo";src:local("Georgia"),local("Liberation Serif"),local("Times New Roman");size-adjust:100.7%}
+/* Paleta de la 012: piedra clara con tinta índigo y alerta en arcilla; en oscuro, grafito con el
+   índigo aclarado. El panel (la serie y la franja de agentes) es azul noche en los dos temas. */
 :root{
-  --bg:#F5F2EA; --surface:#ECE8DD; --ink:#151D1B; --muted:#56605B; --rule:#D8D2C3; --rule-strong:#B5AE9D;
-  --accent:#0E5E66; --accent-ink:#0B4E55; --alert:#C8451F;
-  /* El panel (la serie y la franja de agentes) es oscuro en los dos temas: tiene sus propios colores. */
-  --panel:#11201E; --p-ink:#E9EEEB; --p-muted:#A3B3AD; --p-rule:#2A3B37; --p-accent:#6CC3CB; --p-alert:#F27A52;
-  --p-grid:rgba(233,238,235,.055); --p-band:rgba(108,195,203,.16);
+  --bg:#F5F5F2; --surface:#EBECE7; --ink:#171B22; --muted:#5A6170; --rule:#D6D8D1; --rule-strong:#AEB2A8;
+  --accent:#3D4FB5; --accent-ink:#2F3F9A; --alert:#D4531B;
+  --panel:#141826; --p-ink:#E9EBF2; --p-muted:#A4ABC0; --p-rule:#2A3045; --p-accent:#A7B5FF; --p-alert:#FF8B57;
   --display:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
   --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
-  --page:72rem; --gutter:clamp(1rem,4vw,2.5rem); --bar:3.25rem;
-  --trace-h:clamp(5.75rem,10vw,8.5rem);
+  --page:72rem; --gutter:clamp(1rem,4vw,2.5rem); --bar:3.25rem; --riel:16.5rem;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#0E1312; --surface:#151C1A; --ink:#E7EBE8; --muted:#9AA5A0; --rule:#252E2B; --rule-strong:#3C4843;
-    --accent:#6CC3CB; --accent-ink:#93D6DC; --alert:#F27A52;
-    --panel:#161E1C; --p-rule:#2C3936; color-scheme:dark;
+    --bg:#0F1115; --surface:#171A21; --ink:#E8E9EC; --muted:#9DA3B0; --rule:#272B35; --rule-strong:#3E4452;
+    --accent:#9CACFF; --accent-ink:#B7C3FF; --alert:#FF8B57;
+    --panel:#141826; --p-rule:#2A3045; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0E1312; --surface:#151C1A; --ink:#E7EBE8; --muted:#9AA5A0; --rule:#252E2B; --rule-strong:#3C4843;
-  --accent:#6CC3CB; --accent-ink:#93D6DC; --alert:#F27A52;
-  --panel:#161E1C; --p-rule:#2C3936; color-scheme:dark;
+  --bg:#0F1115; --surface:#171A21; --ink:#E8E9EC; --muted:#9DA3B0; --rule:#272B35; --rule-strong:#3E4452;
+  --accent:#9CACFF; --accent-ink:#B7C3FF; --alert:#FF8B57;
+  --panel:#141826; --p-rule:#2A3045; color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar) + var(--fig-h,0px) + 1rem);overflow-anchor:none}
@@ -91,58 +90,40 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .btn.sec{background:none;color:var(--ink)}
 .btn:hover{text-decoration:underline;text-decoration-thickness:1px}
 
-/* ---- la serie: sólo la línea y la alerta (iteración 011) ----
-   El gráfico lleva la línea, la alerta, el escenario con su unidad y «datos simulados». Los pasos, las
-   réplicas, la referencia y las palabras viven en el texto de cada caso. */
+/* ---- la serie: cuadros de Manim que avanzan con el scroll (iteración 012) ----
+   La figura muestra los cuadros que rinde scripts/animacion.py (ejes finos, rótulo escrito a mano, la
+   línea, la alerta y «datos simulados» van dentro del cuadro). Con JS y movimiento normal los dibuja un
+   canvas y el scroll elige el cuadro; con prefers-reduced-motion, o sin JS, se ve la imagen fija del
+   escenario (picture.poster). Los botones de escenario sólo existen con JS. */
 .serie{background:var(--panel);color:var(--p-ink);border-block:1px solid var(--p-rule)}
 .serie :focus-visible,.agentes :focus-visible{outline-color:var(--p-accent)}
-.escenarios{display:flex;flex-wrap:wrap;gap:0 1.75rem;padding-top:.35rem;font-family:var(--display);font-size:.95rem}
+.escenarios{display:flex;flex-wrap:wrap;gap:0 1.75rem;padding-top:.3rem;font-family:var(--display);font-size:.95rem}
 .escenarios[hidden]{display:none}
-.esc{margin:0;padding:.6rem 0;border:0;border-bottom:2px solid transparent;background:none;font:inherit;color:var(--p-muted);cursor:pointer}
+.esc{margin:0;padding:.5rem 0;border:0;border-bottom:2px solid transparent;background:none;font:inherit;color:var(--p-muted);cursor:pointer}
 .esc:hover{color:var(--p-ink)}
 .esc[aria-pressed="true"]{color:var(--p-ink);font-weight:600;border-bottom-color:var(--p-accent)}
-.serie-top{display:flex;justify-content:space-between;align-items:baseline;gap:.2rem 1.5rem;padding-top:.6rem;font-family:var(--mono);font-size:.8rem;color:var(--p-ink)}
-.sim{font-size:.7rem;color:var(--p-muted);white-space:nowrap}
-.plot{position:relative;height:var(--trace-h);margin-block:.9rem 1.1rem}
-.trazo{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.plot path{vector-effect:non-scaling-stroke}
-.trend{fill:none;stroke:var(--p-accent);stroke-width:2.6px;stroke-linejoin:round;stroke-linecap:round}
-.alerta{position:absolute;width:24px;height:24px;margin:-12px 0 0 -12px;border:2px solid var(--p-alert);border-radius:50%;box-shadow:0 0 0 6px rgba(242,122,82,.16)}
-.alerta::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--p-alert)}
-/* Sin JS la figura se ve completa. Con JS se dibuja la línea y después salta la alerta. */
-.serie.ready .trend{animation:draw 2.4s cubic-bezier(.25,.6,.2,1) .2s forwards}
-.serie.ready .alerta{opacity:0;animation:appear .45s ease-out 2.6s forwards}
-@keyframes draw{to{stroke-dashoffset:0}}
-@keyframes appear{to{opacity:1}}
+/* El cuadro ancho (8:1) desde 900 px; el angosto (1200×340) en celular, a todo el ancho; en tablet el
+   angosto se centra en un alto fijo (el fondo es transparente, así que no se nota el recorte). */
+.plot{position:relative;height:clamp(7rem,13vw,9.5rem);margin-block:.6rem .9rem}
+@media (max-width:639px){.plot{height:auto;aspect-ratio:1200/340}}
+@media (min-width:900px){.plot{height:auto;aspect-ratio:2400/300}}
+@media (max-height:520px){.plot{height:4.5rem;aspect-ratio:auto}}
+.plot canvas,.plot picture,.plot img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.plot img{object-fit:contain}
+.plot [hidden]{display:none}
+.serie.sinjs .escenarios{display:none}
 
-/* ---- la serie fija arriba (iteración 010) ----
+/* ---- la serie fija arriba (desde la 010) ----
    Con JS, la figura queda pegada bajo la barra mientras se recorren los tres casos (todo lo que hay
-   dentro de .escena) y el script le cambia el escenario según la sección. Sin JS no se pega y se ve
-   como antes: el escenario 1, completo y quieto. */
+   dentro de .escena). Sin JS no se pega. */
 .escena{position:relative}
-.serie.fijo{position:sticky;top:var(--bar);z-index:6;--trace-h:clamp(5.5rem,9vw,7.5rem);border-bottom-color:var(--p-muted);box-shadow:0 10px 16px -12px rgba(0,0,0,.55)}
-.serie.fijo>.pagina{padding-top:.3rem}
-.serie.fijo .escenarios{padding-top:.1rem}
+.serie.fijo{position:sticky;top:var(--bar);z-index:6;border-bottom-color:var(--p-muted);box-shadow:0 10px 16px -12px rgba(0,0,0,.55)}
+.serie.fijo>.pagina{padding-top:.25rem}
+.serie.fijo .escenarios{padding-top:.05rem}
 .serie.fijo .esc{padding-block:.4rem}
-.serie.fijo .serie-top{padding-top:.1rem}
-.serie.fijo .plot{margin-block:.55rem .85rem}
-/* Cambio de escenario: el rótulo se funde y la línea se desplaza (el script mueve la curva). */
-.serie .serie-var{transition:opacity .22s ease}
-.serie.cambiando .serie-var{opacity:0}
-@media (prefers-reduced-motion:reduce){.serie .serie-var{transition:none}}
-/* Escritorio (y celular de lado): botones y rótulo en una fila. */
-@media (min-width:900px),(max-height:520px) and (min-width:560px){
-  .serie.fijo>.pagina{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:2rem;align-items:center}
-  .serie.fijo .escenarios,.serie.fijo .serie-top{padding-top:0}
-  .serie.fijo .plot{grid-column:1 / -1}
-}
-/* Celular: lo mínimo para dejar a la vista el texto de la página. */
-@media (max-width:639px){
-  .serie.fijo .serie-top{font-size:.75rem;line-height:1.35}
-  .serie.fijo .escenarios{gap:0 1.25rem;font-size:.9rem}
-}
-/* Pantallas bajas (celular de lado). */
-@media (max-height:520px){.serie.fijo{--trace-h:4.5rem}.serie.fijo .plot{margin-bottom:.5rem}}
+.serie.fijo .plot{margin-block:.45rem .8rem}
+@media (max-width:639px){.serie.fijo .escenarios{gap:0 1.25rem;font-size:.9rem}}
+@media (max-height:520px){.serie.fijo .plot{margin-bottom:.5rem}}
 
 /* ---- estados: cada cosa de la página dice en qué está ---- */
 .estado{font-family:var(--mono);font-size:.8rem;line-height:1.4;color:var(--ink);white-space:nowrap}
@@ -150,46 +131,57 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .e-uso::before{background:var(--accent)}
 .e-piloto::before{background:linear-gradient(90deg,var(--accent) 50%,transparent 50%)}
 
-/* ---- índice de casos ---- */
-.casos{padding-block:clamp(2.75rem,7vw,5rem) clamp(2rem,5vw,3.5rem)}
-.casos h2{font-size:clamp(1.6rem,2vw + 1rem,2.4rem)}
-.intro{max-width:36em;margin-top:.8rem}
-.estados{display:flex;flex-wrap:wrap;gap:.3rem 1.5rem;margin-top:.9rem}
-.lista{margin-top:clamp(1.5rem,3.5vw,2.25rem);border-bottom:1px solid var(--rule-strong)}
-.lista a{display:grid;grid-template-columns:8.5rem 1fr auto;align-items:baseline;gap:.2rem 1.5rem;padding-block:1.05rem;border-top:1px solid var(--rule-strong);color:inherit;text-decoration:none}
-.lista .tit{font-family:var(--display);font-weight:500;font-size:clamp(1.12rem,.8vw + 1rem,1.45rem);line-height:1.2;letter-spacing:-.01em}
-.lista a:hover .tit{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em;text-decoration-color:var(--accent)}
-.lista .est{display:flex;flex-direction:column;align-items:flex-start}
-.kicker{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
-@media (max-width:760px){.lista a{grid-template-columns:1fr}}
-
-/* ---- un caso: riel con título y estado; cuerpo con el libro Había / Hice / Quedó ---- */
-.caso{border-top:1px solid var(--rule-strong);padding-block:clamp(2.5rem,6vw,4.5rem)}
-.caso-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:1.75rem}
-.riel h2{font-size:clamp(1.55rem,1.2vw + 1.2rem,2.05rem);margin-block:.5rem .9rem}
+/* ---- dos columnas bajo el gráfico (iteración 012) ----
+   Cada sección es un riel a la izquierda (título, fijo mientras dura la sección) y el contenido a la
+   derecha, que avanza con el scroll. En celular el riel se parte: el título queda fijo y chico bajo
+   el gráfico, y el estado y el lugar pasan al flujo, sobre el contenido. */
+.seccion{border-top:1px solid var(--rule-strong);padding-block:clamp(2.25rem,5.5vw,4rem)}
+.dos{display:grid;grid-template-columns:minmax(0,1fr);gap:1.1rem 0}
+.riel h2{font-size:clamp(1.5rem,1.2vw + 1.15rem,2rem);margin-block:.45rem .9rem}
 .riel .donde{font-family:var(--display);font-size:.92rem;color:var(--muted);margin-top:.6rem}
 .riel .estado{display:block}
+.kicker{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
 @media (min-width:960px){
-  .caso-grid{grid-template-columns:16.5rem minmax(0,1fr);gap:clamp(2rem,4vw,3.5rem)}
+  .dos{grid-template-columns:var(--riel) minmax(0,1fr);gap:clamp(2rem,4vw,3.5rem)}
   .riel{position:sticky;top:calc(var(--bar) + var(--fig-h,0px) + 1.5rem);align-self:start}
+  .fuera .riel{top:calc(var(--bar) + 1.5rem)}
 }
+@media (max-width:959px){
+  .riel{display:contents}
+  .riel-top{position:sticky;top:calc(var(--bar) + var(--fig-h,0px));z-index:5;background:var(--bg);margin-inline:calc(-1*var(--gutter));padding:.55rem var(--gutter) .6rem;border-bottom:1px solid var(--rule)}
+  .fuera .riel-top{top:var(--bar)}
+  .riel-top .kicker{display:none}
+  .riel h2{font-size:1.05rem;line-height:1.25;margin:0;letter-spacing:-.01em}
+  .riel-meta{display:flex;flex-wrap:wrap;gap:.2rem 1.25rem;align-items:baseline}
+  .riel .donde{margin-top:0}
+}
+
+/* ---- índice de casos ---- */
+.intro{max-width:36em}
+.estados{display:flex;flex-wrap:wrap;gap:.3rem 1.5rem;margin-top:.9rem}
+.lista{margin-top:clamp(1.25rem,3vw,2rem);border-bottom:1px solid var(--rule-strong)}
+.lista a{display:grid;grid-template-columns:7.5rem 1fr auto;align-items:baseline;gap:.2rem 1.5rem;padding-block:1rem;border-top:1px solid var(--rule-strong);color:inherit;text-decoration:none}
+.lista .tit{font-family:var(--display);font-weight:500;font-size:clamp(1.12rem,.8vw + 1rem,1.4rem);line-height:1.2;letter-spacing:-.01em}
+.lista a:hover .tit{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em;text-decoration-color:var(--accent)}
+.lista .est{display:flex;flex-direction:column;align-items:flex-start}
+@media (max-width:760px){.lista a{grid-template-columns:1fr}}
+
+/* ---- un caso: el problema, el método en tres pasos, la evidencia y el detalle plegado ---- */
 .problema{font-family:var(--display);font-size:clamp(1.2rem,.9vw + 1rem,1.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;max-width:28em;text-wrap:balance}
-.leer{max-width:42rem;margin:.9rem 0 0;font-size:.98rem;line-height:1.55;color:var(--muted)}
-.leer b{color:var(--ink);font-weight:600}
-.libro{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 clamp(1.25rem,2.5vw,2rem);margin-top:clamp(1.5rem,3vw,2.25rem)}
-.libro dt{font-family:var(--display);font-weight:600;font-size:1rem;padding-block:.55rem;border-top:2px solid var(--ink)}
-.libro .habia dt{border-top-color:var(--rule-strong);color:var(--muted)}
-.libro .quedo dt{border-top-color:var(--accent);color:var(--accent-ink)}
-.libro li{padding-block:.6rem;border-top:1px solid var(--rule);font-size:.98rem;line-height:1.45}
-.libro .habia li{color:var(--muted)}
-.libro .estado{display:block;margin-top:.2rem}
-@media (max-width:760px){.libro{grid-template-columns:1fr}.libro>div+div{margin-top:1.25rem}}
+.grafico{max-width:44rem;margin-top:.9rem;font-family:var(--mono);font-size:.78rem;line-height:1.55;color:var(--muted)}
+.grafico b{font-weight:500;color:var(--ink)}
+.metodo{margin-top:clamp(1.5rem,3vw,2.25rem);border-top:2px solid var(--ink)}
+.metodo li{display:grid;grid-template-columns:minmax(0,1fr);gap:.35rem 1.5rem;padding-block:.9rem 1.1rem;border-bottom:1px solid var(--rule)}
+.metodo h3{font-size:1rem;font-weight:600;line-height:1.3;margin:0;padding-top:.1rem}
+.metodo li:nth-child(2) h3{color:var(--accent-ink)}
+.metodo p{font-size:1rem;line-height:1.5;max-width:40em}
+@media (min-width:700px){.metodo li{grid-template-columns:9.5rem minmax(0,1fr)}}
 .con-que{font-family:var(--mono);font-size:.82rem;line-height:1.6;color:var(--muted);margin-top:1.25rem}
 .con-que b{font-weight:500;color:var(--ink)}
 .evidencia{margin-top:clamp(1.75rem,4vw,2.75rem)}
 .evidencia figcaption,.pie{font-family:var(--mono);font-size:.78rem;line-height:1.55;color:var(--muted);margin-top:.8rem;max-width:62em}
-.caso h3{font-size:1.2rem;margin-top:clamp(2rem,4.5vw,3rem)}
-.caso h3 + .estado{display:block;margin-top:.35rem}
+.seccion h3.titulo{font-size:1.2rem;margin-top:clamp(2rem,4.5vw,3rem)}
+.seccion h3.titulo + .estado{display:block;margin-top:.35rem}
 .nota{max-width:36em}
 
 /* ---- esquemas de flujo, en HTML: fila con ramas en escritorio, columna en móvil ---- */
@@ -206,7 +198,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .flujo .det::after{background:var(--alert)}
 /* Flecha a la derecha / flecha hacia abajo, cada una en un solo pseudo-elemento recortado. */
 .flujo .fd::after,.flujo .fb::after,.flujo .fb2::before{content:""}
-@media (min-width:820px){
+@media (min-width:1100px){
   .flujo .fd::after{left:calc(100% + 1.5px);top:50%;width:var(--fg);height:9px;margin-top:-4.5px;clip-path:var(--fh)}
   .flujo .fb::after,.flujo .fb2::before{left:50%;top:calc(100% + 1.5px);width:9px;height:var(--fg);margin-left:-4.5px;clip-path:var(--fv)}
   .flota{grid-template-columns:repeat(5,minmax(0,1fr))}
@@ -216,7 +208,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
   .colegio .aparte{grid-area:2 / 1 / auto / span 2}
   .colegio .reg{grid-area:2 / 3}
 }
-@media (max-width:819px){
+@media (max-width:1099px){
   .flujo .fd::after,.flujo .fb::after,.flujo .fb2::before{left:50%;top:calc(100% + 1.5px);width:9px;height:var(--fg);margin-left:-4.5px;clip-path:var(--fv)}
   /* La flota se bifurca en la base: a la izquierda sigue al mapa, a la derecha va al detector. */
   .flota{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -239,10 +231,8 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .ficha{display:grid;grid-template-columns:11.5rem 1fr}
 .ficha dt{font-family:var(--display);font-size:.95rem;color:var(--muted);padding:.75rem 1rem .75rem 0;border-top:1px solid var(--rule)}
 .ficha dd{padding:.75rem 0;border-top:1px solid var(--rule)}
+.ficha .estado{display:block;margin-top:.3rem}
 @media (max-width:560px){.ficha{grid-template-columns:1fr}.ficha dd{border-top:0;padding-top:0}.ficha dt{padding-bottom:.2rem}}
-.tres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem clamp(1rem,2.5vw,1.75rem);font-size:.98rem;line-height:1.45}
-.tres dt{font-family:var(--display);font-weight:600;margin-bottom:.3rem}
-@media (max-width:640px){.tres{grid-template-columns:1fr}}
 .pubs li{display:grid;grid-template-columns:3.5rem 1fr;gap:0 1rem;padding:.6rem 0;border-top:1px solid var(--rule)}
 .pubs .year{font-family:var(--mono);font-size:.85rem;color:var(--muted);padding-top:.2rem}
 .pubs .venue{display:block;font-style:italic;color:var(--muted);font-size:.95rem;margin-top:.1rem}
@@ -281,39 +271,31 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 @media (max-width:640px){.herr-a{grid-template-columns:1fr}.campos{grid-template-columns:1fr;gap:.1rem}.campos dd+dt{margin-top:.5rem}}
 
 /* ---- agentes de IA: franja oscura ---- */
-.agentes{background:var(--panel);color:var(--p-ink);border-block:1px solid var(--p-rule);padding-block:clamp(2.5rem,6vw,4.5rem)}
+.agentes{background:var(--panel);color:var(--p-ink);border-block:1px solid var(--p-rule);border-top:0}
 .agentes a{color:var(--p-accent)}
-.agentes .kicker{color:var(--p-muted)}
-.agentes-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:1.75rem}
-.agentes h2{font-size:clamp(1.7rem,2.2vw + 1rem,2.7rem);margin-top:.5rem;max-width:12em}
-.agentes .lede{color:var(--p-ink);margin-top:1rem;font-size:1.12rem;max-width:30em}
-.practicas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(1.25rem,3vw,2rem);align-content:start}
+.agentes .kicker,.agentes .riel .donde{color:var(--p-muted)}
+.agentes .riel-top{background:var(--panel);border-bottom-color:var(--p-rule)}
+.agentes .lede{color:var(--p-ink);margin-top:0;font-size:1.12rem;max-width:30em}
+.practicas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(1.25rem,3vw,2rem);align-content:start;margin-top:1.25rem}
 .practicas div{padding-block:.85rem 1.1rem;border-top:1px solid var(--p-rule)}
 .practicas dt{font-family:var(--mono);font-size:.8rem;color:var(--p-accent);margin-bottom:.3rem}
 .practicas dd{font-size:1rem;line-height:1.45}
-@media (min-width:960px){.agentes-grid{grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(2rem,5vw,4.5rem)}}
 @media (max-width:520px){.practicas{grid-template-columns:1fr}}
 
-/* ---- recorrido: estaciones sobre una línea ---- */
-.recorrido h2,.contacto h2{font-size:clamp(1.6rem,2vw + 1rem,2.4rem)}
-.ruta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:clamp(1.75rem,4vw,2.5rem);font-size:.98rem;line-height:1.45}
-.ruta>div{position:relative;padding:1rem clamp(1rem,2.5vw,1.75rem) 0 0;border-top:1px solid var(--rule-strong)}
-.ruta>div::before{content:"";position:absolute;left:0;top:-5.5px;width:10px;height:10px;border-radius:50%;background:var(--bg);border:1.6px solid var(--accent)}
+/* ---- recorrido: estaciones sobre una línea vertical ---- */
+.ruta{display:grid;font-size:.98rem;line-height:1.45}
+.ruta>div{position:relative;border-left:1px solid var(--rule-strong);padding:0 0 1.25rem 1.2rem}
+.ruta>div:last-child{padding-bottom:0}
+.ruta>div::before{content:"";position:absolute;left:-5.5px;top:.3rem;width:10px;height:10px;border-radius:50%;background:var(--bg);border:1.6px solid var(--accent)}
 .ruta>div:last-child::before{background:var(--accent)}
 .ruta dt{font-family:var(--display);font-weight:600;line-height:1.25;margin-bottom:.35rem}
 .ruta .sub{display:block;font-family:var(--display);font-size:.86rem;color:var(--muted);margin-top:.4rem}
-@media (max-width:860px){
-  .ruta{grid-template-columns:1fr}
-  .ruta>div{border-top:0;border-left:1px solid var(--rule-strong);padding:0 0 1.25rem 1.2rem}
-  .ruta>div:last-child{padding-bottom:0}
-  .ruta>div::before{top:.3rem;left:-5.5px}
-}
 
 /* Con la serie fija, el borde de salto ya lleva su alto (scroll-padding); lo que está fuera de .escena no. */
 #recorrido,#contacto{scroll-margin-top:calc(0px - var(--fig-h,0px))}
 
 /* ---- contacto ---- */
-.correo{display:inline-block;margin-top:1rem;font-family:var(--display);font-weight:600;font-size:clamp(1.3rem,3.6vw,2.6rem);letter-spacing:-.02em;line-height:1.15;color:var(--ink);text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:.16em}
+.correo{display:inline-block;font-family:var(--display);font-weight:600;font-size:clamp(1.3rem,3.6vw,2.6rem);letter-spacing:-.02em;line-height:1.15;color:var(--ink);text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:.16em}
 .perfiles{display:flex;flex-wrap:wrap;gap:.2rem 1.75rem;margin-top:1.4rem;font-family:var(--display)}
 .perfiles a{display:inline-block;padding-block:.4rem}
 footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line-height:1.6;color:var(--muted)}
@@ -342,7 +324,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 <div class="hero pagina">
   <p class="lugar">Santiago, Chile</p>
   <h1>Resuelvo problemas con lo que hay disponible.</h1>
-  <p class="lede">Soy Benjamín Moreira-Grez, ecólogo microbiano (Ph.D.). Hoy construyo sistemas de datos para una empresa de transporte, trabajo con agentes de IA en entornos controlados y enseño ciencias en un colegio. El método viene del doctorado: medir, detectar, explicar.</p>
+  <p class="lede">Soy Benjamín Moreira-Grez, ecólogo microbiano (Ph.D.). Hoy construyo sistemas de datos para una empresa de transporte, trabajo con agentes de IA en entornos controlados y enseño ciencias en un colegio. El método viene del doctorado: medir, ver la desviación a tiempo, explicar y actuar.</p>
   <p class="acciones"><a class="btn" href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a><a class="btn sec" href="#casos">Ver los tres casos</a></p>
 </div>
 
@@ -354,59 +336,54 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <button type="button" class="esc" data-esc="1" aria-pressed="false">Docencia</button>
       <button type="button" class="esc" data-esc="2" aria-pressed="false">Ecología</button>
     </div>
-    <figcaption class="serie-top"><span class="serie-var">Data science · °C</span><span class="sim">datos simulados</span></figcaption>
     <div class="plot">
-      <svg class="trazo" viewBox="0 0 1200 260" preserveAspectRatio="none" role="img" aria-label="Gráfico con datos simulados: la temperatura del refrigerante de un bus se mantiene estable, empieza a derivar hacia arriba y sale de su banda normal; una marca señala la alerta. Se revisa el bus y la temperatura vuelve a lo normal."><path class="trend" d="M24 202 L63.7 202 L103.4 202 L143.2 202 L182.9 202 L222.6 202 L262.3 202 L302.1 202 L341.8 202 L381.5 202 L421.2 151.2 L461 147 L500.7 130.3 L540.4 108.8 L580.1 86.3 L619.9 63.2 L659.6 49.1 L699.3 39.9 L739 55.2 L778.8 81.8 L818.5 120.3 L858.2 154.4 L897.9 181.9 L937.7 205.1 L977.4 216.2 L1017.1 217.6 L1056.8 212.6 L1096.6 206.2 L1136.3 203.3 L1176 202.6"/></svg>
-      <span class="alerta" style="left:41.72%;top:50.12%" aria-hidden="true"></span>
+      <picture class="poster">
+        <source media="(min-width:900px)" srcset="anim/w/poster-ds.webp">
+        <img src="anim/n/poster-ds.webp" width="1200" height="340" alt="Gráfico con datos simulados: la temperatura del refrigerante de un bus se mantiene estable, empieza a derivar hacia arriba y sale de su banda normal; una marca señala la alerta. Se revisa el bus y la temperatura vuelve a lo normal.">
+      </picture>
+      <canvas class="lienzo" role="img" aria-label="Gráfico con datos simulados: la temperatura del refrigerante de un bus se mantiene estable, empieza a derivar hacia arriba y sale de su banda normal; una marca señala la alerta. Se revisa el bus y la temperatura vuelve a lo normal." hidden></canvas>
     </div>
   </div>
   <script type="application/json" id="escenarios">[{"n":30,"hit":12,"trend":"M24 202 L63.7 202 L103.4 202 L143.2 202 L182.9 202 L222.6 202 L262.3 202 L302.1 202 L341.8 202 L381.5 202 L421.2 151.2 L461 147 L500.7 130.3 L540.4 108.8 L580.1 86.3 L619.9 63.2 L659.6 49.1 L699.3 39.9 L739 55.2 L778.8 81.8 L818.5 120.3 L858.2 154.4 L897.9 181.9 L937.7 205.1 L977.4 216.2 L1017.1 217.6 L1056.8 212.6 L1096.6 206.2 L1136.3 203.3 L1176 202.6","alert":{"l":"41.72","t":"50.12"},"id":"ds","tab":"Data science","rotulo":"Data science · °C","aria":"Gráfico con datos simulados: la temperatura del refrigerante de un bus se mantiene estable, empieza a derivar hacia arriba y sale de su banda normal; una marca señala la alerta. Se revisa el bus y la temperatura vuelve a lo normal."},{"n":14,"hit":8,"trend":"M24 40.2 L112.6 40.2 L201.2 40.2 L289.8 40.2 L378.5 40.2 L467.1 40.2 L555.7 40.2 L644.3 119.7 L732.9 171.8 L821.5 215.1 L910.2 217.6 L998.8 189.6 L1087.4 136 L1176 92.5","alert":{"l":"61.08","t":"66.06"},"id":"do","tab":"Docencia","rotulo":"Docencia · % de acierto","aria":"Gráfico con datos simulados, sólo promedios del curso: el logro en un tema se mantiene estable a lo largo de los primeros ensayos, cae cuando aparece un tema nuevo y sale de su banda de referencia; una marca señala la alerta. Se refuerza el tema y el logro vuelve a la referencia."},{"n":36,"hit":25,"trend":"M24 37.6 L56.9 37.6 L89.8 37.6 L122.7 37.6 L155.7 37.6 L188.6 37.6 L221.5 37.6 L254.4 37.6 L287.3 34.1 L320.2 120 L353.1 185 L386.1 221.9 L419 224.8 L451.9 203.7 L484.8 177.5 L517.7 155 L550.6 140 L583.5 131.9 L616.5 125.6 L649.4 119.8 L682.3 114.9 L715.2 110.1 L748.1 107.5 L781 104.5 L813.9 101.8 L846.9 101.3 L879.8 103.5 L912.7 104.2 L945.6 103.9 L978.5 102.5 L1011.4 98.7 L1044.3 96.2 L1077.3 99.4 L1110.2 104.4 L1143.1 111.2 L1176 109.1","alert":{"l":"70.57","t":"38.97"},"id":"ec","tab":"Ecología","rotulo":"Ecología · % de la referencia","aria":"Gráfico con datos simulados: un sistema estable se perturba, cae y se recupera, pero se estabiliza por debajo de la banda que marcaba su estado previo; una marca señala dónde se confirma que no vuelve."}]</script>
+  <!-- Los cuadros de la animación (scripts/animacion.py → scripts/empaquetar_cuadros.py). -->
+  <script type="application/json" id="anim">{"fps":24,"n":224,"conjuntos":{"w":{"dir":"anim/w/","w":2400,"h":300},"n":{"dir":"anim/n/","w":1200,"h":340}},"fases":{"dsDraw":[0,94],"tDsDo":[94,123],"doAlerta":[123,159],"tDoEc":[159,188],"ecAlerta":[188,224]}}</script>
 </figure>
 
-<section class="casos pagina" id="casos" aria-labelledby="h-casos">
-  <h2 id="h-casos">Tres casos, el mismo método</h2>
-  <p class="intro">Cada caso se lee igual: qué había, qué hice y qué quedó. Van en el mismo orden que la serie: data science, docencia y ecología. Y cada cosa dice en qué estado está de verdad.</p>
-  <ul class="estados" aria-label="Estados que usa esta página">
-    <li class="estado e-uso">publicado o en uso</li>
-    <li class="estado e-piloto">en piloto</li>
-    <li class="estado e-dev">en desarrollo</li>
-  </ul>
-  <ol class="lista">
-    <li><a href="#ingenieria"><span class="kicker">Data science</span><span class="tit">Telemetría y detección de fallas para una flota de buses</span><span class="est"><span class="estado e-piloto">en piloto</span></span></a></li>
-    <li><a href="#educacion"><span class="kicker">Docencia</span><span class="tit">Herramientas para enseñar ciencias y para dirigir un colegio con datos</span><span class="est"><span class="estado e-uso">en uso en clases</span><span class="estado e-dev">asistente en desarrollo</span></span></a></li>
-    <li><a href="#investigacion"><span class="kicker">Ecología</span><span class="tit">Restauración de suelos mineros: medir si de verdad se recuperan</span><span class="est"><span class="estado e-uso">publicado</span></span></a></li>
-  </ol>
-</section>
-
-<section class="caso" id="ingenieria" aria-labelledby="h-ing">
-  <div class="pagina caso-grid">
+<section class="seccion" id="casos" aria-labelledby="h-casos">
+  <div class="pagina dos">
     <header class="riel">
-      <p class="kicker">Data science</p>
-      <h2 id="h-ing">Telemetría y detección de fallas para una flota de buses</h2>
-      <p class="estado e-piloto">en piloto</p>
-      <p class="donde">Para una empresa de transporte.</p>
+      <div class="riel-top"><p class="kicker">Tres casos</p><h2 id="h-casos">Un método, tres lugares</h2></div>
     </header>
     <div>
-      <p class="problema">Una flota sin visibilidad de sus vehículos ni de las fallas que venían.</p>
-      <p class="leer">En el gráfico de arriba, con datos simulados de la temperatura del refrigerante de un bus, por día: <b>Medir</b>: tres lecturas por día. <b>Ver la desviación</b>: la banda normal son los primeros 10 días ± 2σ; después la temperatura deriva, sale de ella y salta la alerta. <b>Explicar y actuar</b>: se revisa el bus antes de que falle y la temperatura vuelve a lo normal; sin la revisión habría seguido subiendo hasta la falla.</p>
-      <dl class="libro">
-        <div class="habia"><dt>Había</dt><dd><ul>
-          <li>Señales CAN sin procesar.</li>
-          <li>Trámites por correo.</li>
-          <li>Una nueva ley de datos personales, con vigencia desde diciembre de 2026.</li>
-          <li>Sin fallas registradas suficientes.</li>
-        </ul></dd></div>
-        <div class="hice"><dt>Hice</dt><dd><ul>
-          <li>Telemetría con series temporales, del bus CAN y GNSS al mapa en vivo.</li>
-          <li>Detección de fallas, con un simulador de telemetría y un banco de evaluación a ciegas.</li>
-          <li>Una plataforma para los datos de conductores, conforme a la Ley 21.719.</li>
-        </ul></dd></div>
-        <div class="quedo"><dt>Quedó</dt><dd><ul>
-          <li>Decisiones sobre datos en tiempo real, en piloto y con monitoreo propio.</li>
-          <li>Datos personales con resguardos, no por correo.</li>
-          <li>Se despliega sólo lo que supera a las reglas simples; lo demás, no.</li>
-        </ul></dd></div>
-      </dl>
+      <p class="intro">Medir, ver la desviación a tiempo, explicar y actuar. Lo hice en una empresa de transporte, en un colegio y en la investigación del doctorado, y es lo que cuenta el gráfico de arriba en cada escenario. Cada cosa dice en qué estado está de verdad.</p>
+      <ul class="estados" aria-label="Estados que usa esta página">
+        <li class="estado e-uso">publicado o en uso</li>
+        <li class="estado e-piloto">en piloto</li>
+        <li class="estado e-dev">en desarrollo</li>
+      </ul>
+      <ol class="lista">
+        <li><a href="#ingenieria"><span class="kicker">Data science</span><span class="tit">Telemetría y detección de fallas en una flota de buses</span><span class="est"><span class="estado e-piloto">en piloto</span></span></a></li>
+        <li><a href="#educacion"><span class="kicker">Docencia</span><span class="tit">Enseñar ciencias y medir un colegio</span><span class="est"><span class="estado e-uso">en uso en clases</span><span class="estado e-dev">asistente en desarrollo</span></span></a></li>
+        <li><a href="#investigacion"><span class="kicker">Ecología</span><span class="tit">Suelos mineros: saber si de verdad se recuperan</span><span class="est"><span class="estado e-uso">publicado</span></span></a></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="seccion" id="ingenieria" aria-labelledby="h-ing">
+  <div class="pagina dos">
+    <header class="riel">
+      <div class="riel-top"><p class="kicker">Data science</p><h2 id="h-ing">Telemetría y detección de fallas en una flota de buses</h2></div>
+      <div class="riel-meta"><p class="estado e-piloto">en piloto</p><p class="donde">Para una empresa de transporte.</p></div>
+    </header>
+    <div>
+      <p class="problema">Una flota de buses sin visibilidad de sus vehículos ni de las fallas que venían.</p>
+      <p class="grafico"><b>Arriba, el escenario Data science</b>, con datos simulados: temperatura del refrigerante de un bus, tres lecturas por día. La referencia son los primeros 10 días ± 2σ; cuando la tendencia sale de la banda salta la alerta, y la revisión la devuelve a lo normal antes de la falla.</p>
+      <ol class="metodo">
+        <li><h3>Medir</h3><p>Las señales llegaban del bus CAN sin procesar. Monté la telemetría de punta a punta: del bus CAN y el GNSS a una base de series temporales, con un contrato de datos versionado en la ingesta, una API y un mapa en vivo que reconstruye los tramos. FMS, protocolos de tacógrafo y GNSS los aprendí sobre la marcha.</p></li>
+        <li><h3>Ver la desviación</h3><p>No había fallas registradas suficientes para aprender de ellas. Construí un simulador de telemetría y un banco de evaluación a ciegas, y sobre eso un detector de anomalías, con reglas y modelos, que estima el riesgo de falla desde las señales del bus.</p></li>
+        <li><h3>Explicar y actuar</h3><p>Se despliega sólo lo que supera a las reglas simples; lo demás, no. Hoy el sistema decide sobre datos en tiempo real, en piloto y con monitoreo propio. Los datos de conductores, que iban por correo, pasaron a una plataforma con resguardos, diseñada para la Ley 21.719, vigente desde diciembre de 2026.</p></li>
+      </ol>
       <figure class="evidencia" data-nosnippet>
         <ol class="flujo flota" aria-label="Esquema del sistema: del bus CAN y GNSS a la ingesta, la base de series temporales, la API y el mapa en vivo; desde la base, una rama evalúa las señales con un detector de anomalías y produce alertas.">
           <li class="can fd"><b>Bus CAN y GNSS</b><span>en cada vehículo</span></li>
@@ -445,53 +422,39 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
   </div>
 </section>
 
-<section class="agentes" id="agentes" aria-labelledby="h-ia">
-  <div class="pagina agentes-grid">
+<section class="seccion agentes" id="agentes" aria-labelledby="h-ia">
+  <div class="pagina dos">
+    <header class="riel">
+      <div class="riel-top"><p class="kicker">Cómo trabajo</p><h2 id="h-ia">Agentes de IA, en entornos controlados</h2></div>
+    </header>
     <div>
-      <p class="kicker">Cómo trabajo</p>
-      <h2 id="h-ia">Agentes de IA, en entornos controlados</h2>
       <p class="lede">Uso agentes de IA a diario. Trabajan sobre un contexto que persiste y se versiona, y nada se despliega sin evaluarlo antes.</p>
+      <dl class="practicas">
+        <div><dt>contexto</dt><dd>Persistente y versionado.</dd></div>
+        <div><dt>entrega</dt><dd>Protocolos de entrega entre agentes, con trazabilidad.</dd></div>
+        <div><dt>búsqueda</dt><dd>Vectorial, con embeddings en pgvector, en un <a href="#colegio">asistente de gestión escolar</a>.</dd></div>
+        <div><dt>evaluación</dt><dd>A ciegas antes de desplegar; la detección de fallas, contra reglas explícitas.</dd></div>
+      </dl>
     </div>
-    <dl class="practicas">
-      <div><dt>contexto</dt><dd>Persistente y versionado.</dd></div>
-      <div><dt>entrega</dt><dd>Protocolos de entrega entre agentes, con trazabilidad.</dd></div>
-      <div><dt>búsqueda</dt><dd>Vectorial, con embeddings en pgvector, en un <a href="#colegio">asistente de gestión escolar</a>.</dd></div>
-      <div><dt>evaluación</dt><dd>A ciegas antes de desplegar; la detección de fallas, contra reglas explícitas.</dd></div>
-    </dl>
   </div>
 </section>
 
-<section class="caso" id="educacion" aria-labelledby="h-edu" style="border-top:0">
-  <div class="pagina caso-grid">
+<section class="seccion" id="educacion" aria-labelledby="h-edu" style="border-top:0">
+  <div class="pagina dos">
     <header class="riel">
-      <p class="kicker">Docencia</p>
-      <h2 id="h-edu">Herramientas para enseñar ciencias y para dirigir un colegio con datos</h2>
-      <p class="estado e-uso">en uso en clases</p>
-      <p class="estado e-dev">asistente en desarrollo</p>
-      <p class="donde">En un colegio.</p>
+      <div class="riel-top"><p class="kicker">Docencia</p><h2 id="h-edu">Enseñar ciencias y medir un colegio</h2></div>
+      <div class="riel-meta"><p class="estado e-uso">en uso en clases</p><p class="estado e-dev">asistente en desarrollo</p><p class="donde">En un colegio.</p></div>
     </header>
     <div>
       <p class="problema">Química, Biología y Ciencias para la Ciudadanía en cursos heterogéneos, con poco tiempo de sala.</p>
-      <p class="leer">En el gráfico de arriba, con datos simulados (sólo promedios del curso) del logro en un tema, por ensayo: <b>Medir</b>: tres preguntas del tema por ensayo. <b>Ver la desviación</b>: la referencia son los primeros 7 ensayos ± 2σ; al aparecer un tema nuevo el logro cae, sale de ella y salta la alerta. <b>Explicar y actuar</b>: se refuerza el tema antes de la evaluación y el logro vuelve a la referencia; sin refuerzo habría seguido cayendo.</p>
-      <dl class="libro">
-        <div class="habia"><dt>Había</dt><dd><ul>
-          <li>Las bases curriculares.</li>
-          <li>Un proyector y estudiantes con celular.</li>
-          <li>Las fuentes que el colegio ya tiene: notas, asistencia, convivencia, observaciones.</li>
-        </ul></dd></div>
-        <div class="hice"><dt>Hice</dt><dd><ul>
-          <li>Planificación por objetivo de aprendizaje, clase a clase, con diagnóstico de prerrequisitos y evaluación formativa antes de la sumativa.</li>
-          <li>Herramientas web propias: en el navegador, sin cuenta ni instalación.</li>
-          <li>Un asistente de gestión escolar con IA, local-first.</li>
-        </ul></dd></div>
-        <div class="quedo"><dt>Quedó</dt><dd><ul>
-          <li>Dos herramientas publicadas.<span class="estado e-uso">en uso en clases</span></li>
-          <li>Una app de práctica PAES, sin nota ni ranking.<span class="estado e-dev">en desarrollo</span></li>
-          <li>El asistente, con una demo sobre datos sintéticos.<span class="estado e-dev">en desarrollo</span></li>
-        </ul></dd></div>
-      </dl>
+      <p class="grafico"><b>Arriba, el escenario Docencia</b>, con datos simulados y sólo promedios del curso: logro en un tema, tres preguntas por ensayo. La referencia son los primeros 7 ensayos ± 2σ; un tema nuevo hace caer el logro, salta la alerta y el refuerzo lo devuelve a la referencia antes de la evaluación.</p>
+      <ol class="metodo">
+        <li><h3>Medir</h3><p>Lo disponible: las bases curriculares, un proyector y estudiantes con celular. Planifico por objetivo de aprendizaje, clase a clase, con diagnóstico de prerrequisitos al inicio y evaluación formativa antes de la sumativa; cuando el calendario se mueve, el cronograma se ajusta por escrito.</p></li>
+        <li><h3>Ver la desviación</h3><p>La formativa muestra qué tema no se entendió mientras todavía hay tiempo de reforzarlo. Para practicar sin nota hice herramientas web propias, en el navegador, sin cuenta ni instalación, que no guardan ni envían respuestas: dos están publicadas y en uso en clases.</p></li>
+        <li><h3>Explicar y actuar</h3><p>Lo mismo, a escala del colegio: un asistente de gestión escolar con IA que cruza las fuentes que el colegio ya tiene, busca patrones entre asignaturas y responde con evidencia. Local-first, con datos seudonimizados. Hoy es una demo con datos sintéticos; el piloto con datos reales está previsto desde 2027.</p></li>
+      </ol>
 
-      <h3>Herramientas publicadas</h3>
+      <h3 class="titulo">Herramientas publicadas</h3>
       <p class="pie">En el navegador, sin cuenta ni instalación, sin guardar ni enviar respuestas. Las imágenes son fragmentos de cada interfaz.</p>
       <article class="herr herr-a">
         <img src="tabla-periodica.webp" width="1200" height="1000" alt="" loading="lazy" decoding="async">
@@ -525,7 +488,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
         </div>
       </article>
 
-      <h3 id="colegio">Medir un colegio</h3>
+      <h3 class="titulo" id="colegio">Medir un colegio</h3>
       <p class="estado e-dev">en desarrollo</p>
       <figure class="evidencia" data-nosnippet style="margin-top:1.25rem">
         <ol class="flujo colegio" aria-label="Esquema del asistente de gestión escolar: las fuentes que el colegio ya tiene alimentan un asistente con IA que busca patrones entre asignaturas y responde con evidencia; dos reglas acotan la respuesta. Lo usan el equipo directivo, UTP, convivencia y profesores jefe.">
@@ -538,45 +501,30 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
         <figcaption>Esquema de «medir un colegio»: asistente de gestión escolar con IA en un equipo del propio colegio, con datos seudonimizados, diseñado para la Ley 21.719. Demo con datos sintéticos desde 2026; piloto con datos reales previsto desde 2027.</figcaption>
       </figure>
       <details class="mas">
-        <summary>Planificación, evaluación y práctica PAES</summary>
+        <summary>Práctica PAES</summary>
         <dl class="ficha">
-          <dt>Planificar y evaluar</dt>
-          <dd>Unidades contra las bases curriculares, clase a clase, con diagnóstico de prerrequisitos y evaluación formativa antes de la sumativa; cronogramas ajustados por escrito cuando el calendario se mueve.</dd>
           <dt>Práctica PAES</dt>
-          <dd>Práctica de habilidad científica con orientación para la remediación. Sin nota ni ranking; no se usa con estudiantes hasta revisar el banco.</dd>
+          <dd>Una app de práctica de habilidad científica con orientación para la remediación. Sin nota ni ranking; no se usa con estudiantes hasta revisar el banco.<span class="estado e-dev">en desarrollo</span></dd>
         </dl>
       </details>
     </div>
   </div>
 </section>
 
-<section class="caso" id="investigacion" aria-labelledby="h-inv">
-  <div class="pagina caso-grid">
+<section class="seccion" id="investigacion" aria-labelledby="h-inv">
+  <div class="pagina dos">
     <header class="riel">
-      <p class="kicker">Ecología</p>
-      <h2 id="h-inv">Restauración de suelos mineros: medir si de verdad se recuperan</h2>
-      <p class="estado e-uso">publicado</p>
-      <p class="donde">Doctorado en la University of Western Australia.</p>
+      <div class="riel-top"><p class="kicker">Ecología</p><h2 id="h-inv">Suelos mineros: saber si de verdad se recuperan</h2></div>
+      <div class="riel-meta"><p class="estado e-uso">publicado</p><p class="donde">Doctorado en la University of Western Australia.</p></div>
     </header>
     <div>
-      <p class="problema">Saber si un suelo minero degradado se recupera al devolverle microorganismos, o solo lo parece.</p>
-      <p class="leer">En el gráfico de arriba, con datos simulados de la función microbiana de un suelo después de la minería, frente a su referencia: <b>Medir</b>: réplicas en cada muestreo. <b>Ver la desviación</b>: la referencia es el estado previo ± 2σ; el sistema estable se perturba, cae y la alerta confirma que no vuelve. <b>Explicar y actuar</b>: se recupera, pero no del todo, y no se da por restaurado.</p>
-      <dl class="libro">
-        <div class="habia"><dt>Había</dt><dd><ul>
-          <li>Pocas muestras, caras y escasas.</li>
-          <li>Secuenciación ruidosa.</li>
-          <li>Ninguna referencia clara de suelo sano.</li>
-        </ul></dd></div>
-        <div class="hice"><dt>Hice</dt><dd><ul>
-          <li>Muestreo con réplicas, en terreno, en zonas áridas.</li>
-          <li>Marcaje isotópico (RNA-SIP) para saber qué organismo hace qué.</li>
-          <li>Metagenómica y estadística multivariante para separar señal de ruido.</li>
-        </ul></dd></div>
-        <div class="quedo"><dt>Quedó</dt><dd><ul>
-          <li>Un doctorado y publicaciones que siguen citándose.</li>
-          <li>El mismo enfoque sirvió en arroceras, trigo y residuos de bauxita.</li>
-        </ul></dd></div>
-      </dl>
+      <p class="problema">Saber si un suelo minero degradado se recupera al devolverle microorganismos, o sólo lo parece.</p>
+      <p class="grafico"><b>Arriba, el escenario Ecología</b>, con datos simulados: función microbiana de un suelo frente a su referencia, con réplicas en cada muestreo. La referencia es el estado previo ± 2σ; el sistema se perturba, cae y se recupera, pero la alerta confirma que no vuelve: no se da por restaurado.</p>
+      <ol class="metodo">
+        <li><h3>Medir</h3><p>Muestras pocas, caras y escasas; secuenciación ruidosa; ninguna referencia clara de suelo sano. Con eso, el diseño del muestreo decide más que el análisis: réplicas en cada muestreo, en terreno, en zonas áridas de Western Australia; marcaje isotópico (RNA-SIP) para saber qué organismo hace qué; metagenómica.</p></li>
+        <li><h3>Ver la desviación</h3><p>Estadística multivariante para separar señal de ruido y la intervención de la variabilidad del sitio: si la comunidad vuelve a su referencia o se estabiliza por debajo.</p></li>
+        <li><h3>Explicar y actuar</h3><p>Revisé los supuestos con que se monitorea la restauración y escribí los resultados para quienes deciden sobre restauración minera, no sólo para revisores. El mismo enfoque sirvió después en arroceras, trigo y residuos de bauxita. Quedó un doctorado y publicaciones que siguen citándose.</p></li>
+      </ol>
       <dl class="metricas">
         <div><dt>citas totales</dt><dd>738</dd></div>
         <div><dt>índice h</dt><dd>12</dd></div>
@@ -595,7 +543,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 <text x="14" y="30">ARN</text>
 </svg></div>
         <div>
-          <p class="nota">Con muestras caras y escasas, el diseño del muestreo decide más que el análisis. Parte del trabajo fue separar la intervención de la variabilidad del sitio y revisar los supuestos con que se monitorea la restauración; los resultados se escribieron para quienes deciden sobre restauración minera, no solo para revisores.</p>
+          <p class="nota">Con muestras caras y escasas, el diseño del muestreo decide más que el análisis. Parte del trabajo fue separar la intervención de la variabilidad del sitio y revisar los supuestos con que se monitorea la restauración; los resultados se escribieron para quienes deciden sobre restauración minera, no sólo para revisores.</p>
           <figcaption>Esquema: ARN separado por densidad (RNA-SIP). El que incorporó ¹³C se desplaza a las fracciones pesadas, a la derecha: así se sabe qué organismos usaron el sustrato. Curvas ilustrativas.</figcaption>
         </div>
       </figure>
@@ -617,9 +565,11 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 
 </div>
 
-<section class="caso recorrido" id="recorrido" aria-labelledby="h-rec">
-  <div class="pagina">
-    <h2 id="h-rec">Recorrido</h2>
+<section class="seccion fuera" id="recorrido" aria-labelledby="h-rec">
+  <div class="pagina dos">
+    <header class="riel">
+      <div class="riel-top"><p class="kicker">Hasta hoy</p><h2 id="h-rec">Recorrido</h2></div>
+    </header>
     <dl class="ruta">
       <div><dt>Pontificia Universidad Católica de Valparaíso</dt><dd>Licenciado en Biología y título profesional de Biólogo.</dd></div>
       <div><dt>The University of Western Australia, Perth</dt><dd>Ph.D., tesis de 2020 (<a href="https://doi.org/10.26182/5e995c216ca93">doi:10.26182/5e995c216ca93</a>). Financiado con la beca de Doctorado Becas Chile, 2014–2018.<span class="sub">Enfoque: reacondicionamiento de suelos degradados, dinámica de comunidades microbianas y restauración ecológica post-minera.</span></dd></div>
@@ -629,16 +579,20 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
   </div>
 </section>
 
-<section class="caso contacto" id="contacto" aria-labelledby="h-con">
-  <div class="pagina">
-    <h2 id="h-con">Contacto</h2>
-    <p><a class="correo" href="mailto:benja.moreira.grez@gmail.com">benja.moreira.grez@gmail.com</a></p>
-    <ul class="perfiles">
-      <li><a href="https://github.com/bengrez">GitHub</a></li>
-      <li><a href="https://scholar.google.com/citations?user=K4uAEBoAAAAJ&amp;hl=en">Google Scholar</a></li>
-      <li><a href="https://orcid.org/0000-0001-5030-5484">ORCID</a></li>
-      <li><a href="https://www.researchgate.net/profile/Benjamin-Moreira-Grez">ResearchGate</a></li>
-    </ul>
+<section class="seccion fuera" id="contacto" aria-labelledby="h-con">
+  <div class="pagina dos">
+    <header class="riel">
+      <div class="riel-top"><p class="kicker">Escríbeme</p><h2 id="h-con">Contacto</h2></div>
+    </header>
+    <div>
+      <p><a class="correo" href="mailto:benja.moreira.grez@gmail.com">benja.moreira.grez@gmail.com</a></p>
+      <ul class="perfiles">
+        <li><a href="https://github.com/bengrez">GitHub</a></li>
+        <li><a href="https://scholar.google.com/citations?user=K4uAEBoAAAAJ&amp;hl=en">Google Scholar</a></li>
+        <li><a href="https://orcid.org/0000-0001-5030-5484">ORCID</a></li>
+        <li><a href="https://www.researchgate.net/profile/Benjamin-Moreira-Grez">ResearchGate</a></li>
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -681,131 +635,128 @@ var portada=(function(){
   return {saltar:saltar};
 })();
 
-/* La serie de la portada: un mismo gráfico con tres escenarios (data science, docencia, ecología) que
-   cambian de variable y de datos pero cuentan lo mismo: medir, ver la desviación a tiempo, actuar.
-   Desde la 011 el gráfico muestra sólo la línea y la alerta, con el escenario, su unidad y «datos
-   simulados»; los pasos viven en el texto de cada caso. Los datos son simulados (scripts/serie.py) y
-   están en el JSON de la figura. Sin JS se ve el primer escenario, completo y quieto, y no se pega. Con
-   JS: la línea se dibuja y salta la alerta, y la figura queda fija bajo la barra mientras se recorren
-   los tres casos: al entrar en cada uno (Data science, Docencia, Ecología) la línea se desplaza al
-   escenario correspondiente. Con prefers-reduced-motion el cambio es instantáneo y parte completa. */
+/* La serie de la portada, desde la 012: cuadros que rinde Manim (scripts/animacion.py) y que el scroll
+   avanza. La figura queda fija bajo la barra mientras se recorren los tres casos (.escena). El cuadro
+   que se muestra sale de en qué sección está la «línea de lectura» (35 % del espacio visible bajo la
+   figura) y cuánto de ella lleva recorrido (p, de 0 a 1):
+     - antes de Data science: el escenario completo; al cargar, la línea se traza sola (en el tiempo);
+     - Data science (incluida la franja de agentes): quieto; en el último 14 % la línea se transforma en la de Docencia;
+     - Docencia: en la primera mitad la alerta recorre la línea (el círculo pulsa y el tramo pasa al acento);
+       la segunda mitad, quieto; al final, se transforma en Ecología;
+     - Ecología: igual, sin transformación al final.
+   Hacia arriba funciona igual, en reversa (es el mismo índice). Con prefers-reduced-motion, o si los
+   cuadros no cargan, se muestra la imagen fija de cada escenario (picture.poster); sin JS, la del primero. */
 (function(){
-  var fig=document.getElementById('serie'), dat=document.getElementById('escenarios'); if(!fig||!dat) return;
-  var esc; try{ esc=JSON.parse(dat.textContent); }catch(e){ return; }
-  var plot=fig.querySelector('.plot'), svg=fig.querySelector('.trazo'), p=fig.querySelector('.trend'), alerta=fig.querySelector('.alerta'),
-      tabs=[].slice.call(fig.querySelectorAll('.esc')),
-      reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-      sc, pts, est, tween=null;
-  // Las secciones que mandan el escenario, en el orden de la serie. Agentes de IA queda entre la primera y la segunda.
-  var secs=['ingenieria','educacion','investigacion'].map(function(id){ return document.getElementById(id); });
-  var bar=document.querySelector('.barra');
+  var fig=document.getElementById('serie'), dat=document.getElementById('escenarios'), adat=document.getElementById('anim'); if(!fig||!dat||!adat) return;
+  var esc, anim; try{ esc=JSON.parse(dat.textContent); anim=JSON.parse(adat.textContent); }catch(e){ return; }
+  var plot=fig.querySelector('.plot'), lienzo=fig.querySelector('.lienzo'), poster=fig.querySelector('.poster'),
+      pimg=poster.querySelector('img'), psrc=poster.querySelector('source'),
+      tabs=[].slice.call(fig.querySelectorAll('.esc')), bar=document.querySelector('.barra'), escena=document.getElementById('escena'),
+      secs=['ingenieria','educacion','investigacion'].map(function(id){ return document.getElementById(id); }),
+      mq=function(q){ return window.matchMedia?window.matchMedia(q):{matches:false}; },
+      reduce=mq('(prefers-reduced-motion: reduce)').matches, ancho=mq('(min-width: 900px)'),
+      ctx=lienzo&&lienzo.getContext?lienzo.getContext('2d'):null,
+      F=anim.fases, dpr=Math.min(2,window.devicePixelRatio||1), TR=.86;
+  var modo=(ctx&&!reduce)?'lienzo':'poster', conj=null, cuadros=[], listos=[], fallas=0, mostrado=-1, auto=null, kAct=-1, raf=0;
 
-  p.addEventListener('animationend',function(){ p.style.strokeDasharray=''; p.style.strokeDashoffset=''; });  // si la ventana cambia de ancho, la línea sigue entera
   function marcar(k){ tabs.forEach(function(b,j){ b.setAttribute('aria-pressed',j===k?'true':'false'); }); }
-
-  // Rótulo y descripción del escenario k (lo que no se desplaza: se funde).
-  function cargarTextos(k){
-    sc=esc[k];
-    fig.querySelector('.serie-var').textContent=sc.rotulo; svg.setAttribute('aria-label',sc.aria); marcar(k);
-    // El path que lee el script sólo usa M/L absolutos con números positivos (README).
-    pts=sc.trend.match(/[\d.]+/g).map(Number);
+  function textos(k){
+    if(k===kAct) return; kAct=k; marcar(k);
+    lienzo.setAttribute('aria-label',esc[k].aria); pimg.alt=esc[k].aria;
+    if(modo==='poster'){ psrc.srcset=anim.conjuntos.w.dir+'poster-'+esc[k].id+'.webp'; pimg.src=anim.conjuntos.n.dir+'poster-'+esc[k].id+'.webp'; }
   }
-  // Geometría exacta del escenario k.
-  function cargarGeom(k){
-    var c=esc[k];
-    p.setAttribute('d',c.trend); alerta.style.left=c.alert.l+'%'; alerta.style.top=c.alert.t+'%';
-    est=geom(c);
-  }
-  function cargar(k){ cargarTextos(k); cargarGeom(k); }
-
-  // ---- cambio de escenario con la línea en movimiento ----
-  function pares(d){ var m=d.match(/[\d.]+/g).map(Number), o=[]; for(var j=0;j<m.length;j+=2) o.push([m[j],m[j+1]]); return o; }
-  function geom(c){ return {trend:pares(c.trend), al:+c.alert.l, at:+c.alert.t}; }
-  function yEn(q,x){ var m=q.length; if(x<=q[0][0]) return q[0][1];
-    for(var j=1;j<m;j++) if(x<=q[j][0]){ var a=q[j-1], b=q[j], w=b[0]>a[0]?(x-a[0])/(b[0]-a[0]):0; return a[1]+(b[1]-a[1])*w; }
-    return q[m-1][1]; }
-  function f1(v){ return Math.round(v*10)/10; }
-  // Las dos curvas se muestrean en la unión de sus x: la curva en e=1 es exactamente la de destino.
-  function lineaEntre(A,B){ var xs=[], vistos={}; A.concat(B).forEach(function(q){ if(!vistos[q[0]]){ vistos[q[0]]=1; xs.push(q[0]); } });
-    xs.sort(function(a,b){ return a-b; });
-    var ya=xs.map(function(x){ return yEn(A,x); }), yb=xs.map(function(x){ return yEn(B,x); });
-    return function(e){ var d=''; for(var j=0;j<xs.length;j++) d+=(j?'L':'M')+f1(xs[j])+' '+f1(ya[j]+(yb[j]-ya[j])*e)+' '; return d; }; }
-  function terminar(k){ tween=null; cargarGeom(k); fig.classList.remove('cambiando'); }
-  function ir(k){
-    if(esc[k]===sc&&!tween) return;
-    if(tween&&tween.k===k) return;
-    // La animación inicial se da por terminada: lo que sigue es el cambio.
-    fig.classList.remove('ready'); p.style.strokeDasharray=''; p.style.strokeDashoffset='';
-    if(tween) cancelAnimationFrame(tween.raf);
-    if(reduce){ cargar(k); tween=null; fig.classList.remove('cambiando'); return; }
-    var B=geom(esc[k]), A=est, t0=null, DUR=800, textos=false, fT=lineaEntre(A.trend,B.trend);
-    marcar(k);
-    fig.classList.add('cambiando');
-    tween={k:k,raf:0};
-    function cuadro(ts){
-      if(t0===null) t0=ts;
-      var t=Math.min(1,(ts-t0)/DUR), e=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2, mez=function(a,b){ return a+(b-a)*e; };
-      p.setAttribute('d',fT(e));
-      alerta.style.left=mez(A.al,B.al)+'%'; alerta.style.top=mez(A.at,B.at)+'%';
-      est={trend:A.trend,al:mez(A.al,B.al),at:mez(A.at,B.at)};
-      if(!textos&&t>=.4){ textos=true; cargarTextos(k); fig.classList.remove('cambiando'); }
-      if(t<1) tween.raf=requestAnimationFrame(cuadro); else terminar(k);
-    }
-    tween.raf=requestAnimationFrame(cuadro);
-  }
-  // Arranca la animación: la línea se dibuja y después salta la alerta.
-  function animar(){
-    fig.classList.remove('ready'); p.style.strokeDasharray=''; p.style.strokeDashoffset='';
-    if(reduce) return;
-    // El SVG se estira distinto en x y en y y el trazo no escala: el largo se mide en píxeles de pantalla.
-    var sx=plot.clientWidth/1200, sy=plot.clientHeight/260, len=2;
-    for(var k=2;k<pts.length;k+=2) len+=Math.sqrt(Math.pow((pts[k]-pts[k-2])*sx,2)+Math.pow((pts[k+1]-pts[k-1])*sy,2));
-    len=Math.ceil(len); p.style.strokeDasharray=len; p.style.strokeDashoffset=len;
-    void fig.offsetWidth; fig.classList.add('ready');
-  }
-
-  // ---- la figura fija y el escenario que manda el scroll ----
-  // Umbral: el escenario es el de la última sección cuyo borde superior ya pasó la «línea de lectura»,
-  // que está al 35 % del espacio visible bajo la figura fija (barra + figura). Agentes de IA no cuenta:
-  // mientras se la recorre sigue el escenario de Data science. Antes de Data science (portada, índice) y
-  // después de Ecología (Recorrido, Contacto) no cambia nada: se queda el primero y el último.
-  var deseado=0, tm=0, bloqueado=false, unl=0, raf=0;
   function medir(){ document.documentElement.style.setProperty('--fig-h',fig.offsetHeight+'px'); }
-  function actual(){
-    var base=(bar?bar.offsetHeight:52)+fig.offsetHeight, linea=base+.35*(window.innerHeight-base), k=0;
-    secs.forEach(function(s,j){ if(s&&s.getBoundingClientRect().top<=linea) k=j; });
-    return k;
+
+  // ---- dónde está la lectura: sección k (-1 antes de la primera) y avance p dentro de ella ----
+  function estado(){
+    var base=(bar?bar.offsetHeight:52)+fig.offsetHeight, linea=base+.35*(window.innerHeight-base), k=-1;
+    var tops=secs.map(function(s){ return s.getBoundingClientRect().top; }), fin=escena.getBoundingClientRect().bottom;
+    tops.forEach(function(t,j){ if(t<=linea) k=j; });
+    if(k<0) return {k:-1,p:0};
+    var ini=tops[k], end=k<2?tops[k+1]:fin, p=end>ini?(linea-ini)/(end-ini):1;
+    return {k:k,p:Math.max(0,Math.min(1,p))};
   }
+  function tramo(r,u){ var n=r[1]-r[0]; return r[0]+Math.min(n-1,Math.max(0,Math.floor(u*n))); }
+  function cuadroDe(s){
+    if(s.k<0) return F.dsDraw[1]-1;
+    if(s.k===0) return s.p<TR?F.dsDraw[1]-1:tramo(F.tDsDo,(s.p-TR)/(1-TR));
+    var al=s.k===1?F.doAlerta:F.ecAlerta, tr=s.k===1?F.tDoEc:null;
+    if(s.p<.5) return tramo(al,s.p/.5);
+    if(!tr||s.p<TR) return al[1]-1;
+    return tramo(tr,(s.p-TR)/(1-TR));
+  }
+  function escenarioDe(s){ var k=Math.max(0,s.k); if(s.k>=0&&s.k<2&&s.p>=(TR+1)/2) k=s.k+1; return k; }
+
+  // ---- los cuadros ----
+  function nombre(i){ return conj.dir+('000'+i).slice(-4)+'.webp'; }
+  function pedir(i){
+    if(cuadros[i]) return; var im=new Image(); cuadros[i]=im;
+    im.onload=function(){ listos[i]=true; if(i===mostrado||(mostrado<0&&i===F.dsDraw[0])) { mostrado=-1; redibujar(); } };
+    im.onerror=function(){ if(++fallas>3&&modo==='lienzo') aPoster(); };
+    im.src=nombre(i);
+  }
+  function disponible(i){
+    if(listos[i]) return i;
+    for(var d=1;d<anim.n;d++){ if(i-d>=0&&listos[i-d]) return i-d; if(i+d<anim.n&&listos[i+d]) return i+d; }
+    return -1;
+  }
+  var pedido=-1;
+  function dibujar(i){
+    pedido=i; var j=disponible(i); if(j<0||j===mostrado) return;
+    var W=lienzo.width, H=lienzo.height, s=Math.min(W/conj.w,H/conj.h), dw=conj.w*s, dh=conj.h*s;
+    ctx.clearRect(0,0,W,H); ctx.drawImage(cuadros[j],(W-dw)/2,(H-dh)/2,dw,dh); mostrado=j;
+  }
+  function redibujar(){ if(pedido>=0) dibujar(pedido); }
+  function medirLienzo(){
+    var w=plot.clientWidth, h=plot.clientHeight;
+    if(lienzo.width!==Math.round(w*dpr)||lienzo.height!==Math.round(h*dpr)){ lienzo.width=Math.round(w*dpr); lienzo.height=Math.round(h*dpr); mostrado=-1; }
+  }
+  function elegirConjunto(){
+    var c=anim.conjuntos[ancho.matches?'w':'n']; if(c===conj) return;
+    conj=c; cuadros=[]; listos=[]; mostrado=-1;
+    // Primero lo que se traza al cargar, después el resto, en orden.
+    for(var i=F.dsDraw[0];i<F.dsDraw[1];i++) pedir(i);
+    for(i=F.dsDraw[1];i<anim.n;i++) pedir(i);
+  }
+  function aPoster(){ modo='poster'; if(auto){ cancelAnimationFrame(auto.raf); auto=null; } lienzo.hidden=true; poster.hidden=false; var k=kAct; kAct=-1; textos(Math.max(0,k)); }
+
+  // ---- al cargar, la línea se traza sola; después manda el scroll ----
+  function autoplay(){
+    var a=F.dsDraw[0], b=F.dsDraw[1], t0=null; auto={raf:0};
+    function paso(ts){
+      if(!auto) return; if(t0===null) t0=ts;
+      var i=a+Math.floor((ts-t0)/1000*anim.fps);
+      if(i>=b){ auto=null; evaluar(); return; }
+      dibujar(i); auto.raf=requestAnimationFrame(paso);
+    }
+    auto.raf=requestAnimationFrame(paso);
+  }
+  function esperarYTrazar(){
+    var a=F.dsDraw[0], b=F.dsDraw[1], t0=Date.now();
+    (function ver(){
+      var ok=true; for(var i=a;i<b;i++) if(!listos[i]){ ok=false; break; }
+      if(ok||Date.now()-t0>6000||modo!=='lienzo'){ if(modo==='lienzo') autoplay(); return; }
+      setTimeout(ver,80);
+    })();
+  }
+
   function evaluar(){
-    raf=0; if(bloqueado) return;
-    var k=actual(); if(k===deseado) return;
-    deseado=k; clearTimeout(tm); tm=setTimeout(function(){ ir(deseado); },reduce?0:90);
+    raf=0; var s=estado(); textos(escenarioDe(s));
+    if(modo==='lienzo'&&!auto) dibujar(cuadroDe(s));
   }
-  function pedir(){ if(!raf) raf=requestAnimationFrame(evaluar); }
-  // Al saltar con un enlace o con los botones, el desplazamiento pasa por secciones intermedias:
-  // se espera a que termine para no parpadear por ellas.
-  function bloquear(k){
-    bloqueado=true; clearTimeout(unl); unl=setTimeout(soltar,450);
-    if(k!==undefined){ deseado=k; clearTimeout(tm); ir(k); }
-  }
-  function soltar(){ bloqueado=false; pedir(); }
-  window.addEventListener('scroll',function(){ if(bloqueado){ clearTimeout(unl); unl=setTimeout(soltar,160); } pedir(); },{passive:true});
-  window.addEventListener('resize',function(){ medir(); pedir(); });
-  document.addEventListener('click',function(e){
-    var a=e.target.closest&&e.target.closest('a[href^="#"]'); if(!a) return;
-    var id=a.getAttribute('href').slice(1), j=['ingenieria','educacion','investigacion'].indexOf(id);
-    bloquear(j>=0?j:(id==='recorrido'||id==='contacto'?2:undefined));
-  });
-  tabs.forEach(function(b){ b.addEventListener('click',function(){
-    var k=+b.getAttribute('data-esc'); bloquear(k);
-    if(secs[k]) portada.saltar(secs[k]);
-  }); });
+  function pedirEval(){ if(!raf) raf=requestAnimationFrame(evaluar); }
+  window.addEventListener('scroll',pedirEval,{passive:true});
+  window.addEventListener('resize',function(){ medir(); if(modo==='lienzo'){ medirLienzo(); elegirConjunto(); redibujar(); } pedirEval(); });
+  tabs.forEach(function(b){ b.addEventListener('click',function(){ var k=+b.getAttribute('data-esc'); if(secs[k]) portada.saltar(secs[k]); }); });
 
   fig.querySelector('.escenarios').hidden=false;
-  cargar(0); animar();
   fig.classList.add('fijo'); medir();
-  if(window.ResizeObserver) new ResizeObserver(medir).observe(fig);
-  window.addEventListener('load',function(){ medir(); deseado=-1; pedir(); });
+  if(window.ResizeObserver) new ResizeObserver(function(){ medir(); if(modo==='lienzo'){ medirLienzo(); redibujar(); } }).observe(fig);
+  if(modo==='lienzo'){
+    poster.hidden=true; lienzo.hidden=false; medirLienzo(); elegirConjunto(); esperarYTrazar();
+  }
+  textos(0);
+  window.addEventListener('load',function(){ medir(); pedirEval(); });
 })();
 
 /* Tema claro u oscuro: parte del sistema; el botón lo cambia y lo recuerda en este navegador. */
