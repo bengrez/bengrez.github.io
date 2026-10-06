@@ -89,6 +89,21 @@ detalle por elementos**, de más a menos, en el orden de la página:
 - Lo que salió: en la 013, los cuadros de Manim (`anim/`, `scripts/animacion.py`, `scripts/empaquetar_cuadros.py`),
   `scripts/serie.py` y `scripts/senales.py`; en la 014, las SVG externas de matplotlib (`fig/`) y sus pies.
 
+## Movimiento de las secciones (iteración 019)
+
+Misma curva que el trazo de la 018 (ReLU con fuga: 12 % del recorrido en el primer 55 % y el 88 % restante en el 45 %,
+unas 9 veces más rápido después del codo), aplicada a dos movimientos más:
+
+- **Salto con ancla** (barra, índice de casos, botones, enlaces `#…`): `portada.saltar` ya no usa el desplazamiento
+  suave del navegador sino una animación propia en JS (`requestAnimationFrame`, 0,7 a 1,4 s según la distancia).
+  Recalcula el destino en cada cuadro (la portada y la figura cambian de alto, y el destino respeta `scroll-padding-top`
+  y `scroll-margin-top`), se interrumpe con rueda, toque, teclado o clic, y se suelta si otra cosa mueve la página.
+  Con movimiento reducido es inmediato; sin JS, anclas normales.
+- **Contenido ligado al scroll**: cada bloque de la columna derecha (`.dos>div:not(.riel)>*`, `.dos>.ruta`) sube 3 rem
+  mientras entra, según el scroll y no el tiempo: `animation-timeline:view()` con `animation-range:entry 0% entry 14rem`
+  y `linear(0,.12 55%,1)`. La figura fija y el título (`.riel`) no se mueven. Sin soporte, un respaldo en JS calcula lo
+  mismo en cada `scroll`. Con movimiento reducido, quieto. Excepción registrada del guardrail 6 del CONTEXT.
+
 ## La serie fija y la portada que se encoge (iteración 010)
 
 Todo lo que va de las figuras al final de Docencia está dentro de `div.escena`; con JS la figura gana la

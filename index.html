@@ -155,6 +155,22 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
   @keyframes aparecer-banda{to{opacity:.07}}
 }
 
+/* ---- movimiento del contenido ligado al scroll (iteración 019) ----
+   El bloque de texto de cada sección (la columna derecha; la figura fija y el título de la izquierda no se mueven)
+   sube 3 rem a medida que entra a la pantalla, ligado a la posición del scroll y no al tiempo (animation-timeline:
+   view()). Misma curva que el trazo (ReLU con fuga): casi sin acomodarse al comienzo de su entrada (12 % del recorrido
+   en el primer 55 %) y después rápido (el 88 % restante en el 45 %), unas 9 veces más veloz. El rango es de 14 rem de
+   scroll desde que el bloque asoma. Sin soporte de animation-timeline, el JS aplica lo mismo (más abajo); con
+   movimiento reducido, o sin JS ni soporte, el contenido queda quieto. Excepción registrada del guardrail 6 del
+   CONTEXT («transiciones de entrada por sección»), decisión del dueño del 2026-10-06: sólo este movimiento ligado al
+   scroll, nunca un fade-and-slide automático al cargar. */
+@supports (animation-timeline:view()){
+  @media (prefers-reduced-motion:no-preference){
+    .dos>div:not(.riel)>*,.dos>.ruta{animation:sube linear both;animation-timing-function:linear(0,.12 55%,1);animation-timeline:view();animation-range:entry 0% entry 14rem}
+    @keyframes sube{from{transform:translateY(3rem)}to{transform:none}}
+  }
+}
+
 /* ---- la figura fija (desde la 010) ----
    Con JS, la figura queda pegada bajo la barra mientras se recorren los tres casos (todo lo que hay
    dentro de .escena, hasta el final de Docencia) y cambia al pasar de sección. Sin JS no se pega.
@@ -876,9 +892,31 @@ var portada=(function(){
   function poner(v){ if(v!==0&&v!==1&&Math.abs(v-ult)<.004) return; ult=v; hero.style.setProperty('--k',v.toFixed(3)); }
   function aplicar(){ raf=0; var y=Math.min(D,Math.max(0,window.pageYOffset||0)), t=y<K?A*y/K:A+(1-A)*(y-K)/(D-K); poner(forzado?1:t); }
   function soltar(){ forzado=false; aplicar(); }
+  // El salto con ancla se anima a mano con la misma curva que el resto (ReLU con fuga: 12 % del recorrido en el primer
+  // 55 % del tiempo y el resto en el 45 %). Se recalcula el destino en cada cuadro porque la portada y la figura cambian
+  // de alto; con movimiento reducido el salto es inmediato.
+  var anim=0;
+  function destino(el){
+    var cs=getComputedStyle(el), pad=parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)||0;
+    var y=el.getBoundingClientRect().top+(window.pageYOffset||0)-(parseFloat(cs.scrollMarginTop)||0)-pad;
+    return Math.max(0,Math.min(y,document.documentElement.scrollHeight-window.innerHeight));
+  }
+  function parar(){ if(anim){ cancelAnimationFrame(anim); anim=0; } }
+  ['wheel','touchstart','keydown','mousedown'].forEach(function(ev){ window.addEventListener(ev,parar,{passive:true}); });
   function saltar(el){
-    forzado=true; poner(1); clearTimeout(ft); ft=setTimeout(soltar,500);
-    el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+    forzado=true; poner(1); clearTimeout(ft); ft=setTimeout(soltar,500); parar();
+    if(reduce){ el.scrollIntoView({behavior:'auto',block:'start'}); return; }
+    var y0=window.pageYOffset||0, d0=Math.abs(destino(el)-y0), dur=Math.min(1400,Math.max(700,d0*.4)), t0=performance.now();
+    var puesto=y0;
+    function paso(now){
+      // si otra cosa movió la página (un foco, otro salto), se suelta
+      if(Math.abs((window.pageYOffset||0)-puesto)>3){ anim=0; ft=setTimeout(soltar,160); return; }
+      var t=Math.min(1,(now-t0)/dur), p=t<.55?.12*t/.55:.12+.88*(t-.55)/.45;
+      forzado=true; clearTimeout(ft);
+      window.scrollTo({top:y0+(destino(el)-y0)*p,behavior:'instant'}); puesto=window.pageYOffset||0;
+      if(t<1) anim=requestAnimationFrame(paso); else { anim=0; window.scrollTo({top:destino(el),behavior:'instant'}); ft=setTimeout(soltar,160); }
+    }
+    anim=requestAnimationFrame(paso);
   }
   window.addEventListener('scroll',function(){ if(forzado){ clearTimeout(ft); ft=setTimeout(soltar,160); } if(!raf) raf=requestAnimationFrame(aplicar); },{passive:true});
   // Los enlaces con ancla pasan por saltar() (salvo «saltar al contenido» y el nombre, que van arriba).
@@ -952,6 +990,23 @@ var portada=(function(){
   if(window.ResizeObserver) new ResizeObserver(medir).observe(fig);
   window.addEventListener('load',function(){ medir(); pedirEval(); });
   evaluar();
+})();
+
+/* Contenido ligado al scroll (019), respaldo para navegadores sin animation-timeline: view() (el CSS hace lo mismo donde
+   hay soporte). Cada bloque de la columna derecha sube hasta 48 px según cuánto ha entrado: p = scroll desde que asoma
+   por abajo / 14 rem, con la misma curva de dos pendientes (12 % en el primer 55 %). Quieto con movimiento reducido. */
+(function(){
+  if(!window.matchMedia||window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if(window.CSS&&CSS.supports&&CSS.supports('animation-timeline','view()')) return;
+  var els=[].slice.call(document.querySelectorAll('.dos>div:not(.riel)>*,.dos>.ruta')), raf=0;
+  function g(p){ return p<=0?0:p>=1?1:p<.55?.12*p/.55:.12+.88*(p-.55)/.45; }
+  function poner(){
+    raf=0; var vh=window.innerHeight, L=14*(parseFloat(getComputedStyle(document.documentElement).fontSize)||16);
+    els.forEach(function(e){ var top=e.getBoundingClientRect().top-(e._o||0), p=(vh-top)/L, o=3*(1-g(p))*L/14;
+      e._o=o; e.style.transform=o>0.01?'translateY('+o.toFixed(2)+'px)':''; });
+  }
+  function pedir(){ if(!raf) raf=requestAnimationFrame(poner); }
+  window.addEventListener('scroll',pedir,{passive:true}); window.addEventListener('resize',pedir); poner();
 })();
 
 /* Tema claro u oscuro: parte del sistema; el botón lo cambia y lo recuerda en este navegador. */
