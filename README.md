@@ -70,8 +70,9 @@ detalle por elementos**, de más a menos, en el orden de la página:
   tipografía del sitio (Plex Mono en marcas y rótulos chicos, Bricolage en los títulos de eje). Cada SVG
   lleva `role="img"` y un `aria-label` que describe el gráfico, y el sello «Datos simulados». Peso: unos
   17 KB las seis.
-- **El trazo**: las líneas llevan `pathLength="1"` y el CSS las dibuja con `stroke-dashoffset` (1,1 s); la
-  banda, la referencia y la leyenda aparecen con un fundido corto, y la alerta, los puntos con sus barras y
+- **El trazo**: las líneas llevan `pathLength="1"` y el CSS las dibuja con `stroke-dashoffset` (1 s); la
+  banda, la referencia y la leyenda aparecen con un fundido corto (desde la 017, todo arranca como una ReLU:
+  `linear(0, 0 K%, 1)`, con `cubic-bezier(.5,0,1,1)` de respaldo; codo 30 % en las líneas y 35 % en los fundidos), y la alerta, los puntos con sus barras y
   el acento después, en orden. Todo dentro de `@media (prefers-reduced-motion:no-preference)`: con movimiento
   reducido, o sin JS, el gráfico aparece completo y quieto. La clase `.traza` la pone el JS cada vez que la
   figura mostrada cambia (quitarla, forzar reflow y volver a ponerla reinicia las animaciones), así el gráfico
@@ -101,7 +102,7 @@ Recorrido). Sin JS no se pega.
   pantallas bajas (< 520 px de alto) mide 5,5 rem.
 - **Titular que se encoge.** `.hero` define `--k` (0 a 1) y el tamaño de letra, el interlineado, los
   márgenes y el relleno van de su valor grande al compacto. `--k` depende sólo del scroll (los primeros
-  160 px, con curva suave) y se queda en 1. Al saltar con un ancla, la portada se compacta antes de medir
+  160 px, con arranque tipo ReLU: plano hasta 32 px y lineal hasta 160) y se queda en 1. Al saltar con un ancla, la portada se compacta antes de medir
   (si no, se encogería en pleno salto y la sección quedaría tapada); `overflow-anchor:none` evita que el
   navegador compense el cambio de alto.
 
