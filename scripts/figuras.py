@@ -9,7 +9,9 @@ paper (ejes en L, barras de error, coral y burdeos) y un gradiente de detalle po
 Las SVG no llevan colores fijos: usan clases que el CSS de index.html pinta con las variables del
 sitio (tinta, apagado, coral, burdeos), así que se integran al fondo en los dos temas. Los trazos
 llevan pathLength="1" para que el CSS los dibuje con stroke-dashoffset al entrar a la sección.
-Cada figura sale en dos variantes, `w` (escritorio, viewBox 640 × 280) y `n` (celular, 400 × 220).
+Cada figura sale en dos variantes: `w` (escritorio, viewBox 640 × 280) va en el riel de su sección, entre
+<!-- figw:ID --> y <!-- /figw:ID -->; `n` (celular, 400 × 220) va en la franja fija, entre <!-- fig:ID --> y
+<!-- /fig:ID --> (iteración 015).
 
 Todo es sintético, con semilla fija (salida idéntica en cada corrida) y cada figura lleva el sello
 «Datos simulados». Nada es dato de estudiantes, de una empresa ni de un sitio real; Docencia usa sólo
@@ -166,7 +168,8 @@ def figura_do(var):
 def todas():
     out = {}
     for nombre, fn in (("ds", figura_ds), ("ec", figura_ec), ("do", figura_do)):
-        out[nombre] = "\n".join(fn(v) for v in ("w", "n"))
+        out["fig:" + nombre] = fn("n")
+        out["figw:" + nombre] = fn("w")
     return out
 
 
@@ -175,13 +178,13 @@ def main():
     if "--pegar" in sys.argv:
         s = open(INDEX, encoding="utf-8").read()
         for k, v in svgs.items():
-            s, n = re.subn(rf"(<!-- fig:{k} -->)\n.*?\n(\s*<!-- /fig:{k} -->)", lambda m: f"{m.group(1)}\n{v}\n{m.group(2)}", s, flags=re.S)
+            s, n = re.subn(rf"(<!-- {k} -->)\n.*?\n(\s*<!-- /{k} -->)", lambda m: f"{m.group(1)}\n{v}\n{m.group(2)}", s, flags=re.S)
             assert n == 1, k
         open(INDEX, "w", encoding="utf-8").write(s)
         print("pegado:", {k: len(v) for k, v in svgs.items()})
     else:
         for k, v in svgs.items():
-            print(f"<!-- fig:{k} -->\n{v}\n<!-- /fig:{k} -->")
+            print(f"<!-- {k} -->\n{v}\n<!-- /{k} -->")
 
 
 if __name__ == "__main__":
