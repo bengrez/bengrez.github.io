@@ -70,8 +70,7 @@ detalle por elementos**, de más a menos, en el orden de la página:
   tipografía del sitio (Plex Mono en marcas y rótulos chicos, Bricolage en los títulos de eje). Cada SVG
   lleva `role="img"` y un `aria-label` que describe el gráfico, y el sello «Datos simulados». Peso: unos
   17 KB las seis.
-- **El trazo**: las líneas llevan `pathLength="1"` y el CSS las dibuja con `stroke-dashoffset` (1,2 y 1,4 s según la
-  línea); la banda, la referencia y la leyenda aparecen con un fundido corto, con la curva común y escalonados (ver «Movimiento de
+- **El trazo**: las líneas llevan `pathLength="1"` y el CSS las dibuja con `stroke-dashoffset` (1 s); la banda, la referencia y la leyenda aparecen con un fundido corto, con la curva común y escalonados (ver «Movimiento de
   las secciones»), y la alerta, los puntos con sus barras y
   el acento después, en orden. Todo dentro de `@media (prefers-reduced-motion:no-preference)`: con movimiento
   reducido, o sin JS, el gráfico aparece completo y quieto. La clase `.traza` la pone el JS cada vez que la
@@ -97,8 +96,9 @@ pendiente 0,35, el 12 % del recorrido), **un tramo rápido** (otro 35 % a pendie
 `linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)` con `cubic-bezier(.6,0,.4,1)` de respaldo; en JS, la función
 `suave(p)`, que da lo mismo. (La 018 y la 019 tenían dos pendientes con contraste ≈ 10× y frenaban en seco.)
 
-- **Escalonado de los gráficos**: banda, referencia y nota 0,5 s; línea b 1,2 s (retardo .1 s); línea a 1,4 s (.2 s); leyenda
-  0,6 s (.5 s); alerta y acento 0,7 s (1,3 s); puntos con barras 0,5 s + 0,03 s por punto, con retardo .1 s + 0,08 s por punto.
+- **Escalonado de los gráficos** (más corto desde la 021, secuencia completa ≈ 1,4 s): banda, referencia y nota 0,4 s; las
+  dos líneas 1 s, con retardos .05 s (b) y .15 s (a); leyenda 0,5 s (retardo .35 s); alerta y acento 0,5 s (.9 s); puntos
+  con barras 0,4 s + 0,02 s por punto, con retardo .05 s + 0,05 s por punto.
 - **Salto con ancla** (barra, índice de casos, botones, enlaces `#…`): `portada.saltar` anima el scroll con
   `requestAnimationFrame` (0,8 a 1,5 s según la distancia). Recalcula el destino en cada cuadro (la portada y la figura cambian
   de alto, y el destino respeta `scroll-padding-top` y `scroll-margin-top`), se interrumpe con rueda, toque, teclado o clic, y

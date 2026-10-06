@@ -140,18 +140,18 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
   /* Curva de los movimientos (017 a 020): lento y visible al partir, un tramo rápido y una llegada suave. Con linear():
      35 % del tiempo a pendiente 0,35 (12 % del recorrido), 35 % a pendiente 1,75 (cinco veces más rápido: 61 % del
      recorrido) y 30 % de frenada cuadrática hasta 0 (el 26 % restante). Antes de cada linear() va un cubic-bezier
-     (ease-in-out) para los navegadores que no lo entienden. Escalonado (020): cada grupo se mueve en cascada, con
-     duraciones (y retardos) crecientes: banda, referencia y nota 0,5 s; línea b 1,2 s y línea a 1,4 s (retardos .1 y .2 s);
-     leyenda 0,6 s tras .5 s; alerta y acento 0,7 s tras 1,3 s; puntos con barras 0,5 s + 0,03 s por punto, con retardo
-     .1 s + 0,08 s por punto. */
-  .fig.traza .linea{stroke-dasharray:1;stroke-dashoffset:1;animation:trazar 1.3s cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
-  .fig.traza .linea.b{animation-duration:1.2s;animation-delay:.1s}
-  .fig.traza .linea.a{animation-duration:1.4s;animation-delay:.2s}
-  .fig.traza .banda,.fig.traza .ref,.fig.traza .nota{opacity:0;animation:aparecer .5s cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
+     (ease-in-out) para los navegadores que no lo entienden. Escalonado (020; más corto en la 021): cada grupo se mueve en cascada, con
+     retardos y duraciones crecientes, pero las dos líneas duran lo mismo (1 s; retardos .05 y .15 s): banda, referencia y
+     nota 0,4 s; leyenda 0,5 s tras .35 s; alerta y acento 0,5 s tras .9 s; puntos con barras 0,4 s + 0,02 s por punto, con
+     retardo .05 s + 0,05 s por punto. Secuencia completa ≈ 1,4 s (020: 2,0 s). */
+  .fig.traza .linea{stroke-dasharray:1;stroke-dashoffset:1;animation:trazar 1s cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
+  .fig.traza .linea.b{animation-delay:.05s}
+  .fig.traza .linea.a{animation-delay:.15s}
+  .fig.traza .banda,.fig.traza .ref,.fig.traza .nota{opacity:0;animation:aparecer .4s cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
   .fig.traza .banda{animation-name:aparecer-banda}
-  .fig.traza .alerta,.fig.traza .acento{opacity:0;animation:aparecer .7s cubic-bezier(.6,0,.4,1) 1.3s forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
-  .fig.traza .leyenda{opacity:0;animation:aparecer .6s cubic-bezier(.6,0,.4,1) .5s forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
-  .fig.traza .pt{opacity:0;animation:aparecer .5s cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1);animation-duration:calc(.5s + var(--i,0)*.03s);animation-delay:calc(.1s + var(--i,0)*.08s)}
+  .fig.traza .alerta,.fig.traza .acento{opacity:0;animation:aparecer .5s cubic-bezier(.6,0,.4,1) .9s forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
+  .fig.traza .leyenda{opacity:0;animation:aparecer .5s cubic-bezier(.6,0,.4,1) .35s forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
+  .fig.traza .pt{opacity:0;animation:aparecer .4s cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1);animation-duration:calc(.4s + var(--i,0)*.02s);animation-delay:calc(.05s + var(--i,0)*.05s)}
   @keyframes trazar{to{stroke-dashoffset:0}}
   @keyframes aparecer{to{opacity:1}}
   @keyframes aparecer-banda{to{opacity:.07}}
