@@ -11,10 +11,10 @@ DOI verificados) en `~/LLM-context/Personal/sitio-personal/`.
 
 Publicado con GitHub Pages desde la rama `main`, raíz del repositorio: https://bengrez.github.io/
 
-## Estructura (desde la 008; dos columnas desde la 012; figuras de paper desde la 013, un panel desde la 014)
+## Estructura (desde la 008; dos columnas desde la 012; figuras de paper desde la 013, un panel desde la 014; gráfico en la columna izquierda y sin botones desde la 016)
 
 La tesis de la portada («Resuelvo problemas con lo que hay disponible») se prueba con la forma de la
-página: cada caso lleva arriba **su gráfico, con estilo de paper y el detalle que su evidencia permite**
+página: cada caso lleva **su gráfico, con estilo de paper y el detalle que su evidencia permite**
 (dos series con banda y alerta; dos series con barras de error; una línea y un acento), se cuenta con los **tres pasos del método** (Medir · Ver la
 desviación · Explicar y actuar) y cada cosa lleva su **estado real** (`.estado`: `e-uso` publicado o en
 uso, `e-piloto` en piloto, `e-dev` en desarrollo; el glifo siempre va con su texto).
@@ -23,12 +23,17 @@ uso, `e-piloto` en piloto, `e-dev` en desarrollo; el glifo siempre va con su tex
 2. **Portada**: titular, una frase que dice quién es y qué hace, y dos acciones. El titular se encoge
    con el scroll (ver «La serie fija y la portada que se encoge»).
 3. **Las figuras** (`#serie`): tres SVG en línea (`.hoja > .plot > svg.fig`), integradas al fondo en los dos
-   temas, y una fila de botones «Data science · Ecología · Docencia». Se ve una a la vez, la del caso que se
-   está leyendo, y se traza al entrar (ver «Las figuras»). Con JS queda fija bajo la barra mientras se
-   recorren los tres casos.
-4. Desde la 012, **todo lo que va bajo el gráfico son dos columnas** (`.pagina.dos`): a la izquierda el
-   **riel** (`header.riel`: rótulo, título, estado y lugar), fijo mientras dura la sección (`position:sticky`
-   desde 960 px, bajo la barra y la serie); a la derecha el contenido, que avanza con el scroll. En celular
+   temas. Se ve una a la vez, la del caso que se está leyendo, y se traza al entrar (ver «Las figuras»).
+   Con JS queda fija mientras se recorren los tres casos: desde 960 px en la columna izquierda, sobre el
+   título; en celular, en una franja bajo la barra. Desde la 016 no hay botones: se navega con la barra y
+   el scroll.
+4. Desde la 012, **todo el sitio son dos columnas** (`.pagina.dos`), centradas 50/50 desde la 016: a la
+   izquierda el **riel** (`header.riel`: rótulo, título, estado y lugar), fijo mientras dura la sección
+   (`position:sticky` desde 960 px, bajo la figura); a la derecha el contenido, que avanza con el scroll.
+   En los tres casos, la figura ocupa la misma columna izquierda: `#escena` es una rejilla de una columna
+   con las cuatro secciones en filas explícitas y `#serie` abarca las cuatro filas (así su alto propio queda
+   pegado bajo la barra y se va con la escena); la figura tiene fondo opaco para tapar el título que sube y la
+   franja no recibe clics. En celular
    (< 960 px) el riel se parte (`display:contents`): el título (`.riel-top`) queda fijo y chico bajo el
    gráfico (o bajo la barra en Recorrido y Contacto, `.fuera`) y el estado y el lugar (`.riel-meta`) pasan
    al flujo, sobre el contenido.
@@ -71,13 +76,14 @@ detalle por elementos**, de más a menos, en el orden de la página:
   reducido, o sin JS, el gráfico aparece completo y quieto. La clase `.traza` la pone el JS cada vez que la
   figura mostrada cambia (quitarla, forzar reflow y volver a ponerla reinicia las animaciones), así el gráfico
   se traza cada vez que se llega a su sección, también al volver.
-- **En la página**: `.plot` tiene alto fijo por tramo (`clamp(10rem,28vh,14rem)` desde 900 px,
+- **En la página**: `.plot` tiene alto fijo por tramo (`clamp(10rem,28vh,14rem)` entre 900 y 959 px,
   `clamp(8rem,24vh,11rem)` entre 640 y 899, y en celular ancho completo con `aspect-ratio:400/220` y tope
-  `30vh`) para que la franja fija no cambie de alto al pasar de un gráfico a otro. Sin pie de figura: la
+  `30vh`; desde 960 px llena la columna izquierda con la variante angosta `.n` hasta 1199 px y la ancha `.w`
+  desde 1200, con tope de `44vh`) para que la figura fija no cambie de alto al pasar de un gráfico a otro. Sin pie de figura: la
   explicación está en el párrafo `.grafico` de cada caso.
 - **Cuál se muestra** (JS de `index.html`): «línea de lectura» al 35 % del espacio visible bajo la barra y
   la figura; la figura es la de la última sección cuyo borde superior la pasó (Data science → 1; Ecología →
-  2; Docencia → 3; antes de la primera, 1). Los botones `.esc` llevan a la sección. Sin JS: la primera, suelta.
+  2; Docencia → 3; antes de la primera, 1). Desde 960 px la línea de lectura sólo descuenta la barra (la figura no tapa nada de la derecha). Sin JS: la primera, suelta.
 - Lo que salió: en la 013, los cuadros de Manim (`anim/`, `scripts/animacion.py`, `scripts/empaquetar_cuadros.py`),
   `scripts/serie.py` y `scripts/senales.py`; en la 014, las SVG externas de matplotlib (`fig/`) y sus pies.
 
@@ -88,8 +94,9 @@ clase `fijo` (`position:sticky` bajo la barra) y queda pegada hasta que termina 
 Recorrido). Sin JS no se pega.
 
 - **Alto de la figura.** El script publica `--fig-h` (alto medido); de él cuelgan `scroll-padding-top`, el
-  riel de cada sección y las anclas, para que nada quede tapado (también al enfocar con teclado).
-  `#recorrido` y `#contacto` lo restan porque ya no hay figura fija ahí.
+  riel de cada sección y, en celular, las anclas, para que nada quede tapado (también al enfocar con
+  teclado). `#recorrido` y `#contacto` lo restan porque ya no hay figura fija ahí. Desde 960 px las anclas
+  sólo descuentan la barra.
 - **Tamaños.** El `.plot` tiene alto fijo por tramo (ver «Las figuras») y el SVG se contiene dentro; en
   pantallas bajas (< 520 px de alto) mide 5,5 rem.
 - **Titular que se encoge.** `.hero` define `--k` (0 a 1) y el tamaño de letra, el interlineado, los
@@ -100,10 +107,10 @@ Recorrido). Sin JS no se pega.
 
 ## Esquemas de flujo
 
-`ol.flujo` (sistema de la flota, asistente del colegio) es HTML, no SVG: una fila con ramas desde
-1100 px y una columna en móvil (la flota se bifurca en dos columnas bajo la base de datos). Cada
-flecha es un pseudo-elemento recortado con `clip-path` (`fd` a la derecha, `fb`/`fb2` hacia abajo;
-bajo 1100 px todas apuntan hacia abajo). El texto de los nodos es texto real.
+`ol.flujo` (sistema de la flota, asistente del colegio) es HTML, no SVG: una columna con la flota
+bifurcada en dos columnas bajo la base de datos. Hasta la 015 había además una fila con ramas desde
+1100 px; con el contenido en media columna (016) ya no cabe y se quitó. Cada flecha es un
+pseudo-elemento recortado con `clip-path` (`fb`/`fb2` hacia abajo). El texto de los nodos es texto real.
 
 ## Temas, capturas y og.png
 
@@ -120,7 +127,7 @@ bajo 1100 px todas apuntan hacia abajo). El texto de los nodos es texto real.
   instituciones. Regenerar: captura a 2560×1720, `convert … -crop 1200x1000+680+370` y
   `-crop 1960x540+300+810 -resize 1400x`, calidad WebP 80.
 - `og.png` (1200×630) es una captura de la portada a 1200×630, tema claro, ocultando `.lede, .acciones,
-  .lugar, .indice, .tema, .escenarios` y con `.hero{padding-block:1.25rem 1.75rem}` para que quepan el
+  .lugar, .indice, .tema` y con `.hero{padding-block:1.25rem 1.75rem}` para que quepan el
   nombre, el titular y el gráfico de Data science. Se rehace si cambia la portada (la 014 cambió el gráfico).
 - Anchos en `rem`/`em`, no en `ch`. Los respaldos `Bricolage Respaldo` y `Source Serif Respaldo`
   usan `size-adjust` medido contra Arial y Georgia para que la página no salte al cargar la fuente.
