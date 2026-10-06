@@ -2,100 +2,88 @@
 
 Página única, HTML autocontenido (`index.html`): CSS y JS en línea, tipografías desde Google
 Fonts (Bricolage Grotesque, Source Serif 4, IBM Plex Mono), sin otras dependencias ni paso de
-build. Desde la 012 el gráfico son cuadros de Manim ya rendidos en `anim/` (ver «La animación»).
-Pensada para GitHub Pages u hosting estático equivalente.
+build. Desde la 013 las tres figuras son SVG estáticas en `fig/`, generadas con matplotlib (ver «Las
+figuras»). Pensada para GitHub Pages u hosting estático equivalente.
 
 Contexto del proyecto, guía normativa y guardrails (privacidad, no nombrar cliente ni colegio,
 DOI verificados) en `~/LLM-context/Personal/sitio-personal/`.
 
 Publicado con GitHub Pages desde la rama `main`, raíz del repositorio: https://bengrez.github.io/
 
-## Estructura (desde la 008; dos columnas desde la 012)
+## Estructura (desde la 008; dos columnas desde la 012; figuras de paper desde la 013)
 
 La tesis de la portada («Resuelvo problemas con lo que hay disponible») se prueba con la forma de la
-página: cada caso se cuenta con los **tres pasos del método** que muestra el gráfico (Medir · Ver la
+página: cada caso lleva arriba **su figura, con el look de una figura de paper y el detalle que su
+evidencia permite** (cuatro paneles, dos, uno), se cuenta con los **tres pasos del método** (Medir · Ver la
 desviación · Explicar y actuar) y cada cosa lleva su **estado real** (`.estado`: `e-uso` publicado o en
 uso, `e-piloto` en piloto, `e-dev` en desarrollo; el glifo siempre va con su texto).
 
 1. **Barra** fija: nombre, secciones (bajo 900 px sólo Contacto) y botón de tema.
 2. **Portada**: titular, una frase que dice quién es y qué hace, y dos acciones. El titular se encoge
    con el scroll (ver «La serie fija y la portada que se encoge»).
-3. **La serie** (`#serie`): panel oscuro en los dos temas, con los cuadros de Manim (ver «La animación»).
-   Con JS queda fija bajo la barra mientras se recorren los tres casos.
+3. **Las figuras** (`#serie`): tres «hojas» (`.hoja`, fondo claro en los dos temas) con la imagen y su pie
+   al estilo de la revista («Figura 1 | …»), y una fila de botones «Fig. 1 Data science · Fig. 2 Ecología ·
+   Fig. 3 Docencia». Se ve una a la vez, la del caso que se está leyendo (ver «Las figuras»). Con JS queda
+   fija bajo la barra mientras se recorren los tres casos.
 4. Desde la 012, **todo lo que va bajo el gráfico son dos columnas** (`.pagina.dos`): a la izquierda el
    **riel** (`header.riel`: rótulo, título, estado y lugar), fijo mientras dura la sección (`position:sticky`
    desde 960 px, bajo la barra y la serie); a la derecha el contenido, que avanza con el scroll. En celular
    (< 960 px) el riel se parte (`display:contents`): el título (`.riel-top`) queda fijo y chico bajo el
    gráfico (o bajo la barra en Recorrido y Contacto, `.fuera`) y el estado y el lugar (`.riel-meta`) pasan
    al flujo, sobre el contenido.
-5. Secciones, en el orden de la serie: **índice de casos** (`#casos`, con la leyenda de estados), **Data
-   science** (`#ingenieria`), **Agentes de IA** (`#agentes`, franja oscura), **Docencia** (`#educacion`),
-   **Ecología** (`#investigacion`), **Recorrido** (`.ruta`, vertical) y **Contacto**. Los id no cambiaron.
-6. Un caso es: el problema (`.problema`), una nota del escenario del gráfico (`.grafico`, mono, con «datos
+5. Secciones, en el orden de las figuras (desde la 013: **Data science → Ecología → Docencia**, la de
+   menos detalle al final): **índice de casos** (`#casos`, con la leyenda de estados), **Data science**
+   (`#ingenieria`), **Agentes de IA** (`#agentes`, franja oscura), **Ecología** (`#investigacion`),
+   **Docencia** (`#educacion`), **Recorrido** (`.ruta`, vertical) y **Contacto**. Los id no cambiaron.
+6. Un caso es: el problema (`.problema`), una nota sobre su figura (`.grafico`, mono, con «datos
    simulados»), el método en tres pasos (`ol.metodo`: Medir / Ver la desviación / Explicar y actuar, dos o
    tres frases cada uno), la evidencia (esquemas `.flujo`, herramientas `.herr`, métricas, RNA-SIP), «con
    qué» y el detalle plegado (`details.mas`). El libro Había / Hice / Quedó de la 008 se quitó en la 012.
 
-## La animación (iteración 012)
+## Las figuras (iteración 013)
 
-El gráfico lo rinde **Manim** (`scripts/animacion.py`) y la página lo avanza con el scroll. Qué pasa:
-aparecen ejes finos y «datos simulados»; el rótulo «escenario · unidad» se escribe a mano (Write); la
-línea de Data science se traza de izquierda a derecha en color neutro, al llegar a la alerta un círculo
-pulsa una vez (queda un punto) y el resto de la línea sale en el color de acento; al final de la sección
-la línea se **transforma** (Transform) en la de Docencia, en neutro, las marcas de la escala y el rótulo
-cambian con un fundido; en la primera mitad de Docencia la alerta recorre la línea (pulso y barrido al
-acento desde el punto de alerta); la segunda mitad queda quieta; igual hacia Ecología. Hacia arriba es lo
-mismo en reversa. Los datos son los de `serie.py` (simulados).
+Tres figuras **estáticas, sin animación**, con el look de una figura de paper científico y **distinto
+nivel de detalle**: la más detallada es la de Data science (donde hay más datos), la intermedia la de
+Ecología y la mínima la de Docencia, que va al final. La paradoja que cuenta la página es que la más simple
+es la más difícil de lograr. Sólo cambian al pasar de sección con el scroll.
 
-- **Técnica**: secuencia de **cuadros WebP con transparencia** (229 cuadros a 24 fps) dibujados en un
-  `<canvas>`; el scroll elige el cuadro. No es video (el *scrubbing* de video es brusco en Safari de
-  iOS) ni SVG (el gráfico se hace con Manim, decisión del dueño). El fondo transparente deja el color del
-  panel al CSS, así que en tablet el cuadro se centra en un alto fijo sin que se note el recorte.
-- **Dos conjuntos**, porque un raster no se estira como el SVG anterior: `anim/w/` (2400×300, 8:1, para
-  900 px o más; se ve a 1152×144 como máximo) y `anim/n/` (1200×340, para celular y tablet; a 358×101 en
-  un celular de 390 px). Cada uno trae `0000.webp … 0228.webp`, `poster-{ds,do,ec}.webp` (el escenario
-  completo, para `prefers-reduced-motion` y sin JS) y `anim.json`. Los cuadros se cuantizan a 64 colores y
-  se guardan sin pérdida: unos 5–7 KB por cuadro, ~1,3 MB por conjunto; el navegador baja sólo el suyo.
-- **Mapa del scroll** (JS de `index.html`): «línea de lectura» al 35 % del espacio visible bajo la barra y
-  la figura; sección = la última cuyo borde superior la pasó; `p` = avance dentro de ella (0 a 1). Antes de
-  Data science: escenario completo (al cargar, la línea se traza sola, en el tiempo, cuando los cuadros
-  de esa fase llegaron). Data science (incluida la franja de agentes): quieto hasta `p = 0,86`, y en el
-  último 14 % la transformación a Docencia. Docencia y Ecología: `p < 0,5` barrido de la alerta; después
-  quieto; `p ≥ 0,86` transformación (Docencia). Las fases están en `<script type="application/json"
-  id="anim">` (`dsDraw`, `tDsDo`, `doAlerta`, `tDoEc`, `ecAlerta`, como rangos de cuadros) y las escribe
-  `empaquetar_cuadros.py`. El botón activo cambia a mitad de la transformación. Si cuatro cuadros fallan
-  al cargar, o con `prefers-reduced-motion`, se muestra el poster del escenario (`picture.poster`); sin JS,
-  el poster de Data science y nada de botones.
-- **Regenerar** (entorno de Manim fuera del repo; se creó con micromamba porque ManimPango no trae rueda
-  binaria para Linux y compilarla pide cabeceras del sistema):
+- **Figura 1, Data science** (cuatro paneles A–D): (A) temperatura del refrigerante de un bus, media ± EE de
+  tres lecturas por día, banda de referencia de los primeros 10 días ± 2σ y la alerta; (B) heatmap del
+  riesgo de falla (puntaje z) por bus y semana, con dendrograma de filas; (C) anticipación a la falla y
+  (D) falsas alertas (eje logarítmico) por método y tipo de falla, media ± EE con letras de significancia
+  y leyenda en recuadro.
+- **Figura 2, Ecología** (dos paneles): (A) índice de Shannon por tratamiento y profundidad, media ± EE,
+  letras y leyenda «Profundidad» en recuadro; (B) función microbiana como porcentaje de la referencia a 0,
+  6, 12 y 24 meses, con la línea de referencia. Es un homenaje directo a la Fig. 4 del paper.
+- **Figura 3, Docencia** (un panel): logro del curso (% de acierto) en tres momentos, media ± EE, un solo
+  color de acento en el punto que importa, sin leyenda. Sólo promedios del curso.
 
-      ~/.local/share/micromamba/bin/micromamba create -p ~/.local/share/manim-env -c conda-forge python=3.12 manim pillow
-      OUT=/tmp/anim; for S in w n; do
-        SERIE_SET=$S SERIE_MARCAS=$OUT/marcas-$S.json ~/.local/share/manim-env/bin/manim render -t --format png \
-          --disable_caching --media_dir $OUT/$S scripts/animacion.py Serie
-        python3 scripts/empaquetar_cuadros.py --set $S --cuadros $OUT/$S/images/animacion --marcas $OUT/marcas-$S.json --destino anim/$S
-      done
+**Estilo tomado del paper de biocrust** (Moreira-Grez et al., *Frontiers in Microbiology* 2019, 10:2143,
+doi:10.3389/fmicb.2019.02143): ejes en L sin grilla (`theme_classic`), marcas cortas, puntos grandes con
+barras de error ±1 EE con capuchón del mismo color, series desplazadas en x, letras de significancia
+centradas sobre la barra, leyenda dentro del área en recuadro negro fino con título en negrita, rótulos de
+panel en negrita fuera del área de datos, unidades entre paréntesis, texto en sans (Arial / Helvetica /
+Liberation Sans, como ggplot), las dos series en coral `#F86848` y burdeos `#900008`, y el heatmap en
+RdYlBu invertido con celdas separadas en blanco (Fig. 2 del paper). El sello «Datos simulados» va dentro
+de cada imagen, además del pie.
 
-  y pegar en `#anim` el JSON de fases que imprime el empaquetador. El rótulo del cuadro usa DejaVu Sans Mono
-  (variable `SERIE_FUENTE` para otra fuente instalada); los colores de la escena son los del panel.
-  `animacion.py` importa `serie.py` (que expone en `_meta` los puntos y el rango de cada serie).
-
-## La serie: datos (serie.py)
-
-Un mismo gráfico con **tres escenarios**, en este orden: Data science (temperatura del refrigerante
-de un bus, por día), Docencia (logro agregado de un curso en un tema, por ensayo) y Ecología (función
-microbiana de un suelo post-minería frente a su referencia). El mensaje es el mismo: medir, ver la
-desviación a tiempo, actuar.
-
-- Es un **esquema con datos simulados** y semilla fija, y lo dice. Nada es dato de estudiantes, de una
-  empresa ni de un sitio real; Docencia usa sólo promedios del curso.
-- La genera `scripts/serie.py` (numpy): `python3 scripts/serie.py json` imprime el JSON de los tres
-  escenarios (va en `<script type="application/json" id="escenarios">`; desde la 012 el JS sólo usa `id`
-  y `aria`; `trend`/`alert` quedan por si se vuelve al SVG), `html` imprime el escenario inicial como SVG y
-  `meta` imprime umbrales, alertas, puntos (`xs`, `ys`) y rango vertical (`top`, `bot`), que son lo que
-  usa `animacion.py`. La alerta sigue dependiendo de la referencia ± 2σ, que se calcula pero no se dibuja.
-- **Escenarios**: botones `.esc` (`aria-pressed`) sobre la figura; sólo existen con JS; llevan a la
-  sección correspondiente (el escenario lo manda el scroll).
+- **Generación**: `python3 scripts/figuras.py` (numpy, scipy, matplotlib; semilla fija, salida idéntica)
+  escribe `fig/{ds,ec,do}-{w,n}.svg`. `w` es el tamaño de escritorio (900 px o más; la Figura 1 mide
+  11,6 × 3,2 pulgadas) y `n` el de celular y tablet (la Figura 1 en 2 × 2, 5,6 × 3,6 pulgadas, con letra más
+  grande y rótulos más cortos). `--png <carpeta>` deja PNG de revisión. Las SVG llevan el texto como texto
+  (`svg.fonttype none`), así que pesan poco (9–90 KB) y se ven nítidas a cualquier escala.
+- **En la página**: cada `.hoja` tiene un `<picture>` que elige `-w` o `-n` por `min-width:900px`, un `alt`
+  que describe la figura y un `<figcaption>` «Figura N | …». La imagen se contiene en un alto fijo (`.plot`:
+  14 rem en escritorio, `clamp(8rem,26vh,12rem)` en celular) para que la figura fija no cambie de alto al
+  pasar de una a otra. Desde 1200 px el pie va al costado, como en la revista; bajo eso va debajo, recortado
+  a dos líneas (una en celular): el texto completo está en el párrafo `.grafico` de cada caso. Las hojas
+  son claras también en tema oscuro (`--paper`), porque son figuras de paper.
+- **Cuál se muestra** (JS de `index.html`): «línea de lectura» al 35 % del espacio visible bajo la barra y
+  la figura; la figura es la de la última sección cuyo borde superior la pasó (Data science, incluida la
+  franja de agentes → 1; Ecología → 2; Docencia → 3; antes de la primera, 1). El cambio es instantáneo. Los
+  botones `.esc` llevan a la sección. Sin JS: Figura 1, suelta, sin botones.
+- Lo que salió en la 013: los cuadros de Manim (`anim/`, `scripts/animacion.py`, `scripts/empaquetar_cuadros.py`)
+  y `scripts/serie.py`. El entorno de Manim (`~/.local/share/manim-env`) queda fuera del repo y no se usa.
 
 ## La serie fija y la portada que se encoge (iteración 010)
 
@@ -106,9 +94,8 @@ Recorrido). Sin JS no se pega.
 - **Alto de la figura.** El script publica `--fig-h` (alto medido); de él cuelgan `scroll-padding-top`, el
   riel de cada sección y las anclas, para que nada quede tapado (también al enfocar con teclado).
   `#recorrido` y `#contacto` lo restan porque ya no hay figura fija ahí.
-- **Tamaños.** El `.plot` sigue la proporción del conjunto de cuadros: 8:1 desde 900 px (144 px de alto a
-  la página máxima), 1200:340 bajo 640 px, y un alto fijo `clamp(7rem,13vw,9.5rem)` entre medio (tablet),
-  donde el cuadro angosto se centra. En pantallas bajas (< 520 px de alto) el plot mide 4,5 rem.
+- **Tamaños.** El `.plot` tiene alto fijo por tramo (ver «Las figuras») y la imagen se contiene dentro; en
+  pantallas bajas (< 520 px de alto) mide 5,5 rem y el pie se oculta.
 - **Titular que se encoge.** `.hero` define `--k` (0 a 1) y el tamaño de letra, el interlineado, los
   márgenes y el relleno van de su valor grande al compacto. `--k` depende sólo del scroll (los primeros
   160 px, con curva suave) y se queda en 1. Al saltar con un ancla, la portada se compacta antes de medir
@@ -125,20 +112,18 @@ bajo 820 px todas apuntan hacia abajo). El texto de los nodos es texto real.
 ## Temas, capturas y og.png
 
 - Tema claro y oscuro por `prefers-color-scheme`; el botón de la barra fija `data-theme` en `<html>`
-  y lo recuerda en `localStorage` (clave `tema`). **Paleta de la 012** («tinta y arcilla»): claro, piedra
-  `#F5F5F2` con tinta `#171B22`, acento índigo `#3D4FB5` (`--accent-ink` `#2F3F9A`) y alerta arcilla
-  `#D4531B`; oscuro, grafito `#0F1115` con tinta `#E8E9EC`, índigo claro `#9CACFF` y alerta `#FF8B57`. El
-  panel (`--panel`, `--p-*`) es azul noche `#141826` en los dos temas: línea neutra `#8E95A8`, acento
-  `#A7B5FF`, alerta `#FF8B57` (los mismos que usa `animacion.py`). Contrastes de texto ≥ 5,2:1 en claro y
-  ≥ 6,9:1 en oscuro; el color de alerta sólo marca, no es texto.
+  y lo recuerda en `localStorage` (clave `tema`). **Paleta de la 013**, tomada de las figuras del paper:
+  claro, papel `#FAF9F6` con tinta `#1B1A17`, acento burdeos `#900008` (`--accent-ink` `#7A0007`) y marca
+  coral `#D9481F`; oscuro, `#131211` con tinta `#ECE9E2`, acento coral `#FF8F74` (`#FFA893`) y marca
+  `#F86848`. Las hojas de las figuras son `--paper` (`#FFFFFF` en claro, `#F4F2EC` en oscuro). La franja de
+  agentes (`--panel`) es tinta cálida `#231B1A` en los dos temas, con acento `#FF9A82`. Contrastes de texto
+  ≥ 6,0:1 en claro y ≥ 6,6:1 en oscuro; el color de marca sólo marca, no es texto.
 - `tabla-periodica.webp` y `autodiagnostico.webp` son recortes de las herramientas públicas de
   `aula-herramientas`, capturadas a 2x y recortadas para no incluir cabeceras con nombres de
   instituciones. Regenerar: captura a 2560×1720, `convert … -crop 1200x1000+680+370` y
   `-crop 1960x540+300+810 -resize 1400x`, calidad WebP 80.
-- `og.png` (1200×630) es una captura de la portada con movimiento reducido, a 1200×630, tema claro,
-  ocultando `.lede, .acciones, .lugar, .indice, .tema, .escenarios` y con
-  `.hero{padding-block:1.25rem 1.75rem}` para que quepan el nombre, el titular y la serie. Muestra el primer
-  escenario (data science) con el poster de Manim (`prefers-reduced-motion` en la captura). Se rehace si
-  cambia la portada (la 012 cambió la paleta y el gráfico).
+- `og.png` (1200×630) es una captura de la portada a 1200×630, tema claro, ocultando `.lede, .acciones,
+  .lugar, .indice, .tema, .escenarios` y con `.hero{padding-block:1.25rem 1.75rem}` para que quepan el
+  nombre, el titular y la Figura 1. Se rehace si cambia la portada (la 013 cambió la paleta y la figura).
 - Anchos en `rem`/`em`, no en `ch`. Los respaldos `Bricolage Respaldo` y `Source Serif Respaldo`
   usan `size-adjust` medido contra Arial y Georgia para que la página no salte al cargar la fuente.
