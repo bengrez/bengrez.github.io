@@ -70,10 +70,9 @@ detalle por elementos**, de más a menos, en el orden de la página:
   tipografía del sitio (Plex Mono en marcas y rótulos chicos, Bricolage en los títulos de eje). Cada SVG
   lleva `role="img"` y un `aria-label` que describe el gráfico, y el sello «Datos simulados». Peso: unos
   17 KB las seis.
-- **El trazo**: las líneas llevan `pathLength="1"` y el CSS las dibuja con `stroke-dashoffset` (1,5 s); la
-  banda, la referencia y la leyenda aparecen con un fundido corto (desde la 017 todo arranca como una ReLU y desde la
-  018 con fuga: `linear(0, .12 K%, 1)`, con `cubic-bezier(.7,0,1,1)` de respaldo; un primer tramo lento que
-  recorre el 12 % hasta el codo, 60 % en las líneas y 55 % en los fundidos, y después once y nueve veces más rápido), y la alerta, los puntos con sus barras y
+- **El trazo**: las líneas llevan `pathLength="1"` y el CSS las dibuja con `stroke-dashoffset` (1,2 y 1,4 s según la
+  línea); la banda, la referencia y la leyenda aparecen con un fundido corto, con la curva común y escalonados (ver «Movimiento de
+  las secciones»), y la alerta, los puntos con sus barras y
   el acento después, en orden. Todo dentro de `@media (prefers-reduced-motion:no-preference)`: con movimiento
   reducido, o sin JS, el gráfico aparece completo y quieto. La clase `.traza` la pone el JS cada vez que la
   figura mostrada cambia (quitarla, forzar reflow y volver a ponerla reinicia las animaciones), así el gráfico
@@ -89,20 +88,27 @@ detalle por elementos**, de más a menos, en el orden de la página:
 - Lo que salió: en la 013, los cuadros de Manim (`anim/`, `scripts/animacion.py`, `scripts/empaquetar_cuadros.py`),
   `scripts/serie.py` y `scripts/senales.py`; en la 014, las SVG externas de matplotlib (`fig/`) y sus pies.
 
-## Movimiento de las secciones (iteración 019)
+## Movimiento de las secciones (iteración 019; curva final y escalonado en la 020)
 
-Misma curva que el trazo de la 018 (ReLU con fuga: 12 % del recorrido en el primer 55 % y el 88 % restante en el 45 %,
-unas 9 veces más rápido después del codo), aplicada a dos movimientos más:
+Todos los movimientos propios del sitio (trazo y fundidos de los gráficos, compactación del título de la portada, salto con
+ancla y contenido ligado al scroll) comparten una curva de tres tramos: **lento y visible al partir** (35 % del tiempo a
+pendiente 0,35, el 12 % del recorrido), **un tramo rápido** (otro 35 % a pendiente 1,75, cinco veces más rápido: el 61 %) y
+**una llegada suave** (30 % de frenada cuadrática hasta cero: el 26 % restante). En CSS es
+`linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)` con `cubic-bezier(.6,0,.4,1)` de respaldo; en JS, la función
+`suave(p)`, que da lo mismo. (La 018 y la 019 tenían dos pendientes con contraste ≈ 10× y frenaban en seco.)
 
-- **Salto con ancla** (barra, índice de casos, botones, enlaces `#…`): `portada.saltar` ya no usa el desplazamiento
-  suave del navegador sino una animación propia en JS (`requestAnimationFrame`, 0,7 a 1,4 s según la distancia).
-  Recalcula el destino en cada cuadro (la portada y la figura cambian de alto, y el destino respeta `scroll-padding-top`
-  y `scroll-margin-top`), se interrumpe con rueda, toque, teclado o clic, y se suelta si otra cosa mueve la página.
-  Con movimiento reducido es inmediato; sin JS, anclas normales.
-- **Contenido ligado al scroll**: cada bloque de la columna derecha (`.dos>div:not(.riel)>*`, `.dos>.ruta`) sube 3 rem
-  mientras entra, según el scroll y no el tiempo: `animation-timeline:view()` con `animation-range:entry 0% entry 14rem`
-  y `linear(0,.12 55%,1)`. La figura fija y el título (`.riel`) no se mueven. Sin soporte, un respaldo en JS calcula lo
-  mismo en cada `scroll`. Con movimiento reducido, quieto. Excepción registrada del guardrail 6 del CONTEXT.
+- **Escalonado de los gráficos**: banda, referencia y nota 0,5 s; línea b 1,2 s (retardo .1 s); línea a 1,4 s (.2 s); leyenda
+  0,6 s (.5 s); alerta y acento 0,7 s (1,3 s); puntos con barras 0,5 s + 0,03 s por punto, con retardo .1 s + 0,08 s por punto.
+- **Salto con ancla** (barra, índice de casos, botones, enlaces `#…`): `portada.saltar` anima el scroll con
+  `requestAnimationFrame` (0,8 a 1,5 s según la distancia). Recalcula el destino en cada cuadro (la portada y la figura cambian
+  de alto, y el destino respeta `scroll-padding-top` y `scroll-margin-top`), se interrumpe con rueda, toque, teclado o clic, y
+  se suelta si otra cosa mueve la página. Con movimiento reducido es inmediato; sin JS, anclas normales. La rueda, las flechas y
+  Re Pág siguen siendo nativas.
+- **Contenido ligado al scroll**: cada bloque de la columna derecha (`.dos>div:not(.riel)>*`, `.dos>.ruta`) sube 1,75 rem
+  mientras entra, según el scroll y no el tiempo: `animation-timeline:view()` con `animation-range:entry 0% entry var(--rango)`.
+  Escalonado: `--rango` es 12 rem para el primer bloque de la sección y suma 2 rem por posición (hasta 28 rem). La figura fija y
+  el título (`.riel`) no se mueven. Sin soporte, un respaldo en JS calcula lo mismo en cada `scroll`. Con movimiento reducido,
+  quieto. Excepción registrada del guardrail 6 del CONTEXT.
 
 ## La serie fija y la portada que se encoge (iteración 010)
 
@@ -118,7 +124,7 @@ Recorrido). Sin JS no se pega.
   pantallas bajas (< 520 px de alto) mide 5,5 rem.
 - **Titular que se encoge.** `.hero` define `--k` (0 a 1) y el tamaño de letra, el interlineado, los
   márgenes y el relleno van de su valor grande al compacto. `--k` depende sólo del scroll (los primeros
-  160 px, con arranque tipo ReLU con fuga: 8 % del recorrido hasta los 80 px y el resto, once veces más rápido, hasta 160) y se queda en 1. Al saltar con un ancla, la portada se compacta antes de medir
+  160 px, con la curva común de los movimientos: lenta, rápida y de llegada suave) y se queda en 1. Al saltar con un ancla, la portada se compacta antes de medir
   (si no, se encogería en pleno salto y la sección quedaría tapada); `overflow-anchor:none` evita que el
   navegador compense el cambio de alto.
 

@@ -137,37 +137,47 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 /* El trazo: las líneas se dibujan (pathLength="1"), la banda y la referencia aparecen antes, la alerta, los
    puntos y el acento después. Al volver a la sección se repite, porque el JS quita y vuelve a poner .traza. */
 @media (prefers-reduced-motion:no-preference){
-  /* Arranque tipo ReLU con fuga (017, exagerada en la 018): un primer tramo lento pero visible y, tras el codo, un
-     avance mucho más rápido. Con linear(): linear(0, A K%, 1) tiene pendiente A/K antes del codo y (1−A)/(1−K)
-     después (la ReLU pura es A = 0). Antes de cada linear() va un cubic-bezier que lo aproxima (ease-in marcado)
-     para los navegadores que no lo entienden. Líneas: A = 12 %, K = 60 % (pendiente 0,2 y 2,2: once veces más
-     rápido después del codo); fundidos: A = 12 %, K = 55 % (0,22 y 1,96: nueve veces). */
-  .fig.traza .linea{stroke-dasharray:1;stroke-dashoffset:1;animation:trazar 1.5s cubic-bezier(.7,0,1,1) forwards;animation-timing-function:linear(0,.12 60%,1)}
-  .fig.traza .linea.b{animation-delay:.1s}
-  .fig.traza .linea.a{animation-delay:.2s}
-  .fig.traza .banda,.fig.traza .ref,.fig.traza .nota{opacity:0;animation:aparecer .6s cubic-bezier(.7,0,1,1) forwards;animation-timing-function:linear(0,.12 55%,1)}
+  /* Curva de los movimientos (017 a 020): lento y visible al partir, un tramo rápido y una llegada suave. Con linear():
+     35 % del tiempo a pendiente 0,35 (12 % del recorrido), 35 % a pendiente 1,75 (cinco veces más rápido: 61 % del
+     recorrido) y 30 % de frenada cuadrática hasta 0 (el 26 % restante). Antes de cada linear() va un cubic-bezier
+     (ease-in-out) para los navegadores que no lo entienden. Escalonado (020): cada grupo se mueve en cascada, con
+     duraciones (y retardos) crecientes: banda, referencia y nota 0,5 s; línea b 1,2 s y línea a 1,4 s (retardos .1 y .2 s);
+     leyenda 0,6 s tras .5 s; alerta y acento 0,7 s tras 1,3 s; puntos con barras 0,5 s + 0,03 s por punto, con retardo
+     .1 s + 0,08 s por punto. */
+  .fig.traza .linea{stroke-dasharray:1;stroke-dashoffset:1;animation:trazar 1.3s cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
+  .fig.traza .linea.b{animation-duration:1.2s;animation-delay:.1s}
+  .fig.traza .linea.a{animation-duration:1.4s;animation-delay:.2s}
+  .fig.traza .banda,.fig.traza .ref,.fig.traza .nota{opacity:0;animation:aparecer .5s cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
   .fig.traza .banda{animation-name:aparecer-banda}
-  .fig.traza .alerta,.fig.traza .acento{opacity:0;animation:aparecer .6s cubic-bezier(.7,0,1,1) 1.3s forwards;animation-timing-function:linear(0,.12 55%,1)}
-  .fig.traza .leyenda{opacity:0;animation:aparecer .6s cubic-bezier(.7,0,1,1) .5s forwards;animation-timing-function:linear(0,.12 55%,1)}
-  .fig.traza .pt{opacity:0;animation:aparecer .6s cubic-bezier(.7,0,1,1) forwards;animation-timing-function:linear(0,.12 55%,1);animation-delay:calc(.1s + var(--i,0)*.08s)}
+  .fig.traza .alerta,.fig.traza .acento{opacity:0;animation:aparecer .7s cubic-bezier(.6,0,.4,1) 1.3s forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
+  .fig.traza .leyenda{opacity:0;animation:aparecer .6s cubic-bezier(.6,0,.4,1) .5s forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
+  .fig.traza .pt{opacity:0;animation:aparecer .5s cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1);animation-duration:calc(.5s + var(--i,0)*.03s);animation-delay:calc(.1s + var(--i,0)*.08s)}
   @keyframes trazar{to{stroke-dashoffset:0}}
   @keyframes aparecer{to{opacity:1}}
   @keyframes aparecer-banda{to{opacity:.07}}
 }
 
-/* ---- movimiento del contenido ligado al scroll (iteración 019) ----
+/* ---- movimiento del contenido ligado al scroll (iteración 019; más suave y escalonado en la 020) ----
    El bloque de texto de cada sección (la columna derecha; la figura fija y el título de la izquierda no se mueven)
-   sube 3 rem a medida que entra a la pantalla, ligado a la posición del scroll y no al tiempo (animation-timeline:
-   view()). Misma curva que el trazo (ReLU con fuga): casi sin acomodarse al comienzo de su entrada (12 % del recorrido
-   en el primer 55 %) y después rápido (el 88 % restante en el 45 %), unas 9 veces más veloz. El rango es de 14 rem de
-   scroll desde que el bloque asoma. Sin soporte de animation-timeline, el JS aplica lo mismo (más abajo); con
-   movimiento reducido, o sin JS ni soporte, el contenido queda quieto. Excepción registrada del guardrail 6 del
+   sube 1,75 rem a medida que entra a la pantalla, ligado a la posición del scroll y no al tiempo (animation-timeline:
+   view()), con la misma curva que el resto (lento al asomar, rápido, llegada suave; contraste 5×). Escalonado: el rango
+   de scroll crece con la posición del bloque en su grupo, 12 rem el primero y 2 rem más cada uno (hasta 28 rem), así los
+   bloques de una sección se acomodan en cascada. Sin soporte de animation-timeline, el JS aplica lo mismo (más abajo);
+   con movimiento reducido, o sin JS ni soporte, el contenido queda quieto. Excepción registrada del guardrail 6 del
    CONTEXT («transiciones de entrada por sección»), decisión del dueño del 2026-10-06: sólo este movimiento ligado al
    scroll, nunca un fade-and-slide automático al cargar. */
 @supports (animation-timeline:view()){
   @media (prefers-reduced-motion:no-preference){
-    .dos>div:not(.riel)>*,.dos>.ruta{animation:sube linear both;animation-timing-function:linear(0,.12 55%,1);animation-timeline:view();animation-range:entry 0% entry 14rem}
-    @keyframes sube{from{transform:translateY(3rem)}to{transform:none}}
+    .dos>div:not(.riel)>*,.dos>.ruta{--rango:12rem;animation:sube linear both;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1);animation-timeline:view();animation-range:entry 0% entry var(--rango)}
+    .dos>div:not(.riel)>:nth-child(2){--rango:14rem}
+    .dos>div:not(.riel)>:nth-child(3){--rango:16rem}
+    .dos>div:not(.riel)>:nth-child(4){--rango:18rem}
+    .dos>div:not(.riel)>:nth-child(5){--rango:20rem}
+    .dos>div:not(.riel)>:nth-child(6){--rango:22rem}
+    .dos>div:not(.riel)>:nth-child(7){--rango:24rem}
+    .dos>div:not(.riel)>:nth-child(8){--rango:26rem}
+    .dos>div:not(.riel)>:nth-child(9){--rango:28rem}
+    @keyframes sube{from{transform:translateY(1.75rem)}to{transform:none}}
   }
 }
 
@@ -882,18 +892,26 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 
 <script>
 /* El título de la portada se encoge con el scroll: --k va de 0 (grande) a 1 (compacto) en los primeros
-   píxeles, con arranque tipo ReLU con fuga (lento, 8 % del recorrido, hasta K = 80 px y luego lineal y once veces más rápido hasta D = 160 px), y se queda compacto. Sólo depende de la posición,
+   píxeles, con la curva común (lento al partir, rápido y llegada suave, suave()) a lo largo de D = 160 px, y se queda compacto. Sólo depende de la posición,
    salvo al saltar a una sección: la portada se compacta antes de medir, porque si no se encogiera en
    pleno salto la sección quedaría más arriba de lo calculado y escondida tras la figura fija. */
+/* Curva común de los movimientos en JS (la misma de linear() en el CSS): p en [0,1] → avance en [0,1]. Lenta al partir
+   (pendiente v hasta 35 %), cinco veces más rápida hasta 70 % y frenada cuadrática hasta 100 %; v = 1/2,85. */
+function suave(p){
+  var K1=.35,K2=.7,v=1/2.85,L=1-K2,u;
+  if(p<=0) return 0; if(p>=1) return 1;
+  if(p<K1) return v*p;
+  if(p<K2) return v*K1+5*v*(p-K1);
+  u=p-K2; return v*K1+5*v*(K2-K1)+5*v*(u-u*u/(2*L));
+}
 var portada=(function(){
   var hero=document.querySelector('.hero'); if(!hero) return {saltar:function(el){ el.scrollIntoView(); }};
   var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var D=160, K=80, A=.08, ult=-1, raf=0, forzado=false, ft=0;
+  var D=160, ult=-1, raf=0, forzado=false, ft=0;
   function poner(v){ if(v!==0&&v!==1&&Math.abs(v-ult)<.004) return; ult=v; hero.style.setProperty('--k',v.toFixed(3)); }
-  function aplicar(){ raf=0; var y=Math.min(D,Math.max(0,window.pageYOffset||0)), t=y<K?A*y/K:A+(1-A)*(y-K)/(D-K); poner(forzado?1:t); }
+  function aplicar(){ raf=0; poner(forzado?1:suave((window.pageYOffset||0)/D)); }
   function soltar(){ forzado=false; aplicar(); }
-  // El salto con ancla se anima a mano con la misma curva que el resto (ReLU con fuga: 12 % del recorrido en el primer
-  // 55 % del tiempo y el resto en el 45 %). Se recalcula el destino en cada cuadro porque la portada y la figura cambian
+  // El salto con ancla se anima a mano con la misma curva que el resto (suave(): lento, rápido y llegada suave). Se recalcula el destino en cada cuadro porque la portada y la figura cambian
   // de alto; con movimiento reducido el salto es inmediato.
   var anim=0;
   function destino(el){
@@ -906,12 +924,12 @@ var portada=(function(){
   function saltar(el){
     forzado=true; poner(1); clearTimeout(ft); ft=setTimeout(soltar,500); parar();
     if(reduce){ el.scrollIntoView({behavior:'auto',block:'start'}); return; }
-    var y0=window.pageYOffset||0, d0=Math.abs(destino(el)-y0), dur=Math.min(1400,Math.max(700,d0*.4)), t0=performance.now();
+    var y0=window.pageYOffset||0, d0=Math.abs(destino(el)-y0), dur=Math.min(1500,Math.max(800,d0*.42)), t0=performance.now();
     var puesto=y0;
     function paso(now){
       // si otra cosa movió la página (un foco, otro salto), se suelta
       if(Math.abs((window.pageYOffset||0)-puesto)>3){ anim=0; ft=setTimeout(soltar,160); return; }
-      var t=Math.min(1,(now-t0)/dur), p=t<.55?.12*t/.55:.12+.88*(t-.55)/.45;
+      var t=Math.min(1,(now-t0)/dur), p=suave(t);
       forzado=true; clearTimeout(ft);
       window.scrollTo({top:y0+(destino(el)-y0)*p,behavior:'instant'}); puesto=window.pageYOffset||0;
       if(t<1) anim=requestAnimationFrame(paso); else { anim=0; window.scrollTo({top:destino(el),behavior:'instant'}); ft=setTimeout(soltar,160); }
@@ -993,16 +1011,17 @@ var portada=(function(){
 })();
 
 /* Contenido ligado al scroll (019), respaldo para navegadores sin animation-timeline: view() (el CSS hace lo mismo donde
-   hay soporte). Cada bloque de la columna derecha sube hasta 48 px según cuánto ha entrado: p = scroll desde que asoma
-   por abajo / 14 rem, con la misma curva de dos pendientes (12 % en el primer 55 %). Quieto con movimiento reducido. */
+   hay soporte). Cada bloque de la columna derecha sube hasta 1,75 rem según cuánto ha entrado: p = scroll desde que asoma
+   por abajo / su rango (12 rem + 2 rem por posición en el grupo, hasta 28 rem), con la curva común. Quieto con movimiento
+   reducido. */
 (function(){
   if(!window.matchMedia||window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if(window.CSS&&CSS.supports&&CSS.supports('animation-timeline','view()')) return;
   var els=[].slice.call(document.querySelectorAll('.dos>div:not(.riel)>*,.dos>.ruta')), raf=0;
-  function g(p){ return p<=0?0:p>=1?1:p<.55?.12*p/.55:.12+.88*(p-.55)/.45; }
+  var rangos=els.map(function(e){ var i=e.parentNode.classList.contains('dos')?0:[].indexOf.call(e.parentNode.children,e); return 12+2*Math.min(i,8); });
   function poner(){
-    raf=0; var vh=window.innerHeight, L=14*(parseFloat(getComputedStyle(document.documentElement).fontSize)||16);
-    els.forEach(function(e){ var top=e.getBoundingClientRect().top-(e._o||0), p=(vh-top)/L, o=3*(1-g(p))*L/14;
+    raf=0; var vh=window.innerHeight, rem=parseFloat(getComputedStyle(document.documentElement).fontSize)||16;
+    els.forEach(function(e,j){ var top=e.getBoundingClientRect().top-(e._o||0), p=(vh-top)/(rangos[j]*rem), o=1.75*rem*(1-suave(p));
       e._o=o; e.style.transform=o>0.01?'translateY('+o.toFixed(2)+'px)':''; });
   }
   function pedir(){ if(!raf) raf=requestAnimationFrame(poner); }
