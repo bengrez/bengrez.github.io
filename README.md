@@ -43,10 +43,12 @@ uso, `e-piloto` en piloto, `e-dev` en desarrollo; el glifo siempre va con su tex
    en el árbol del Recorrido. Palabras visibles: de 1549 (014) a 641 en escritorio, 993 con las ramas abiertas.
 7. **Recorrido** (`ul.arbol`): un árbol al estilo de `tree`, con la tipografía y la paleta del sitio (las
    líneas ├ └ │ son bordes CSS en `li::before/::after`). Raíz por etapas (PUCV, doctorado en UWA, Research
-   Associate en UWA, Santiago hoy); nivel 2, qué hizo en cada etapa; nivel 3, publicaciones con DOI (15, todas
-   resueltas en CrossRef con Moreira-Grez entre los autores) y herramientas por etapa. Al cargar se ve
-   abierto hasta el nivel 2; cada rama del nivel 3 se abre con su botón (`.abrir`, `aria-expanded`,
-   `aria-controls`; clic o teclado). Sin JS, todo abierto. Fuente única: el CV del vault.
+   Associate en UWA, Santiago hoy); nivel 2, qué hizo en cada etapa; nivel 3, publicaciones con DOI (los 15 artículos del CV,
+   con el título que registra CrossRef y Moreira-Grez entre los autores; más la tesis) y herramientas por etapa,
+   sólo las que lista el CV. Al cargar se ve
+   abierto hasta el nivel 2; cada rama del nivel 3 se abre con su botón (`button.abrir`, `aria-expanded`,
+   `aria-controls`; clic o teclado), que el JS crea a partir de un `span.abrir[data-controls]`. Sin JS, todo
+   abierto y sin controles. Fuente única: el CV del vault.
 
 ## Las figuras (iteración 014; la 013 tenía figuras de paper de 4, 2 y 1 paneles)
 
@@ -96,9 +98,9 @@ Todo lo que va de las figuras al final de Docencia está dentro de `div.escena`;
 clase `fijo` (`position:sticky` bajo la barra) y queda pegada hasta que termina la escena (antes de
 Recorrido). Sin JS no se pega.
 
-- **Alto de la figura.** El script publica `--fig-h` (alto medido); de él cuelgan `scroll-padding-top`, el
-  riel de cada sección y las anclas, para que nada quede tapado (también al enfocar con teclado).
-  `#recorrido` y `#contacto` lo restan porque ya no hay figura fija ahí.
+- **Alto de la figura.** El script publica `--fig-h` (alto medido de la franja; 0 desde 960 px, donde la
+  franja no se muestra); de él cuelgan `scroll-padding-top` y las anclas, para que nada quede tapado
+  (también al enfocar con teclado). `#agentes`, `#recorrido` y `#contacto` lo restan porque ahí no hay franja.
 - **Tamaños.** El `.plot` tiene alto fijo por tramo (ver «Las figuras») y el SVG se contiene dentro; en
   pantallas bajas (< 520 px de alto) mide 5,5 rem.
 - **Titular que se encoge.** `.hero` define `--k` (0 a 1) y el tamaño de letra, el interlineado, los
@@ -106,13 +108,6 @@ Recorrido). Sin JS no se pega.
   160 px, con curva suave) y se queda en 1. Al saltar con un ancla, la portada se compacta antes de medir
   (si no, se encogería en pleno salto y la sección quedaría tapada); `overflow-anchor:none` evita que el
   navegador compense el cambio de alto.
-
-## Esquemas de flujo
-
-`ol.flujo` (sistema de la flota, asistente del colegio) es HTML, no SVG: una fila con ramas desde
-1100 px y una columna en móvil (la flota se bifurca en dos columnas bajo la base de datos). Cada
-flecha es un pseudo-elemento recortado con `clip-path` (`fd` a la derecha, `fb`/`fb2` hacia abajo;
-bajo 1100 px todas apuntan hacia abajo). El texto de los nodos es texto real.
 
 ## Temas, capturas y og.png
 
@@ -124,12 +119,9 @@ bajo 1100 px todas apuntan hacia abajo). El texto de los nodos es texto real.
   `#D9555A`); los gráficos no tienen fondo propio. La franja de
   agentes (`--panel`) es tinta cálida `#231B1A` en los dos temas, con acento `#FF9A82`. Contrastes de texto
   ≥ 6,0:1 en claro y ≥ 6,6:1 en oscuro; el color de marca sólo marca, no es texto.
-- `tabla-periodica.webp` y `autodiagnostico.webp` son recortes de las herramientas públicas de
-  `aula-herramientas`, capturadas a 2x y recortadas para no incluir cabeceras con nombres de
-  instituciones. Regenerar: captura a 2560×1720, `convert … -crop 1200x1000+680+370` y
-  `-crop 1960x540+300+810 -resize 1400x`, calidad WebP 80.
-- `og.png` (1200×630) es una captura de la portada a 1200×630, tema claro, ocultando `.lede, .acciones,
-  .lugar, .indice, .tema, .escenarios` y con `.hero{padding-block:1.25rem 1.75rem}` para que quepan el
-  nombre, el titular y el gráfico de Data science. Se rehace si cambia la portada (la 014 cambió el gráfico).
+- `og.png` (1200×630) es una captura a 1200×630, tema claro, ocultando `.lede, .acciones, .lugar, .indice,
+  .tema, #casos, #serie`, con `.hero{padding-block:1.25rem 1.5rem}` y `#ingenieria` sin borde ni relleno
+  superior, para que quepan el nombre, el titular y la sección de Data science con su gráfico ya trazado
+  (`og.js` en la carpeta del agente). Se rehace si cambia la portada o el primer caso.
 - Anchos en `rem`/`em`, no en `ch`. Los respaldos `Bricolage Respaldo` y `Source Serif Respaldo`
   usan `size-adjust` medido contra Arial y Georgia para que la página no salte al cargar la fuente.

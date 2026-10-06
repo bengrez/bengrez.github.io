@@ -113,10 +113,14 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
   .riel-fig{margin-bottom:1rem}
   .riel-fig .plot{height:auto;aspect-ratio:640/280;max-height:38vh}
   .riel-fig .fig{width:100%;height:auto;max-height:100%;margin:0}
+  /* En la columna del 50 % el viewBox de 640 se dibuja a 420–560 px: el texto sube para seguir legible. */
+  .riel-fig .fig text{font-size:15.5px}
+  .riel-fig .fig .titulo{font-size:17px}
+  .riel-fig .fig .sello,.riel-fig .fig .nota{font-size:14px}
 }
 @media (max-width:959px){.riel-fig{display:none}}
 @media (max-width:639px){.plot{height:auto;aspect-ratio:400/220;max-height:30vh}.fig{width:100%;height:auto;max-height:100%}}
-@media (max-height:520px){.plot{height:5.5rem;aspect-ratio:auto}.fig{width:auto;height:100%}.fig .tick,.fig .nota,.fig .sello,.fig .leyenda{display:none}}
+@media (max-height:520px) and (max-width:959px){.plot{height:5.5rem;aspect-ratio:auto}.fig{width:auto;height:100%}.fig .tick,.fig .nota,.fig .sello,.fig .leyenda{display:none}}
 .fig text{font-family:var(--mono);font-size:13px;fill:var(--muted)}
 .fig .titulo{font-family:var(--display);font-size:15px;font-weight:500;fill:var(--ink)}
 .fig.n .titulo{font-size:14px}
@@ -163,7 +167,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
    dentro de .escena, hasta el final de Docencia) y cambia al pasar de sección. Sin JS no se pega. */
 .escena{position:relative}
 .serie.fijo{position:sticky;top:var(--bar);z-index:6;box-shadow:0 10px 16px -12px rgba(0,0,0,.35)}
-@media (max-height:520px){.serie.fijo .hoja{margin-bottom:.4rem}}
+@media (max-height:520px) and (max-width:959px){.serie.fijo .hoja{margin-bottom:.4rem}}
 
 /* ---- estados: cada cosa de la página dice en qué está ---- */
 .estado{font-family:var(--mono);font-size:.8rem;line-height:1.4;color:var(--ink);white-space:nowrap}
@@ -209,7 +213,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .lista .tit{font-family:var(--display);font-weight:500;font-size:clamp(1.12rem,.8vw + 1rem,1.4rem);line-height:1.2;letter-spacing:-.01em}
 .lista a:hover .tit{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em;text-decoration-color:var(--accent)}
 .lista .est{display:flex;flex-direction:column;align-items:flex-start}
-@media (max-width:760px){.lista a{grid-template-columns:1fr}}
+@media (max-width:1149px){.lista a{grid-template-columns:1fr}}
 
 /* ---- un caso como slide: un titular y tres viñetas (problema, qué hice, resultado) ---- */
 .problema{font-family:var(--display);font-size:clamp(1.25rem,1vw + 1rem,1.75rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;max-width:22em;text-wrap:balance}
@@ -238,9 +242,10 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .arbol .nodo{font-family:var(--display);font-weight:600;font-size:1.1rem;line-height:1.3}
 .arbol .cuando{display:inline-block;font-family:var(--mono);font-weight:400;font-size:.78rem;color:var(--muted);margin-right:.7em}
 .arbol li li{padding-block:.2rem}
-.abrir{margin:0;padding:0;border:0;background:none;font:inherit;font-family:var(--display);font-weight:500;color:var(--accent-ink);cursor:pointer;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
-.abrir::before{content:"−";display:inline-block;width:1.1em;font-family:var(--mono);color:var(--muted);text-decoration:none}
-.abrir[aria-expanded="false"]::before{content:"+"}
+.abrir{margin:0;padding:0;border:0;background:none;font:inherit;font-family:var(--display);font-weight:500;color:var(--ink)}
+button.abrir{color:var(--accent-ink);cursor:pointer;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
+button.abrir::before{content:"−";display:inline-block;width:1.1em;font-family:var(--mono);color:var(--muted);text-decoration:none}
+button.abrir[aria-expanded="false"]::before{content:"+"}
 .abrir .n{font-family:var(--mono);font-weight:400;font-size:.8rem;color:var(--muted);margin-left:.35em}
 .hojas{margin-top:.25rem}
 .hojas[hidden]{display:none}
@@ -251,14 +256,14 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 /* ---- agentes de IA: franja oscura ---- */
 .agentes{background:var(--panel);color:var(--p-ink);border-block:1px solid var(--p-rule)}
 .agentes a{color:var(--p-accent)}
-.agentes .kicker,.agentes .riel .donde{color:var(--p-muted)}
+.agentes .kicker{color:var(--p-muted)}
 .agentes .riel-top{background:var(--panel);border-bottom-color:var(--p-rule)}
 
 /* Con la serie fija, el borde de salto ya lleva su alto (scroll-padding); lo que está fuera de .escena no. */
 #agentes,#recorrido,#contacto{scroll-margin-top:calc(0px - var(--fig-h,0px))}
 
 /* ---- contacto ---- */
-.correo{display:inline-block;font-family:var(--display);font-weight:600;font-size:clamp(1.3rem,3.6vw,2.6rem);letter-spacing:-.02em;line-height:1.15;color:var(--ink);text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:.16em}
+.correo{display:inline-block;font-family:var(--display);font-weight:600;font-size:clamp(1.25rem,2.1vw,2.2rem);letter-spacing:-.02em;line-height:1.15;color:var(--ink);text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:.16em;overflow-wrap:anywhere}
 .perfiles{display:flex;flex-wrap:wrap;gap:.2rem 1.75rem;margin-top:1.4rem;font-family:var(--display)}
 .perfiles a{display:inline-block;padding-block:.4rem}
 footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line-height:1.6;color:var(--muted)}
@@ -585,7 +590,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
     <div class="slide">
       <p class="problema">Química, Biología y Ciencias para la Ciudadanía en cursos heterogéneos, con poco tiempo de sala.</p>
       <ul class="vinetas">
-        <li><b>Problema</b>Lo disponible: las bases curriculares, un proyector y estudiantes con celular.</li>
+        <li><b>Problema</b>Cursos heterogéneos, poco tiempo de sala y sin práctica sin nota.</li>
         <li><b>Qué hice</b>Formativa antes de la sumativa y dos herramientas web propias, en uso en clases: <a href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/">Tabla periódica reactiva</a> y <a href="https://bengrez.github.io/aula-herramientas/autodiagnostico-bienestar-salud/">Autodiagnóstico de Bienestar y Salud</a>.</li>
         <li><b>Resultado</b>Un asistente de gestión escolar con IA, en desarrollo: demo con datos sintéticos; piloto previsto para 2027.</li>
       </ul>
@@ -604,7 +609,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <p class="problema">Uso agentes de IA a diario, y nada se despliega sin evaluarlo antes.</p>
       <ul class="vinetas">
         <li><b>Contexto</b>Persistente y versionado, con protocolos de entrega entre agentes.</li>
-        <li><b>Búsqueda</b>Vectorial, con embeddings en pgvector.</li>
+        <li><b>Búsqueda</b>Vectorial, con embeddings.</li>
         <li><b>Evaluación</b>A ciegas antes de desplegar; la detección de fallas, contra reglas explícitas.</li>
       </ul>
     </div>
@@ -620,7 +625,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <p class="pie">Cuatro etapas. Las ramas de publicaciones y herramientas se abren con un clic.</p>
       <ul class="arbol" id="arbol">
         <li class="etapa">
-          <p class="nodo"><span class="cuando">hasta 2014</span><b>Pontificia Universidad Católica de Valparaíso</b></p>
+          <p class="nodo"><span class="cuando">Pregrado</span><b>Pontificia Universidad Católica de Valparaíso</b></p>
           <ul>
             <li>Licenciado en Biología y título profesional de Biólogo.</li>
           </ul>
@@ -630,7 +635,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
           <ul>
             <li>Ph.D.; tesis de 2020 (<a href="https://doi.org/10.26182/5e995c216ca93">doi:10.26182/5e995c216ca93</a>). Beca de Doctorado Becas Chile, 2014–2018.</li>
             <li>Tema: reacondicionamiento de suelos degradados, comunidades microbianas y restauración post-minera.</li>
-            <li class="rama"><button type="button" class="abrir" aria-expanded="true" aria-controls="r-doc-pub">Publicaciones <span class="n">8</span></button>
+            <li class="rama"><span class="abrir" data-controls="r-doc-pub">Publicaciones <span class="n">8</span></span>
               <ol class="hojas" id="r-doc-pub">
                 <li><span class="year">2017</span><a href="https://doi.org/10.1038/s41598-017-00650-6">Microbial Functional Capacity Is Preserved Within Engineered Soil Formulations Used In Mine Site Restoration</a><span class="venue">Scientific Reports</span></li>
                 <li><span class="year">2019</span><a href="https://doi.org/10.3389/fmicb.2019.02143">The Bacterial Microbiome Associated With Arid Biocrusts and the Biogeochemical Influence of Biocrusts Upon the Underlying Soil</a><span class="venue">Frontiers in Microbiology</span></li>
@@ -638,11 +643,11 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
                 <li><span class="year">2019</span><a href="https://doi.org/10.1007/978-1-4939-9721-3_3">RNA Stable Isotope Probing (RNA-SIP)</a><span class="venue">Methods in Molecular Biology, capítulo de métodos</span></li>
                 <li><span class="year">2019</span><a href="https://doi.org/10.1038/s41564-019-0494-6">Global phylogeography and ancient evolution of the widespread human gut virus crAssphage</a><span class="venue">Nature Microbiology, coautoría de consorcio</span></li>
                 <li><span class="year">2020</span><a href="https://doi.org/10.1002/2688-8319.12031">Examining assumptions of soil microbial ecology in the monitoring of ecological restoration</a><span class="venue">Ecological Solutions and Evidence</span></li>
-                <li><span class="year">2020</span><a href="https://doi.org/10.1016/j.geoderma.2020.114312">Effect of phosphorus amendments on rice rhizospheric methanogens and methanotrophs</a><span class="venue">Geoderma</span></li>
+                <li><span class="year">2020</span><a href="https://doi.org/10.1016/j.geoderma.2020.114312">Effect of phosphorus amendments on rice rhizospheric methanogens and methanotrophs in a phosphorus deficient soil</a><span class="venue">Geoderma</span></li>
                 <li><span class="year">2021</span><a href="https://doi.org/10.1007/s11104-018-3876-2">Compromised root development constrains the establishment potential of native plants in unamended alkaline post-mining substrates</a><span class="venue">Plant and Soil, en línea desde 2018</span></li>
               </ol>
             </li>
-            <li class="rama"><button type="button" class="abrir" aria-expanded="true" aria-controls="r-doc-herr">Herramientas</button>
+            <li class="rama"><span class="abrir" data-controls="r-doc-herr">Herramientas</span>
               <ul class="hojas" id="r-doc-herr">
                 <li><b>Laboratorio</b>Metagenómica, RNA-SIP, amplicones 16S e ITS, qPCR.</li>
                 <li><b>Análisis</b>R (vegan, phyloseq), PRIMER-E; NMDS, PCoA, PERMANOVA, Mantel.</li>
@@ -652,21 +657,21 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
           </ul>
         </li>
         <li class="etapa">
-          <p class="nodo"><span class="cuando">hasta 2022</span><b>Research Associate, The University of Western Australia</b></p>
+          <p class="nodo"><b>Research Associate, The University of Western Australia</b></p>
           <ul>
             <li>El mismo enfoque en arroceras, trigo, residuos de bauxita, nematodos como bioindicadores y suelos de Western Australia.</li>
-            <li class="rama"><button type="button" class="abrir" aria-expanded="true" aria-controls="r-ra-pub">Publicaciones <span class="n">7</span></button>
+            <li class="rama"><span class="abrir" data-controls="r-ra-pub">Publicaciones <span class="n">7</span></span>
               <ol class="hojas" id="r-ra-pub">
-                <li><span class="year">2021</span><a href="https://doi.org/10.1016/j.soilbio.2021.108162">Effects of ecosystem disturbance on nematode communities in calcareous and sandy soils: a comparison of taxonomic methods</a><span class="venue">Soil Biology and Biochemistry</span></li>
+                <li><span class="year">2021</span><a href="https://doi.org/10.1016/j.soilbio.2021.108162">Effects of ecosystem disturbance on nematode communities in calcareous and red soils: Comparison of taxonomic methods</a><span class="venue">Soil Biology and Biochemistry</span></li>
                 <li><span class="year">2022</span><a href="https://doi.org/10.1007/s00374-021-01616-7">Synergism between feremycorrhizal symbiosis and free-living diazotrophs leads to improved growth and nutrition of wheat under nitrogen deficiency conditions</a><span class="venue">Biology and Fertility of Soils</span></li>
                 <li><span class="year">2022</span><a href="https://doi.org/10.1111/1462-2920.15994">From rags to enriched: metagenomic insights into ammonia-oxidizing archaea following ammonia enrichment of a denuded oligotrophic soil ecosystem</a><span class="venue">Environmental Microbiology</span></li>
-                <li><span class="year">2022</span><a href="https://doi.org/10.1111/rec.13738">Evaluating biological properties of topsoil for post-mining ecological restoration</a><span class="venue">Restoration Ecology</span></li>
+                <li><span class="year">2022</span><a href="https://doi.org/10.1111/rec.13738">Evaluating biological properties of topsoil for post-mining ecological restoration: different assessment methods give different results</a><span class="venue">Restoration Ecology</span></li>
                 <li><span class="year">2022</span><a href="https://doi.org/10.1016/j.apsoil.2021.104265">Influences of phosphorus and potassium deficiencies on the methanotrophic communities in rice rhizosphere</a><span class="venue">Applied Soil Ecology</span></li>
-                <li><span class="year">2023</span><a href="https://doi.org/10.1016/j.scitotenv.2023.162699">Coupling microbial and abiotic amendments accelerates in situ remediation of bauxite residue</a><span class="venue">Science of The Total Environment</span></li>
-                <li><span class="year">2023</span><a href="https://doi.org/10.1128/aem.00379-23">Biogeographic distribution and molecular epidemiology of Clostridioides difficile in Western Australian soils</a><span class="venue">Applied and Environmental Microbiology</span></li>
+                <li><span class="year">2023</span><a href="https://doi.org/10.1016/j.scitotenv.2023.162699">Coupling microbial and abiotic amendments accelerates in situ remediation of bauxite residue at field scale</a><span class="venue">Science of The Total Environment</span></li>
+                <li><span class="year">2023</span><a href="https://doi.org/10.1128/aem.00379-23">Biogeographic distribution and molecular epidemiology of Clostridioides (Clostridium) difficile in Western Australian soils</a><span class="venue">Applied and Environmental Microbiology</span></li>
               </ol>
             </li>
-            <li class="rama"><button type="button" class="abrir" aria-expanded="true" aria-controls="r-ra-herr">Herramientas</button>
+            <li class="rama"><span class="abrir" data-controls="r-ra-herr">Herramientas</span>
               <ul class="hojas" id="r-ra-herr">
                 <li><b>Laboratorio</b>Metagenómica, amplicones 16S e ITS, qPCR.</li>
                 <li><b>Análisis</b>R (vegan, phyloseq), estadística multivariante, biostatística.</li>
@@ -680,17 +685,11 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
             <li>Docencia de ciencias en un colegio, desde 2023.</li>
             <li>Desarrollo y análisis de datos para una empresa de transporte: telemetría, detección de fallas, datos de conductores.</li>
             <li>Agentes de IA en entornos controlados, a diario.</li>
-            <li class="rama"><button type="button" class="abrir" aria-expanded="true" aria-controls="r-hoy-pub">Publicado <span class="n">2</span></button>
-              <ul class="hojas" id="r-hoy-pub">
-                <li><a href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/">Tabla periódica reactiva</a><span class="venue">Química, 8.º básico; en uso en clases</span></li>
-                <li><a href="https://bengrez.github.io/aula-herramientas/autodiagnostico-bienestar-salud/">Autodiagnóstico de Bienestar y Salud</a><span class="venue">Ciencias para la Ciudadanía, tercero medio; en uso en clases</span></li>
-              </ul>
-            </li>
-            <li class="rama"><button type="button" class="abrir" aria-expanded="true" aria-controls="r-hoy-herr">Herramientas</button>
+            <li class="rama"><span class="abrir" data-controls="r-hoy-herr">Herramientas</span>
               <ul class="hojas" id="r-hoy-herr">
-                <li><b>Lenguajes</b>Python (FastAPI, pandas, numpy, scipy), SQL, Bash; React y HTMX.</li>
-                <li><b>Datos</b>PostgreSQL con TimescaleDB, PostGIS y pgvector; telemetría por bus CAN y GNSS; redes de sensores IoT.</li>
-                <li><b>Operación</b>Docker, Linux, n8n, Supabase, MCP; evaluación a ciegas antes de desplegar.</li>
+                <li><b>Lenguajes</b>Python (FastAPI, pandas, numpy, scipy), SQL, Bash; React básico.</li>
+                <li><b>Datos</b>PostgreSQL con TimescaleDB y PostGIS; búsqueda vectorial y embeddings; telemetría por bus CAN; redes de sensores IoT.</li>
+                <li><b>Operación</b>Docker, Linux, n8n, Supabase; evaluación a ciegas antes de desplegar.</li>
               </ul>
             </li>
           </ul>
@@ -811,13 +810,15 @@ var portada=(function(){
 })();
 
 /* El recorrido: al cargar se ve abierto hasta el nivel 2 y las ramas del nivel 3 (publicaciones, herramientas)
-   se abren por rama con el botón (clic o teclado). Sin JS, todo abierto (así viene en el HTML). */
+   se abren por rama con un botón (clic o teclado). Sin JS, todo abierto y sin controles: el rótulo de cada rama
+   es un span en el HTML y aquí se reemplaza por el button con aria-expanded y aria-controls. */
 (function(){
-  var botones=[].slice.call(document.querySelectorAll('.arbol .abrir'));
-  botones.forEach(function(b){
-    var lista=document.getElementById(b.getAttribute('aria-controls')); if(!lista) return;
-    b.setAttribute('aria-expanded','false'); lista.hidden=true;
+  [].slice.call(document.querySelectorAll('.arbol span.abrir')).forEach(function(sp){
+    var lista=document.getElementById(sp.getAttribute('data-controls')); if(!lista) return;
+    var b=document.createElement('button'); b.type='button'; b.className='abrir'; b.innerHTML=sp.innerHTML;
+    b.setAttribute('aria-controls',lista.id); b.setAttribute('aria-expanded','false'); lista.hidden=true;
     b.addEventListener('click',function(){ var abierto=b.getAttribute('aria-expanded')==='true'; b.setAttribute('aria-expanded',abierto?'false':'true'); lista.hidden=abierto; });
+    sp.parentNode.replaceChild(b,sp);
   });
 })();
 
