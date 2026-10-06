@@ -147,8 +147,12 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
   .fuera .riel{top:calc(var(--bar) + 1.5rem)}
 }
 @media (max-width:959px){
+  /* El título es lo primero de la sección y el salto con ancla lo deja justo bajo la figura. */
+  html{scroll-padding-top:calc(var(--bar) + var(--fig-h,0px))}
+  .seccion{padding-top:0}
   .riel{display:contents}
-  .riel-top{position:sticky;top:calc(var(--bar) + var(--fig-h,0px));z-index:5;background:var(--bg);margin-inline:calc(-1*var(--gutter));padding:.55rem var(--gutter) .6rem;border-bottom:1px solid var(--rule)}
+  .riel-top{position:sticky;top:calc(var(--bar) + var(--fig-h,0px));z-index:5;background:var(--bg);margin-inline:calc(-1*var(--gutter));padding:.6rem var(--gutter) .65rem;border-bottom:1px solid var(--rule)}
+  .riel-meta{margin-top:.5rem}
   .fuera .riel-top{top:var(--bar)}
   .riel-top .kicker{display:none}
   .riel h2{font-size:1.05rem;line-height:1.25;margin:0;letter-spacing:-.01em}
@@ -346,7 +350,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
   </div>
   <script type="application/json" id="escenarios">[{"n":30,"hit":12,"trend":"M24 202 L63.7 202 L103.4 202 L143.2 202 L182.9 202 L222.6 202 L262.3 202 L302.1 202 L341.8 202 L381.5 202 L421.2 151.2 L461 147 L500.7 130.3 L540.4 108.8 L580.1 86.3 L619.9 63.2 L659.6 49.1 L699.3 39.9 L739 55.2 L778.8 81.8 L818.5 120.3 L858.2 154.4 L897.9 181.9 L937.7 205.1 L977.4 216.2 L1017.1 217.6 L1056.8 212.6 L1096.6 206.2 L1136.3 203.3 L1176 202.6","alert":{"l":"41.72","t":"50.12"},"id":"ds","tab":"Data science","rotulo":"Data science · °C","aria":"Gráfico con datos simulados: la temperatura del refrigerante de un bus se mantiene estable, empieza a derivar hacia arriba y sale de su banda normal; una marca señala la alerta. Se revisa el bus y la temperatura vuelve a lo normal."},{"n":14,"hit":8,"trend":"M24 40.2 L112.6 40.2 L201.2 40.2 L289.8 40.2 L378.5 40.2 L467.1 40.2 L555.7 40.2 L644.3 119.7 L732.9 171.8 L821.5 215.1 L910.2 217.6 L998.8 189.6 L1087.4 136 L1176 92.5","alert":{"l":"61.08","t":"66.06"},"id":"do","tab":"Docencia","rotulo":"Docencia · % de acierto","aria":"Gráfico con datos simulados, sólo promedios del curso: el logro en un tema se mantiene estable a lo largo de los primeros ensayos, cae cuando aparece un tema nuevo y sale de su banda de referencia; una marca señala la alerta. Se refuerza el tema y el logro vuelve a la referencia."},{"n":36,"hit":25,"trend":"M24 37.6 L56.9 37.6 L89.8 37.6 L122.7 37.6 L155.7 37.6 L188.6 37.6 L221.5 37.6 L254.4 37.6 L287.3 34.1 L320.2 120 L353.1 185 L386.1 221.9 L419 224.8 L451.9 203.7 L484.8 177.5 L517.7 155 L550.6 140 L583.5 131.9 L616.5 125.6 L649.4 119.8 L682.3 114.9 L715.2 110.1 L748.1 107.5 L781 104.5 L813.9 101.8 L846.9 101.3 L879.8 103.5 L912.7 104.2 L945.6 103.9 L978.5 102.5 L1011.4 98.7 L1044.3 96.2 L1077.3 99.4 L1110.2 104.4 L1143.1 111.2 L1176 109.1","alert":{"l":"70.57","t":"38.97"},"id":"ec","tab":"Ecología","rotulo":"Ecología · % de la referencia","aria":"Gráfico con datos simulados: un sistema estable se perturba, cae y se recupera, pero se estabiliza por debajo de la banda que marcaba su estado previo; una marca señala dónde se confirma que no vuelve."}]</script>
   <!-- Los cuadros de la animación (scripts/animacion.py → scripts/empaquetar_cuadros.py). -->
-  <script type="application/json" id="anim">{"fps":24,"n":224,"conjuntos":{"w":{"dir":"anim/w/","w":2400,"h":300},"n":{"dir":"anim/n/","w":1200,"h":340}},"fases":{"dsDraw":[0,94],"tDsDo":[94,123],"doAlerta":[123,159],"tDoEc":[159,188],"ecAlerta":[188,224]}}</script>
+  <script type="application/json" id="anim">{"fps":24,"n":229,"conjuntos":{"w":{"dir":"anim/w/","w":2400,"h":300},"n":{"dir":"anim/n/","w":1200,"h":340}},"fases":{"dsDraw":[0,99],"tDsDo":[99,128],"doAlerta":[128,164],"tDoEc":[164,193],"ecAlerta":[193,229]}}</script>
 </figure>
 
 <section class="seccion" id="casos" aria-labelledby="h-casos">
@@ -704,7 +708,7 @@ var portada=(function(){
   function dibujar(i){
     pedido=i; var j=disponible(i); if(j<0||j===mostrado) return;
     var W=lienzo.width, H=lienzo.height, s=Math.min(W/conj.w,H/conj.h), dw=conj.w*s, dh=conj.h*s;
-    ctx.clearRect(0,0,W,H); ctx.drawImage(cuadros[j],(W-dw)/2,(H-dh)/2,dw,dh); mostrado=j;
+    ctx.clearRect(0,0,W,H); ctx.drawImage(cuadros[j],(W-dw)/2,(H-dh)/2,dw,dh); mostrado=j; lienzo.setAttribute('data-cuadro',j);
   }
   function redibujar(){ if(pedido>=0) dibujar(pedido); }
   function medirLienzo(){
