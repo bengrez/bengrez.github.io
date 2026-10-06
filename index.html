@@ -137,17 +137,19 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 /* El trazo: las líneas se dibujan (pathLength="1"), la banda y la referencia aparecen antes, la alerta, los
    puntos y el acento después. Al volver a la sección se repite, porque el JS quita y vuelve a poner .traza. */
 @media (prefers-reduced-motion:no-preference){
-  /* Arranque tipo ReLU (017): un tramo plano y, de golpe, un avance lineal, sin rampa al inicio. Con linear():
-     linear(0, 0 K%, 1) es max(0, (t − K)/(1 − K)); K es el codo. Antes de cada linear() va un cubic-bezier
-     que lo aproxima (ease-in con arranque casi plano) para los navegadores que no lo entienden. */
-  .fig.traza .linea{stroke-dasharray:1;stroke-dashoffset:1;animation:trazar 1s cubic-bezier(.5,0,1,1) forwards;animation-timing-function:linear(0,0 30%,1)}
+  /* Arranque tipo ReLU con fuga (017, exagerada en la 018): un primer tramo lento pero visible y, tras el codo, un
+     avance mucho más rápido. Con linear(): linear(0, A K%, 1) tiene pendiente A/K antes del codo y (1−A)/(1−K)
+     después (la ReLU pura es A = 0). Antes de cada linear() va un cubic-bezier que lo aproxima (ease-in marcado)
+     para los navegadores que no lo entienden. Líneas: A = 12 %, K = 60 % (pendiente 0,2 y 2,2: once veces más
+     rápido después del codo); fundidos: A = 12 %, K = 55 % (0,22 y 1,96: nueve veces). */
+  .fig.traza .linea{stroke-dasharray:1;stroke-dashoffset:1;animation:trazar 1.5s cubic-bezier(.7,0,1,1) forwards;animation-timing-function:linear(0,.12 60%,1)}
   .fig.traza .linea.b{animation-delay:.1s}
   .fig.traza .linea.a{animation-delay:.2s}
-  .fig.traza .banda,.fig.traza .ref,.fig.traza .nota{opacity:0;animation:aparecer .4s cubic-bezier(.5,0,1,1) forwards;animation-timing-function:linear(0,0 35%,1)}
+  .fig.traza .banda,.fig.traza .ref,.fig.traza .nota{opacity:0;animation:aparecer .6s cubic-bezier(.7,0,1,1) forwards;animation-timing-function:linear(0,.12 55%,1)}
   .fig.traza .banda{animation-name:aparecer-banda}
-  .fig.traza .alerta,.fig.traza .acento{opacity:0;animation:aparecer .4s cubic-bezier(.5,0,1,1) 1.1s forwards;animation-timing-function:linear(0,0 35%,1)}
-  .fig.traza .leyenda{opacity:0;animation:aparecer .4s cubic-bezier(.5,0,1,1) .7s forwards;animation-timing-function:linear(0,0 35%,1)}
-  .fig.traza .pt{opacity:0;animation:aparecer .4s cubic-bezier(.5,0,1,1) forwards;animation-timing-function:linear(0,0 35%,1);animation-delay:calc(.1s + var(--i,0)*.08s)}
+  .fig.traza .alerta,.fig.traza .acento{opacity:0;animation:aparecer .6s cubic-bezier(.7,0,1,1) 1.3s forwards;animation-timing-function:linear(0,.12 55%,1)}
+  .fig.traza .leyenda{opacity:0;animation:aparecer .6s cubic-bezier(.7,0,1,1) .5s forwards;animation-timing-function:linear(0,.12 55%,1)}
+  .fig.traza .pt{opacity:0;animation:aparecer .6s cubic-bezier(.7,0,1,1) forwards;animation-timing-function:linear(0,.12 55%,1);animation-delay:calc(.1s + var(--i,0)*.08s)}
   @keyframes trazar{to{stroke-dashoffset:0}}
   @keyframes aparecer{to{opacity:1}}
   @keyframes aparecer-banda{to{opacity:.07}}
@@ -618,7 +620,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <div class="riel-top"><p class="kicker">Tres casos</p><h2 id="h-casos">Un método, tres lugares</h2></div>
     </header>
     <div>
-      <p class="intro">Medir, ver la desviación a tiempo, explicar y actuar, en una empresa de transporte, en el doctorado y en un colegio. Cada cosa dice en qué estado está de verdad.</p>
+      <p class="intro">Medir, ver la desviación a tiempo, explicar y actuar, en una empresa de transporte, en el doctorado y en un colegio. Cada cosa dice en qué estado está.</p>
       <ul class="estados" aria-label="Estados que usa esta página">
         <li class="estado e-uso">publicado o en uso</li>
         <li class="estado e-piloto">en piloto</li>
@@ -626,7 +628,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       </ul>
       <ol class="lista">
         <li><a href="#ingenieria"><span class="kicker">Data science</span><span class="tit">Telemetría y detección de fallas en una flota de buses</span><span class="est"><span class="estado e-piloto">en piloto</span></span></a></li>
-        <li><a href="#investigacion"><span class="kicker">Ecología</span><span class="tit">Suelos mineros: saber si de verdad se recuperan</span><span class="est"><span class="estado e-uso">publicado</span></span></a></li>
+        <li><a href="#investigacion"><span class="kicker">Ecología</span><span class="tit">Suelos mineros: medir si se recuperan</span><span class="est"><span class="estado e-uso">publicado</span></span></a></li>
         <li><a href="#educacion"><span class="kicker">Docencia</span><span class="tit">Enseñar ciencias y medir un colegio</span><span class="est"><span class="estado e-uso">en uso en clases</span><span class="estado e-dev">asistente en desarrollo</span></span></a></li>
       </ol>
     </div>
@@ -643,9 +645,9 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <p class="problema">Una flota de buses sin visibilidad de sus vehículos ni de las fallas que venían.</p>
       <p class="grafico"><b>El gráfico de Data science</b>, con datos simulados: refrigerante de dos buses. La banda es la referencia de los primeros 10 días ± 2σ. Un bus se queda dentro; el otro deriva, sale y salta la alerta, y la revisión lo devuelve a lo normal antes de la falla.</p>
       <ol class="metodo">
-        <li><h3>Medir</h3><p>Las señales del bus CAN llegaban sin procesar. Monté la telemetría de punta a punta: bus CAN y GNSS, base de series temporales con contrato de datos versionado, API y mapa en vivo que reconstruye tramos. FMS, tacógrafos y GNSS los aprendí sobre la marcha.</p></li>
+        <li><h3>Medir</h3><p>Las señales del bus CAN llegaban sin procesar. Armé la telemetría: bus CAN y GNSS, base de series temporales con contrato de datos versionado, API y mapa en vivo que reconstruye tramos. FMS, tacógrafos y GNSS los aprendí sobre la marcha.</p></li>
         <li><h3>Ver la desviación</h3><p>Sin fallas registradas suficientes, construí un simulador de telemetría y un banco de evaluación a ciegas, y sobre eso un detector de anomalías, con reglas y modelos, que estima el riesgo de falla.</p></li>
-        <li><h3>Explicar y actuar</h3><p>Se despliega sólo lo que supera a las reglas simples. Hoy decide sobre datos en tiempo real, en piloto y con monitoreo propio. Los datos de conductores, que iban por correo, pasaron a una plataforma con resguardos, diseñada para la Ley 21.719, vigente desde diciembre de 2026.</p></li>
+        <li><h3>Explicar y actuar</h3><p>Despliego un modelo sólo si supera a las reglas simples. Hoy decide sobre datos en tiempo real, en piloto y con monitoreo propio. Los datos de conductores, que iban por correo, pasaron a una plataforma con resguardos, diseñada para la Ley 21.719, vigente desde diciembre de 2026.</p></li>
       </ol>
       <figure class="evidencia" data-nosnippet>
         <ol class="flujo flota" aria-label="Esquema del sistema: del bus CAN y GNSS a la ingesta, la base de series temporales, la API y el mapa en vivo; desde la base, una rama evalúa las señales con un detector de anomalías y produce alertas.">
@@ -674,9 +676,9 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
           <dt>Detector de anomalías</dt>
           <dd>Riesgo de falla desde las señales del bus. Sin fallas registradas suficientes: simulador de telemetría y banco de evaluación a ciegas.</dd>
           <dt>Alerta</dt>
-          <dd>Se despliega sólo lo que supera a las reglas simples.</dd>
+          <dd>Despliego un modelo sólo si supera a las reglas simples.</dd>
           <dt>Datos personales</dt>
-          <dd>Plataforma multiempresa para datos y fotos de conductores, en vez del correo: calidad en origen, lo sensible separado de la traza durable, diseñada para cumplir la Ley 21.719.</dd>
+          <dd>Plataforma multiempresa para datos y fotos de conductores, en vez del correo: calidad en origen, lo sensible separado de la traza durable, diseñada para la Ley 21.719.</dd>
           <dt>Sobre la marcha</dt>
           <dd>Despliegues sin internet y la ley de datos personales.</dd>
         </dl>
@@ -688,7 +690,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 <section class="seccion" id="investigacion" aria-labelledby="h-inv">
   <div class="pagina dos">
     <header class="riel">
-      <div class="riel-top"><p class="kicker">Ecología</p><h2 id="h-inv">Suelos mineros: saber si de verdad se recuperan</h2></div>
+      <div class="riel-top"><p class="kicker">Ecología</p><h2 id="h-inv">Suelos mineros: medir si se recuperan</h2></div>
       <div class="riel-meta"><p class="estado e-uso">publicado</p><p class="donde">Doctorado en la University of Western Australia.</p></div>
     </header>
     <div>
@@ -697,7 +699,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <ol class="metodo">
         <li><h3>Medir</h3><p>Muestras escasas y caras, secuenciación ruidosa, ninguna referencia clara de suelo sano. Por eso importa el diseño: réplicas en cada muestreo, en terreno, en zonas áridas de Western Australia; marcaje isotópico (RNA-SIP) para saber qué organismo hace qué; metagenómica.</p></li>
         <li><h3>Ver la desviación</h3><p>Estadística multivariante para separar señal de ruido y la intervención de la variabilidad del sitio: si la comunidad vuelve a su referencia o se estabiliza por debajo.</p></li>
-        <li><h3>Explicar y actuar</h3><p>Revisé los supuestos con que se monitorea la restauración y escribí los resultados para quienes deciden sobre ella, no sólo para revisores. El enfoque sirvió después en arroceras, trigo y residuos de bauxita. Quedó un doctorado y publicaciones que siguen citándose.</p></li>
+        <li><h3>Explicar y actuar</h3><p>Revisé los supuestos con que se monitorea la restauración y escribí los resultados también para quienes deciden sobre ella. Después usé el mismo enfoque en arroceras, trigo y residuos de bauxita. Quedaron la tesis y publicaciones que otros han citado.</p></li>
       </ol>
       <dl class="metricas">
         <div><dt>citas totales</dt><dd>738</dd></div>
@@ -717,7 +719,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 <text x="14" y="30">ARN</text>
 </svg></div>
         <div>
-          <p class="nota">Con muestras caras y escasas, el diseño del muestreo decide más que el análisis.</p>
+          <p class="nota">Con muestras caras y escasas, el diseño del muestreo condicionó el análisis.</p>
           <figcaption>Esquema (RNA-SIP): ARN por densidad. El que incorporó ¹³C pasa a las fracciones pesadas, a la derecha: así se sabe qué organismos usaron el sustrato. Curvas ilustrativas.</figcaption>
         </div>
       </figure>
@@ -749,7 +751,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <ol class="metodo">
         <li><h3>Medir</h3><p>Lo disponible: las bases curriculares, un proyector y estudiantes con celular. Planifico por objetivo de aprendizaje, clase a clase: diagnóstico de prerrequisitos al inicio, evaluación formativa antes de la sumativa y, si el calendario se mueve, cronograma ajustado por escrito.</p></li>
         <li><h3>Ver la desviación</h3><p>La formativa muestra qué tema no se entendió mientras hay tiempo de reforzarlo. Para practicar sin nota hice herramientas web propias, sin cuenta ni instalación y sin guardar ni enviar respuestas: dos están publicadas y en uso en clases.</p></li>
-        <li><h3>Explicar y actuar</h3><p>Lo mismo a escala del colegio: un asistente de gestión escolar con IA que cruza las fuentes que ya tiene, busca patrones entre asignaturas y responde con evidencia. Local-first, con datos seudonimizados. Hoy es una demo con datos sintéticos; el piloto, con datos reales, desde 2027.</p></li>
+        <li><h3>Explicar y actuar</h3><p>Lo mismo a escala del colegio: un asistente de gestión escolar con IA que cruza las fuentes que ya tiene, busca patrones entre asignaturas y responde indicando la fuente. Local-first, con datos seudonimizados. Hoy es una demo con datos sintéticos; el piloto, con datos reales, desde 2027.</p></li>
       </ol>
 
       <h3 class="titulo">Herramientas publicadas</h3>
@@ -817,7 +819,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <div class="riel-top"><p class="kicker">Cómo trabajo</p><h2 id="h-ia">Agentes de IA, en entornos controlados</h2></div>
     </header>
     <div>
-      <p class="lede">Uso agentes de IA a diario, sobre un contexto que persiste y se versiona. Nada se despliega sin evaluarlo antes.</p>
+      <p class="lede">Uso agentes de IA a diario, sobre un contexto que persiste y se versiona. Evalúo antes de desplegar.</p>
       <dl class="practicas">
         <div><dt>contexto</dt><dd>Persistente y versionado.</dd></div>
         <div><dt>entrega</dt><dd>Protocolos de entrega entre agentes, con trazabilidad.</dd></div>
@@ -860,19 +862,19 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 </section>
 
 </main>
-<footer><div class="pagina">Santiago, Chile. Métricas de citación de Google Scholar al 26 de mayo de 2026. Los gráficos usan datos simulados y lo dicen; los esquemas, curvas ilustrativas.</div></footer>
+<footer><div class="pagina">Santiago, Chile. Métricas de citación de Google Scholar al 26 de mayo de 2026. Los gráficos usan datos simulados; los esquemas, curvas ilustrativas.</div></footer>
 
 <script>
 /* El título de la portada se encoge con el scroll: --k va de 0 (grande) a 1 (compacto) en los primeros
-   píxeles, con arranque tipo ReLU (plano hasta K = 32 px y luego lineal hasta D = 160 px, sin rampa al inicio), y se queda compacto. Sólo depende de la posición,
+   píxeles, con arranque tipo ReLU con fuga (lento, 8 % del recorrido, hasta K = 80 px y luego lineal y once veces más rápido hasta D = 160 px), y se queda compacto. Sólo depende de la posición,
    salvo al saltar a una sección: la portada se compacta antes de medir, porque si no se encogiera en
    pleno salto la sección quedaría más arriba de lo calculado y escondida tras la figura fija. */
 var portada=(function(){
   var hero=document.querySelector('.hero'); if(!hero) return {saltar:function(el){ el.scrollIntoView(); }};
   var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var D=160, K=32, ult=-1, raf=0, forzado=false, ft=0;
+  var D=160, K=80, A=.08, ult=-1, raf=0, forzado=false, ft=0;
   function poner(v){ if(v!==0&&v!==1&&Math.abs(v-ult)<.004) return; ult=v; hero.style.setProperty('--k',v.toFixed(3)); }
-  function aplicar(){ raf=0; var t=Math.min(1,Math.max(0,((window.pageYOffset||0)-K)/(D-K))); poner(forzado?1:t); }
+  function aplicar(){ raf=0; var y=Math.min(D,Math.max(0,window.pageYOffset||0)), t=y<K?A*y/K:A+(1-A)*(y-K)/(D-K); poner(forzado?1:t); }
   function soltar(){ forzado=false; aplicar(); }
   function saltar(el){
     forzado=true; poner(1); clearTimeout(ft); ft=setTimeout(soltar,500);
