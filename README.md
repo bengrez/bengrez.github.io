@@ -98,7 +98,7 @@ pantallas anchas, el párrafo se ve completo. No cambia ningún texto ni gráfic
 
 ## Fondo con quimiotaxis en un fluido, sólo escritorio (iteraciones 024 y 025)
 
-`quimiotaxis.js` (≈ 17 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
+`quimiotaxis.js` (≈ 28 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
 contenido un canvas 2D con unas 100 células de 5 a 8 px que se mueven por quimiotaxis bacteriana en una corriente suave. Un
 cargador mínimo en `index.html` lo pide al terminar la página sólo si hay puntero fino (`(pointer: fine)`), el ancho es de
 1024 px o más y no hay `prefers-reduced-motion` ni `saveData`: en celular y tabletas no se descarga ni el script ni el canvas.
@@ -126,11 +126,22 @@ cargador mínimo en `index.html` lo pide al terminar la página sólo si hay pun
   diseño. Las células pasan «por detrás» y se atenúan bajo el texto sin desaparecer. Sin el fondo (celular, tabletas, movimiento
   reducido, sin JS) no hay clase y no hay velo.
 - **Choques suaves**: las células no se superponen; cada una cede la mitad del solape (rigidez .45, hueco de .6 px).
-- **Nutriente**: `campo(x, y, fuentes)`, función aparte; cinco fuentes fijas e invisibles con perfil gaussiano, hacia los
-  márgenes laterales. `window.Quimiotaxis` expone `agregar`, `mover`, `quitar`, `fuentes` y `usarCampo(fn)` para lo que sigue
-  (palabras clave del texto como fuentes que el usuario pueda mover).
-- **Rendimiento adaptativo por calidad** (con ~100 células la cantidad ya no es lo que pesa): cuatro niveles: 20 fps con 60 células,
-  sin choques, sin trazadores ni órbitas de Jeffery; 30 fps sin choques (24 trazadores); 30 fps con choques (40 trazadores); 60 fps con choques. Nivel de partida por `hardwareConcurrency` y
+- **Nutriente que difunde y se consume** (027): un campo `c` en [0, 1] sobre una grilla gruesa de 64 × 40 celdas (≈ 22 px) con
+  difusión explícita (D = 380 px²/s; subpasos para ser estable; sin flujo por los bordes), reposición de las fuentes
+  (c' = 0,2·a·g·(1 − c), con `g` el perfil gaussiano de cada fuente), un decaimiento uniforme (0,05/s) y consumo de Monod por las
+  células de su celda (q·c/(K + c), K = 0,2; q = 0,28/s por unidad de biomasa adherida y 0,004/s por nadadora). La quimiotaxis
+  lee `campo(x, y)` (interpolación bilineal de la grilla); `usarCampo(fn)` reemplaza lo que lee la quimiotaxis, pero la grilla
+  sigue siendo lo que se consume y donde se adhieren y crecen las células. Las fuentes de la API reponen nutriente en la grilla.
+- **Ciclo plancton ↔ biopelícula** (027): una nadadora se adhiere (queda sésil, quieta y con el flagelo detenido) con tasa
+  0,25·(c − 0,5)/0,5·(0,06 + 1,6·vecinas adheridas)/s si c > 0,5; la adherida crece (biomasa ×2 en ≈ 15 s a c saturante, Monod) y
+  se divide con la hija al lado, sin superponerse (a lo largo del eje en bacilos y espirilos); deposita una matriz (EPS) tenue que
+  se desvanece (≈ 50 s). Si c < 0,17 durante 6 s, las del borde de la colonia (< 4 vecinas) se dispersan (1,2/s) y vuelven a nadar hacia
+  afuera, con 20 s sin readherirse; la dispersión se contagia a las vecinas (señal de colonia); el hambre prolongada mata. Tope de
+  población de 60 a 160 según el nivel; entran nadadoras por los bordes cuando hay menos de 40 (0,7/s) y salen o mueren algunas,
+  así que el costo no crece sin límite. Ciclos de uno a dos minutos por fuente.
+
+- **Rendimiento adaptativo por calidad** (con ~100 células la cantidad ya no es lo que pesa): cuatro niveles: 20 fps, tope de 60 células, sin choques, trazadores, Jeffery ni matriz, con la grilla actualizada cada 3 cuadros;
+  30 fps, tope de 120, sin choques (24 trazadores); 30 fps, tope de 140, con choques (40 trazadores); 60 fps, tope de 160. Nivel de partida por `hardwareConcurrency` y
   `deviceMemory`; cada 2 s se mide el trabajo por cuadro y los cuadros por segundo y se sube o baja (al bajar, ese nivel es el techo,
   para evitar el vaivén); si ni el nivel 0 alcanza, se detiene y quita el canvas. Pausa con la pestaña oculta; sin leer la GPU.
 
