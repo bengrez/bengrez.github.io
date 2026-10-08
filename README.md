@@ -87,6 +87,15 @@ detalle por elementos**, de más a menos, en el orden de la página:
 - Lo que salió: en la 013, los cuadros de Manim (`anim/`, `scripts/animacion.py`, `scripts/empaquetar_cuadros.py`),
   `scripts/serie.py` y `scripts/senales.py`; en la 014, las SVG externas de matplotlib (`fig/`) y sus pies.
 
+## Celular: más aire y menos información (iteración 022)
+
+Bajo 640 px: margen lateral de 1,3 rem (`--gutter`), interlineado de 1,7 (`body`, `.metodo p`), un hilo de `letter-spacing` y
+`word-spacing`, más espacio entre bloques (método, evidencia, herramientas, esquemas, secciones) y la franja del gráfico más
+ancha (casi a los bordes) y con más aire arriba y abajo. La descripción de cada gráfico (`.grafico`) queda plegada en un
+`<details class="mas grafico-d">` con el rótulo «Cómo leer el gráfico»: lo arma el JS al cargar, sólo en celular; sin JS, o en
+pantallas anchas, el párrafo se ve completo. No cambia ningún texto ni gráfico; todo vive en un bloque de CSS «celular» antes del
+`footer` y en un IIFE de JS.
+
 ## Movimiento de las secciones (iteración 019; curva final y escalonado en la 020)
 
 Todos los movimientos propios del sitio (trazo y fundidos de los gráficos, compactación del título de la portada, salto con

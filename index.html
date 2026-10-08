@@ -392,6 +392,37 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .perfiles{display:flex;flex-wrap:wrap;gap:.2rem 1.75rem;margin-top:1.4rem;font-family:var(--display)}
 .perfiles a{display:inline-block;padding-block:.4rem}
 @media (min-width:960px){.correo{font-size:clamp(1.5rem,2.2vw,2rem)}}
+/* ---- celular: más aire y menos información a la vista (iteración 022) ----
+   Más margen lateral y más espacio entre bloques y entre líneas, el gráfico un poco más ancho (la franja fija casi a
+   los bordes, con más espacio arriba y abajo) y la descripción de cada gráfico plegada («Cómo leer el gráfico», el JS
+   la mete en un <details>; sin JS se ve completa). No cambia ningún texto ni gráfico. */
+@media (max-width:639px){
+  :root{--gutter:1.3rem}
+  body{line-height:1.7;letter-spacing:.004em;word-spacing:.05em}
+  .serie>.pagina{padding-inline:.6rem}
+  .hoja{margin-block:.55rem .65rem}
+  .riel-top{padding-block:.75rem .8rem}
+  .seccion{padding-bottom:3.5rem}
+  .estados{margin-top:1.25rem;gap:.5rem 1.5rem}
+  .lista{margin-top:1.75rem}
+  .lista a{padding-block:1.25rem}
+  .problema{margin-top:.5rem;line-height:1.35}
+  .grafico{margin-top:1.4rem;line-height:1.75}
+  .mas.grafico-d{margin-top:1.4rem}
+  .mas.grafico-d>p{margin-top:0}
+  .metodo{margin-top:2.25rem}
+  .metodo li{gap:.6rem;padding-block:1.4rem 1.6rem}
+  .metodo p{line-height:1.7}
+  .con-que{margin-top:1.75rem;line-height:1.75}
+  .evidencia{margin-top:2.5rem}
+  .flujo{--fg:2rem}
+  .mas{margin-top:2.25rem}
+  .herr{margin-top:2rem;padding-top:1.75rem;gap:1.25rem}
+  .campos{gap:.7rem 1rem;line-height:1.6}
+  .practicas div{padding-block:1.1rem 1.4rem}
+  .ruta>div{padding-bottom:1.75rem}
+  .sip{gap:1.5rem}
+}
 footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line-height:1.6;color:var(--muted)}
 </style>
 </head>
@@ -1008,6 +1039,17 @@ var portada=(function(){
   if(window.ResizeObserver) new ResizeObserver(medir).observe(fig);
   window.addEventListener('load',function(){ medir(); pedirEval(); });
   evaluar();
+})();
+
+/* Celular (022): la descripción de cada gráfico queda plegada, para que la lectura empiece por el gráfico. Se decide al
+   cargar; sin JS, o en pantallas anchas, el párrafo se ve completo. */
+(function(){
+  if(!window.matchMedia||!window.matchMedia('(max-width:639px)').matches) return;
+  [].slice.call(document.querySelectorAll('.grafico')).forEach(function(p){
+    var d=document.createElement('details'), t=document.createElement('summary');
+    d.className='mas grafico-d'; t.textContent='Cómo leer el gráfico';
+    p.parentNode.insertBefore(d,p); d.appendChild(t); d.appendChild(p);
+  });
 })();
 
 /* Contenido ligado al scroll (019), respaldo para navegadores sin animation-timeline: view() (el CSS hace lo mismo donde
