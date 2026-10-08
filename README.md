@@ -96,6 +96,26 @@ ancha (casi a los bordes) y con más aire arriba y abajo. La descripción de cad
 pantallas anchas, el párrafo se ve completo. No cambia ningún texto ni gráfico; todo vive en un bloque de CSS «celular» antes del
 `footer` y en un IIFE de JS.
 
+## Fondo con quimiotaxis, sólo escritorio (iteración 024)
+
+`quimiotaxis.js` (≈ 9 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
+contenido un canvas 2D con células que se mueven por quimiotaxis bacteriana. De lejos es un color plano; de cerca, puntos de
+1,6 px de la tinta del sitio al 14 % de opacidad. Un cargador mínimo en `index.html` lo pide al terminar la página sólo si hay
+puntero fino (`(pointer: fine)`), el ancho es de 1024 px o más y no hay `prefers-reduced-motion` ni `saveData`: en celular y
+tabletas no se descarga ni el script ni el canvas.
+
+- **Modelo**: «run and tumble» como *E. coli*. Cada célula nada a 38 px/s y gira (ángulo aleatorio, σ = 1,1 rad) a una tasa
+  λ = λ₀·exp(−G·s), con λ₀ = 1/s y G = 5, acotada entre 0,08 y 5 veces λ₀. `s = d(ln(c + c₀))/dt` es lo que percibe respecto de su
+  memoria (promedio móvil de 0,9 s): si la concentración sube, gira menos y los tramos rectos se alargan. Más ruido de rotación
+  (D_r = 0,15 rad²/s) y rebote en los bordes de la ventana.
+- **Nutriente**: `campo(x, y, fuentes)`, función aparte (hoy cinco fuentes fijas con perfil gaussiano repartidas por la
+  ventana; sin difusión ni consumo). `window.Quimiotaxis` expone `agregar`, `mover`, `quitar`, `fuentes` y `usarCampo(fn)`
+  para lo que sigue (palabras clave del texto como fuentes que el usuario pueda mover).
+- **Rendimiento adaptativo**: nivel de partida según `hardwareConcurrency` y `deviceMemory`; cada 2 s se mide el trabajo por
+  cuadro y los cuadros por segundo y se sube de nivel (200 → 500 → 1200 → 2400 células) o se baja; si ni 200 alcanza, se
+  detiene y quita el canvas. Tope de 30 fps; pausa con la pestaña oculta; sin leer la GPU ni enviar nada.
+- **Canvas 2D** (no WebGL): 2400 puntos cuestan ≈ 3 ms por cuadro en una CPU de escritorio. Excepción registrada en el CONTEXT.
+
 ### Celular: el gráfico de la franja se encoge al bajar (iteración 023)
 
 Bajo 640 px, con JS, la franja fija arranca con el gráfico más chico (76 % de su ancho, `.serie.enc .plot`) y, ligado a
