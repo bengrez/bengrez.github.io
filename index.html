@@ -35,7 +35,7 @@
   --bg:#FAF9F6; --surface:#F0EEE8; --ink:#1B1A17; --muted:#5B5955; --rule:#DAD7CF; --rule-strong:#B5B1A6;
   --accent:#900008; --accent-ink:#7A0007; --alert:#D9481F;
   --panel:#231B1A; --p-ink:#ECE9E2; --p-muted:#C9C3B8; --p-rule:#3B312F; --p-accent:#FF9A82;
-  --serie-a:#EF5536; --serie-b:#900008;
+  --serie-a:#EF5536; --serie-b:#900008; --velo:rgba(250,249,246,.72);
   --display:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
   --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
@@ -46,13 +46,13 @@
   :root:not([data-theme="light"]){
     --bg:#131211; --surface:#1C1A18; --ink:#ECE9E2; --muted:#A39F97; --rule:#2C2926; --rule-strong:#45413C;
     --accent:#FF8F74; --accent-ink:#FFA893; --alert:#F86848;
-    --serie-a:#F86848; --serie-b:#D9555A; color-scheme:dark;
+    --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.72); color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#131211; --surface:#1C1A18; --ink:#ECE9E2; --muted:#A39F97; --rule:#2C2926; --rule-strong:#45413C;
   --accent:#FF8F74; --accent-ink:#FFA893; --alert:#F86848;
-  --serie-a:#F86848; --serie-b:#D9555A; color-scheme:dark;
+  --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.72); color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar) + var(--fig-h,0px) + 1rem);overflow-anchor:none}
@@ -392,6 +392,15 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .perfiles{display:flex;flex-wrap:wrap;gap:.2rem 1.75rem;margin-top:1.4rem;font-family:var(--display)}
 .perfiles a{display:inline-block;padding-block:.4rem}
 @media (min-width:960px){.correo{font-size:clamp(1.5rem,2.2vw,2rem)}}
+/* ---- texto protegido sobre el fondo vivo (iteración 026), sólo escritorio ----
+   quimiotaxis.js pone .fondo-vivo en <html> mientras el fondo de células está activo (≥ 1024 px, puntero fino, sin movimiento
+   reducido); sin él, nada de esto se aplica. Cada bloque de texto lleva un velo del color de la página al 72 % de opacidad y sin
+   borde, y su sombra del mismo color, con desenfoque, lo difumina hacia afuera sin tocar el diseño: las células pasan «por
+   detrás» y se atenúan bajo el texto sin desaparecer. Los gráficos tienen su propia franja y la franja de Agentes es opaca. */
+.fondo-vivo :is(.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.grafico,.metodo,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.practicas,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina):not(.agentes *){
+  background:var(--velo);box-shadow:0 0 12px 9px var(--velo);border-radius:3px}
+.fondo-vivo .hero h1{box-shadow:0 0 16px 12px var(--velo)}
+
 /* ---- celular: más aire y menos información a la vista (iteración 022) ----
    Más margen lateral y más espacio entre bloques y entre líneas, el gráfico un poco más ancho (la franja fija casi a
    los bordes, con más espacio arriba y abajo) y la descripción de cada gráfico plegada («Cómo leer el gráfico», el JS

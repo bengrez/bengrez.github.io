@@ -98,7 +98,7 @@ pantallas anchas, el párrafo se ve completo. No cambia ningún texto ni gráfic
 
 ## Fondo con quimiotaxis en un fluido, sólo escritorio (iteraciones 024 y 025)
 
-`quimiotaxis.js` (≈ 13 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
+`quimiotaxis.js` (≈ 17 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
 contenido un canvas 2D con unas 100 células de 5 a 8 px que se mueven por quimiotaxis bacteriana en una corriente suave. Un
 cargador mínimo en `index.html` lo pide al terminar la página sólo si hay puntero fino (`(pointer: fine)`), el ancho es de
 1024 px o más y no hay `prefers-reduced-motion` ni `saveData`: en celular y tabletas no se descarga ni el script ni el canvas.
@@ -112,12 +112,25 @@ cargador mínimo en `index.html` lo pide al terminar la página sólo si hay pun
   0,9 s), acotada entre 0,08 y 5 veces λ₀; ruido de rotación de 0,15 rad²/s.
 - **Fluido**: corriente lenta (campo de velocidad sin divergencia: u = ∂ψ/∂y, v = −∂ψ/∂x con ψ suma de tres ondas planas de
   820, 560 y 1100 px y periodos de 70, 45 y 100 s; 5 a 8 px/s por onda, ≈ 7 px/s de media) que arrastra a todas las células.
+- **Acoplamiento con el fluido** (026; número de Reynolds bajo: todo se mueve con el medio):
+  - *Propulsión ondulatoria*: los espirilos (onda del cuerpo, λ 9 px) y los bacilos (flagelo de 6 px, λ 5 px) llevan una onda
+    que viaja hacia atrás, con una fase que avanza como ω = k·v/η (η = .55) con `v` la velocidad real de nado; el avance sale de
+    la onda. Tras cada giro («tumble») la célula frena al 20 % y se recupera en ≈ .35 s, y la onda se frena con ella. El vaivén de
+    la trayectoria del tirabuzón usa la misma fase (fase/6), así que va acompasado con la espiral.
+  - *Órbitas de Jeffery*: las células alargadas giran con θ' = ω/2 + Λ(E_xy cos2θ − E_xx sen2θ), Λ = .9, con el gradiente de la
+    corriente calculado analíticamente: la corriente las orienta y no sólo las desplaza.
+  - *Medio visible*: 24 a 40 partículas trazadoras (líneas de .9 px, opacidad .16 con una cola corta) llevadas sólo por la corriente.
+- **Texto protegido** (026): mientras el fondo está activo, `quimiotaxis.js` pone `.fondo-vivo` en `<html>` y el CSS da a cada bloque
+  de texto (párrafos, listas, títulos, fichas; no los gráficos ni la franja de Agentes) un velo del color de la página al 72 %
+  (`--velo`), sin borde, con una sombra del mismo color y desenfoque (`0 0 12px 9px`) que lo difumina hacia afuera sin tocar el
+  diseño. Las células pasan «por detrás» y se atenúan bajo el texto sin desaparecer. Sin el fondo (celular, tabletas, movimiento
+  reducido, sin JS) no hay clase y no hay velo.
 - **Choques suaves**: las células no se superponen; cada una cede la mitad del solape (rigidez .45, hueco de .6 px).
 - **Nutriente**: `campo(x, y, fuentes)`, función aparte; cinco fuentes fijas e invisibles con perfil gaussiano, hacia los
   márgenes laterales. `window.Quimiotaxis` expone `agregar`, `mover`, `quitar`, `fuentes` y `usarCampo(fn)` para lo que sigue
   (palabras clave del texto como fuentes que el usuario pueda mover).
-- **Rendimiento adaptativo por calidad** (con ~100 células la cantidad ya no es lo que pesa): cuatro niveles: 20 fps con 60 células
-  y sin choques; 30 fps sin choques; 30 fps con choques; 60 fps con choques. Nivel de partida por `hardwareConcurrency` y
+- **Rendimiento adaptativo por calidad** (con ~100 células la cantidad ya no es lo que pesa): cuatro niveles: 20 fps con 60 células,
+  sin choques, sin trazadores ni órbitas de Jeffery; 30 fps sin choques (24 trazadores); 30 fps con choques (40 trazadores); 60 fps con choques. Nivel de partida por `hardwareConcurrency` y
   `deviceMemory`; cada 2 s se mide el trabajo por cuadro y los cuadros por segundo y se sube o baja (al bajar, ese nivel es el techo,
   para evitar el vaivén); si ni el nivel 0 alcanza, se detiene y quita el canvas. Pausa con la pestaña oculta; sin leer la GPU.
 
