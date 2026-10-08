@@ -98,7 +98,7 @@ pantallas anchas, el párrafo se ve completo. No cambia ningún texto ni gráfic
 
 ## Fondo con quimiotaxis en un fluido, sólo escritorio (iteraciones 024 y 025)
 
-`quimiotaxis.js` (≈ 33 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
+`quimiotaxis.js` (≈ 46 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
 contenido un canvas 2D con unas 100 células de 5 a 8 px que se mueven por quimiotaxis bacteriana en una corriente suave. Un
 cargador mínimo en `index.html` lo pide al terminar la página sólo si hay puntero fino (`(pointer: fine)`), el ancho es de
 1024 px o más y no hay `prefers-reduced-motion` ni `saveData`: en celular y tabletas no se descarga ni el script ni el canvas.
@@ -125,6 +125,25 @@ cargador mínimo en `index.html` lo pide al terminar la página sólo si hay pun
   (`--velo`), sin borde, con una sombra del mismo color y desenfoque (`0 0 12px 9px`) que lo difumina hacia afuera sin tocar el
   diseño. Las células pasan «por detrás» y se atenúan bajo el texto sin desaparecer. Sin el fondo (celular, tabletas, movimiento
   reducido, sin JS) no hay clase y no hay velo.
+- **Interacción con el lector** (029): (1) **palabras clave**: 9 términos marcados en el HTML con `data-nutriente` (Data science: «telemetría»,
+  «anomalías», «tiempo real»; Ecología: «suelo», «metagenómica», «restauración»; Docencia: «formativa», «herramientas», «asistente»); cada uno,
+  mientras está a la vista, suelta nutriente (amplitud 0,4, σ = 0,8 de la de fondo; sube y baja con τ = 1,2 s) y su fuente sigue a la palabra
+  con el scroll (se mide cada 90 ms). (2) **El scroll agita el fluido**: su velocidad (saturada a 2500 px/s) suma una cuarta onda de corriente
+  corta (260 px, periodo 3 s, hasta 16 px/s) y un empuje uniforme opuesto al scroll (hasta 12 px/s); decaen con τ = 1,6 s. (3) **Un clic** sobre
+  una zona no interactiva (ni enlaces, botones, resúmenes, controles ni con texto seleccionado; sólo botón principal, sin teclas
+  modificadoras ni toque) deja un pulso de nutriente (amplitud 1,1, σ = 0,55; decae con τ = 5 s; hasta 4 vivos). **Todas** las fuentes que toman
+  nutriente (cursor, palabras y pulsos) comparten el **mismo presupuesto finito**: se quita a las de fondo en proporción, con piso del 15 %, y si
+  piden más de lo disponible se recortan todas por igual.
+- **Calma y lectura** (029): con el scroll quieto 4 s, el tiempo de la simulación baja un 40 % (factor 0,6, constante de 1,5 s) y vuelve al
+  desplazarse. Una máscara de los bloques de texto (los mismos que llevan velo; se rehace cada 250 ms y al hacer scroll) aleja a las nadadoras
+  (repulsión de 12 px/s por unidad de gradiente de la máscara suavizada), impide que se adhieran bajo el texto y las dibuja un 45 % más
+  tenues allí. La opacidad general bajó un 12 % (cocos .26, bacilos .37, espirilos .30).
+- **Realismo biológico** (029): el flagelo de los bacilos que nadan es una onda de 9 px (λ ≈ 6,6 px) que viaja hacia atrás y no se dibuja en los
+  adheridos; la **división** alarga la célula y la estrecha al medio (constricción) y las hijas quedan exactamente donde terminan los dos lóbulos
+  (a lo largo del eje; si no cabe, se prueba con el eje girado y la célula empuja a las vecinas); **cocos** en pares (diplococos, 40 %: una sola
+  división) y cadenas (estreptococos, 60 %: el eje se mantiene y a veces se rompe); **colonias** de crecimiento radial (los bastones y las cadenas
+  se alinean con el radio), borde irregular (la hija sale con el eje desviado ±0,3 rad), matriz más densa en el centro (acumulación proporcional a las
+  vecinas más un halo por célula, que se superponen) y variación individual de tamaño (×0,88–1,18) y de ritmo de crecimiento (×0,75–1,25).
 - **Choques suaves**: las células no se superponen; cada una cede la mitad del solape (rigidez .45, hueco de .6 px).
 - **Nutriente que difunde y se consume** (027): un campo `c` en [0, 1] sobre una grilla gruesa de 64 × 40 celdas (≈ 22 px) con
   difusión explícita (D = 380 px²/s; subpasos para ser estable; sin flujo por los bordes), reposición de las fuentes

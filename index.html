@@ -714,9 +714,9 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <p class="problema">Una flota de buses sin visibilidad de sus vehículos ni de las fallas que venían.</p>
       <p class="grafico"><b>El gráfico de Data science</b>, con datos simulados: refrigerante de dos buses. La banda es la referencia de los primeros 10 días ± 2σ. Un bus se queda dentro; el otro deriva, sale y salta la alerta, y la revisión lo devuelve a lo normal antes de la falla.</p>
       <ol class="metodo">
-        <li><h3>Medir</h3><p>Las señales del bus CAN llegaban sin procesar. Armé la telemetría: bus CAN y GNSS, base de series temporales con contrato de datos versionado, API y mapa en vivo que reconstruye tramos. FMS, tacógrafos y GNSS los aprendí sobre la marcha.</p></li>
-        <li><h3>Ver la desviación</h3><p>Sin fallas registradas suficientes, construí un simulador de telemetría y un banco de evaluación a ciegas, y sobre eso un detector de anomalías, con reglas y modelos, que estima el riesgo de falla.</p></li>
-        <li><h3>Explicar y actuar</h3><p>Despliego un modelo sólo si supera a las reglas simples. Hoy decide sobre datos en tiempo real, en piloto y con monitoreo propio. Los datos de conductores, que iban por correo, pasaron a una plataforma con resguardos, diseñada para la Ley 21.719, vigente desde diciembre de 2026.</p></li>
+        <li><h3>Medir</h3><p>Las señales del bus CAN llegaban sin procesar. Armé la <span data-nutriente>telemetría</span>: bus CAN y GNSS, base de series temporales con contrato de datos versionado, API y mapa en vivo que reconstruye tramos. FMS, tacógrafos y GNSS los aprendí sobre la marcha.</p></li>
+        <li><h3>Ver la desviación</h3><p>Sin fallas registradas suficientes, construí un simulador de telemetría y un banco de evaluación a ciegas, y sobre eso un detector de <span data-nutriente>anomalías</span>, con reglas y modelos, que estima el riesgo de falla.</p></li>
+        <li><h3>Explicar y actuar</h3><p>Despliego un modelo sólo si supera a las reglas simples. Hoy decide sobre datos en <span data-nutriente>tiempo real</span>, en piloto y con monitoreo propio. Los datos de conductores, que iban por correo, pasaron a una plataforma con resguardos, diseñada para la Ley 21.719, vigente desde diciembre de 2026.</p></li>
       </ol>
       <figure class="evidencia" data-nosnippet>
         <ol class="flujo flota" aria-label="Esquema del sistema: del bus CAN y GNSS a la ingesta, la base de series temporales, la API y el mapa en vivo; desde la base, una rama evalúa las señales con un detector de anomalías y produce alertas.">
@@ -763,12 +763,12 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <div class="riel-meta"><p class="estado e-uso">publicado</p><p class="donde">Doctorado en la University of Western Australia.</p></div>
     </header>
     <div>
-      <p class="problema">Saber si un suelo minero degradado se recupera al devolverle microorganismos, o sólo lo parece.</p>
+      <p class="problema">Saber si un <span data-nutriente>suelo</span> minero degradado se recupera al devolverle microorganismos, o sólo lo parece.</p>
       <p class="grafico"><b>El gráfico de Ecología</b>, con datos simulados y el estilo de mis figuras publicadas: función microbiana de un suelo inoculado, en superficie y en profundidad, media ± EE por muestreo. Las dos series suben, pero a los dos años siguen bajo la referencia: no se da por restaurado.</p>
       <ol class="metodo">
-        <li><h3>Medir</h3><p>Muestras escasas y caras, secuenciación ruidosa, ninguna referencia clara de suelo sano. Por eso importa el diseño: réplicas en cada muestreo, en terreno, en zonas áridas de Western Australia; marcaje isotópico (RNA-SIP) para saber qué organismo hace qué; metagenómica.</p></li>
+        <li><h3>Medir</h3><p>Muestras escasas y caras, secuenciación ruidosa, ninguna referencia clara de suelo sano. Por eso importa el diseño: réplicas en cada muestreo, en terreno, en zonas áridas de Western Australia; marcaje isotópico (RNA-SIP) para saber qué organismo hace qué; <span data-nutriente>metagenómica</span>.</p></li>
         <li><h3>Ver la desviación</h3><p>Estadística multivariante para separar señal de ruido y la intervención de la variabilidad del sitio: si la comunidad vuelve a su referencia o se estabiliza por debajo.</p></li>
-        <li><h3>Explicar y actuar</h3><p>Revisé los supuestos con que se monitorea la restauración y escribí los resultados también para quienes deciden sobre ella. Después usé el mismo enfoque en arroceras, trigo y residuos de bauxita. Quedaron la tesis y publicaciones que otros han citado.</p></li>
+        <li><h3>Explicar y actuar</h3><p>Revisé los supuestos con que se monitorea la <span data-nutriente>restauración</span> y escribí los resultados también para quienes deciden sobre ella. Después usé el mismo enfoque en arroceras, trigo y residuos de bauxita. Quedaron la tesis y publicaciones que otros han citado.</p></li>
       </ol>
       <dl class="metricas">
         <div><dt>citas totales</dt><dd>738</dd></div>
@@ -819,8 +819,8 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <p class="grafico"><b>El gráfico de Docencia</b>, con datos simulados y sólo promedios del curso: el logro en un tema, ensayo a ensayo, y un solo acento. El tema nuevo hace caer el logro; el refuerzo lo devuelve antes de la evaluación.</p>
       <ol class="metodo">
         <li><h3>Medir</h3><p>Lo disponible: las bases curriculares, un proyector y estudiantes con celular. Planifico por objetivo de aprendizaje, clase a clase: diagnóstico de prerrequisitos al inicio, evaluación formativa antes de la sumativa y, si el calendario se mueve, cronograma ajustado por escrito.</p></li>
-        <li><h3>Ver la desviación</h3><p>La formativa muestra qué tema no se entendió mientras hay tiempo de reforzarlo. Para practicar sin nota hice herramientas web propias, sin cuenta ni instalación y sin guardar ni enviar respuestas: dos están publicadas y en uso en clases.</p></li>
-        <li><h3>Explicar y actuar</h3><p>Lo mismo a escala del colegio: un asistente de gestión escolar con IA que cruza las fuentes que ya tiene, busca patrones entre asignaturas y responde indicando la fuente. Local-first, con datos seudonimizados. Hoy es una demo con datos sintéticos; el piloto, con datos reales, desde 2027.</p></li>
+        <li><h3>Ver la desviación</h3><p>La <span data-nutriente>formativa</span> muestra qué tema no se entendió mientras hay tiempo de reforzarlo. Para practicar sin nota hice <span data-nutriente>herramientas</span> web propias, sin cuenta ni instalación y sin guardar ni enviar respuestas: dos están publicadas y en uso en clases.</p></li>
+        <li><h3>Explicar y actuar</h3><p>Lo mismo a escala del colegio: un <span data-nutriente>asistente</span> de gestión escolar con IA que cruza las fuentes que ya tiene, busca patrones entre asignaturas y responde indicando la fuente. Local-first, con datos seudonimizados. Hoy es una demo con datos sintéticos; el piloto, con datos reales, desde 2027.</p></li>
       </ol>
 
       <h3 class="titulo">Herramientas publicadas</h3>

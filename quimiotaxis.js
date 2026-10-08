@@ -33,6 +33,19 @@
    menos de 3). Al apagarse la del cursor, el presupuesto vuelve a las de fondo despacio. Hasta 3 fuentes del cursor vivas: al crear
    otra, la más vieja se apaga más rápido. Se escucha `pointermove` en window; el canvas sigue sin capturar eventos.
 
+   Interacción con el lector (029): (1) las palabras marcadas con data-nutriente en el HTML liberan nutriente mientras están a la vista, y
+   su fuente sigue a la palabra con el scroll; (2) la velocidad del scroll agita el fluido (una onda corta y un empuje que decaen en
+   ≈ 2 s); (3) un clic sobre una zona no interactiva (sin selección de texto) deja un pulso de nutriente. Las fuentes del cursor, de las
+   palabras y de los pulsos comparten el MISMO presupuesto finito: lo que toman se lo quitan a las de fondo, en proporción, y si piden más
+   de lo disponible se recortan todas por igual.
+   Calma y lectura (029): con el scroll quieto unos segundos (se está leyendo) el tiempo de la simulación baja un 40 %, y vuelve al
+   desplazarse; las células se alejan suavemente de los bloques de texto (repulsión desde el gradiente de una máscara de los bloques
+   con velo), no se adhieren bajo el texto y se dibujan más tenues allí: el texto queda en «aguas tranquilas».
+   Realismo (029): flagelo ondulante visible en los bacilos que nadan (desaparece al adherirse); división con alargamiento y constricción
+   (las hijas quedan exactamente donde terminan los dos lóbulos); cocos en pares (diplococos) y cadenas (estreptococos); colonias de
+   crecimiento radial (los bastones y las cadenas se alinean con el radio), borde irregular, matriz (EPS) más densa en el centro y tamaños y
+   velocidades de crecimiento con variación individual.
+
    El fluido y las células son el mismo medio (número de Reynolds bajo: no hay inercia, todo se mueve con el flujo):
    - Corriente: campo de velocidad sin divergencia (función de corriente: tres ondas planas que se desplazan despacio). Arrastra a
      las células que nadan y a unas partículas trazadoras finas que hacen visible el medio.
@@ -59,14 +72,14 @@
 
   // Niveles de calidad (se adapta la calidad, no el tamaño de la población): cuadros por segundo, tope de población, choques,
   // trazadores, órbitas de Jeffery, matriz (EPS) y cada cuántos cuadros se actualiza la grilla de nutriente.
-  var NIVELES=[{fps:20,cap:60,choques:false,traz:0,jeffery:false,eps:false,grilla:3},{fps:30,cap:120,choques:false,traz:24,jeffery:true,eps:true,grilla:1},
-               {fps:30,cap:140,choques:true,traz:40,jeffery:true,eps:true,grilla:1},{fps:60,cap:160,choques:true,traz:40,jeffery:true,eps:true,grilla:1}];
+  var NIVELES=[{fps:20,cap:60,choques:false,traz:0,jeffery:false,eps:false,texto:false,grilla:3},{fps:30,cap:120,choques:false,traz:24,jeffery:true,eps:true,texto:true,grilla:1},
+               {fps:30,cap:140,choques:true,traz:40,jeffery:true,eps:true,texto:true,grilla:1},{fps:60,cap:160,choques:true,traz:40,jeffery:true,eps:true,texto:true,grilla:1}];
   // Por tipo: 0 coco, 1 bacilo, 2 espirilo. Velocidad de nado (px/s), giros por segundo, desviación del giro (rad), radio de choque (px)
   var VEL=[0,25,38], LAM=[0,1,.35], GIRO=[0,1.1,.8], RAD=[2.8,3.4,3.6];
-  var ALFA=[.30,.42,.34], ALFA_COLA=.26, ALFA_TRAZ=.16, ALFA_SES=1.18, ALFA_EPS=.05; // opacidades (tinta del sitio); las adheridas, algo más; la matriz, muy tenue
+  var ALFA=[.26,.37,.30], ALFA_COLA=.40, ALFA_TRAZ=.14, ALFA_SES=1.18, ALFA_EPS=.035, ALFA_HALO=.024; // opacidades (tinta del sitio); las adheridas, algo más; la matriz, muy tenue
   var PATRON=[0,1,1,2,1,0,1,2,1,0];  // 3 cocos, 5 bacilos y 2 espirilos de cada 10
   var TAU=.9, GAIN=6, C0=.02, DR=.15, BRO=7, HUECO=.6, RIGIDEZ=.45, LMIN=.08, LMAX=5;
-  var ETA=.55, KONDA=[0,1.257,.698];  // propulsión: v = η·(ω/k); número de onda (rad/px) del flagelo del bacilo (λ 5 px) y del cuerpo del espirilo (λ 9 px)
+  var ETA=.55, KONDA=[0,.95,.698];  // propulsión: v = η·(ω/k); número de onda (rad/px) del flagelo del bacilo (λ 5 px) y del cuerpo del espirilo (λ 9 px)
   var FRENADA=.2, RELAJA=.35, LAMBDA_J=.9;  // tras un giro la velocidad cae al 20 % y se recupera en ≈ .35 s; Λ de Jeffery
   // Nutriente (c en [0, 1], por celda de la grilla): difusión (px²/s), reposición de las fuentes (1/s), constante de Monod, consumo por célula (1/s)
   var GX=64, GY=40, DIF=380, REPO=.2, DEC=.05, KM=.2, QNAD=.004, QSES=.28;
@@ -75,6 +88,11 @@
   var SALIDA=.2, MUERTE_POBRE=.004, INMIG=.7, NSWIM=64;  // prob. de salir por un borde, muerte en medio pobre (1/s), entrada de nadadoras (1/s), nadadoras que se mantienen
   // Cursor como fuente: quietud (px y s), amplitud máxima, constantes de crecimiento y de decaimiento (s), tope de fuentes del cursor, piso de las de fondo, retorno (s)
   var TOL=6, ESPERA=2, AMAX=1.8, SIGMA=1.3, TAUG=12, TAUD=18, MAXC=3, PISO=.15, TAUR=20;
+  // 029: palabras clave (amplitud, ancho relativo, constante de subida/bajada en s), pulso del clic (amplitud, ancho, decaimiento en s, tope),
+  // agitación del scroll (px/s de la onda, de la deriva, velocidad de scroll que la satura, decaimiento en s), calma (espera en s, factor, constante en s),
+  // repulsión del texto (px/s por unidad de gradiente), tiempo de reconstrucción de la máscara (ms)
+  var AKW=.4, SKW=.8, TKW=1.2, APUL=1.1, SPUL=.55, TPUL=5, MAXP=4, AGIT_O=16, AGIT_D=12, AGIT_V=2500, AGIT_T=1.6, CALMA_ESPERA=4, CALMA_F=.6, CALMA_T=1.5, REP_T=36, MASC_MS=250;
+  var SEL_TEXTO='.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.grafico,.metodo,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.practicas,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina';
   var RESERVA=14, REFRACTARIA=20, NMAX=160, TMAX=40, GN=GX*GY;
 
   var cv=document.createElement('canvas'), ctx=cv.getContext('2d',{alpha:true});
@@ -87,11 +105,11 @@
   var W=0,H=0,dpr=1,hx=1,hy=1;
   var X=new Float32Array(NMAX), Y=new Float32Array(NMAX), TH=new Float32Array(NMAX), M=new Float32Array(NMAX), PH=new Float32Array(NMAX),
       SP=new Float32Array(NMAX), FI=new Float32Array(NMAX), BM=new Float32Array(NMAX), HM=new Float32Array(NMAX), T=new Uint8Array(NMAX), S=new Uint8Array(NMAX),
-      NB=new Uint8Array(NMAX), VX=new Float32Array(NMAX), VY=new Float32Array(NMAX);
+      NB=new Uint8Array(NMAX), VX=new Float32Array(NMAX), VY=new Float32Array(NMAX), SZ=new Float32Array(NMAX), GR=new Float32Array(NMAX), ES=new Uint8Array(NMAX);
   var TX=new Float32Array(TMAX), TY=new Float32Array(TMAX), nt=0;
-  var CA=new Float32Array(GN), CB=new Float32Array(GN), SG=new Float32Array(GN), EPS=new Float32Array(GN), sucio=true, acum=0, cuadro=0;
+  var CA=new Float32Array(GN), CB=new Float32Array(GN), SG=new Float32Array(GN), EPS=new Float32Array(GN), TXT=new Float32Array(GN), TXB=new Float32Array(GN), TXC=new Float32Array(GN), sucio=true, acum=0, cuadro=0;
   var n=0, nivel=0, raf=0, ultimo=0, vivo=true, tiempo=0, factor=1, colores=['','',''], coloresS=['','',''], cola='', traza='', rgb='0,0,0';
-  var relojC=0, cur=[], ptr={x:0,y:0,ok:false}, anc={x:0,y:0,t:0}, creciendo=null, cid=0, ultHuella=-9, ev={adh:0,div:0,disp:0,hambre:0,pobre:0,sal:0,ent:0}, fuentes=[], campoFn=null, usuario=false, nNadan=0, nSesiles=0;
+  var palEls=null, tPal=-1e9, relojC=0, kws=[], pul=[], pid=0, agit=0, empuje=0, tScroll=0, ritmo=1, ultScroll={y:0,t:0}, textoEls=[], tMasc=-1e9, cur=[], ptr={x:0,y:0,ok:false}, anc={x:0,y:0,t:0}, creciendo=null, cid=0, ultHuella=-9, ev={adh:0,div:0,disp:0,hambre:0,pobre:0,sal:0,ent:0}, fuentes=[], campoFn=null, usuario=false, nNadan=0, nSesiles=0;
   // fuentes propias: fracción de la ventana (x, y), amplitud y ancho como fracción del alto; hacia los márgenes, para que las
   // colonias se vean sin pasar detrás del texto
   var base=[[.07,.30,1,.13],[.06,.72,.9,.12],[.94,.22,.9,.12],[.93,.62,1,.13],[.50,.93,.7,.12]];
@@ -137,7 +155,7 @@
   // La corriente: u = dψ/dy, v = −dψ/dx con ψ = Σ (a/k)·sen(kx·x + ky·y + φ). Sin divergencia. Tres ondas (longitud, dirección,
   // amplitud en px/s y periodo en s) que se desplazan despacio, así que el flujo cambia sin prisa. También calcula el gradiente
   // (ux, uy, vx, vy), que usan las órbitas de Jeffery.
-  var ONDAS=[[620,.35,9,70],[430,1.75,7,45],[820,2.8,5,100]].map(function(o,i){ var k=6.283185307/o[0]; return {kx:k*Math.cos(o[1]),ky:k*Math.sin(o[1]),k:k,a:o[2],w:6.283185307/o[3],f:i*2.1}; });
+  var ONDAS=[[620,.35,9,70],[430,1.75,7,45],[820,2.8,5,100],[260,1.1,0,3]].map(function(o,i){ var k=6.283185307/o[0]; return {kx:k*Math.cos(o[1]),ky:k*Math.sin(o[1]),k:k,a:o[2],w:6.283185307/o[3],f:i*2.1}; });
   var fu=0, fv=0, gux=0, guy=0, gvx=0;
   function flujo(x,y,t,grad){
     var i, o, c, s, p, q; fu=0; fv=0; gux=0; guy=0; gvx=0;
@@ -145,6 +163,7 @@
       o=ONDAS[i]; p=o.kx*x+o.ky*y+o.f+o.w*t; c=o.a*Math.cos(p); q=o.ky/o.k; fu+=c*q; fv-=c*o.kx/o.k;
       if(grad){ s=o.a*Math.sin(p); gux-=s*q*o.kx; guy-=s*q*o.ky; gvx+=s*(o.kx/o.k)*o.kx; }
     }
+    fv+=empuje; // el scroll empuja el medio (una deriva uniforme, sin divergencia)
   }
 
   function fuentesBase(){
@@ -170,11 +189,12 @@
   // ---- Células ----
   function nueva(x,y,th,tp){
     var i=n++; T[i]=tp; X[i]=x; Y[i]=y; TH[i]=th; PH[i]=Math.random()*6.283185307; FI[i]=Math.random()*6.283185307; SP[i]=1; S[i]=0; BM[i]=1; HM[i]=0; NB[i]=0;
+    SZ[i]=.88+.3*Math.random(); GR[i]=.75+.5*Math.random(); ES[i]=tp===0?(Math.random()<.4?1:2):0; // tamaño y ritmo de crecimiento individuales; cocos: 1 diplococo, 2 estreptococo
     M[i]=Math.log(campo(x,y)+C0); return i;
   }
   function quitar(i){ // saca la célula i copiando la última en su lugar
     var u=--n; if(i===u) return;
-    X[i]=X[u]; Y[i]=Y[u]; TH[i]=TH[u]; M[i]=M[u]; PH[i]=PH[u]; SP[i]=SP[u]; FI[i]=FI[u]; BM[i]=BM[u]; HM[i]=HM[u]; T[i]=T[u]; S[i]=S[u]; NB[i]=NB[u]; VX[i]=VX[u]; VY[i]=VY[u];
+    X[i]=X[u]; Y[i]=Y[u]; TH[i]=TH[u]; M[i]=M[u]; PH[i]=PH[u]; SP[i]=SP[u]; FI[i]=FI[u]; BM[i]=BM[u]; HM[i]=HM[u]; T[i]=T[u]; S[i]=S[u]; NB[i]=NB[u]; VX[i]=VX[u]; VY[i]=VY[u]; SZ[i]=SZ[u]; GR[i]=GR[u]; ES[i]=ES[u];
   }
   function entrante(){ // una nadadora entra por un borde, hacia adentro
     var lado=(Math.random()*4)|0, x, y, th;
@@ -184,13 +204,26 @@
   function sembrar(k){ for(var i=0;i<k;i++) nueva(Math.random()*W,Math.random()*H,Math.random()*6.283185307,PATRON[i%PATRON.length]); }
   function trazadores(k){ for(var i=nt;i<k;i++){ TX[i]=Math.random()*W; TY[i]=Math.random()*H; } nt=k; }
 
-  function dividir(i){ // la hija queda al lado, sin superponerse; los bacilos y espirilos tienden a dividirse a lo largo de su eje
-    var k, a, d, x, y, j, ok, tp=T[i], md=2*RAD[tp]+HUECO+.3, dx, dy, m;
-    for(k=0;k<7;k++){
-      a=(tp>0&&k<3?TH[i]+(Math.random()<.5?0:Math.PI):Math.random()*6.283185307)+.25*normal();
-      x=X[i]+Math.cos(a)*md; y=Y[i]+Math.sin(a)*md; ok=x>RAD[tp]&&x<W-RAD[tp]&&y>RAD[tp]&&y<H-RAD[tp];
-      for(j=0;j<n&&ok;j++){ if(j===i) continue; dx=X[j]-x; dy=Y[j]-y; m=RAD[tp]+RAD[T[j]]+.2; if(dx*dx+dy*dy<m*m) ok=false; }
-      if(ok){ j=nueva(x,y,TH[i]+.15*normal(),tp); S[j]=1; SP[j]=0; FI[j]=FI[i]; BM[i]=1; BM[j]=1+.15*Math.random(); return true; }
+  var GIROS_DIV=[0,.3,-.3,.6,-.6,1,-1,1.57,-1.57,2.4,-2.4];
+  function empujar(px,py,r,except){ // la célula que crece empuja a las vecinas que se le superponen (presión dentro de la colonia)
+    var j, dx, dy, d, m, o;
+    for(j=0;j<n;j++){ if(j===except[0]||j===except[1]) continue; dx=X[j]-px; dy=Y[j]-py; m=r+RAD[T[j]]*SZ[j]+HUECO*.5; d=dx*dx+dy*dy; if(d>=m*m) continue;
+      d=Math.sqrt(d); if(d<.05){ dx=1; dy=0; d=1; } o=(m-d)*.8/d; X[j]+=dx*o; Y[j]+=dy*o; }
+  }
+  function dividir(i){ // división a lo largo del eje de la célula: la madre y la hija quedan donde terminan los dos lóbulos de la constricción
+    var k, a, j, ok, tp=T[i], r=RAD[tp]*SZ[i], md=2*r+HUECO+.3, h=md/2, ex, ey, x0=X[i], y0=Y[i], ax=TH[i];
+    for(k=0;k<GIROS_DIV.length;k++){
+      a=ax+GIROS_DIV[k];                                 // si el eje apunta a un borde de la ventana, se prueba con el eje girado
+      ex=Math.cos(a); ey=Math.sin(a);
+      ok=x0-ex*h>r&&x0+ex*h<W-r&&y0-ey*h>r&&y0+ey*h<H-r&&x0+ex*h>r&&x0-ex*h<W-r&&y0+ey*h>r&&y0-ey*h<H-r;
+      if(ok){
+        ev.div++; X[i]=x0-ex*h; Y[i]=y0-ey*h; TH[i]=a;
+        j=nueva(x0+ex*h,y0+ey*h,a,tp); S[j]=1; SP[j]=0; FI[j]=FI[i]; BM[i]=1; BM[j]=1+.1*Math.random(); SZ[j]=Math.max(.85,Math.min(1.2,SZ[i]+.06*normal())); GR[j]=Math.max(.7,Math.min(1.3,GR[i]+.1*normal()));
+        if(tp===0){ ES[j]=ES[i]; if(ES[i]===1){ ES[i]=3; ES[j]=3; } else if(Math.random()<.15) TH[j]=Math.random()*6.283185307; } // diplococos: un solo par; estreptococos: cadena (a veces se rompe y cambia de eje)
+        else TH[j]=a+.3*normal();                         // borde irregular: la hija sale con el eje algo desviado
+        empujar(X[i],Y[i],r,[i,j]); empujar(X[j],Y[j],r,[i,j]);
+        return true;
+      }
     }
     return false;
   }
@@ -205,38 +238,112 @@
     var dx=ptr.x-anc.x, dy=ptr.y-anc.y;
     if(dx*dx+dy*dy>TOL*TOL){ anc.x=ptr.x; anc.y=ptr.y; anc.t=relojC; suelta(); } // se movió más que el temblor: reinicia la espera y suelta la fuente
   }
+  function pesoAd(f){ var r=f.s/sref(); return f.ad*r*r; } // caudal deseado de una fuente que toma del presupuesto
   function cursorPaso(dt){
-    var i, f, bs=[], Bt=0, Ft=0, Ct=0, w, r, esc, tar, k;
+    var i, f, bs=[], Bt=0, Ft=0, Ct=0, w, r, esc, tar, k, tom=[], e;
     if(ptr.ok&&!creciendo&&!document.hidden&&relojC-anc.t>=ESPERA){ // 2 s quieto: nace una fuente
       for(i=0,k=0;i<cur.length;i++) if(!cur[i].rapido) k++;                              // si ya hay MAXC, las más viejas se apagan antes (decaimiento rápido)
       for(i=0;i<cur.length&&k>=MAXC;i++) if(!cur[i].rapido){ cur[i].rapido=true; k--; }
-      f={id:'cursor'+(cid++),cursor:true,x:anc.x,y:anc.y,a:0,s:SIGMA*sref(),s0:SIGMA*sref(),t0:relojC,tf:0,crece:true,rapido:false};
+      f={id:'cursor'+(cid++),cursor:true,x:anc.x,y:anc.y,a:0,ad:0,s:SIGMA*sref(),s0:SIGMA*sref(),t0:relojC,tf:0,crece:true,rapido:false};
       fuentes.push(f); cur.push(f); creciendo=f;
     }
     for(i=cur.length-1;i>=0;i--){
       f=cur[i];
-      if(f.crece) f.a=AMAX*(1-Math.exp(-(relojC-f.t0)/TAUG));                            // crece con la permanencia
+      if(f.crece) f.ad=AMAX*(1-Math.exp(-(relojC-f.t0)/TAUG));                           // crece con la permanencia
       else{
-        f.tf+=dt; f.a*=Math.exp(-dt/(f.rapido?4:TAUD)); f.s=f.s0*(1+.7*(1-Math.exp(-f.tf/30))); // se difumina: decae y se ensancha
-        if(f.a<.015){ k=fuentes.indexOf(f); if(k>=0) fuentes.splice(k,1); cur.splice(i,1); sucio=true; continue; }
+        f.tf+=dt; f.ad*=Math.exp(-dt/(f.rapido?4:TAUD)); f.s=f.s0*(1+.7*(1-Math.exp(-f.tf/30))); // se difumina: decae y se ensancha
+        if(f.ad<.015){ k=fuentes.indexOf(f); if(k>=0) fuentes.splice(k,1); cur.splice(i,1); sucio=true; continue; }
       }
+      tom.push(f);
+    }
+    for(i=0;i<kws.length;i++){ // palabras clave: sueltan nutriente mientras están a la vista
+      f=kws[i]; e=1-Math.exp(-dt/TKW); f.ad+=((f.visible?AKW:0)-f.ad)*e;
+      if(f.visible||f.ad>=.01){ if(!f.activa){ fuentes.push(f); f.activa=true; } tom.push(f); }
+      else if(f.activa){ k=fuentes.indexOf(f); if(k>=0) fuentes.splice(k,1); f.activa=false; f.a=0; sucio=true; }
+    }
+    for(i=pul.length-1;i>=0;i--){ // pulsos de clic: decaen solos
+      f=pul[i]; f.ad*=Math.exp(-dt/TPUL); f.tf+=dt; f.s=f.s0*(1+.6*(1-Math.exp(-f.tf/6)));
+      if(f.ad<.02){ k=fuentes.indexOf(f); if(k>=0) fuentes.splice(k,1); pul.splice(i,1); sucio=true; continue; }
+      tom.push(f);
     }
     for(i=0;i<fuentes.length;i++){ f=fuentes[i]; if(f.base){ bs.push(f); r=f.s/sref(); w=r*r; Bt+=f.a0*w; Ft+=PISO*f.a0*w; } }
-    for(i=0;i<cur.length;i++) Ct+=peso(cur[i]);
-    if(Ct>Bt-Ft&&Ct>0){ k=(Bt-Ft)/Ct; for(i=0;i<cur.length;i++) cur[i].a*=k; Ct=Bt-Ft; } // el presupuesto no alcanza para más
+    for(i=0;i<tom.length;i++) Ct+=pesoAd(tom[i]);
+    k=Ct>Bt-Ft&&Ct>0?(Bt-Ft)/Ct:1; Ct*=k;                                                // el presupuesto no alcanza para más: se recorta todo por igual
+    for(i=0;i<tom.length;i++) tom[i].a=tom[i].ad*k;
     esc=Bt>Ft?(Bt-Ct-Ft)/(Bt-Ft):1; esc=esc<0?0:esc>1?1:esc;
     for(i=0;i<bs.length;i++){ f=bs[i]; tar=f.a0*(PISO+(1-PISO)*esc);
       if(f.a>tar) f.a=tar; else f.a+=(tar-f.a)*(1-Math.exp(-dt/TAUR));                  // baja de inmediato (se la quitan), vuelve despacio
     }
-    if(cur.length||bs.some(function(b){ return Math.abs(b.a-b.a0)>.002; })) sucio=true;
+    if(tom.length||bs.some(function(b){ return Math.abs(b.a-b.a0)>.002; })) sucio=true;
   }
   window.addEventListener('pointermove',alMover,{passive:true});
   raiz.addEventListener('mouseleave',function(){ ptr.ok=false; suelta(); });
 
+  // El scroll: agita el fluido (según su velocidad) y marca que se está desplazando (la calma se levanta)
+  window.addEventListener('scroll',function(){
+    var t=performance.now(), y=window.pageYOffset||0, dt=(t-ultScroll.t)/1000, v;
+    tScroll=t; tMasc=-1e9; // la máscara de los bloques de texto se rehace enseguida
+    if(dt>.005&&dt<.5){ v=(y-ultScroll.y)/dt; agit=Math.max(agit,Math.min(1,Math.abs(v)/AGIT_V)); empuje=Math.max(-12,Math.min(12,-v*.012)); }
+    ultScroll.y=y; ultScroll.t=t;
+  },{passive:true});
+  window.addEventListener('resize',function(){ tMasc=-1e9; });
+
+  // Un clic sobre una zona no interactiva (y sin selección de texto) deja un pulso pequeño de nutriente, del mismo presupuesto
+  window.addEventListener('click',function(e){
+    var el=e.target, sel, f, k;
+    if(!vivo||e.button!==0||e.pointerType==='touch'||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.defaultPrevented) return;
+    if(el&&el.closest&&el.closest('a,button,input,textarea,select,summary,label,details,[role="button"],[contenteditable],[tabindex],video,audio,svg a')) return;
+    sel=window.getSelection&&window.getSelection(); if(sel&&!sel.isCollapsed) return; // el clic cerró una selección de texto
+    if(pul.length>=MAXP){ f=pul.shift(); k=fuentes.indexOf(f); if(k>=0) fuentes.splice(k,1); }
+    f={id:'pulso'+(pid++),pulso:true,x:e.clientX,y:e.clientY,a:0,ad:APUL,s:SPUL*sref(),s0:SPUL*sref(),tf:0};
+    fuentes.push(f); pul.push(f); sucio=true;
+  },{passive:true});
+
+  // Palabras clave: cada [data-nutriente] visible suelta nutriente cerca de su posición en pantalla; la fuente sigue a la palabra con el scroll
+  function palabras(){
+    var els=palEls||(palEls=[].slice.call(document.querySelectorAll('[data-nutriente]'))), i, e, r, f, vis, ahora=performance.now();
+    if(ahora-tPal<90) return; tPal=ahora; // se mide a lo sumo cada 90 ms (lecturas de layout)
+    for(i=0;i<els.length;i++){
+      e=els[i]; f=e._kw; if(!f){ f=e._kw={id:'kw'+i,kw:true,x:0,y:0,a:0,ad:0,s:SKW*sref(),visible:false,activa:false}; kws.push(f); }
+      r=e.getBoundingClientRect(); vis=r.width>1&&r.height>1&&r.bottom>60&&r.top<H-20&&r.right>0&&r.left<W&&!e.closest('.agentes');
+      f.visible=vis; if(vis){ f.x=r.left+r.width/2; f.y=r.top+r.height/2; sucio=true; }
+    }
+  }
+
+  // Máscara de los bloques de texto (la misma lista que lleva velo): fracción de cada celda de la grilla cubierta por texto, y una versión
+  // suavizada cuyo gradiente aleja a las células de los bloques
+  function mascara(){
+    var i, j, k, e, r, i0, i1, j0, j1, ov, p, t, a;
+    if(!textoEls.length) textoEls=[].slice.call(document.querySelectorAll(SEL_TEXTO)).filter(function(x){ return !x.closest('.agentes'); });
+    TXT.fill(0);
+    for(k=0;k<textoEls.length;k++){
+      r=textoEls[k].getBoundingClientRect(); if(r.width<2||r.height<2||r.bottom<0||r.top>H||r.right<0||r.left>W) continue;
+      i0=Math.max(0,Math.floor(r.left/hx)); i1=Math.min(GX-1,Math.floor(r.right/hx)); j0=Math.max(0,Math.floor(r.top/hy)); j1=Math.min(GY-1,Math.floor(r.bottom/hy));
+      for(j=j0;j<=j1;j++) for(i=i0;i<=i1;i++){
+        ov=(Math.min(r.right,(i+1)*hx)-Math.max(r.left,i*hx))*(Math.min(r.bottom,(j+1)*hy)-Math.max(r.top,j*hy))/(hx*hy);
+        if(ov>0){ e=TXT[j*GX+i]+ov; TXT[j*GX+i]=e>1?1:e; }
+      }
+    }
+    TXB.set(TXT);
+    for(p=0;p<3;p++){ // suavizado (caja de 3 × 3, tres pasadas): el gradiente se siente a ≈ 3 celdas (≈ 65 px) del borde
+      for(j=0;j<GY;j++) for(i=0;i<GX;i++){
+        a=0; t=0;
+        for(k=-1;k<=1;k++) for(e=-1;e<=1;e++){ if(i+e>=0&&i+e<GX&&j+k>=0&&j+k<GY){ a+=TXB[(j+k)*GX+i+e]; t++; } }
+        TXC[j*GX+i]=a/t;
+      }
+      TXB.set(TXC);
+    }
+    tMasc=performance.now();
+  }
+
   function paso(dt,real){
     var nv=NIVELES[nivel], fs=fuentes, i, c, l, s, a, p=1-Math.exp(-dt/TAU), sd=Math.sqrt(2*DR*dt), bro=Math.sqrt(2*BRO*dt), rel=1-Math.exp(-dt/RELAJA),
-        tp, x, y, v, ex, exy, th2, k, cl, q, cap=nv.cap, ns=0, viva;
-    tiempo+=dt; cuadro++; real=real==null?dt:real; relojC+=real; cursorPaso(real);
+        tp, x, y, v, ex, exy, th2, k, cl, q, cap=nv.cap, ns=0, viva, gi, gj, k2, ao, bx, bf;
+    tiempo+=dt; cuadro++; real=real==null?dt:real; relojC+=real;
+    agit*=Math.exp(-real/AGIT_T); empuje*=Math.exp(-real/AGIT_T); ONDAS[3].a=AGIT_O*agit; // la agitación del scroll decae en ≈ 2 s
+    if(cuadro%3===0) palabras();
+    if(nv.texto&&performance.now()-tMasc>MASC_MS) mascara();
+    cursorPaso(real);
     acum+=dt; if(cuadro%nv.grilla===0){ difundir(acum); acum=0; } // nivel 0: la grilla se actualiza cada 3 cuadros
     for(k=0;k<GN;k++) EPS[k]*=1-dt/50; // la matriz se desvanece sola (≈ 50 s)
     nNadan=0; nSesiles=0;
@@ -245,9 +352,11 @@
       if(S[i]){ // ---- adherida: quieta, crece, se divide, deposita matriz o se dispersa ----
         nSesiles++;
         q=QSES*BM[i]*dt*cl/(KM+cl); CA[k]=cl>q?cl-q:0;              // consumo de Monod
-        if(nv.eps){ EPS[k]+=dt*.12; if(EPS[k]>1) EPS[k]=1; }
-        BM[i]+=GROW*dt*cl/(KM+cl);                                    // crecimiento de Monod
-        if(BM[i]>=2&&n<cap-RESERVA&&dividir(i)) ev.div++;
+        if(nv.eps){ EPS[k]+=dt*.05*(1+.6*Math.min(NB[i],8)); if(EPS[k]>1) EPS[k]=1; } // la matriz se acumula más donde hay más vecinas (el centro)
+        if(!(tp===0&&ES[i]===3&&BM[i]>=1.45)) BM[i]+=GROW*GR[i]*dt*cl/(KM+cl);          // crecimiento de Monod, con ritmo individual (los diplococos se quedan en pares)
+        if(NB[i]>=2){ ao=Math.atan2(-VY[i],-VX[i]); TH[i]+=dt*.4*Math.sin(2*(ao-TH[i])); } // los bastones y las cadenas se alinean con el radio de la colonia: crecimiento radial
+        if(n>=cap-RESERVA){ if(BM[i]>1.69) BM[i]=1.69; }                                  // con la población al tope no hay divisiones (ni constricción a medias)
+        else if(BM[i]>=2&&!dividir(i)){ BM[i]=1.55; ev.divFalla=(ev.divFalla||0)+1; }                                          // si no hay lugar, la constricción retrocede y se reintenta más tarde
         if(cl<CDISP) HM[i]+=dt; else { HM[i]-=2*dt; if(HM[i]<0) HM[i]=0; }
         if(HM[i]>THAMBRE){
           if(NB[i]<4&&Math.random()<KDISP*dt){ // dispersión: sale hacia afuera desde el borde de la colonia
@@ -280,8 +389,12 @@
           if(tp===2) a+=.5*Math.sin(FI[i]/6+PH[i]); // tirabuzón: el vaivén sale de la misma fase que la onda del cuerpo
           x+=(Math.cos(a)*v+fu)*dt; y+=(Math.sin(a)*v+fv)*dt;
         }
+        bx=0; // texto en «aguas tranquilas»: las células se alejan suavemente de los bloques de texto y no se adhieren bajo ellos
+        if(nv.texto){ k2=celda(x,y); gi=k2%GX; gj=(k2/GX)|0; bx=TXT[k2];
+          bf=REP_T*dt*.5;
+          x-=(TXB[gj*GX+(gi<GX-1?gi+1:gi)]-TXB[gj*GX+(gi>0?gi-1:gi)])*bf; y-=(TXB[(gj<GY-1?gj+1:gj)*GX+gi]-TXB[(gj>0?gj-1:gj)*GX+gi])*bf; }
         // adhesión: en una zona rica, más probable junto a células ya adheridas
-        if(cl>CAD&&Math.random()<KADH*dt*(cl-CAD)/(1-CAD)*(.06+1.6*NB[i])&&NB[i]<9&&HM[i]>=0){ S[i]=1; SP[i]=0; HM[i]=0; BM[i]=1+.4*Math.random(); ev.adh++; }
+        if(cl>CAD&&Math.random()<KADH*dt*(cl-CAD)/(1-CAD)*(.06+1.6*NB[i])*(1-bx)&&NB[i]<9&&HM[i]>=0){ S[i]=1; SP[i]=0; HM[i]=0; BM[i]=1+.4*Math.random(); ev.adh++; }
         else if(cl<.02&&Math.random()<MUERTE_POBRE*dt){ viva=false; ev.pobre++; }   // muerte en medio pobre
         if(x<0||x>W||y<0||y>H){
           if(Math.random()<SALIDA){ viva=false; ev.sal++; }                         // sale por el borde
@@ -311,19 +424,21 @@
       if(dx>VECINO||dx<-VECINO||dy>VECINO||dy<-VECINO) continue;
       d2=dx*dx+dy*dy; si=S[i]; sj=S[j];
       if(d2<r2){ if(sj&&NB[i]<255){ NB[i]++; VX[i]+=dx; VY[i]+=dy; } if(si&&NB[j]<255){ NB[j]++; VX[j]-=dx; VY[j]-=dy; } }
-      if(!empujar||(si&&sj)) continue;
-      md=RAD[T[i]]+RAD[T[j]]+HUECO; if(d2>=md*md) continue;
+      if(!empujar) continue;
+      md=RAD[T[i]]*SZ[i]+RAD[T[j]]*SZ[j]+HUECO; if(d2>=md*md) continue;
       d=Math.sqrt(d2); o=(md-d)*RIGIDEZ; if(d<.02){ dx=1; dy=0; k=o; } else k=o/d;
-      if(si){ X[j]+=dx*k; Y[j]+=dy*k; } else if(sj){ X[i]-=dx*k; Y[i]-=dy*k; } else { X[i]-=dx*k*.5; Y[i]-=dy*k*.5; X[j]+=dx*k*.5; Y[j]+=dy*k*.5; }
+      if(si&&!sj){ X[j]+=dx*k; Y[j]+=dy*k; } else if(sj&&!si){ X[i]-=dx*k; Y[i]-=dy*k; } else { X[i]-=dx*k*.5; Y[i]-=dy*k*.5; X[j]+=dx*k*.5; Y[j]+=dy*k*.5; }
     }
   }
 
   function dibujar(){
-    var i, k, tp, c, s, a, x, y, sx, f, u, w, e, sesil;
-    ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+    var i, k, tp, c, s, a, x, y, sx, f, u, w, e, sesil, sz, pt, Le, g, r, d, nv=NIVELES[nivel], m, ex, ey;
+    ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H); ctx.globalAlpha=1;
     ctx.lineCap='round'; ctx.lineJoin='round';
-    if(NIVELES[nivel].eps){ // matriz (EPS): halos muy tenues sobre las celdas con colonia, que se desvanecen después de la dispersión
+    if(nv.eps){ // matriz (EPS): halos muy tenues sobre las celdas con colonia, que se desvanecen después de la dispersión; más densa donde hay más células
       for(k=0;k<GN;k++){ e=EPS[k]; if(e>.04){ ctx.fillStyle='rgba('+rgb+','+(ALFA_EPS*e*factor).toFixed(3)+')'; ctx.beginPath(); ctx.arc(((k%GX)+.5)*hx,(((k/GX)|0)+.5)*hy,.62*hx,0,6.283185307); ctx.fill(); } }
+      ctx.fillStyle='rgba('+rgb+','+(ALFA_HALO*factor).toFixed(3)+')'; // un halo por célula adherida: donde se superponen (el centro) la matriz se ve más densa
+      for(i=0;i<n;i++) if(S[i]){ ctx.beginPath(); ctx.arc(X[i],Y[i],6.5*SZ[i],0,6.283185307); ctx.fill(); }
     }
     for(i=0;i<cur.length;i++){ // señal muy sutil: un halo tenue que crece bajo el cursor mientras se forma la fuente y se apaga con ella
       e=cur[i]; w=Math.min(1,e.a/AMAX); if(w<.03) continue;
@@ -335,23 +450,36 @@
       ctx.stroke();
     }
     for(i=0;i<n;i++){
-      tp=T[i]; x=X[i]; y=Y[i]; sesil=S[i];
-      if(tp===0){ ctx.fillStyle=sesil?coloresS[0]:colores[0]; ctx.beginPath(); ctx.arc(x,y,2.8,0,6.283185307); ctx.fill(); continue; }
+      tp=T[i]; x=X[i]; y=Y[i]; sesil=S[i]; sz=SZ[i];
+      u=sesil&&BM[i]>1.7?(BM[i]-1.7)/.3:0; if(u>1) u=1;                       // avance de la constricción (la célula se alarga y se estrecha al medio)
+      if(nv.texto){ m=1-.45*(TXB[celda(x,y)]>1?1:TXB[celda(x,y)]); ctx.globalAlpha=m; } // más tenues bajo el texto
+      if(tp===0){
+        ctx.fillStyle=sesil?coloresS[0]:colores[0]; r=2.8*sz; ctx.beginPath();
+        if(u>0){ d=3.25*u*sz; ex=Math.cos(TH[i])*d; ey=Math.sin(TH[i])*d; ctx.arc(x-ex,y-ey,r,0,6.283185307); ctx.moveTo(x+ex+r,y+ey); ctx.arc(x+ex,y+ey,r,0,6.283185307); } // dos lóbulos que se separan
+        else ctx.arc(x,y,r,0,6.283185307);
+        ctx.fill(); continue;
+      }
       a=TH[i]; c=Math.cos(a)*dpr; s=Math.sin(a)*dpr; ctx.setTransform(c,s,-s,c,x*dpr,y*dpr); f=FI[i];
       if(tp===1){
-        ctx.strokeStyle=sesil?coloresS[1]:colores[1]; ctx.lineWidth=3.1; ctx.beginPath(); ctx.moveTo(-2.45,0); ctx.lineTo(2.45,0); ctx.stroke();    // bacilo: cápsula de 8 × 3,1 px
-        if(!sesil){                                                                                                                              // flagelo: onda que viaja hacia atrás (detenido si está adherida)
-          ctx.strokeStyle=cola; ctx.lineWidth=.8; ctx.beginPath(); ctx.moveTo(-4,0);
-          for(k=1;k<=8;k++){ u=k*.75; w=-4-u; ctx.lineTo(w,1.2*(u/6)*Math.sin(KONDA[1]*w+f)); }
+        ctx.strokeStyle=sesil?coloresS[1]:colores[1]; ctx.lineWidth=3.1*sz; ctx.beginPath();                                                        // bacilo: cápsula de 8 × 3,1 px
+        if(u>0){ Le=(4+3.85*u)*sz; g=1.5*u*sz; r=1.55*sz; ctx.moveTo(-(Le-r),0); ctx.lineTo(-g,0); ctx.moveTo(g,0); ctx.lineTo(Le-r,0); }       // constricción: dos lóbulos con cintura
+        else{ ctx.moveTo(-2.45*sz,0); ctx.lineTo(2.45*sz,0); }
+        ctx.stroke();
+        if(!sesil){                                                                                                                                 // flagelo: onda que viaja hacia atrás (detenido y sin dibujar si está adherida)
+          ctx.strokeStyle=cola; ctx.lineWidth=.75; ctx.beginPath(); ctx.moveTo(-4*sz,0);
+          for(k=1;k<=12;k++){ pt=k*.75; w=-4*sz-pt; ctx.lineTo(w,1.5*(pt/9)*Math.sin(KONDA[1]*w+f)); }
           ctx.stroke();
         }
-      }else{                                                                                                                                      // espirilo: trazo ondulado de 9 px
-        ctx.strokeStyle=sesil?coloresS[2]:colores[2]; ctx.lineWidth=1.35; ctx.beginPath();
-        for(k=0;k<=12;k++){ sx=-4.5+k*.75; if(k) ctx.lineTo(sx,1.5*Math.sin(KONDA[2]*sx+f)); else ctx.moveTo(sx,1.5*Math.sin(KONDA[2]*sx+f)); }
+      }else{                                                                                                                                         // espirilo: trazo ondulado de 9 px (con constricción: dos mitades)
+        ctx.strokeStyle=sesil?coloresS[2]:colores[2]; ctx.lineWidth=1.35*sz; ctx.beginPath();
+        if(u>0){ Le=4.5*(1+.9*u)*sz; g=.7*u*sz; for(k=0;k<=8;k++){ sx=-Le+(Le-g)*k/8; if(k) ctx.lineTo(sx,1.5*sz*Math.sin(KONDA[2]*sx+f)); else ctx.moveTo(sx,1.5*sz*Math.sin(KONDA[2]*sx+f)); }
+          for(k=0;k<=8;k++){ sx=g+(Le-g)*k/8; if(k) ctx.lineTo(sx,1.5*sz*Math.sin(KONDA[2]*sx+f)); else ctx.moveTo(sx,1.5*sz*Math.sin(KONDA[2]*sx+f)); } }
+        else for(k=0;k<=12;k++){ sx=(-4.5+k*.75)*sz; if(k) ctx.lineTo(sx,1.5*sz*Math.sin(KONDA[2]*sx+f)); else ctx.moveTo(sx,1.5*sz*Math.sin(KONDA[2]*sx+f)); }
         ctx.stroke();
       }
       ctx.setTransform(dpr,0,0,dpr,0,0);
     }
+    ctx.globalAlpha=1;
   }
 
   // Rendimiento adaptativo: nivel de partida por núcleos y memoria; cada ~2 s se miden el trabajo por cuadro y los cuadros por segundo
@@ -388,7 +516,9 @@
     raf=requestAnimationFrame(bucle);
     if(t-ultimo<1000/NIVELES[nivel].fps-2) return;
     var dt=Math.min(.05,(t-ultimo)/1000), a, ult0=ultimo; ultimo=t; // dt para la física (acotado); el reloj del cursor usa el tiempo real
-    a=performance.now(); paso(dt,(t-ult0)/1000); dibujar(); st.trab+=performance.now()-a; st.cuadros++;
+    var real=(t-ult0)/1000;                                                       // calma: con el scroll quieto unos segundos (se está leyendo) el tiempo de la simulación baja un 40 %
+    ritmo+=((performance.now()-tScroll>CALMA_ESPERA*1000?CALMA_F:1)-ritmo)*(1-Math.exp(-real/CALMA_T));
+    a=performance.now(); paso(dt*ritmo,real); dibujar(); st.trab+=performance.now()-a; st.cuadros++;
     if(t-st.t0>=st.ventana) evaluar(t);
   }
   function arrancar(){ if(raf||!vivo||document.hidden) return; raiz.classList.add('fondo-vivo'); ultimo=performance.now(); st.t0=ultimo; st.trab=0; st.cuadros=0; raf=requestAnimationFrame(bucle); }
@@ -414,8 +544,9 @@
 
   function cursorEstado(){
     var i, f, Bt=0, Tot=0, bs=[], r;
-    for(i=0;i<fuentes.length;i++){ f=fuentes[i]; r=f.s/sref(); if(f.base){ Bt+=f.a0*r*r; Tot+=peso(f); bs.push(+(f.a/f.a0).toFixed(3)); } else if(f.cursor) Tot+=peso(f); }
+    for(i=0;i<fuentes.length;i++){ f=fuentes[i]; r=f.s/sref(); if(f.base){ Bt+=f.a0*r*r; Tot+=peso(f); bs.push(+(f.a/f.a0).toFixed(3)); } else if(f.cursor||f.kw||f.pulso) Tot+=peso(f); }
     return {presupuesto:+Bt.toFixed(3),total:+Tot.toFixed(3),fondo:bs,fondoMin:bs.length?Math.min.apply(null,bs):0,activasFondo:bs.length,
+            palabras:{total:kws.length,visibles:kws.filter(function(k){ return k.visible; }).length,activas:kws.filter(function(k){ return k.activa; }).length,ad:kws.map(function(k){ return +k.ad.toFixed(2); })},pulsos:pul.map(function(q){ return {x:Math.round(q.x),y:Math.round(q.y),a:+q.a.toFixed(3)}; }),ritmo:+ritmo.toFixed(3),agitacion:+agit.toFixed(3),
             cursores:cur.map(function(c){ return {x:Math.round(c.x),y:Math.round(c.y),a:+c.a.toFixed(3),s:Math.round(c.s),crece:c.crece,rapido:c.rapido,edad:+(relojC-c.t0).toFixed(1)}; })};
   }
 
@@ -437,6 +568,7 @@
     parar:parar
   };
 
+  tScroll=performance.now(); ultScroll.y=window.pageYOffset||0; ultScroll.t=tScroll;
   medir(); colorDeTinta(); huella(); for(var q0=0;q0<GN;q0++) CA[q0]=Math.min(1,SG[q0]*.8); // el nutriente parte repartido cerca de las fuentes
   difundir(2); sembrar(90); fijarNivel(nivelInicial()); dibujar(); arrancar();
 })();
