@@ -96,6 +96,13 @@ ancha (casi a los bordes) y con más aire arriba y abajo. La descripción de cad
 pantallas anchas, el párrafo se ve completo. No cambia ningún texto ni gráfico; todo vive en un bloque de CSS «celular» antes del
 `footer` y en un IIFE de JS.
 
+### Celular: el gráfico de la franja se encoge al bajar (iteración 023)
+
+Bajo 640 px, con JS, la franja fija arranca con el gráfico más chico (76 % de su ancho, `.serie.enc .plot`) y, ligado a
+la posición del scroll (no a la sección), se encoge hasta el 56 % y se aclara hasta el 45 % de opacidad entre los 260 y los
+1460 px de scroll, con la curva común `suave()`; el alto que deja libre lo gana el texto. `--enc` (0 a 1) lo pone el JS en
+`#serie`; al subir se recupera. Con movimiento reducido queda en el tamaño chico, fijo; sin JS, como en la 022 (a todo el ancho).
+
 ## Movimiento de las secciones (iteración 019; curva final y escalonado en la 020)
 
 Todos los movimientos propios del sitio (trazo y fundidos de los gráficos, compactación del título de la portada, salto con

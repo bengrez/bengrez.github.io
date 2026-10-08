@@ -401,6 +401,9 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
   body{line-height:1.7;letter-spacing:.004em;word-spacing:.05em}
   .serie>.pagina{padding-inline:.6rem}
   .hoja{margin-block:.55rem .65rem}
+  /* 023: con JS la franja arranca con el gráfico más chico (76 % del ancho) y, al bajar, se encoge hasta 56 % y se aclara hasta
+     45 % de opacidad; --enc (0 a 1) lo pone el JS según el scroll. Sin JS queda como en la 022. El alto se libera: el texto sube. */
+  .serie.enc .plot{width:calc(76% - 20% * var(--enc,0));margin-inline:auto;opacity:calc(1 - .55 * var(--enc,0))}
   .riel-top{padding-block:.75rem .8rem}
   .seccion{padding-bottom:3.5rem}
   .estados{margin-top:1.25rem;gap:.5rem 1.5rem}
@@ -1026,11 +1029,21 @@ var portada=(function(){
     return k;
   }
   function evaluar(){
-    raf=0;
+    raf=0; encoger();
     var base=(bar?bar.offsetHeight:52)+fig.offsetHeight;
     if(escena.getBoundingClientRect().bottom<=base){ kAct=-1; pendiente=false; return; } // la escena salió por arriba
     mostrar(estado());
     if(pendiente&&aLaVista()){ pendiente=false; trazar(hojas[kAct]); }
+  }
+  // Celular (023): la figura de la franja se encoge y se aclara al bajar, ligada a la posición del scroll (no a la
+  // sección), con la curva común suave(): de 0 a 1 entre 260 y 1460 px de scroll (hasta la mitad del primer caso) (la portada ya está compacta desde 160).
+  // Con movimiento reducido queda en el tamaño chico, fijo. Piso: 56 % del ancho y 45 % de opacidad (en el CSS).
+  var movil=window.matchMedia?window.matchMedia('(max-width:639px)'):{matches:false},
+      quieto=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches, encUlt=-1;
+  function encoger(){
+    if(!movil.matches){ if(encUlt!==-2){ fig.classList.remove('enc'); fig.style.removeProperty('--enc'); encUlt=-2; } return; }
+    var v=quieto?0:suave(((window.pageYOffset||0)-260)/1200);
+    fig.classList.add('enc'); if(Math.abs(v-encUlt)>.002||v===0||v===1){ encUlt=v; fig.style.setProperty('--enc',v.toFixed(3)); }
   }
   function pedirEval(){ if(!raf) raf=requestAnimationFrame(evaluar); }
   window.addEventListener('scroll',pedirEval,{passive:true});
