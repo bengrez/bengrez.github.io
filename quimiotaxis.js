@@ -33,11 +33,8 @@
    menos de 3). Al apagarse la del cursor, el presupuesto vuelve a las de fondo despacio. Hasta 3 fuentes del cursor vivas: al crear
    otra, la más vieja se apaga más rápido. Se escucha `pointermove` en window; el canvas sigue sin capturar eventos.
 
-   Interacción con el lector (029): (1) las palabras marcadas con data-nutriente en el HTML liberan nutriente mientras están a la vista, y
-   su fuente sigue a la palabra con el scroll; (2) la velocidad del scroll agita el fluido (una onda corta y un empuje que decaen en
-   ≈ 2 s); (3) un clic sobre una zona no interactiva (sin selección de texto) deja un pulso de nutriente. Las fuentes del cursor, de las
-   palabras y de los pulsos comparten el MISMO presupuesto finito: lo que toman se lo quitan a las de fondo, en proporción, y si piden más
-   de lo disponible se recortan todas por igual.
+   Interacción con el lector (029; 030): la velocidad del scroll agita el fluido (una onda corta y un empuje que decaen en ≈ 2 s). El único
+   que da nutriente, además de las fuentes de fondo, es el cursor (028); las palabras clave y el pulso del clic de la 029 se quitaron.
    Calma y lectura (029): con el scroll quieto unos segundos (se está leyendo) el tiempo de la simulación baja un 40 %, y vuelve al
    desplazarse; las células se alejan suavemente de los bloques de texto (repulsión desde el gradiente de una máscara de los bloques
    con velo), no se adhieren bajo el texto y se dibujan más tenues allí: el texto queda en «aguas tranquilas».
@@ -55,7 +52,7 @@
    Choques suaves: las células no se superponen; se empujan levemente (las adheridas no se mueven).
    Mientras el fondo está activo, <html> lleva la clase .fondo-vivo (el CSS pone un velo bajo cada bloque de texto).
 
-   API (window.Quimiotaxis), pensada para fuentes dinámicas (palabras clave que el usuario pueda mover):
+   API (window.Quimiotaxis), pensada para fuentes dinámicas (por ahora sin consumidores en el sitio; las fuentes agregadas se suman encima del presupuesto):
      agregar({id, x, y, a, s})  agrega una fuente que repone nutriente (x, y en px de la ventana; a amplitud; s ancho en px)
      mover(id, x, y)            cambia la posición de una fuente (puede llamarse en cada cuadro)
      quitar(id)                 la elimina
@@ -88,10 +85,9 @@
   var SALIDA=.2, MUERTE_POBRE=.004, INMIG=.7, NSWIM=64;  // prob. de salir por un borde, muerte en medio pobre (1/s), entrada de nadadoras (1/s), nadadoras que se mantienen
   // Cursor como fuente: quietud (px y s), amplitud máxima, constantes de crecimiento y de decaimiento (s), tope de fuentes del cursor, piso de las de fondo, retorno (s)
   var TOL=6, ESPERA=2, AMAX=1.8, SIGMA=1.3, TAUG=12, TAUD=18, MAXC=3, PISO=.15, TAUR=20;
-  // 029: palabras clave (amplitud, ancho relativo, constante de subida/bajada en s), pulso del clic (amplitud, ancho, decaimiento en s, tope),
-  // agitación del scroll (px/s de la onda, de la deriva, velocidad de scroll que la satura, decaimiento en s), calma (espera en s, factor, constante en s),
+  // 029: agitación del scroll (px/s de la onda, de la deriva, velocidad de scroll que la satura, decaimiento en s), calma (espera en s, factor, constante en s),
   // repulsión del texto (px/s por unidad de gradiente), tiempo de reconstrucción de la máscara (ms)
-  var AKW=.4, SKW=.8, TKW=1.2, APUL=1.1, SPUL=.55, TPUL=5, MAXP=4, AGIT_O=16, AGIT_D=12, AGIT_V=2500, AGIT_T=1.6, CALMA_ESPERA=4, CALMA_F=.6, CALMA_T=1.5, REP_T=36, MASC_MS=250;
+  var AGIT_O=16, AGIT_D=12, AGIT_V=2500, AGIT_T=1.6, CALMA_ESPERA=4, CALMA_F=.6, CALMA_T=1.5, REP_T=36, MASC_MS=250;
   var SEL_TEXTO='.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.grafico,.metodo,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.practicas,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina';
   var RESERVA=14, REFRACTARIA=20, NMAX=160, TMAX=40, GN=GX*GY;
 
@@ -109,7 +105,7 @@
   var TX=new Float32Array(TMAX), TY=new Float32Array(TMAX), nt=0;
   var CA=new Float32Array(GN), CB=new Float32Array(GN), SG=new Float32Array(GN), EPS=new Float32Array(GN), TXT=new Float32Array(GN), TXB=new Float32Array(GN), TXC=new Float32Array(GN), sucio=true, acum=0, cuadro=0;
   var n=0, nivel=0, raf=0, ultimo=0, vivo=true, tiempo=0, factor=1, colores=['','',''], coloresS=['','',''], cola='', traza='', rgb='0,0,0';
-  var palEls=null, tPal=-1e9, relojC=0, kws=[], pul=[], pid=0, agit=0, empuje=0, tScroll=0, ritmo=1, ultScroll={y:0,t:0}, textoEls=[], tMasc=-1e9, cur=[], ptr={x:0,y:0,ok:false}, anc={x:0,y:0,t:0}, creciendo=null, cid=0, ultHuella=-9, ev={adh:0,div:0,disp:0,hambre:0,pobre:0,sal:0,ent:0}, fuentes=[], campoFn=null, usuario=false, nNadan=0, nSesiles=0;
+  var relojC=0, agit=0, empuje=0, tScroll=0, ritmo=1, ultScroll={y:0,t:0}, textoEls=[], tMasc=-1e9, cur=[], ptr={x:0,y:0,ok:false}, anc={x:0,y:0,t:0}, creciendo=null, cid=0, ultHuella=-9, ev={adh:0,div:0,disp:0,hambre:0,pobre:0,sal:0,ent:0}, fuentes=[], campoFn=null, usuario=false, nNadan=0, nSesiles=0;
   // fuentes propias: fracción de la ventana (x, y), amplitud y ancho como fracción del alto; hacia los márgenes, para que las
   // colonias se vean sin pasar detrás del texto
   var base=[[.07,.30,1,.13],[.06,.72,.9,.12],[.94,.22,.9,.12],[.93,.62,1,.13],[.50,.93,.7,.12]];
@@ -238,7 +234,7 @@
     var dx=ptr.x-anc.x, dy=ptr.y-anc.y;
     if(dx*dx+dy*dy>TOL*TOL){ anc.x=ptr.x; anc.y=ptr.y; anc.t=relojC; suelta(); } // se movió más que el temblor: reinicia la espera y suelta la fuente
   }
-  function pesoAd(f){ var r=f.s/sref(); return f.ad*r*r; } // caudal deseado de una fuente que toma del presupuesto
+  function pesoAd(f){ var r=f.s/sref(); return f.ad*r*r; } // caudal deseado de una fuente del cursor
   function cursorPaso(dt){
     var i, f, bs=[], Bt=0, Ft=0, Ct=0, w, r, esc, tar, k, tom=[], e;
     if(ptr.ok&&!creciendo&&!document.hidden&&relojC-anc.t>=ESPERA){ // 2 s quieto: nace una fuente
@@ -254,16 +250,6 @@
         f.tf+=dt; f.ad*=Math.exp(-dt/(f.rapido?4:TAUD)); f.s=f.s0*(1+.7*(1-Math.exp(-f.tf/30))); // se difumina: decae y se ensancha
         if(f.ad<.015){ k=fuentes.indexOf(f); if(k>=0) fuentes.splice(k,1); cur.splice(i,1); sucio=true; continue; }
       }
-      tom.push(f);
-    }
-    for(i=0;i<kws.length;i++){ // palabras clave: sueltan nutriente mientras están a la vista
-      f=kws[i]; e=1-Math.exp(-dt/TKW); f.ad+=((f.visible?AKW:0)-f.ad)*e;
-      if(f.visible||f.ad>=.01){ if(!f.activa){ fuentes.push(f); f.activa=true; } tom.push(f); }
-      else if(f.activa){ k=fuentes.indexOf(f); if(k>=0) fuentes.splice(k,1); f.activa=false; f.a=0; sucio=true; }
-    }
-    for(i=pul.length-1;i>=0;i--){ // pulsos de clic: decaen solos
-      f=pul[i]; f.ad*=Math.exp(-dt/TPUL); f.tf+=dt; f.s=f.s0*(1+.6*(1-Math.exp(-f.tf/6)));
-      if(f.ad<.02){ k=fuentes.indexOf(f); if(k>=0) fuentes.splice(k,1); pul.splice(i,1); sucio=true; continue; }
       tom.push(f);
     }
     for(i=0;i<fuentes.length;i++){ f=fuentes[i]; if(f.base){ bs.push(f); r=f.s/sref(); w=r*r; Bt+=f.a0*w; Ft+=PISO*f.a0*w; } }
@@ -287,28 +273,6 @@
     ultScroll.y=y; ultScroll.t=t;
   },{passive:true});
   window.addEventListener('resize',function(){ tMasc=-1e9; });
-
-  // Un clic sobre una zona no interactiva (y sin selección de texto) deja un pulso pequeño de nutriente, del mismo presupuesto
-  window.addEventListener('click',function(e){
-    var el=e.target, sel, f, k;
-    if(!vivo||e.button!==0||e.pointerType==='touch'||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.defaultPrevented) return;
-    if(el&&el.closest&&el.closest('a,button,input,textarea,select,summary,label,details,[role="button"],[contenteditable],[tabindex],video,audio,svg a')) return;
-    sel=window.getSelection&&window.getSelection(); if(sel&&!sel.isCollapsed) return; // el clic cerró una selección de texto
-    if(pul.length>=MAXP){ f=pul.shift(); k=fuentes.indexOf(f); if(k>=0) fuentes.splice(k,1); }
-    f={id:'pulso'+(pid++),pulso:true,x:e.clientX,y:e.clientY,a:0,ad:APUL,s:SPUL*sref(),s0:SPUL*sref(),tf:0};
-    fuentes.push(f); pul.push(f); sucio=true;
-  },{passive:true});
-
-  // Palabras clave: cada [data-nutriente] visible suelta nutriente cerca de su posición en pantalla; la fuente sigue a la palabra con el scroll
-  function palabras(){
-    var els=palEls||(palEls=[].slice.call(document.querySelectorAll('[data-nutriente]'))), i, e, r, f, vis, ahora=performance.now();
-    if(ahora-tPal<90) return; tPal=ahora; // se mide a lo sumo cada 90 ms (lecturas de layout)
-    for(i=0;i<els.length;i++){
-      e=els[i]; f=e._kw; if(!f){ f=e._kw={id:'kw'+i,kw:true,x:0,y:0,a:0,ad:0,s:SKW*sref(),visible:false,activa:false}; kws.push(f); }
-      r=e.getBoundingClientRect(); vis=r.width>1&&r.height>1&&r.bottom>60&&r.top<H-20&&r.right>0&&r.left<W&&!e.closest('.agentes');
-      f.visible=vis; if(vis){ f.x=r.left+r.width/2; f.y=r.top+r.height/2; sucio=true; }
-    }
-  }
 
   // Máscara de los bloques de texto (la misma lista que lleva velo): fracción de cada celda de la grilla cubierta por texto, y una versión
   // suavizada cuyo gradiente aleja a las células de los bloques
@@ -341,7 +305,6 @@
         tp, x, y, v, ex, exy, th2, k, cl, q, cap=nv.cap, ns=0, viva, gi, gj, k2, ao, bx, bf;
     tiempo+=dt; cuadro++; real=real==null?dt:real; relojC+=real;
     agit*=Math.exp(-real/AGIT_T); empuje*=Math.exp(-real/AGIT_T); ONDAS[3].a=AGIT_O*agit; // la agitación del scroll decae en ≈ 2 s
-    if(cuadro%3===0) palabras();
     if(nv.texto&&performance.now()-tMasc>MASC_MS) mascara();
     cursorPaso(real);
     acum+=dt; if(cuadro%nv.grilla===0){ difundir(acum); acum=0; } // nivel 0: la grilla se actualiza cada 3 cuadros
@@ -544,9 +507,9 @@
 
   function cursorEstado(){
     var i, f, Bt=0, Tot=0, bs=[], r;
-    for(i=0;i<fuentes.length;i++){ f=fuentes[i]; r=f.s/sref(); if(f.base){ Bt+=f.a0*r*r; Tot+=peso(f); bs.push(+(f.a/f.a0).toFixed(3)); } else if(f.cursor||f.kw||f.pulso) Tot+=peso(f); }
+    for(i=0;i<fuentes.length;i++){ f=fuentes[i]; r=f.s/sref(); if(f.base){ Bt+=f.a0*r*r; Tot+=peso(f); bs.push(+(f.a/f.a0).toFixed(3)); } else if(f.cursor) Tot+=peso(f); }
     return {presupuesto:+Bt.toFixed(3),total:+Tot.toFixed(3),fondo:bs,fondoMin:bs.length?Math.min.apply(null,bs):0,activasFondo:bs.length,
-            palabras:{total:kws.length,visibles:kws.filter(function(k){ return k.visible; }).length,activas:kws.filter(function(k){ return k.activa; }).length,ad:kws.map(function(k){ return +k.ad.toFixed(2); })},pulsos:pul.map(function(q){ return {x:Math.round(q.x),y:Math.round(q.y),a:+q.a.toFixed(3)}; }),ritmo:+ritmo.toFixed(3),agitacion:+agit.toFixed(3),
+            ritmo:+ritmo.toFixed(3),agitacion:+agit.toFixed(3),
             cursores:cur.map(function(c){ return {x:Math.round(c.x),y:Math.round(c.y),a:+c.a.toFixed(3),s:Math.round(c.s),crece:c.crece,rapido:c.rapido,edad:+(relojC-c.t0).toFixed(1)}; })};
   }
 

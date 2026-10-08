@@ -98,7 +98,7 @@ pantallas anchas, el párrafo se ve completo. No cambia ningún texto ni gráfic
 
 ## Fondo con quimiotaxis en un fluido, sólo escritorio (iteraciones 024 y 025)
 
-`quimiotaxis.js` (≈ 46 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
+`quimiotaxis.js` (≈ 43 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
 contenido un canvas 2D con unas 100 células de 5 a 8 px que se mueven por quimiotaxis bacteriana en una corriente suave. Un
 cargador mínimo en `index.html` lo pide al terminar la página sólo si hay puntero fino (`(pointer: fine)`), el ancho es de
 1024 px o más y no hay `prefers-reduced-motion` ni `saveData`: en celular y tabletas no se descarga ni el script ni el canvas.
@@ -125,15 +125,10 @@ cargador mínimo en `index.html` lo pide al terminar la página sólo si hay pun
   (`--velo`), sin borde, con una sombra del mismo color y desenfoque (`0 0 12px 9px`) que lo difumina hacia afuera sin tocar el
   diseño. Las células pasan «por detrás» y se atenúan bajo el texto sin desaparecer. Sin el fondo (celular, tabletas, movimiento
   reducido, sin JS) no hay clase y no hay velo.
-- **Interacción con el lector** (029): (1) **palabras clave**: 9 términos marcados en el HTML con `data-nutriente` (Data science: «telemetría»,
-  «anomalías», «tiempo real»; Ecología: «suelo», «metagenómica», «restauración»; Docencia: «formativa», «herramientas», «asistente»); cada uno,
-  mientras está a la vista, suelta nutriente (amplitud 0,4, σ = 0,8 de la de fondo; sube y baja con τ = 1,2 s) y su fuente sigue a la palabra
-  con el scroll (se mide cada 90 ms). (2) **El scroll agita el fluido**: su velocidad (saturada a 2500 px/s) suma una cuarta onda de corriente
-  corta (260 px, periodo 3 s, hasta 16 px/s) y un empuje uniforme opuesto al scroll (hasta 12 px/s); decaen con τ = 1,6 s. (3) **Un clic** sobre
-  una zona no interactiva (ni enlaces, botones, resúmenes, controles ni con texto seleccionado; sólo botón principal, sin teclas
-  modificadoras ni toque) deja un pulso de nutriente (amplitud 1,1, σ = 0,55; decae con τ = 5 s; hasta 4 vivos). **Todas** las fuentes que toman
-  nutriente (cursor, palabras y pulsos) comparten el **mismo presupuesto finito**: se quita a las de fondo en proporción, con piso del 15 %, y si
-  piden más de lo disponible se recortan todas por igual.
+- **El scroll agita el fluido** (029): su velocidad (saturada a 2500 px/s) suma una cuarta onda de corriente corta (260 px, periodo 3 s, hasta
+  16 px/s) y un empuje uniforme opuesto al scroll (hasta 12 px/s); decaen con τ = 1,6 s. (En la 029 también había palabras clave y pulsos de clic
+  como fuentes; la 030 los quitó: **sólo el cursor** da nutriente, además de las cinco fuentes de fondo, y el clic y la selección de texto quedan
+  como en cualquier página.) La API `agregar`/`mover`/`quitar` sigue, sin consumidores en el sitio.
 - **Calma y lectura** (029): con el scroll quieto 4 s, el tiempo de la simulación baja un 40 % (factor 0,6, constante de 1,5 s) y vuelve al
   desplazarse. Una máscara de los bloques de texto (los mismos que llevan velo; se rehace cada 250 ms y al hacer scroll) aleja a las nadadoras
   (repulsión de 12 px/s por unidad de gradiente de la máscara suavizada), impide que se adhieran bajo el texto y las dibuja un 45 % más
