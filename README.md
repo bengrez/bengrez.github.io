@@ -98,7 +98,7 @@ pantallas anchas, el párrafo se ve completo. No cambia ningún texto ni gráfic
 
 ## Fondo con quimiotaxis en un fluido, sólo escritorio (iteraciones 024 y 025)
 
-`quimiotaxis.js` (≈ 28 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
+`quimiotaxis.js` (≈ 33 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
 contenido un canvas 2D con unas 100 células de 5 a 8 px que se mueven por quimiotaxis bacteriana en una corriente suave. Un
 cargador mínimo en `index.html` lo pide al terminar la página sólo si hay puntero fino (`(pointer: fine)`), el ancho es de
 1024 px o más y no hay `prefers-reduced-motion` ni `saveData`: en celular y tabletas no se descarga ni el script ni el canvas.
@@ -132,6 +132,14 @@ cargador mínimo en `index.html` lo pide al terminar la página sólo si hay pun
   células de su celda (q·c/(K + c), K = 0,2; q = 0,28/s por unidad de biomasa adherida y 0,004/s por nadadora). La quimiotaxis
   lee `campo(x, y)` (interpolación bilineal de la grilla); `usarCampo(fn)` reemplaza lo que lee la quimiotaxis, pero la grilla
   sigue siendo lo que se consume y donde se adhieren y crecen las células. Las fuentes de la API reponen nutriente en la grilla.
+- **El cursor como fuente de nutriente** (028): si el cursor se queda quieto 2 s (tolerancia de 6 px para el temblor de la mano; se
+  escucha `pointermove` en `window`, el canvas sigue sin capturar eventos), nace una fuente en ese punto (σ = 1,3 veces la de fondo) que
+  crece con la permanencia: a(t) = 1,8·(1 − e^(−t/12 s)). Al irse el cursor la fuente deja de crecer, se ensancha (hasta ×1,7 en ≈ 1 min) y
+  decae (τ = 18 s) hasta desaparecer. **Nutriente finito**: hay un presupuesto constante de caudal (Σ amplitud·(σ/σref)² de las cinco fuentes
+  de fondo = 4,47) y lo que gana la del cursor se le quita a las de fondo, en proporción a lo que tienen sobre su piso (15 % de la suya);
+  las de fondo bajan de inmediato y recuperan con τ = 20 s, así que **siempre hay 5 fuentes de fondo (nunca menos de 3)**. Hasta 3 fuentes del
+  cursor vivas: al crear otra, la más vieja se apaga con τ = 4 s. Señal visual: un halo de 5 a 29 px con 0,2 de opacidad máxima, que crece
+  y se apaga con la fuente. Sin cursor (celular, tabletas, movimiento reducido) no existe.
 - **Ciclo plancton ↔ biopelícula** (027): una nadadora se adhiere (queda sésil, quieta y con el flagelo detenido) con tasa
   0,25·(c − 0,5)/0,5·(0,06 + 1,6·vecinas adheridas)/s si c > 0,5; la adherida crece (biomasa ×2 en ≈ 15 s a c saturante, Monod) y
   se divide con la hija al lado, sin superponerse (a lo largo del eje en bacilos y espirilos); deposita una matriz (EPS) tenue que
@@ -143,7 +151,7 @@ cargador mínimo en `index.html` lo pide al terminar la página sólo si hay pun
 - **Rendimiento adaptativo por calidad** (con ~100 células la cantidad ya no es lo que pesa): cuatro niveles: 20 fps, tope de 60 células, sin choques, trazadores, Jeffery ni matriz, con la grilla actualizada cada 3 cuadros;
   30 fps, tope de 120, sin choques (24 trazadores); 30 fps, tope de 140, con choques (40 trazadores); 60 fps, tope de 160. Nivel de partida por `hardwareConcurrency` y
   `deviceMemory`; cada 2 s se mide el trabajo por cuadro y los cuadros por segundo y se sube o baja (al bajar, ese nivel es el techo,
-  para evitar el vaivén); si ni el nivel 0 alcanza, se detiene y quita el canvas. Pausa con la pestaña oculta; sin leer la GPU.
+  para evitar el vaivén); si ni el nivel 0 alcanza, se esconde el fondo y se reintenta al minuto, a los 2 y a los 3 minutos (una sobrecarga pasajera no lo apaga para siempre); a la tercera falla se detiene y quita el canvas. Pausa con la pestaña oculta; sin leer la GPU.
 
 ### Celular: el gráfico de la franja se encoge al bajar (iteración 023)
 

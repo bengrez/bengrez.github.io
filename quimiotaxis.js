@@ -25,6 +25,14 @@
      tope de población (100 a 160 según el nivel): no hay divisiones por encima; entran nadadoras por los bordes cuando faltan y
        algunas salen o mueren, así que el costo no crece sin límite.
 
+   El cursor como fuente (028): si el cursor se queda quieto 2 s (con 6 px de tolerancia para el temblor de la mano), empieza a formarse
+   una fuente de nutriente en ese punto, que crece mientras el cursor siga ahí (saturando con la permanencia). Al irse el cursor la
+   fuente deja de crecer, se ensancha y decae poco a poco hasta desaparecer. El nutriente es finito: hay un presupuesto constante de
+   caudal (suma de amplitud × (σ/σref)² de las fuentes) y lo que gana la fuente del cursor se le quita a las fuentes de fondo, en
+   proporción a lo que tienen sobre su piso; ninguna baja del 15 % de la suya, así que siempre hay 5 fuentes de fondo activas (nunca
+   menos de 3). Al apagarse la del cursor, el presupuesto vuelve a las de fondo despacio. Hasta 3 fuentes del cursor vivas: al crear
+   otra, la más vieja se apaga más rápido. Se escucha `pointermove` en window; el canvas sigue sin capturar eventos.
+
    El fluido y las células son el mismo medio (número de Reynolds bajo: no hay inercia, todo se mueve con el flujo):
    - Corriente: campo de velocidad sin divergencia (función de corriente: tres ondas planas que se desplazan despacio). Arrastra a
      las células que nadan y a unas partículas trazadoras finas que hacen visible el medio.
@@ -64,7 +72,9 @@
   var GX=64, GY=40, DIF=380, REPO=.2, DEC=.05, KM=.2, QNAD=.004, QSES=.28;
   // Ciclo de vida: adhesión (umbral de c, tasa 1/s), crecimiento (1/s de biomasa a c saturante), dispersión (umbral de c, segundos de hambre, tasa 1/s), muerte
   var CAD=.5, KADH=.25, GROW=1/15, CDISP=.17, THAMBRE=6, KDISP=1.2, KMUERTE=.012, CASCADA=4, VECINO=13;
-  var SALIDA=.2, MUERTE_POBRE=.004, INMIG=.7, NSWIM=40;  // prob. de salir por un borde, muerte en medio pobre (1/s), entrada de nadadoras (1/s), nadadoras que se mantienen
+  var SALIDA=.2, MUERTE_POBRE=.004, INMIG=.7, NSWIM=64;  // prob. de salir por un borde, muerte en medio pobre (1/s), entrada de nadadoras (1/s), nadadoras que se mantienen
+  // Cursor como fuente: quietud (px y s), amplitud máxima, constantes de crecimiento y de decaimiento (s), tope de fuentes del cursor, piso de las de fondo, retorno (s)
+  var TOL=6, ESPERA=2, AMAX=1.8, SIGMA=1.3, TAUG=12, TAUD=18, MAXC=3, PISO=.15, TAUR=20;
   var RESERVA=14, REFRACTARIA=20, NMAX=160, TMAX=40, GN=GX*GY;
 
   var cv=document.createElement('canvas'), ctx=cv.getContext('2d',{alpha:true});
@@ -81,7 +91,7 @@
   var TX=new Float32Array(TMAX), TY=new Float32Array(TMAX), nt=0;
   var CA=new Float32Array(GN), CB=new Float32Array(GN), SG=new Float32Array(GN), EPS=new Float32Array(GN), sucio=true, acum=0, cuadro=0;
   var n=0, nivel=0, raf=0, ultimo=0, vivo=true, tiempo=0, factor=1, colores=['','',''], coloresS=['','',''], cola='', traza='', rgb='0,0,0';
-  var ev={adh:0,div:0,disp:0,hambre:0,pobre:0,sal:0,ent:0}, fuentes=[], campoFn=null, usuario=false, nNadan=0, nSesiles=0;
+  var cur=[], ptr={x:0,y:0,ok:false}, anc={x:0,y:0,t:0}, creciendo=null, cid=0, ultHuella=-9, ev={adh:0,div:0,disp:0,hambre:0,pobre:0,sal:0,ent:0}, fuentes=[], campoFn=null, usuario=false, nNadan=0, nSesiles=0;
   // fuentes propias: fracción de la ventana (x, y), amplitud y ancho como fracción del alto; hacia los márgenes, para que las
   // colonias se vean sin pasar detrás del texto
   var base=[[.07,.30,1,.13],[.06,.72,.9,.12],[.94,.22,.9,.12],[.93,.62,1,.13],[.50,.93,.7,.12]];
@@ -90,17 +100,23 @@
 
   // ---- El campo de nutriente: grilla gruesa con difusión, fuentes y consumo ----
   function huella(){ // perfil de las fuentes sobre la grilla (se recalcula cuando cambian las fuentes)
-    var i, j, k, f, dx, dy, g, s;
-    for(j=0;j<GY;j++) for(i=0;i<GX;i++){
-      s=0;
-      for(k=0;k<fuentes.length;k++){ f=fuentes[k]; dx=(i+.5)*hx-f.x; dy=(j+.5)*hy-f.y; s+=f.a*Math.exp(-(dx*dx+dy*dy)/(2*f.s*f.s)); }
-      SG[j*GX+i]=s>1.5?1.5:s;
+    var i, j, k, f, dx, dy, s, clave, ft, a, v;
+    for(k=0;k<fuentes.length;k++){ // el perfil unitario de cada fuente se guarda y sólo se recalcula si cambian su posición o su ancho
+      f=fuentes[k]; clave=f.x.toFixed(1)+'|'+f.y.toFixed(1)+'|'+f.s.toFixed(1);
+      if(f.clave!==clave){
+        ft=f.pie||(f.pie=new Float32Array(GN));
+        for(j=0;j<GY;j++) for(i=0;i<GX;i++){ dx=(i+.5)*hx-f.x; dy=(j+.5)*hy-f.y; ft[j*GX+i]=Math.exp(-(dx*dx+dy*dy)/(2*f.s*f.s)); }
+        f.clave=clave;
+      }
     }
+    for(i=0;i<GN;i++) SG[i]=0;
+    for(k=0;k<fuentes.length;k++){ f=fuentes[k]; ft=f.pie; a=f.a; for(i=0;i<GN;i++) SG[i]+=a*ft[i]; }
+    for(i=0;i<GN;i++) if(SG[i]>1.5) SG[i]=1.5;
     sucio=false;
   }
   function difundir(dt){
     var m=Math.max(1,Math.ceil(dt*DIF*(2/(hx*hx)+2/(hy*hy))/.8)), h=dt/m, ax=DIF*h/(hx*hx), ay=DIF*h/(hy*hy), r=REPO*h, de=DEC*h, s, i, j, k, a, c, t, u;
-    if(sucio) huella();
+    if(sucio&&cuadro-ultHuella>=4){ huella(); ultHuella=cuadro; } // el perfil de las fuentes se recalcula cada 4 cuadros como máximo
     for(s=0;s<m;s++){
       for(j=0;j<GY;j++) for(i=0;i<GX;i++){
         k=j*GX+i; c=CA[k];
@@ -132,7 +148,7 @@
   }
 
   function fuentesBase(){
-    base.forEach(function(b,i){ fuentes.push({id:'base'+i,base:true,x:b[0]*W,y:b[1]*H,a:b[2],s:b[3]*H}); });
+    base.forEach(function(b,i){ fuentes.push({id:'base'+i,base:true,x:b[0]*W,y:b[1]*H,a:b[2],a0:b[2],s:b[3]*H}); });
   }
 
   function medir(){
@@ -179,10 +195,48 @@
     return false;
   }
 
+  // ---- El cursor como fuente de nutriente, con presupuesto finito ----
+  function sref(){ return .125*H; }
+  function peso(f){ var r=f.s/sref(); return f.a*r*r; } // caudal de una fuente (su aporte al presupuesto)
+  function suelta(){ if(creciendo){ creciendo.crece=false; creciendo=null; } }
+  function alMover(e){
+    if(e.pointerType==='touch') return;
+    ptr.x=e.clientX; ptr.y=e.clientY; ptr.ok=true;
+    var dx=ptr.x-anc.x, dy=ptr.y-anc.y;
+    if(dx*dx+dy*dy>TOL*TOL){ anc.x=ptr.x; anc.y=ptr.y; anc.t=tiempo; suelta(); } // se movió más que el temblor: reinicia la espera y suelta la fuente
+  }
+  function cursorPaso(dt){
+    var i, f, bs=[], Bt=0, Ft=0, Ct=0, w, r, esc, tar, k;
+    if(ptr.ok&&!creciendo&&!document.hidden&&tiempo-anc.t>=ESPERA){ // 2 s quieto: nace una fuente
+      for(i=0,k=0;i<cur.length;i++) if(!cur[i].rapido) k++;                              // si ya hay MAXC, las más viejas se apagan antes (decaimiento rápido)
+      for(i=0;i<cur.length&&k>=MAXC;i++) if(!cur[i].rapido){ cur[i].rapido=true; k--; }
+      f={id:'cursor'+(cid++),cursor:true,x:anc.x,y:anc.y,a:0,s:SIGMA*sref(),s0:SIGMA*sref(),t0:tiempo,tf:0,crece:true,rapido:false};
+      fuentes.push(f); cur.push(f); creciendo=f;
+    }
+    for(i=cur.length-1;i>=0;i--){
+      f=cur[i];
+      if(f.crece) f.a=AMAX*(1-Math.exp(-(tiempo-f.t0)/TAUG));                            // crece con la permanencia
+      else{
+        f.tf+=dt; f.a*=Math.exp(-dt/(f.rapido?4:TAUD)); f.s=f.s0*(1+.7*(1-Math.exp(-f.tf/30))); // se difumina: decae y se ensancha
+        if(f.a<.015){ k=fuentes.indexOf(f); if(k>=0) fuentes.splice(k,1); cur.splice(i,1); sucio=true; continue; }
+      }
+    }
+    for(i=0;i<fuentes.length;i++){ f=fuentes[i]; if(f.base){ bs.push(f); r=f.s/sref(); w=r*r; Bt+=f.a0*w; Ft+=PISO*f.a0*w; } }
+    for(i=0;i<cur.length;i++) Ct+=peso(cur[i]);
+    if(Ct>Bt-Ft&&Ct>0){ k=(Bt-Ft)/Ct; for(i=0;i<cur.length;i++) cur[i].a*=k; Ct=Bt-Ft; } // el presupuesto no alcanza para más
+    esc=Bt>Ft?(Bt-Ct-Ft)/(Bt-Ft):1; esc=esc<0?0:esc>1?1:esc;
+    for(i=0;i<bs.length;i++){ f=bs[i]; tar=f.a0*(PISO+(1-PISO)*esc);
+      if(f.a>tar) f.a=tar; else f.a+=(tar-f.a)*(1-Math.exp(-dt/TAUR));                  // baja de inmediato (se la quitan), vuelve despacio
+    }
+    if(cur.length||bs.some(function(b){ return Math.abs(b.a-b.a0)>.002; })) sucio=true;
+  }
+  window.addEventListener('pointermove',alMover,{passive:true});
+  raiz.addEventListener('mouseleave',function(){ ptr.ok=false; suelta(); });
+
   function paso(dt){
     var nv=NIVELES[nivel], fs=fuentes, i, c, l, s, a, p=1-Math.exp(-dt/TAU), sd=Math.sqrt(2*DR*dt), bro=Math.sqrt(2*BRO*dt), rel=1-Math.exp(-dt/RELAJA),
         tp, x, y, v, ex, exy, th2, k, cl, q, cap=nv.cap, ns=0, viva;
-    tiempo+=dt; cuadro++;
+    tiempo+=dt; cuadro++; cursorPaso(dt);
     acum+=dt; if(cuadro%nv.grilla===0){ difundir(acum); acum=0; } // nivel 0: la grilla se actualiza cada 3 cuadros
     for(k=0;k<GN;k++) EPS[k]*=1-dt/50; // la matriz se desvanece sola (≈ 50 s)
     nNadan=0; nSesiles=0;
@@ -271,6 +325,10 @@
     if(NIVELES[nivel].eps){ // matriz (EPS): halos muy tenues sobre las celdas con colonia, que se desvanecen después de la dispersión
       for(k=0;k<GN;k++){ e=EPS[k]; if(e>.04){ ctx.fillStyle='rgba('+rgb+','+(ALFA_EPS*e*factor).toFixed(3)+')'; ctx.beginPath(); ctx.arc(((k%GX)+.5)*hx,(((k/GX)|0)+.5)*hy,.62*hx,0,6.283185307); ctx.fill(); } }
     }
+    for(i=0;i<cur.length;i++){ // señal muy sutil: un halo tenue que crece bajo el cursor mientras se forma la fuente y se apaga con ella
+      e=cur[i]; w=Math.min(1,e.a/AMAX); if(w<.03) continue;
+      ctx.strokeStyle='rgba('+rgb+','+(.2*w*factor).toFixed(3)+')'; ctx.lineWidth=.9; ctx.beginPath(); ctx.arc(e.x,e.y,5+24*w,0,6.283185307); ctx.stroke();
+    }
     if(nt){ // trazadores: líneas finísimas, con una cola corta en el sentido contrario a la corriente
       ctx.strokeStyle=traza; ctx.lineWidth=.9; ctx.beginPath();
       for(i=0;i<nt;i++){ flujo(TX[i],TY[i],tiempo,false); ctx.moveTo(TX[i],TY[i]); ctx.lineTo(TX[i]-fu*.5,TY[i]-fv*.5); }
@@ -310,11 +368,20 @@
     st.fps=st.cuadros/seg; st.trabajoMs=st.trab/Math.max(1,st.cuadros);
     st.historial.push({nivel:nivel,celulas:n,fps:+st.fps.toFixed(1),trabajoMs:+st.trabajoMs.toFixed(2)});
     if(!st.fijo){
-      if(st.trabajoMs>.6*interv||st.fps<.7*meta){ if(nivel===0){ parar(); return; } fijarNivel(nivel-1); st.techo=nivel; st.estables=0; } // al bajar, ese nivel pasa a ser el techo (sin vaivén)
+      if(st.trabajoMs>.6*interv||st.fps<.7*meta){ if(nivel===0){ pesado(); return; } fijarNivel(nivel-1); st.techo=nivel; st.estables=0; } // al bajar, ese nivel pasa a ser el techo (sin vaivén)
       else if(st.trabajoMs<.25*interv&&st.fps>=.85*meta&&nivel<st.techo&&st.estables<3){ fijarNivel(nivel+1); st.estables=0; }
       else { st.estables++; if(st.estables>=2) st.ventana=4000; }
     }
     st.t0=ahora; st.trab=0; st.cuadros=0;
+  }
+
+  // Si ni el nivel más bajo alcanza (equipo lento o sobrecargado un momento), se esconde el fondo y se reintenta al minuto, a los 2 y a los 3
+  // minutos; a la tercera falla se detiene del todo. Así una sobrecarga pasajera (otra aplicación) no lo apaga para siempre.
+  var fallos=0;
+  function pesado(){
+    pausar(); cv.style.display='none'; raiz.classList.remove('fondo-vivo'); fallos++;
+    if(fallos>=3){ parar(); return; }
+    setTimeout(function(){ if(!vivo||window.innerWidth<1024) return; cv.style.display='block'; fijarNivel(0); st.techo=1; st.estables=0; st.ventana=2000; arrancar(); },60000*fallos);
   }
 
   function bucle(t){
@@ -345,6 +412,13 @@
     return {n:nc,max:mx,grandes:grandes};
   }
 
+  function cursorEstado(){
+    var i, f, Bt=0, Tot=0, bs=[], r;
+    for(i=0;i<fuentes.length;i++){ f=fuentes[i]; r=f.s/sref(); if(f.base){ Bt+=f.a0*r*r; Tot+=peso(f); bs.push(+(f.a/f.a0).toFixed(3)); } else if(f.cursor) Tot+=peso(f); }
+    return {presupuesto:+Bt.toFixed(3),total:+Tot.toFixed(3),fondo:bs,fondoMin:bs.length?Math.min.apply(null,bs):0,activasFondo:bs.length,
+            cursores:cur.map(function(c){ return {x:Math.round(c.x),y:Math.round(c.y),a:+c.a.toFixed(3),s:Math.round(c.s),crece:c.crece,rapido:c.rapido,edad:+(tiempo-c.t0).toFixed(1)}; })};
+  }
+
   window.Quimiotaxis={
     fuentes:fuentes,
     agregar:function(f){ fuentes.push({id:f.id,x:f.x,y:f.y,a:f.a==null?1:f.a,s:f.s||150}); sucio=true; },
@@ -355,7 +429,7 @@
     opacidad:function(f){ factor=f; colorDeTinta(); },
     nivel:function(k){ if(k==null) return nivel; st.fijo=true; fijarNivel(k); st.t0=performance.now(); st.trab=0; st.cuadros=0; return nivel; },
     estado:function(){ var nv=NIVELES[nivel], co=colonias(), cs=0, k, mn=1, mx=0; for(k=0;k<GN;k++){ cs+=CA[k]; if(CA[k]<mn) mn=CA[k]; if(CA[k]>mx) mx=CA[k]; }
-      return {nivel:nivel,celulas:n,nadando:nNadan,adheridas:nSesiles,colonias:co.n,mayorColonia:co.max,coloniasGrandes:co.grandes,nutrienteMedio:+(cs/GN).toFixed(3),nutrienteMax:+mx.toFixed(2),eventos:JSON.parse(JSON.stringify(ev)),trazadores:nt,fps:+st.fps.toFixed(1),trabajoMs:+st.trabajoMs.toFixed(2),fijo:st.fijo,choques:nv.choques,jeffery:nv.jeffery,historial:st.historial.slice()}; },
+      return {nivel:nivel,celulas:n,nadando:nNadan,adheridas:nSesiles,colonias:co.n,mayorColonia:co.max,coloniasGrandes:co.grandes,nutrienteMedio:+(cs/GN).toFixed(3),nutrienteMax:+mx.toFixed(2),eventos:JSON.parse(JSON.stringify(ev)),cursor:cursorEstado(),trazadores:nt,fps:+st.fps.toFixed(1),trabajoMs:+st.trabajoMs.toFixed(2),fijo:st.fijo,choques:nv.choques,jeffery:nv.jeffery,historial:st.historial.slice()}; },
     posiciones:function(){ var s=Array.prototype.slice; return {x:s.call(X,0,n),y:s.call(Y,0,n),th:s.call(TH,0,n),fi:s.call(FI,0,n),sp:s.call(SP,0,n),tipo:s.call(T,0,n),sesil:s.call(S,0,n),biomasa:s.call(BM,0,n)}; },
     avanzar:function(seg){ var k=Math.round(seg*30); for(var i=0;i<k;i++) paso(1/30); dibujar(); },
     grilla:function(){ return {gx:GX,gy:GY,c:Array.prototype.slice.call(CA)}; },
