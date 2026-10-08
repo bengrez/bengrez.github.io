@@ -139,7 +139,7 @@ cargador mínimo en `index.html` lo pide al terminar la página sólo si hay pun
   de fondo = 4,47) y lo que gana la del cursor se le quita a las de fondo, en proporción a lo que tienen sobre su piso (15 % de la suya);
   las de fondo bajan de inmediato y recuperan con τ = 20 s, así que **siempre hay 5 fuentes de fondo (nunca menos de 3)**. Hasta 3 fuentes del
   cursor vivas: al crear otra, la más vieja se apaga con τ = 4 s. Señal visual: un halo de 5 a 29 px con 0,2 de opacidad máxima, que crece
-  y se apaga con la fuente. Sin cursor (celular, tabletas, movimiento reducido) no existe.
+  y se apaga con la fuente. El tiempo de quietud y de crecimiento se mide con el reloj real (no con el de la simulación), así que no cambia si el equipo va corto de cuadros. Sin cursor (celular, tabletas, movimiento reducido) no existe.
 - **Ciclo plancton ↔ biopelícula** (027): una nadadora se adhiere (queda sésil, quieta y con el flagelo detenido) con tasa
   0,25·(c − 0,5)/0,5·(0,06 + 1,6·vecinas adheridas)/s si c > 0,5; la adherida crece (biomasa ×2 en ≈ 15 s a c saturante, Monod) y
   se divide con la hija al lado, sin superponerse (a lo largo del eje en bacilos y espirilos); deposita una matriz (EPS) tenue que

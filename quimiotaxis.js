@@ -91,7 +91,7 @@
   var TX=new Float32Array(TMAX), TY=new Float32Array(TMAX), nt=0;
   var CA=new Float32Array(GN), CB=new Float32Array(GN), SG=new Float32Array(GN), EPS=new Float32Array(GN), sucio=true, acum=0, cuadro=0;
   var n=0, nivel=0, raf=0, ultimo=0, vivo=true, tiempo=0, factor=1, colores=['','',''], coloresS=['','',''], cola='', traza='', rgb='0,0,0';
-  var cur=[], ptr={x:0,y:0,ok:false}, anc={x:0,y:0,t:0}, creciendo=null, cid=0, ultHuella=-9, ev={adh:0,div:0,disp:0,hambre:0,pobre:0,sal:0,ent:0}, fuentes=[], campoFn=null, usuario=false, nNadan=0, nSesiles=0;
+  var relojC=0, cur=[], ptr={x:0,y:0,ok:false}, anc={x:0,y:0,t:0}, creciendo=null, cid=0, ultHuella=-9, ev={adh:0,div:0,disp:0,hambre:0,pobre:0,sal:0,ent:0}, fuentes=[], campoFn=null, usuario=false, nNadan=0, nSesiles=0;
   // fuentes propias: fracción de la ventana (x, y), amplitud y ancho como fracción del alto; hacia los márgenes, para que las
   // colonias se vean sin pasar detrás del texto
   var base=[[.07,.30,1,.13],[.06,.72,.9,.12],[.94,.22,.9,.12],[.93,.62,1,.13],[.50,.93,.7,.12]];
@@ -203,19 +203,19 @@
     if(e.pointerType==='touch') return;
     ptr.x=e.clientX; ptr.y=e.clientY; ptr.ok=true;
     var dx=ptr.x-anc.x, dy=ptr.y-anc.y;
-    if(dx*dx+dy*dy>TOL*TOL){ anc.x=ptr.x; anc.y=ptr.y; anc.t=tiempo; suelta(); } // se movió más que el temblor: reinicia la espera y suelta la fuente
+    if(dx*dx+dy*dy>TOL*TOL){ anc.x=ptr.x; anc.y=ptr.y; anc.t=relojC; suelta(); } // se movió más que el temblor: reinicia la espera y suelta la fuente
   }
   function cursorPaso(dt){
     var i, f, bs=[], Bt=0, Ft=0, Ct=0, w, r, esc, tar, k;
-    if(ptr.ok&&!creciendo&&!document.hidden&&tiempo-anc.t>=ESPERA){ // 2 s quieto: nace una fuente
+    if(ptr.ok&&!creciendo&&!document.hidden&&relojC-anc.t>=ESPERA){ // 2 s quieto: nace una fuente
       for(i=0,k=0;i<cur.length;i++) if(!cur[i].rapido) k++;                              // si ya hay MAXC, las más viejas se apagan antes (decaimiento rápido)
       for(i=0;i<cur.length&&k>=MAXC;i++) if(!cur[i].rapido){ cur[i].rapido=true; k--; }
-      f={id:'cursor'+(cid++),cursor:true,x:anc.x,y:anc.y,a:0,s:SIGMA*sref(),s0:SIGMA*sref(),t0:tiempo,tf:0,crece:true,rapido:false};
+      f={id:'cursor'+(cid++),cursor:true,x:anc.x,y:anc.y,a:0,s:SIGMA*sref(),s0:SIGMA*sref(),t0:relojC,tf:0,crece:true,rapido:false};
       fuentes.push(f); cur.push(f); creciendo=f;
     }
     for(i=cur.length-1;i>=0;i--){
       f=cur[i];
-      if(f.crece) f.a=AMAX*(1-Math.exp(-(tiempo-f.t0)/TAUG));                            // crece con la permanencia
+      if(f.crece) f.a=AMAX*(1-Math.exp(-(relojC-f.t0)/TAUG));                            // crece con la permanencia
       else{
         f.tf+=dt; f.a*=Math.exp(-dt/(f.rapido?4:TAUD)); f.s=f.s0*(1+.7*(1-Math.exp(-f.tf/30))); // se difumina: decae y se ensancha
         if(f.a<.015){ k=fuentes.indexOf(f); if(k>=0) fuentes.splice(k,1); cur.splice(i,1); sucio=true; continue; }
@@ -233,10 +233,10 @@
   window.addEventListener('pointermove',alMover,{passive:true});
   raiz.addEventListener('mouseleave',function(){ ptr.ok=false; suelta(); });
 
-  function paso(dt){
+  function paso(dt,real){
     var nv=NIVELES[nivel], fs=fuentes, i, c, l, s, a, p=1-Math.exp(-dt/TAU), sd=Math.sqrt(2*DR*dt), bro=Math.sqrt(2*BRO*dt), rel=1-Math.exp(-dt/RELAJA),
         tp, x, y, v, ex, exy, th2, k, cl, q, cap=nv.cap, ns=0, viva;
-    tiempo+=dt; cuadro++; cursorPaso(dt);
+    tiempo+=dt; cuadro++; real=real==null?dt:real; relojC+=real; cursorPaso(real);
     acum+=dt; if(cuadro%nv.grilla===0){ difundir(acum); acum=0; } // nivel 0: la grilla se actualiza cada 3 cuadros
     for(k=0;k<GN;k++) EPS[k]*=1-dt/50; // la matriz se desvanece sola (≈ 50 s)
     nNadan=0; nSesiles=0;
@@ -387,8 +387,8 @@
   function bucle(t){
     raf=requestAnimationFrame(bucle);
     if(t-ultimo<1000/NIVELES[nivel].fps-2) return;
-    var dt=Math.min(.05,(t-ultimo)/1000), a; ultimo=t;
-    a=performance.now(); paso(dt); dibujar(); st.trab+=performance.now()-a; st.cuadros++;
+    var dt=Math.min(.05,(t-ultimo)/1000), a, ult0=ultimo; ultimo=t; // dt para la física (acotado); el reloj del cursor usa el tiempo real
+    a=performance.now(); paso(dt,(t-ult0)/1000); dibujar(); st.trab+=performance.now()-a; st.cuadros++;
     if(t-st.t0>=st.ventana) evaluar(t);
   }
   function arrancar(){ if(raf||!vivo||document.hidden) return; raiz.classList.add('fondo-vivo'); ultimo=performance.now(); st.t0=ultimo; st.trab=0; st.cuadros=0; raf=requestAnimationFrame(bucle); }
@@ -416,7 +416,7 @@
     var i, f, Bt=0, Tot=0, bs=[], r;
     for(i=0;i<fuentes.length;i++){ f=fuentes[i]; r=f.s/sref(); if(f.base){ Bt+=f.a0*r*r; Tot+=peso(f); bs.push(+(f.a/f.a0).toFixed(3)); } else if(f.cursor) Tot+=peso(f); }
     return {presupuesto:+Bt.toFixed(3),total:+Tot.toFixed(3),fondo:bs,fondoMin:bs.length?Math.min.apply(null,bs):0,activasFondo:bs.length,
-            cursores:cur.map(function(c){ return {x:Math.round(c.x),y:Math.round(c.y),a:+c.a.toFixed(3),s:Math.round(c.s),crece:c.crece,rapido:c.rapido,edad:+(tiempo-c.t0).toFixed(1)}; })};
+            cursores:cur.map(function(c){ return {x:Math.round(c.x),y:Math.round(c.y),a:+c.a.toFixed(3),s:Math.round(c.s),crece:c.crece,rapido:c.rapido,edad:+(relojC-c.t0).toFixed(1)}; })};
   }
 
   window.Quimiotaxis={
