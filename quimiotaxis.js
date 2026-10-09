@@ -73,7 +73,7 @@
                {fps:30,cap:140,choques:true,traz:40,jeffery:true,eps:true,texto:true,grilla:1,gr:340},{fps:60,cap:160,choques:true,traz:40,jeffery:true,eps:true,texto:true,grilla:1,gr:420}];
   // Por tipo: 0 coco, 1 bacilo, 2 espirilo. Velocidad de nado (px/s), giros por segundo, desviación del giro (rad), radio de choque (px)
   var VEL=[0,25,38], LAM=[0,1,.35], GIRO=[0,1.1,.8], RAD=[2.8,3.4,3.6];
-  var ALFA=[.26,.37,.30], ALFA_COLA=.40, ALFA_TRAZ=.14, ALFA_SES=1.18, ALFA_EPS=.035, ALFA_HALO=.024; // opacidades (tinta del sitio); las adheridas, algo más; la matriz, muy tenue
+  var ALFA=[.26,.37,.30], ALFA_COLA=.40, ALFA_TRAZ=.14, ALFA_SES=1.18, ALFA_EPS=[.07,.11,.16]; // opacidades (tinta del sitio); las adheridas, algo más; la matriz (EPS), muy tenue, en tres tramos de intensidad
   var PATRON=[0,1,1,2,1,0,1,2,1,0];  // 3 cocos, 5 bacilos y 2 espirilos de cada 10
   var TAU=.9, GAIN=6, C0=.02, DR=.15, BRO=7, HUECO=.6, RIGIDEZ=.45, LMIN=.08, LMAX=5;
   var ETA=.55, KONDA=[0,.95,.698];  // propulsión: v = η·(ω/k); número de onda (rad/px) del flagelo del bacilo (λ 5 px) y del cuerpo del espirilo (λ 9 px)
@@ -92,7 +92,10 @@
   var TP=20, KP=2, TAUL=400, M0=8, BLIND=4, HW=.8;
   // 031: arena bajo el cursor quieto. σ de los granos (fracción del σ de la fuente), tope de granos (el mayor de NIVELES), tamaño (px), nivel de fondo de c (el que había en su celda al nacer la fuente),
   // umbral de c sobre ese fondo (mínimo y máximo, para que se vea un grano), alfa por tramo de concentración (tope en el centro) y bajo el texto (factor)
-  var GSIG=.25, GMAX=420, GSZ0=1, GSZ1=1.6, GTH0=.002, GTH1=.75, ALFA_AR=[.2,.34,.45], ARENA_TXT=.55, ARENA_K=.3, GV0=2.5, GV1=5;  // GV: duración del viaje de cada grano (s)
+  var GSIG=.25, GMAX=420, GSZ0=1, GSZ1=1.6, GTH0=.002, GTH1=.75, ALFA_AR=[.2,.34,.45], ARENA_TXT=.55, ARENA_K=.3, GV0=2.5, GV1=5;
+  // 034: el núcleo crece con lo depositado (σ de los granos × ρ(D), ρ = RHO0 + (RHO1 − RHO0)·√(D/DREF): el área sigue a la masa y avanza al ritmo del pulso) y se vuelve
+  // una masa sólida: un cuerpo continuo e irregular (radio NUC_R σ, ×√ fracción de granos del centro que quedan) cuya opacidad sube con D hasta ALFA_NUC.
+  var RHO0=.5, RHO1=1.7, DREF=36.9, NUC_R=1.15, ALFA_NUC=.3, SOL0=2, SOL1=26;  // GV: duración del viaje de cada grano (s)
   // 029: agitación del scroll (px/s de la onda, de la deriva, velocidad de scroll que la satura, decaimiento en s), calma (espera en s, factor, constante en s),
   // repulsión del texto (px/s por unidad de gradiente), tiempo de reconstrucción de la máscara (ms)
   var AGIT_O=16, AGIT_D=12, AGIT_V=2500, AGIT_T=1.6, CALMA_ESPERA=4, CALMA_F=.6, CALMA_T=1.5, REP_T=36, MASC_MS=250;
@@ -110,8 +113,14 @@
   var X=new Float32Array(NMAX), Y=new Float32Array(NMAX), TH=new Float32Array(NMAX), M=new Float32Array(NMAX), PH=new Float32Array(NMAX),
       SP=new Float32Array(NMAX), FI=new Float32Array(NMAX), BM=new Float32Array(NMAX), HM=new Float32Array(NMAX), T=new Uint8Array(NMAX), S=new Uint8Array(NMAX),
       NB=new Uint8Array(NMAX), VX=new Float32Array(NMAX), VY=new Float32Array(NMAX), SZ=new Float32Array(NMAX), GR=new Float32Array(NMAX), ES=new Uint8Array(NMAX);
+  // 034: matriz extracelular (EPS) como rastros cortos y alargados (ya no discos): un anillo de NE segmentos (x1, y1, x2, y2) con su intensidad y su
+  // nacimiento (tiempo de la simulación). Se depositan a lo largo del eje de las adheridas (que en las colonias sigue el crecimiento radial y de la cadena),
+  // en el eje de cada división y como rastro del deslizamiento de las nadadoras en zona de adhesión. Se desvanecen en EPS_VIDA s. Tamaño ≈ ⅓ de la 033.
+  var NE=700, EPS_VIDA=45, EPS_L=7, EPS_T=3.5, EA=new Float32Array(NE*4), EW=new Float32Array(NE), EN=new Float32Array(NE), eneT=0;
+  var ETM=new Float32Array(NMAX), LX=new Float32Array(NMAX), LY=new Float32Array(NMAX);
+  function eps(x1,y1,x2,y2,w){ var o=eneT%NE, q=o*4; EA[q]=x1; EA[q+1]=y1; EA[q+2]=x2; EA[q+3]=y2; EW[o]=w>1?1:w; EN[o]=tiempo; eneT++; }
   var TX=new Float32Array(TMAX), TY=new Float32Array(TMAX), nt=0;
-  var CA=new Float32Array(GN), CB=new Float32Array(GN), SG=new Float32Array(GN), EPS=new Float32Array(GN), TXT=new Float32Array(GN), TXB=new Float32Array(GN), TXC=new Float32Array(GN), sucio=true, acum=0, cuadro=0;
+  var CA=new Float32Array(GN), CB=new Float32Array(GN), SG=new Float32Array(GN), TXT=new Float32Array(GN), TXB=new Float32Array(GN), TXC=new Float32Array(GN), sucio=true, acum=0, cuadro=0;
   var n=0, nivel=0, raf=0, ultimo=0, vivo=true, tiempo=0, factor=1, colores=['','',''], coloresS=['','',''], cola='', traza='', rgb='0,0,0';
   var relojC=0, agit=0, empuje=0, tScroll=0, ritmo=1, ultScroll={y:0,t:0}, textoEls=[], tMasc=-1e9, cur=[], ptr={x:0,y:0,ok:false}, anc={x:0,y:0,t:0}, creciendo=null, cid=0, ultHuella=-9, ev={adh:0,div:0,disp:0,hambre:0,pobre:0,sal:0,ent:0}, fuentes=[], campoFn=null, usuario=false, nNadan=0, nSesiles=0;
   // fuentes propias: fracción de la ventana (x, y), amplitud y ancho como fracción del alto; hacia los márgenes, para que las
@@ -192,13 +201,13 @@
 
   // ---- Células ----
   function nueva(x,y,th,tp){
-    var i=n++; T[i]=tp; X[i]=x; Y[i]=y; TH[i]=th; PH[i]=Math.random()*6.283185307; FI[i]=Math.random()*6.283185307; SP[i]=1; S[i]=0; BM[i]=1; HM[i]=0; NB[i]=0;
+    var i=n++; T[i]=tp; X[i]=x; Y[i]=y; TH[i]=th; PH[i]=Math.random()*6.283185307; FI[i]=Math.random()*6.283185307; SP[i]=1; S[i]=0; BM[i]=1; HM[i]=0; NB[i]=0; ETM[i]=0; LX[i]=NaN; LY[i]=0;
     SZ[i]=.88+.3*Math.random(); GR[i]=.75+.5*Math.random(); ES[i]=tp===0?(Math.random()<.4?1:2):0; // tamaño y ritmo de crecimiento individuales; cocos: 1 diplococo, 2 estreptococo
     M[i]=Math.log(campo(x,y)+C0); return i;
   }
   function quitar(i){ // saca la célula i copiando la última en su lugar
     var u=--n; if(i===u) return;
-    X[i]=X[u]; Y[i]=Y[u]; TH[i]=TH[u]; M[i]=M[u]; PH[i]=PH[u]; SP[i]=SP[u]; FI[i]=FI[u]; BM[i]=BM[u]; HM[i]=HM[u]; T[i]=T[u]; S[i]=S[u]; NB[i]=NB[u]; VX[i]=VX[u]; VY[i]=VY[u]; SZ[i]=SZ[u]; GR[i]=GR[u]; ES[i]=ES[u];
+    X[i]=X[u]; Y[i]=Y[u]; TH[i]=TH[u]; M[i]=M[u]; PH[i]=PH[u]; SP[i]=SP[u]; FI[i]=FI[u]; BM[i]=BM[u]; HM[i]=HM[u]; T[i]=T[u]; S[i]=S[u]; NB[i]=NB[u]; VX[i]=VX[u]; VY[i]=VY[u]; SZ[i]=SZ[u]; GR[i]=GR[u]; ES[i]=ES[u]; ETM[i]=ETM[u]; LX[i]=LX[u]; LY[i]=LY[u];
   }
   function entrante(){ // una nadadora entra por un borde, hacia adentro
     var lado=(Math.random()*4)|0, x, y, th;
@@ -221,7 +230,7 @@
       ex=Math.cos(a); ey=Math.sin(a);
       ok=x0-ex*h>r&&x0+ex*h<W-r&&y0-ey*h>r&&y0+ey*h<H-r&&x0+ex*h>r&&x0-ex*h<W-r&&y0+ey*h>r&&y0-ey*h<H-r;
       if(ok){
-        ev.div++; X[i]=x0-ex*h; Y[i]=y0-ey*h; TH[i]=a;
+        ev.div++; X[i]=x0-ex*h; Y[i]=y0-ey*h; TH[i]=a; if(NIVELES[nivel].eps) eps(x0-ex*(h+r+3),y0-ey*(h+r+3),x0+ex*(h+r+3),y0+ey*(h+r+3),1); // la matriz sigue el eje de la división
         j=nueva(x0+ex*h,y0+ey*h,a,tp); S[j]=1; SP[j]=0; FI[j]=FI[i]; BM[i]=1; BM[j]=1+.1*Math.random(); SZ[j]=Math.max(.85,Math.min(1.2,SZ[i]+.06*normal())); GR[j]=Math.max(.7,Math.min(1.3,GR[i]+.1*normal()));
         if(tp===0){ ES[j]=ES[i]; if(ES[i]===1){ ES[i]=3; ES[j]=3; } else if(Math.random()<.15) TH[j]=Math.random()*6.283185307; } // diplococos: un solo par; estreptococos: cadena (a veces se rompe y cambia de eje)
         else TH[j]=a+.3*normal();                         // borde irregular: la hija sale con el eje algo desviado
@@ -246,12 +255,13 @@
   // Con semilla (mulberry32), así el montón es el mismo mientras vive la fuente. Cada grano trae su umbral de concentración, su puerta de crecimiento
   // (los del centro nacen antes), su duración de viaje y su tamaño.
   function granos(sem){
-    var g={x:new Float32Array(GMAX),y:new Float32Array(GMAX),th:new Float32Array(GMAX),pu:new Float32Array(GMAX),d:new Float32Array(GMAX),sz:new Float32Array(GMAX),
+    var fo, g={f:[0,0,0],x:new Float32Array(GMAX),y:new Float32Array(GMAX),th:new Float32Array(GMAX),pu:new Float32Array(GMAX),d:new Float32Array(GMAX),sz:new Float32Array(GMAX),
            c0:new Float32Array(GMAX),ini:false,v:new Uint8Array(GMAX),tv:new Float32Array(GMAX)}, j, u, r, a, q, st=sem>>>0;
     function az(){ st=(st+0x6D2B79F5)>>>0; var t=st; t=Math.imul(t^(t>>>15),t|1); t^=t+Math.imul(t^(t>>>7),t|61); return ((t^(t>>>14))>>>0)/4294967296; }
+    for(j=0;j<3;j++) g.f[j]=6.283185307*az();
     for(j=0;j<GMAX;j++){
       u=az(); q=u<.999?u:.999; r=Math.sqrt(-2*Math.log(1-q)); if(r>2.6){ r=2.6; q=1-Math.exp(-r*r/2); } // radio (en σ) y su acumulada q
-      a=6.283185307*az(); g.x[j]=r*Math.cos(a); g.y[j]=r*Math.sin(a);
+      a=6.283185307*az(); fo=1+.12*Math.sin(2*a+g.f[0])+.08*Math.sin(3*a+g.f[1])+.05*Math.sin(5*a+g.f[2]); g.x[j]=r*fo*Math.cos(a); g.y[j]=r*fo*Math.sin(a); // forma algo irregular, sin anillos
       g.pu[j]=.9*q; g.th[j]=GTH0+(GTH1-GTH0)*Math.pow(.15*az()+.85*q,1.6); g.d[j]=GV0+(GV1-GV0)*(.5*az()+.5*q); g.sz[j]=GSZ0+(GSZ1-GSZ0)*az();
     }
     return g;
@@ -327,20 +337,21 @@
 
   function paso(dt,real){
     var nv=NIVELES[nivel], fs=fuentes, i, c, l, s, a, p=1-Math.exp(-dt/TAU), sd=Math.sqrt(2*DR*dt), bro=Math.sqrt(2*BRO*dt), rel=1-Math.exp(-dt/RELAJA),
-        tp, x, y, v, ex, exy, th2, k, cl, q, cap=nv.cap, ns=0, viva, gi, gj, k2, ao, bx, bf;
+        tp, x, y, v, ex, ey, exy, th2, k, cl, q, cap=nv.cap, ns=0, viva, gi, gj, k2, ao, bx, bf;
     tiempo+=dt; cuadro++; real=real==null?dt:real; relojC+=real;
     agit*=Math.exp(-real/AGIT_T); empuje*=Math.exp(-real/AGIT_T); ONDAS[3].a=AGIT_O*agit; // la agitación del scroll decae en ≈ 2 s
     if(nv.texto&&performance.now()-tMasc>MASC_MS) mascara();
     cursorPaso(real);
     acum+=dt; if(cuadro%nv.grilla===0){ difundir(acum); acum=0; } // nivel 0: la grilla se actualiza cada 3 cuadros
-    for(k=0;k<GN;k++) EPS[k]*=1-dt/50; // la matriz se desvanece sola (≈ 50 s)
     nNadan=0; nSesiles=0;
     for(i=0;i<n;i++){
       tp=T[i]; x=X[i]; y=Y[i]; k=celda(x,y); cl=CA[k]; viva=true;
       if(S[i]){ // ---- adherida: quieta, crece, se divide, deposita matriz o se dispersa ----
         nSesiles++;
         q=QSES*BM[i]*dt*cl/(KM+cl)/(1+BLIND*cl*cl); CA[k]=cl>q?cl-q:0; // consumo de Monod, frenado en el núcleo denso (sólo se accede bien al borde)
-        if(nv.eps){ EPS[k]+=dt*.05*(1+.6*Math.min(NB[i],8)); if(EPS[k]>1) EPS[k]=1; } // la matriz se acumula más donde hay más vecinas (el centro)
+        if(nv.eps){ ETM[i]+=dt; if(ETM[i]>EPS_T/(1+.3*Math.min(NB[i],8))){ ETM[i]=0;    // la matriz se deposita más seguido (y más fuerte) donde hay más vecinas (el centro)
+          if(NB[i]>0){ l=Math.sqrt(VX[i]*VX[i]+VY[i]*VY[i])+1e-6; ex=VX[i]/l; ey=VY[i]/l; } else{ ex=Math.cos(TH[i]); ey=Math.sin(TH[i]); } // hacia el centro de la colonia (crecimiento radial); sola, a lo largo de su eje
+          eps(x+ex*3,y+ey*3,x+ex*(3+EPS_L),y+ey*(3+EPS_L),.45+.1*Math.min(NB[i],5)); } }
         if(!(tp===0&&ES[i]===3&&BM[i]>=1.45)) BM[i]+=GROW*GR[i]*dt*cl/(KM+cl);          // crecimiento de Monod, con ritmo individual (los diplococos se quedan en pares)
         if(NB[i]>=2){ ao=Math.atan2(-VY[i],-VX[i]); TH[i]+=dt*.4*Math.sin(2*(ao-TH[i])); } // los bastones y las cadenas se alinean con el radio de la colonia: crecimiento radial
         if(n>=cap-RESERVA){ if(BM[i]>1.69) BM[i]=1.69; }                                  // con la población al tope no hay divisiones (ni constricción a medias)
@@ -355,6 +366,8 @@
         }
       }else{
         nNadan++; if(HM[i]<0) HM[i]+=dt;
+        if(nv.eps&&tp>0){ if(NB[i]>0){ ETM[i]+=dt; if(LX[i]!==LX[i]){ LX[i]=x; LY[i]=y; ETM[i]=0; } // deslizamiento junto a una colonia, previo a adherirse: un rastro tenue y corto del desplazamiento
+          else if(ETM[i]>.3&&(x-LX[i])*(x-LX[i])+(y-LY[i])*(y-LY[i])>6){ eps(LX[i],LY[i],x,y,.4); LX[i]=x; LY[i]=y; ETM[i]=0; } } else LX[i]=NaN; }
         flujo(x,y,tiempo,nv.jeffery&&tp>0);
         q=QNAD*dt*cl/(KM+cl)/(1+BLIND*cl*cl); CA[k]=cl>q?cl-q:0;                      // consumo de Monod (pequeño)
         if(tp===0){ // coco: lo lleva la corriente, más movimiento browniano
@@ -423,20 +436,29 @@
   // concentración de su celda, por encima del fondo, supera su umbral: así el consumo (Monod) y el decaimiento lo adelgazan grano a grano. Más tenue bajo el texto.
   var AX=new Float32Array(GMAX*8), AY=new Float32Array(GMAX*8), AS=new Float32Array(GMAX*8), AB=new Uint8Array(GMAX*8), nGranos=0, nBajo=0;
   function arena(nv){
-    var k, j, e, g, w, sg, ng=nv.gr, c, tx, ty, p, vi, b, na=0, rel, ce, bajo, cx, cy, t, nb=0, kw;
+    var k, j, e, g, w, sg, ng=nv.gr, c, tx, ty, p, vi, b, na=0, rel, ce, bajo, cx, cy, t, nb=0, kw, rho, sg0, ti, vi2, sol, al, rc, th, gr, m, fo;
     for(k=0;k<cur.length;k++){
-      e=cur[k]; g=e.g; if(!g||na+ng>GMAX*8) continue; w=e.a/AMAX; sg=GSIG*e.s0; kw=e.crece?ARENA_K*w:0; // mientras el cursor sigue ahí, el flujo de la fuente basta para los primeros granos (la grilla tarda en subir)
-      if(!g.ini){ for(j=0;j<GMAX;j++){ tx=e.x+g.x[j]*sg; ty=e.y+g.y[j]*sg; g.c0[j]=tx<0||ty<0||tx>=W||ty>=H?0:CA[celda(tx,ty)]; } g.ini=true; }
+      e=cur[k]; g=e.g; if(!g||na+ng>GMAX*8) continue; w=e.a/AMAX; rho=RHO0+(RHO1-RHO0)*Math.sqrt(Math.min(1,e.D/DREF)); sg0=GSIG*e.s0; sg=sg0*rho; ti=0; vi2=0; kw=e.crece?ARENA_K*w:0; // mientras el cursor sigue ahí, el flujo de la fuente basta para los primeros granos (la grilla tarda en subir)
+      if(!g.ini){ for(j=0;j<GMAX;j++){ tx=e.x+g.x[j]*sg0; ty=e.y+g.y[j]*sg0; g.c0[j]=tx<0||ty<0||tx>=W||ty>=H?0:CA[celda(tx,ty)]; } g.ini=true; }
       for(j=0;j<ng;j++){
         tx=e.x+g.x[j]*sg; ty=e.y+g.y[j]*sg; if(tx<0||ty<0||tx>=W||ty>=H) continue;
         ce=celda(tx,ty); c=CA[ce]-g.c0[j]; if(c<kw) c=kw;
         if(g.v[j]===1){ if(c<.8*g.th[j]) g.v[j]=2; }                                         // consumido: se apaga con algo de histéresis
         else if(c>g.th[j]&&(g.v[j]===2||w>=g.pu[j])){ g.v[j]=1; g.tv[j]=relojC; }            // nace (la puerta de crecimiento sólo cuenta la primera vez)
+        if(g.pu[j]<.4){ ti++; if(g.v[j]===1) vi2++; }
         if(g.v[j]!==1) continue;
         p=(relojC-g.tv[j])/g.d[j]; if(p>1) p=1; p=1-(1-p)*(1-p);
         cx=e.x+(tx-e.x)*p; cy=e.y+(ty-e.y)*p;
         rel=c/.6; b=rel<.34?0:rel<.67?1:2; bajo=nv.texto&&TXB[ce]>.5?1:0;
         AX[na]=cx; AY[na]=cy; AS[na]=g.sz[j]; AB[na]=b*2+bajo; na++; nb+=bajo;
+      }
+      sol=(e.D-SOL0)/(SOL1-SOL0); sol=sol<0?0:sol>1?1:sol; sol=sol*sol*(3-2*sol); m=ti>0?vi2/ti:0; al=ALFA_NUC*sol*m*factor; // el núcleo: más sólido con lo depositado, más fino cuando se lo comen
+      if(al>.01&&e.x>=0&&e.y>=0&&e.x<W&&e.y<H){
+        rc=NUC_R*sg*Math.sqrt(m); if(nv.texto&&TXB[celda(e.x,e.y)]>.5) al*=ARENA_TXT;
+        gr=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,rc*1.2); gr.addColorStop(0,'rgba('+rgb+','+al.toFixed(3)+')'); gr.addColorStop(.7,'rgba('+rgb+','+(al*.8).toFixed(3)+')'); gr.addColorStop(1,'rgba('+rgb+','+(al*.15).toFixed(3)+')');
+        e.nr=rc; e.na=al; ctx.fillStyle=gr; ctx.beginPath();
+        for(t=0;t<28;t++){ th=t*.2243995; fo=1+.12*Math.sin(2*th+g.f[0])+.08*Math.sin(3*th+g.f[1])+.05*Math.sin(5*th+g.f[2]); tx=e.x+Math.cos(th)*rc*fo; ty=e.y+Math.sin(th)*rc*fo; if(t) ctx.lineTo(tx,ty); else ctx.moveTo(tx,ty); }
+        ctx.closePath(); ctx.fill();
       }
     }
     nGranos=na; nBajo=nb;
@@ -451,10 +473,14 @@
     var i, k, tp, c, s, a, x, y, sx, f, u, w, e, sesil, sz, pt, Le, g, r, d, nv=NIVELES[nivel], m, ex, ey;
     ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H); ctx.globalAlpha=1;
     ctx.lineCap='round'; ctx.lineJoin='round';
-    if(nv.eps){ // matriz (EPS): halos muy tenues sobre las celdas con colonia, que se desvanecen después de la dispersión; más densa donde hay más células
-      for(k=0;k<GN;k++){ e=EPS[k]; if(e>.04){ ctx.fillStyle='rgba('+rgb+','+(ALFA_EPS*e*factor).toFixed(3)+')'; ctx.beginPath(); ctx.arc(((k%GX)+.5)*hx,(((k/GX)|0)+.5)*hy,.62*hx,0,6.283185307); ctx.fill(); } }
-      ctx.fillStyle='rgba('+rgb+','+(ALFA_HALO*factor).toFixed(3)+')'; // un halo por célula adherida: donde se superponen (el centro) la matriz se ve más densa
-      for(i=0;i<n;i++) if(S[i]){ ctx.beginPath(); ctx.arc(X[i],Y[i],6.5*SZ[i],0,6.283185307); ctx.fill(); }
+    if(nv.eps&&eneT){ // matriz (EPS): rastros finos y alargados, en tres tramos de intensidad, que se desvanecen con la edad
+      var b3, ne=eneT<NE?eneT:NE, ed;
+      ctx.lineWidth=1.05;
+      for(b3=0;b3<3;b3++){
+        ctx.beginPath(); r=0;
+        for(k=0;k<ne;k++){ ed=1-(tiempo-EN[k])/EPS_VIDA; if(ed<=0) continue; w=EW[k]*ed; if((w>.62?2:w>.3?1:0)!==b3) continue; ctx.moveTo(EA[k*4],EA[k*4+1]); ctx.lineTo(EA[k*4+2],EA[k*4+3]); r=1; }
+        if(r){ ctx.strokeStyle='rgba('+rgb+','+(ALFA_EPS[b3]*factor).toFixed(3)+')'; ctx.stroke(); }
+      }
     }
     if(cur.length) arena(nv);
     if(nt){ // trazadores: líneas finísimas, con una cola corta en el sentido contrario a la corriente
@@ -556,12 +582,13 @@
   }
 
   function ver(g,q0,q1){ var j, v=0, t=0, ng=NIVELES[nivel].gr; for(j=0;j<ng;j++) if(g.pu[j]>=q0*.9&&g.pu[j]<q1*.9){ t++; if(g.v[j]===1) v++; } return [v,t]; } // granos visibles / totales de un tramo de radio
+  function epsEstado(){ var k, ne=eneT<NE?eneT:NE, v=0, L=0, ed; for(k=0;k<ne;k++){ ed=1-(tiempo-EN[k])/EPS_VIDA; if(ed>0){ v++; L+=Math.hypot(EA[k*4+2]-EA[k*4],EA[k*4+3]-EA[k*4+1]); } } return {vivos:v,largoMedio:v?+(L/v).toFixed(2):0}; }
   function cursorEstado(){
     var i, f, Bt=0, Tot=0, bs=[], r;
     for(i=0;i<fuentes.length;i++){ f=fuentes[i]; r=f.s/sref(); if(f.base){ Bt+=f.a0*r*r; Tot+=peso(f); bs.push(+(f.a/f.a0).toFixed(3)); } else if(f.cursor) Tot+=peso(f); }
     return {presupuesto:+Bt.toFixed(3),total:+Tot.toFixed(3),fondo:bs,fondoMin:bs.length?Math.min.apply(null,bs):0,activasFondo:bs.length,
             ritmo:+ritmo.toFixed(3),agitacion:+agit.toFixed(3),arena:{granos:cur.length?nGranos:0,bajoTexto:cur.length?nBajo:0},
-            cursores:cur.map(function(c){ return {x:Math.round(c.x),y:Math.round(c.y),a:+c.a.toFixed(3),s:Math.round(c.s),crece:c.crece,rapido:c.rapido,r:+c.r.toFixed(3),dep:+c.D.toFixed(2),M:+c.M.toFixed(2),centro:c.g?ver(c.g,0,.45):[0,0],borde:c.g?ver(c.g,.45,1):[0,0],granos:c.g?Array.prototype.reduce.call(c.g.v.subarray(0,NIVELES[nivel].gr),function(m,v){ return m+(v===1?1:0); },0):0,edad:+(relojC-c.t0).toFixed(1)}; })};
+            cursores:cur.map(function(c){ return {x:Math.round(c.x),y:Math.round(c.y),a:+c.a.toFixed(3),s:Math.round(c.s),crece:c.crece,rapido:c.rapido,r:+c.r.toFixed(3),dep:+c.D.toFixed(2),M:+c.M.toFixed(2),centro:c.g?ver(c.g,0,.45):[0,0],borde:c.g?ver(c.g,.45,1):[0,0],nucleo:[+(c.nr||0).toFixed(1),+(c.na||0).toFixed(3)],granos:c.g?Array.prototype.reduce.call(c.g.v.subarray(0,NIVELES[nivel].gr),function(m,v){ return m+(v===1?1:0); },0):0,edad:+(relojC-c.t0).toFixed(1)}; })};
   }
 
   window.Quimiotaxis={
@@ -574,7 +601,7 @@
     opacidad:function(f){ factor=f; colorDeTinta(); },
     nivel:function(k){ if(k==null) return nivel; st.fijo=true; fijarNivel(k); st.t0=performance.now(); st.trab=0; st.cuadros=0; return nivel; },
     estado:function(){ var nv=NIVELES[nivel], co=colonias(), cs=0, k, mn=1, mx=0; for(k=0;k<GN;k++){ cs+=CA[k]; if(CA[k]<mn) mn=CA[k]; if(CA[k]>mx) mx=CA[k]; }
-      return {nivel:nivel,celulas:n,nadando:nNadan,adheridas:nSesiles,colonias:co.n,mayorColonia:co.max,coloniasGrandes:co.grandes,nutrienteMedio:+(cs/GN).toFixed(3),nutrienteMax:+mx.toFixed(2),eventos:JSON.parse(JSON.stringify(ev)),cursor:cursorEstado(),trazadores:nt,fps:+st.fps.toFixed(1),trabajoMs:+st.trabajoMs.toFixed(2),fijo:st.fijo,choques:nv.choques,jeffery:nv.jeffery,historial:st.historial.slice()}; },
+      return {nivel:nivel,celulas:n,nadando:nNadan,adheridas:nSesiles,colonias:co.n,mayorColonia:co.max,coloniasGrandes:co.grandes,nutrienteMedio:+(cs/GN).toFixed(3),nutrienteMax:+mx.toFixed(2),eventos:JSON.parse(JSON.stringify(ev)),cursor:cursorEstado(),eps:epsEstado(),trazadores:nt,fps:+st.fps.toFixed(1),trabajoMs:+st.trabajoMs.toFixed(2),fijo:st.fijo,choques:nv.choques,jeffery:nv.jeffery,historial:st.historial.slice()}; },
     posiciones:function(){ var s=Array.prototype.slice; return {x:s.call(X,0,n),y:s.call(Y,0,n),th:s.call(TH,0,n),fi:s.call(FI,0,n),sp:s.call(SP,0,n),tipo:s.call(T,0,n),sesil:s.call(S,0,n),biomasa:s.call(BM,0,n)}; },
     avanzar:function(seg){ var k=Math.round(seg*30); for(var i=0;i<k;i++) paso(1/30); dibujar(); },
     grilla:function(){ return {gx:GX,gy:GY,c:Array.prototype.slice.call(CA)}; },
