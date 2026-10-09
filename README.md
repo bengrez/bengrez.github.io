@@ -98,12 +98,12 @@ pantallas anchas, el párrafo se ve completo. No cambia ningún texto ni gráfic
 
 ## Fondo con quimiotaxis en un fluido, sólo escritorio (iteraciones 024 y 025)
 
-`quimiotaxis.js` (≈ 43 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
+`quimiotaxis.js` (≈ 60 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
 contenido un canvas 2D con unas 100 células de 5 a 8 px que se mueven por quimiotaxis bacteriana en una corriente suave. Un
 cargador mínimo en `index.html` lo pide al terminar la página sólo si hay puntero fino (`(pointer: fine)`), el ancho es de
 1024 px o más y no hay `prefers-reduced-motion` ni `saveData`: en celular y tabletas no se descarga ni el script ni el canvas.
 
-- **Muestra ambiental** (monocromo con la tinta del sitio, cada forma con su opacidad): 30 % **cocos** (círculos de 5,6 px,
+- **Muestra ambiental** (desde la 035: 50 % bacilos, 30 % cocobacilos, 10 % cocos y 10 % espirilos; ver abajo) (monocromo con la tinta del sitio, cada forma con su opacidad): 30 % **cocos** (círculos de 5,6 px,
   opacidad .30), 50 % **bacilos** (cápsulas de 8 × 3,1 px orientadas hacia donde nadan, .42) y 20 % **espirilos** (trazo ondulado
   de 9 px, .34). Dibujo en canvas, sin imágenes.
 - **Comportamiento**: bacilos, «run and tumble» como *E. coli* a 25 px/s, 1 giro/s; espirilos, tirabuzón (el rumbo ondula
@@ -156,7 +156,20 @@ cargador mínimo en `index.html` lo pide al terminar la página sólo si hay pun
 - **Matriz extracelular (EPS) en rastros** (034): ya no hay discos por celda de la grilla ni halos circulares de 6,5 px. Un anillo de 700 segmentos (x, y, x, y, intensidad, nacimiento) que se desvanecen en 45 s, dibujados en tres tramos de intensidad (alfa 0,07 / 0,11 / 0,16) con trazo de 1 px: (a) cada adherida deposita cada 3,5 s (más seguido con más vecinas) un segmento de 7 px que parte de su borde hacia el centro de la colonia (el crecimiento radial; sola, a lo largo de su eje); (b) cada división deja un segmento sobre el eje de las dos hijas; (c) las nadadoras junto a una colonia dejan un rastro tenue de su desplazamiento (el previo a adherirse). Largo medio ≈ 7,5 px, contra halos de 13 px y discos de 25 px de la 033.
 - **El aglomerado crece y se vuelve sólido** (034): mientras el cursor sigue quieto, el σ de los granos se multiplica por ρ(D) = 0,5 + 1,2·√(D/36,9) (el área sigue a la masa depositada: rápido cerca del máximo de r, lento en la cola; ≈ 11 px de σ a los 5 s y 37 px a los 60 s) y se dibuja un núcleo continuo e irregular (contorno con armónicos 2, 3 y 5, radio 1,15σ·√(fracción de granos del centro que quedan)) con gradiente suave y opacidad hasta 0,30 con D (se suma a los granos). Al mover el cursor más de `TOL`, el montón viejo queda como estaba (D congelada) y uno nuevo parte de cero, chico y suelto; una fuente abandonada antes de ≈ 3 s se borra sin dejar nada. El núcleo se come de afuera hacia adentro (φ de la 033 y umbrales de los granos más bajos hacia el centro).
 - **Consumo frenado en el núcleo denso** (033): en un aglomerado las bacterias sólo acceden bien al borde, así que el consumo de Monod se multiplica por φ(c) = 1/(1 + 4·c²) (c es la concentración local, que hace de densidad): φ = 0,26 con c = 0,85, 0,5 con c = 0,5 y 0,86 con c = 0,2. El montón se degrada de afuera hacia adentro y dura más bajo el ataque.
-- **Ciclo plancton ↔ biopelícula** (027): una nadadora se adhiere (queda sésil, quieta y con el flagelo detenido) con tasa
+- **Relaciones ecológicas, etapa 1: dos morfotipos, competencia r/K y sintrofía** (035). Las relaciones son sutiles y se distinguen por la **forma**, no por el color
+  (el sitio es monocromo). La muestra pasa a 50 % bacilos, 30 % **cocobacilos** (cápsula corta de 5,3 × 3,5 px, nado lento de 20 px/s con flagelo corto), 10 % cocos y 10 % espirilos.
+  - **A, estrategia r = el bacilo** (nadador rápido, flagelo largo): μmax = 2 y Ks = 0,45 (relativos a la 034: crece rápido con nutriente abundante), consume por biomasa 0,45 (poco eficiente), se adhiere
+    con c > 0,55 y menos seguido (×0,7). **B, estrategia K = cocobacilos y cocos**: μmax = 0,7, Ks = 0,06, consumo 0,17 (eficiente), se adhiere con c > 0,28 y más seguido (×1,8), aguanta el hambre
+    (umbral de c 0,05 en vez de 0,17) y la muerte en medio pobre (0,008 en vez de 0,02) y deposita más matriz (×1,8 de frecuencia). Los espirilos son un tercer grupo neutro (intermedio) fuera de las proporciones A:B.
+  - **Competencia por la misma grilla c** con Monod propio: μ = μmax·c/(Ks + c); A gana con c alto, B con c bajo (se cruzan en c ≈ 0,12). B además se frena con exceso de nutriente (divide su
+    crecimiento y su adhesión por 1 + (c/0,5)²) y las vecinas A adheridas frenan su adhesión (÷ (1 + 1,5·vecinas A)): A ocupa el núcleo rico del montón y B queda en torno. Resultado visible: con el
+    cursor quieto manda A cerca del montón; en las fuentes de fondo, A coloniza primero (≈ 2 min) y B toma el relevo (≈ 4 min en adelante).
+  - **Sintrofía (cross-feeding)**: una **segunda grilla p** (la misma resolución de 64 × 40 celdas; no se dibuja). Al comer, A libera subproducto (3 unidades de p por unidad de c consumida); p difunde como c y decae (0,06/s).
+    Sólo B lo consume: crece con μ = 2·p/(0,08 + p) (se suma al de c), gasta 0,3, cuenta como alimento para adherirse y no pasar hambre (peso 1,2) y los cocobacilos lo siguen por quimiotaxis (señal 0,3·c + 2,5·p).
+    Alrededor de un montón que A está comiendo aparece, con retardo (≈ 2 a 4 min), un halo de colonias B que viven del subproducto. `Quimiotaxis.relaciones({subproducto:false})` lo apaga (control de las mediciones).
+  - **Preparado para la 036 y la 037** (sin implementar): tablas por tipo (`EST`, `MU`, `KS`…), `NA` (vecinas A) como ejemplo de relación entre pares dentro de `vecinos()`, y `p` como patrón para más grillas
+    (una señal de quorum) en `difundir()`; depredación y simbiosis usarán `EST` y los mismos ganchos.
+- **Ciclo plancton ↔ biopelícula** (027; desde la 035 el umbral de c, la tasa, el crecimiento y el hambre son de cada morfotipo, con los valores de A de abajo como referencia de la 034): una nadadora se adhiere (queda sésil, quieta y con el flagelo detenido) con tasa
   0,25·(c − 0,5)/0,5·(0,06 + 1,6·vecinas adheridas)/s si c > 0,5; la adherida crece (biomasa ×2 en ≈ 15 s a c saturante, Monod) y
   se divide con la hija al lado, sin superponerse (a lo largo del eje en bacilos y espirilos); deposita una matriz (EPS) tenue que
   se desvanece (≈ 45 s; 034: rastros, no discos). Si c < 0,17 durante 6 s, las del borde de la colonia (< 4 vecinas) se dispersan (1,2/s) y vuelven a nadar hacia
