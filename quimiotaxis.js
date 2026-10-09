@@ -84,10 +84,10 @@
   var CAD=.5, KADH=.25, GROW=1/15, CDISP=.17, THAMBRE=6, KDISP=1.2, KMUERTE=.012, CASCADA=4, VECINO=13;
   var SALIDA=.2, MUERTE_POBRE=.004, INMIG=.7, NSWIM=64;  // prob. de salir por un borde, muerte en medio pobre (1/s), entrada de nadadoras (1/s), nadadoras que se mantienen
   // Cursor como fuente: quietud (px y s), amplitud máxima, constantes de crecimiento y de decaimiento (s), tope de fuentes del cursor, piso de las de fondo, retorno (s)
-  var TOL=6, ESPERA=.5, AMAX=1.8, SIGMA=1.3, TAUG=2, TAUD=18, MAXC=3, PISO=.15, TAUR=20;
+  var TOL=6, ESPERA=1.5, AMAX=1.8, SIGMA=1.3, TAUG=6, TAUD=40, MAXC=3, PISO=.15, TAUR=20;
   // 031: arena bajo el cursor quieto. σ de los granos (fracción del σ de la fuente), tope de granos (el mayor de NIVELES), tamaño (px), nivel de fondo de c (el que había en su celda al nacer la fuente),
   // umbral de c sobre ese fondo (mínimo y máximo, para que se vea un grano), alfa por tramo de concentración (tope en el centro) y bajo el texto (factor)
-  var GSIG=.25, GMAX=420, GSZ0=1, GSZ1=1.6, GTH0=.002, GTH1=.75, ALFA_AR=[.2,.34,.45], ARENA_TXT=.55, ARENA_K=.3;
+  var GSIG=.25, GMAX=420, GSZ0=1, GSZ1=1.6, GTH0=.002, GTH1=.75, ALFA_AR=[.2,.34,.45], ARENA_TXT=.55, ARENA_K=.3, GV0=2.5, GV1=5;  // GV: duración del viaje de cada grano (s)
   // 029: agitación del scroll (px/s de la onda, de la deriva, velocidad de scroll que la satura, decaimiento en s), calma (espera en s, factor, constante en s),
   // repulsión del texto (px/s por unidad de gradiente), tiempo de reconstrucción de la máscara (ms)
   var AGIT_O=16, AGIT_D=12, AGIT_V=2500, AGIT_T=1.6, CALMA_ESPERA=4, CALMA_F=.6, CALMA_T=1.5, REP_T=36, MASC_MS=250;
@@ -247,7 +247,7 @@
     for(j=0;j<GMAX;j++){
       u=az(); q=u<.999?u:.999; r=Math.sqrt(-2*Math.log(1-q)); if(r>2.6){ r=2.6; q=1-Math.exp(-r*r/2); } // radio (en σ) y su acumulada q
       a=6.283185307*az(); g.x[j]=r*Math.cos(a); g.y[j]=r*Math.sin(a);
-      g.pu[j]=.6*q; g.th[j]=GTH0+(GTH1-GTH0)*Math.pow(.15*az()+.85*q,1.6); g.d[j]=.4+.6*(.5*az()+.5*q); g.sz[j]=GSZ0+(GSZ1-GSZ0)*az();
+      g.pu[j]=.9*q; g.th[j]=GTH0+(GTH1-GTH0)*Math.pow(.15*az()+.85*q,1.6); g.d[j]=GV0+(GV1-GV0)*(.5*az()+.5*q); g.sz[j]=GSZ0+(GSZ1-GSZ0)*az();
     }
     return g;
   }
@@ -411,7 +411,7 @@
     }
   }
 
-  // Arena: un montón visto desde arriba. Cada grano nace en el cursor y viaja a su sitio (ease-out, 0,4–1 s), del centro hacia afuera. Se ve mientras la
+  // Arena: un montón visto desde arriba. Cada grano nace en el cursor y viaja a su sitio (ease-out, 2,5–5 s), del centro hacia afuera. Se ve mientras la
   // concentración de su celda, por encima del fondo, supera su umbral: así el consumo (Monod) y el decaimiento lo adelgazan grano a grano. Más tenue bajo el texto.
   var AX=new Float32Array(GMAX*8), AY=new Float32Array(GMAX*8), AS=new Float32Array(GMAX*8), AB=new Uint8Array(GMAX*8), nGranos=0, nBajo=0;
   function arena(nv){
@@ -425,7 +425,7 @@
         if(g.v[j]===1){ if(c<.8*g.th[j]) g.v[j]=2; }                                         // consumido: se apaga con algo de histéresis
         else if(c>g.th[j]&&(g.v[j]===2||w>=g.pu[j])){ g.v[j]=1; g.tv[j]=relojC; }            // nace (la puerta de crecimiento sólo cuenta la primera vez)
         if(g.v[j]!==1) continue;
-        p=(relojC-g.tv[j])/g.d[j]; if(p>1) p=1; p=1-(1-p)*(1-p)*(1-p);
+        p=(relojC-g.tv[j])/g.d[j]; if(p>1) p=1; p=1-(1-p)*(1-p);
         cx=e.x+(tx-e.x)*p; cy=e.y+(ty-e.y)*p;
         rel=c/.6; b=rel<.34?0:rel<.67?1:2; bajo=nv.texto&&TXB[ce]>.5?1:0;
         AX[na]=cx; AY[na]=cy; AS[na]=g.sz[j]; AB[na]=b*2+bajo; na++; nb+=bajo;
