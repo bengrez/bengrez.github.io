@@ -84,7 +84,12 @@
   var CAD=.5, KADH=.25, GROW=1/15, CDISP=.17, THAMBRE=6, KDISP=1.2, KMUERTE=.012, CASCADA=4, VECINO=13;
   var SALIDA=.2, MUERTE_POBRE=.004, INMIG=.7, NSWIM=64;  // prob. de salir por un borde, muerte en medio pobre (1/s), entrada de nadadoras (1/s), nadadoras que se mantienen
   // Cursor como fuente: quietud (px y s), amplitud máxima, constantes de crecimiento y de decaimiento (s), tope de fuentes del cursor, piso de las de fondo, retorno (s)
-  var TOL=6, ESPERA=1.5, AMAX=1.8, SIGMA=1.3, TAUG=6, TAUD=40, MAXC=3, PISO=.15, TAUR=20;
+  var TOL=6, ESPERA=1.5, AMAX=1.8, SIGMA=.78, TAUD=40, MAXC=3, PISO=.15, TAUR=20;
+  // 033: emisión con forma de pulso. La tasa r(τ) = (τ/TP)^KP·e^(KP·(1−τ/TP)) (gamma normalizada a 1 en TP) sube, llega al máximo en TP y decae con cola;
+  // lo depositado D = ∫r crece como una S. La fuente deposita en un montón M (M' = r − M/TAUL, TAUL = disolución lenta) y su amplitud es
+  // a = AMAX·(1 − e^(−M/M0)): el montón sigue engordando después del máximo de la tasa. El nutriente disuelto también se extiende
+  // (σ de la fuente en la grilla × (1 + HW·(1 − e^(−M/M0)))), que es lo que atrae a más y más bacterias de lejos; los granos (el núcleo) no se ensanchan. Consumo en el núcleo denso: factor 1/(1 + BLIND·c²).
+  var TP=20, KP=2, TAUL=400, M0=8, BLIND=4, HW=.8;
   // 031: arena bajo el cursor quieto. σ de los granos (fracción del σ de la fuente), tope de granos (el mayor de NIVELES), tamaño (px), nivel de fondo de c (el que había en su celda al nacer la fuente),
   // umbral de c sobre ese fondo (mínimo y máximo, para que se vea un grano), alfa por tramo de concentración (tope en el centro) y bajo el texto (factor)
   var GSIG=.25, GMAX=420, GSZ0=1, GSZ1=1.6, GTH0=.002, GTH1=.75, ALFA_AR=[.2,.34,.45], ARENA_TXT=.55, ARENA_K=.3, GV0=2.5, GV1=5;  // GV: duración del viaje de cada grano (s)
@@ -230,7 +235,7 @@
   // ---- El cursor como fuente de nutriente, con presupuesto finito ----
   function sref(){ return .125*H; }
   function peso(f){ var r=f.s/sref(); return f.a*r*r; } // caudal de una fuente (su aporte al presupuesto)
-  function suelta(){ if(creciendo){ creciendo.crece=false; creciendo=null; } }
+  function suelta(){ if(creciendo){ creciendo.crece=false; creciendo.sr=creciendo.s; creciendo=null; } }
   function alMover(e){
     if(e.pointerType==='touch') return;
     ptr.x=e.clientX; ptr.y=e.clientY; ptr.ok=true;
@@ -253,18 +258,21 @@
   }
   function pesoAd(f){ var r=f.s/sref(); return f.ad*r*r; } // caudal deseado de una fuente del cursor
   function cursorPaso(dt){
-    var i, f, bs=[], Bt=0, Ft=0, Ct=0, w, r, esc, tar, k, tom=[], e;
+    var i, f, bs=[], Bt=0, Ft=0, Ct=0, w, r, esc, tar, k, tom=[], e, u;
     if(ptr.ok&&!creciendo&&!document.hidden&&relojC-anc.t>=ESPERA){ // 2 s quieto: nace una fuente
       for(i=0,k=0;i<cur.length;i++) if(!cur[i].rapido) k++;                              // si ya hay MAXC, las más viejas se apagan antes (decaimiento rápido)
       for(i=0;i<cur.length&&k>=MAXC;i++) if(!cur[i].rapido){ cur[i].rapido=true; k--; }
-      f={id:'cursor'+(cid++),cursor:true,x:anc.x,y:anc.y,a:0,ad:0,s:SIGMA*sref(),s0:SIGMA*sref(),t0:relojC,tf:0,crece:true,rapido:false};
+      f={id:'cursor'+(cid++),cursor:true,x:anc.x,y:anc.y,a:0,ad:0,s:SIGMA*sref(),s0:SIGMA*sref(),t0:relojC,tf:0,crece:true,rapido:false,M:0,D:0,r:0};
       f.g=granos(f.id.length+cid*7919+1); fuentes.push(f); cur.push(f); creciendo=f;
     }
     for(i=cur.length-1;i>=0;i--){
       f=cur[i];
-      if(f.crece) f.ad=AMAX*(1-Math.exp(-(relojC-f.t0)/TAUG));                           // crece con la permanencia
+      if(f.crece){                                                                         // emisión en pulso: r sube, llega al máximo y decae; el montón M acumula
+        u=(relojC-f.t0)/TP; f.r=Math.pow(u,KP)*Math.exp(KP*(1-u)); f.D+=f.r*dt; f.M+=(f.r-f.M/TAUL)*dt; if(f.M<0) f.M=0;
+        u=1-Math.exp(-f.M/M0); f.ad=AMAX*u; f.s=f.s0*(1+HW*u);
+      }
       else{
-        f.tf+=dt; f.ad*=Math.exp(-dt/(f.rapido?4:TAUD)); f.s=f.s0*(1+.7*(1-Math.exp(-f.tf/30))); // se difumina: decae y se ensancha
+        f.tf+=dt; f.ad*=Math.exp(-dt/(f.rapido?4:TAUD)); f.s=f.sr*(1+.7*(1-Math.exp(-f.tf/30))); // se difumina: decae y se ensancha
         if(f.ad<.015){ k=fuentes.indexOf(f); if(k>=0) fuentes.splice(k,1); cur.splice(i,1); sucio=true; continue; }
       }
       tom.push(f);
@@ -331,7 +339,7 @@
       tp=T[i]; x=X[i]; y=Y[i]; k=celda(x,y); cl=CA[k]; viva=true;
       if(S[i]){ // ---- adherida: quieta, crece, se divide, deposita matriz o se dispersa ----
         nSesiles++;
-        q=QSES*BM[i]*dt*cl/(KM+cl); CA[k]=cl>q?cl-q:0;              // consumo de Monod
+        q=QSES*BM[i]*dt*cl/(KM+cl)/(1+BLIND*cl*cl); CA[k]=cl>q?cl-q:0; // consumo de Monod, frenado en el núcleo denso (sólo se accede bien al borde)
         if(nv.eps){ EPS[k]+=dt*.05*(1+.6*Math.min(NB[i],8)); if(EPS[k]>1) EPS[k]=1; } // la matriz se acumula más donde hay más vecinas (el centro)
         if(!(tp===0&&ES[i]===3&&BM[i]>=1.45)) BM[i]+=GROW*GR[i]*dt*cl/(KM+cl);          // crecimiento de Monod, con ritmo individual (los diplococos se quedan en pares)
         if(NB[i]>=2){ ao=Math.atan2(-VY[i],-VX[i]); TH[i]+=dt*.4*Math.sin(2*(ao-TH[i])); } // los bastones y las cadenas se alinean con el radio de la colonia: crecimiento radial
@@ -348,7 +356,7 @@
       }else{
         nNadan++; if(HM[i]<0) HM[i]+=dt;
         flujo(x,y,tiempo,nv.jeffery&&tp>0);
-        q=QNAD*dt*cl/(KM+cl); CA[k]=cl>q?cl-q:0;                      // consumo de Monod (pequeño)
+        q=QNAD*dt*cl/(KM+cl)/(1+BLIND*cl*cl); CA[k]=cl>q?cl-q:0;                      // consumo de Monod (pequeño)
         if(tp===0){ // coco: lo lleva la corriente, más movimiento browniano
           x+=fu*dt+bro*normal(); y+=fv*dt+bro*normal();
         }else{
@@ -547,12 +555,13 @@
     return {n:nc,max:mx,grandes:grandes};
   }
 
+  function ver(g,q0,q1){ var j, v=0, t=0, ng=NIVELES[nivel].gr; for(j=0;j<ng;j++) if(g.pu[j]>=q0*.9&&g.pu[j]<q1*.9){ t++; if(g.v[j]===1) v++; } return [v,t]; } // granos visibles / totales de un tramo de radio
   function cursorEstado(){
     var i, f, Bt=0, Tot=0, bs=[], r;
     for(i=0;i<fuentes.length;i++){ f=fuentes[i]; r=f.s/sref(); if(f.base){ Bt+=f.a0*r*r; Tot+=peso(f); bs.push(+(f.a/f.a0).toFixed(3)); } else if(f.cursor) Tot+=peso(f); }
     return {presupuesto:+Bt.toFixed(3),total:+Tot.toFixed(3),fondo:bs,fondoMin:bs.length?Math.min.apply(null,bs):0,activasFondo:bs.length,
             ritmo:+ritmo.toFixed(3),agitacion:+agit.toFixed(3),arena:{granos:cur.length?nGranos:0,bajoTexto:cur.length?nBajo:0},
-            cursores:cur.map(function(c){ return {x:Math.round(c.x),y:Math.round(c.y),a:+c.a.toFixed(3),s:Math.round(c.s),crece:c.crece,rapido:c.rapido,granos:c.g?Array.prototype.reduce.call(c.g.v.subarray(0,NIVELES[nivel].gr),function(m,v){ return m+(v===1?1:0); },0):0,edad:+(relojC-c.t0).toFixed(1)}; })};
+            cursores:cur.map(function(c){ return {x:Math.round(c.x),y:Math.round(c.y),a:+c.a.toFixed(3),s:Math.round(c.s),crece:c.crece,rapido:c.rapido,r:+c.r.toFixed(3),dep:+c.D.toFixed(2),M:+c.M.toFixed(2),centro:c.g?ver(c.g,0,.45):[0,0],borde:c.g?ver(c.g,.45,1):[0,0],granos:c.g?Array.prototype.reduce.call(c.g.v.subarray(0,NIVELES[nivel].gr),function(m,v){ return m+(v===1?1:0); },0):0,edad:+(relojC-c.t0).toFixed(1)}; })};
   }
 
   window.Quimiotaxis={
