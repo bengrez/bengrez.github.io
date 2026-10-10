@@ -98,7 +98,7 @@ pantallas anchas, el párrafo se ve completo. No cambia ningún texto ni gráfic
 
 ## Fondo con quimiotaxis en un fluido, sólo escritorio (iteraciones 024 y 025)
 
-`quimiotaxis.js` (≈ 60 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
+`quimiotaxis.js` (≈ 70 KB, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
 contenido un canvas 2D con unas 100 células de 5 a 8 px que se mueven por quimiotaxis bacteriana en una corriente suave. Un
 cargador mínimo en `index.html` lo pide al terminar la página sólo si hay puntero fino (`(pointer: fine)`), el ancho es de
 1024 px o más y no hay `prefers-reduced-motion` ni `saveData`: en celular y tabletas no se descarga ni el script ni el canvas.
@@ -169,6 +169,15 @@ cargador mínimo en `index.html` lo pide al terminar la página sólo si hay pun
     Alrededor de un montón que A está comiendo aparece, con retardo (≈ 2 a 4 min), un halo de colonias B que viven del subproducto. `Quimiotaxis.relaciones({subproducto:false})` lo apaga (control de las mediciones).
   - **Preparado para la 036 y la 037** (sin implementar): tablas por tipo (`EST`, `MU`, `KS`…), `NA` (vecinas A) como ejemplo de relación entre pares dentro de `vecinos()`, y `p` como patrón para más grillas
     (una señal de quorum) en `difundir()`; depredación y simbiosis usarán `EST` y los mismos ganchos.
+- **Relaciones ecológicas, etapa 2: depredador tipo *Bdellovibrio* y quorum sensing** (036). Todo sutil, monocromo, distinguible por la forma y sin cambiar la calma (C nada rápido, pero sólo cerca de las colonias).
+  - **C, el depredador** (tipo 4; `EST` = 3): un vibrio de 5 px en forma de coma, con un flagelo polar de onda rápida, de nado muy rápido (48 px/s; A, 25). Son 3 al partir (≈ 5 % de las células; 7,7 ± 1,7 en promedio); tope de 10.
+    **Ciclo de vida:** (1) *ataque*: nada, persigue (giro de 5 rad/s) a la presa de más peso a menos de 90 px (peso: B 1, A 0,35, neutros 0,2; adherida en colonia densa × (0,3 + 0,7·vecinas/6), nadando × 0,22) y, en contacto, ataca con tasa 1/s × peso;
+    (2) *entra*: C desaparece dentro, la presa deja de crecer y de dividirse y se **redondea** (bdeloplasto: un círculo algo mayor con un punto adentro); (3) *crece dentro* ≈ 40 s (± 20 %); (4) *lisis*: la presa se rompe y libera 2 a 6 C (cada cría sobrevive con probabilidad
+    1 − (C/10)², así que C no explota) y devuelve nutriente (0,35 por biomasa) y subproducto (0,25) a las grillas. C muere de hambre tras 150 s sin presa; **piso:** con menos de 2, entra una por un borde (0,05/s). Los choques y el texto (aguas tranquilas) valen igual para C.
+  - **Efecto sobre la competencia de la 035:** C prefiere B, así que desplaza el equilibrio hacia A: a los 20 min, en las fuentes de fondo, A:B = 0,54 con C frente a 0,17 sin C (B adheridas 35 frente a 110); cerca de un montón a los 4 min, A:B = 2,4 con C frente a 0,9 sin C. Ciclos lentos: las colonias densas se vacían desde dentro y se recuperan (la autocorrelación de B adheridas baja a −0,27 hacia los 12 min; sin C no pasa de ≈ 0); el período es de ≈ 25 min y la amplitud, moderada.
+  - **Quorum sensing:** una tercera grilla `q` (autoinductor; 64 × 40, sin dibujar). Las adheridas lo producen (0,09/s por célula), difunde como c y decae (0,08/s). Respuesta local ql = smoothstep((q − 0,3)/0,35): una colonia de ≈ 15 células o más la supera.
+    (a) **más matriz:** frecuencia y fuerza de los rastros × (1 + 2,5·ql); (b) **protección:** el ataque de C se multiplica por (1 − 0,9·ql)²; (c) **dispersión:** con ql > 0,6 sostenido 30 s, las adheridas del borde de la colonia (≤ 6 vecinas) vuelven a nadar con tasa 0,05/s (20 s sin readherirse). No hay efecto gráfico propio: se ve como más matriz y como nadadoras que salen de la colonia.
+  - **Controles y medición:** `Quimiotaxis.relaciones({depredador:false})` y `({quorum:false})` los apagan; `Quimiotaxis.medicion()` entrega ataques por nivel de quorum, lisis, crías y dispersiones por densidad. Preparado para la 037 (sin implementar): `EST` y `p`/`q` como punto de partida de la simbiosis.
 - **Ciclo plancton ↔ biopelícula** (027; desde la 035 el umbral de c, la tasa, el crecimiento y el hambre son de cada morfotipo, con los valores de A de abajo como referencia de la 034): una nadadora se adhiere (queda sésil, quieta y con el flagelo detenido) con tasa
   0,25·(c − 0,5)/0,5·(0,06 + 1,6·vecinas adheridas)/s si c > 0,5; la adherida crece (biomasa ×2 en ≈ 15 s a c saturante, Monod) y
   se divide con la hija al lado, sin superponerse (a lo largo del eje en bacilos y espirilos); deposita una matriz (EPS) tenue que
