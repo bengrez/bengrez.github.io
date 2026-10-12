@@ -101,6 +101,18 @@
      Estado inicial avanzado: la visita no parte de cero sino con cinco colonias ya formadas junto a las fuentes de fondo (donde hay menos texto encima), un par espirilo–B asociado, un depredador que ronda una colonia B y un bdeloplasto a punto de lisis
        (reiniciar({avanzado:false}) vuelve a la partida de la 037, para medir). Contraste: sobre fondo claro la opacidad se sube un 12 % y las adheridas se dibujan ×1,3 (antes ×1,18); el vibrio, de 0,40 a 0,46.
 
+   La luz (039): el fondo sólo se ve alrededor del cursor, como el campo de un microscopio, para que quien lee explore el fondo con el mouse y descubra las interacciones donde apunta.
+     Una «tapa» del color de la página cubre el canvas con alfa 0,95 (piso de 0,05 afuera: el rastro que deja intuir que hay vida) salvo en la luz: diámetro = 10 % del ancho de la ventana (radio exterior
+     0,05·ancho, 72 px a 1440), plena hasta el 35 % del radio y con caída suave (smoothstep, sin anillo) hasta el borde. Son seis capas (cuatro losas sólidas, un cuadrado con el degradado y un «tapón» que sube su opacidad
+     para el fundido) que sólo se mueven con transform y opacidad: sin raster por cuadro. (Una máscara CSS —mask-image con un radial-gradient— sobre el canvas dejaba el nivel 3 en 36–51 de 60 fps con el compositor por software (y el nivel adaptativo no subía de 2), porque se
+     re-rasteriza en cada cuadro; con capas el costo es nulo.) Siguen al cursor con un suavizado leve (τ = 45 ms, retraso de ≈ 37 ms·v) en su propio requestAnimationFrame, a la tasa de la pantalla aunque la simulación
+     corra a 20 cuadros por segundo. dibujar() no pinta lo que cae fuera de la luz más un margen (36 px más 0,05 s de la velocidad del cursor, hasta 110 px; el recorte cubre la cápsula entre la luz y su objetivo), ni los
+     rastros de la matriz, los trazadores, los granos de la arena ni los núcleos; las células se dibujan también afuera (así el piso de 0,05 es el rastro de toda la población), pero sin flagelo ni pilo. La simulación sigue entera en todo el fondo: las colonias evolucionan
+     aunque no se las vea. Sin cursor, al cargar la luz nace sobre la colonia con el depredador (la más activa de las cinco iniciales) con un fundido de ≈ 1 s y, al primer movimiento del mouse, viaja suave hasta el cursor
+     (τ = 0,4 s que baja a 45 ms en 1,2 s); si el cursor sale de la ventana (mouseleave, mouseout sin destino o blur) la luz queda donde estaba y se apaga en ≈ 3 s hasta el piso; al volver reaparece en ≈ 0,3 s y viaja
+     hasta el cursor. La arena del cursor quieto nace justo donde está la luz. Calma, agitación del scroll, controles de cada relación y compuertas (sólo escritorio con puntero fino; con movimiento reducido el script no carga)
+     no cambian. El velo bajo el texto (index.html) baja de 72 a 60 %: con el fondo apagado fuera de la luz sirve para que lo que pasa bajo el texto se vea dentro de ella, y el texto secundario conserva ≥ 5:1 con una célula debajo.
+
    Resumen de las relaciones (035–037), sus interruptores (para medir; todos encendidos por defecto) y sus controles:
      competencia r/K (A bacilo, B cocobacilo y cocos)    sin interruptor: es la cinética de cada morfotipo (tablas EST, MU, KS…); control: A y B sin las demás relaciones
      sintrofía A → B por p                                relaciones({subproducto:false})  (B sigue sintiendo la misma señal, con p = 0)
@@ -122,6 +134,7 @@
      nivel(k) / estado()        diagnóstico y fijar el nivel de calidad (para medir); posiciones() copia las posiciones;
      relaciones({subproducto, depredador, quorum, mutualismo, excluir})  enciende o apaga cada relación (controles de las mediciones); grilla() entrega también p, q, m y f; medicion() entrega los contadores de ataque y de quorum;
                                 avanzar(seg, r) simula sin esperar (pruebas y videos; r = factor del reloj, 0,6 con la lectura en calma); flujo(x, y) lee la corriente
+     luz({activa, r, x, y, fija})  la luz (039): activa:false la apaga (el fondo se ve entero, como en la 038); r es el radio exterior en px (0 = 5 % del ancho); x, y la fijan (salta ahí y no sigue al cursor hasta fija:false); sin argumentos sólo informa
      reiniciar({avanzado})      vuelve al comienzo de una visita (avanzado:false = partida desde cero, como en la 037); movimiento(reset) entrega las corridas (duración y largo), los ángulos de tumbo, la velocidad propia media y los saltos del twitching
      parar()                    detiene y quita el canvas */
 (function(){
@@ -198,6 +211,8 @@
   var AGIT_O=16, AGIT_D=12, AGIT_V=2500, AGIT_T=1.6, CALMA_ESPERA=4, CALMA_F=.6, CALMA_T=1.5, REP_T=36, MASC_MS=250;
   var SEL_TEXTO='.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.grafico,.metodo,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.practicas,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina';
   var RESERVA=14, REFRACTARIA=20, NMAX=160, TMAX=40, GN=GX*GY;
+  // 039: la luz (radio = LUZ_FRAC del ancho; plena hasta LUZ_R0 del radio; piso de alfa fuera; τ del seguimiento, del viaje y del fundido; margen del recorte)
+  var LUZ_FRAC=.05, LUZ_R0=.35, LUZ_PISO=.05, LUZ_PASOS=6, LUZ_TAU=.045, LUZ_TAU_VIAJE=.4, LUZ_VIAJE_T=1.2, LUZ_TAU_ENTRA=.33, LUZ_TAU_VUELVE=.12, LUZ_TAU_SALE=.85, LUZ_MARGEN=36, LUZ_MARGEN_V=110, LUZ_MUESTRA=1;
 
   var cv=document.createElement('canvas'), ctx=cv.getContext('2d',{alpha:true});
   if(!ctx) return;
@@ -306,7 +321,7 @@
 
   function medir(){
     W=window.innerWidth; H=window.innerHeight; dpr=Math.min(window.devicePixelRatio||1,2); hx=W/GX; hy=H/GY;
-    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); luzRadio();
     var fr=fuentes.filter(function(f){ return f.base; });
     if(!fr.length) fuentesBase(); else fr.forEach(function(f,i){ f.x=base[i][0]*W; f.y=base[i][1]*H; f.s=base[i][3]*H; });
     sucio=true;
@@ -318,6 +333,7 @@
     if(m){ var v=parseInt(m[1],16); rgb=((v>>16)&255)+','+((v>>8)&255)+','+(v&255); }
     var lum=m?(((parseInt(m[1],16)>>16)&255)*.2126+((parseInt(m[1],16)>>8)&255)*.7152+(parseInt(m[1],16)&255)*.0722)/255:0, gc=lum<.5?GANA_CLARO:1, f=factor*gc;  // 038: sobre fondo claro la misma opacidad se lee menos (contraste 1,8–2,8:1 frente a 2,1–3,8:1 en oscuro); se compensa un 12 %
     for(var k=0;k<5;k++){ colores[k]='rgba('+rgb+','+Math.min(1,ALFA[k]*f).toFixed(3)+')'; coloresS[k]='rgba('+rgb+','+Math.min(1,ALFA[k]*ALFA_SES*f).toFixed(3)+')'; }
+    if(luz.el) luzColor();
     bdel='rgba('+rgb+','+Math.min(1,.62*f).toFixed(3)+')'; cola='rgba('+rgb+','+Math.min(1,ALFA_COLA*f).toFixed(3)+')'; traza='rgba('+rgb+','+Math.min(1,ALFA_TRAZ*factor).toFixed(3)+')';
   }
 
@@ -388,6 +404,7 @@
     p=pos[4]; paliza(p[0]-18,p[1],3,6.283185307*Math.random()); racimo(p[0]+16,p[1],5,3,3,0); espiriloAl(p[0]+16,p[1],8,3.1416);               // 5: A y B pequeñas juntas, con un espirilo
     for(i=0;i<62;i++) nueva(Math.random()*W,Math.random()*H,Math.random()*6.283185307,PATRON[i%PATRON.length]);                                // nadadoras
     if(depr&&n<NMAX-3) for(i=0;i<2;i++){ ang=6.283185307*Math.random(); j=nueva(cx+(70+30*Math.random())*Math.cos(ang),cy+(70+30*Math.random())*Math.sin(ang),ang+3.1416+.4*normal(),4); }
+    luzFoco(cx+(depr&&j>=0?.3*(X[j]-cx):0),cy+(depr&&j>=0?.3*(Y[j]-cy):0));                                                                    // 039: la luz de la carga cae sobre la colonia con el depredador (la más activa), un poco hacia él
     vecinos(false); mejor=-1; segundo=-1;
     if(depr) for(i=0;i<n;i++){ if(!S[i]||T[i]!==3||(X[i]-cx)*(X[i]-cx)+(Y[i]-cy)*(Y[i]-cy)>40*40||NB[i]<3) continue; if(mejor<0||NB[i]>NB[mejor]){ segundo=mejor; mejor=i; } else if(segundo<0||NB[i]>NB[segundo]) segundo=i; }
     if(mejor>=0) IN[mejor]=7+4*Math.random(); if(segundo>=0) IN[segundo]=19+8*Math.random();                                                    // lisis hacia los 7–11 s y otra hacia los 19–27 s
@@ -437,7 +454,7 @@
   function suelta(){ if(creciendo){ creciendo.crece=false; creciendo.sr=creciendo.s; creciendo=null; } }
   function alMover(e){
     if(e.pointerType==='touch') return;
-    ptr.x=e.clientX; ptr.y=e.clientY; ptr.ok=true;
+    ptr.x=e.clientX; ptr.y=e.clientY; ptr.ok=true; luzSigue(ptr.x,ptr.y);
     var dx=ptr.x-anc.x, dy=ptr.y-anc.y;
     if(dx*dx+dy*dy>TOL*TOL){ anc.x=ptr.x; anc.y=ptr.y; anc.t=relojC; suelta(); } // se movió más que el temblor: reinicia la espera y suelta la fuente
   }
@@ -488,7 +505,95 @@
     if(tom.length||bs.some(function(b){ return Math.abs(b.a-b.a0)>.002; })) sucio=true;
   }
   window.addEventListener('pointermove',alMover,{passive:true});
-  raiz.addEventListener('mouseleave',function(){ ptr.ok=false; suelta(); });
+  function salida(){ ptr.ok=false; suelta(); luzSale(); }
+  raiz.addEventListener('mouseleave',salida);
+  document.addEventListener('mouseout',function(e){ if(!e.relatedTarget) salida(); });   // respaldo: el cursor sale de la ventana
+  window.addEventListener('blur',salida);
+
+  // ---- 039: la luz ----
+  // El fondo sólo se ve alrededor del cursor, como el campo de un microscopio. Una tapa del color de la página (alfa 1 − LUZ_PISO, con un hueco de caída suave)
+  // lo recorta: sigue al cursor a la tasa de la pantalla (su propio requestAnimationFrame, aunque la simulación corra a 20 cuadros por segundo)
+  // y no cuesta nada del presupuesto del canvas. Además dibujar() no pinta lo que cae fuera de la luz (más un margen): la simulación sigue entera, las colonias
+  // evolucionan donde no se las ve, y fuera sólo se pintan las células, sin flagelos (LUZ_MUESTRA = 1 de cada n), para el rastro. Diámetro = 10 % del ancho de la ventana (radio exterior r1 = 0,05·ancho).
+  // Sin cursor (al cargar) la luz nace sobre la colonia más activa (fundido de ≈ 1 s) y al primer movimiento viaja hasta el cursor; si el cursor sale de la ventana
+  // la luz se queda donde estaba y se apaga en ≈ 3 s hasta el piso.
+  var luz={el:null,bg:'',opP:1,estilo:'',activa:true,fija:false,r:72,rEsp:0,x:0,y:0,tx:0,ty:0,pico:1,meta:1,viaje:0,visto:false,fuera:false,raf:0,ult:0,vel:0,ptT:0,ptX:0,ptY:0,foco:null,
+           exc:-1e9,nt:0,c:false,ax:0,ay:0,bx:0,by:0,dx:0,dy:0,l2:0,R2:0,n:0};
+  // La «tapa» de la luz son capas que sólo se mueven con transform (la máscara CSS sobre el canvas se re-rasterizaba en cada cuadro y bajaba los fps en el compositor por software;
+  // con capas movidas por transform el costo es nulo): cuatro losas sólidas del color de la página (alfa 1 − piso) alrededor de un cuadrado de 2·r1 donde un degradado deja un hueco
+  // (transparente hasta r0, smoothstep hasta r1) y, encima, un «tapón» cuyo alfa p = A(1 − s)/(1 − A·s) devuelve el cuadrado entero al alfa A al subir su opacidad (el fundido de entrada y de salida).
+  function luzRadio(){
+    var r1, R, d, k, t, sm, a, g, g2, sol, A=1-LUZ_PISO, L=luz.el;
+    luz.r=luz.rEsp>0?luz.rEsp:LUZ_FRAC*W; r1=luz.r; R=Math.ceil(r1);
+    if(!L) return; L.R=R;
+    sol=L.base+'background:rgba('+luz.bg+','+A+');';
+    L.top.style.cssText=sol+'width:'+W+'px;height:'+H+'px'; L.bot.style.cssText=sol+'width:'+W+'px;height:'+H+'px';
+    L.izq.style.cssText=sol+'width:'+W+'px;height:'+2*R+'px'; L.der.style.cssText=sol+'width:'+W+'px;height:'+2*R+'px';
+    g=''; g2='';
+    for(k=0;k<=LUZ_PASOS;k++){ t=k/LUZ_PASOS; sm=t*t*(3-2*t); a=A*sm; g+=',rgba('+luz.bg+','+a.toFixed(4)+') '+(LUZ_R0*r1+t*(1-LUZ_R0)*r1).toFixed(1)+'px'; g2+=',rgba('+luz.bg+','+(A*(1-sm)/(1-A*sm)).toFixed(4)+') '+(LUZ_R0*r1+t*(1-LUZ_R0)*r1).toFixed(1)+'px'; }
+    d='width:'+2*R+'px;height:'+2*R+'px;background:radial-gradient(circle at '+R+'px '+R+'px,rgba('+luz.bg+',0) 0px'+g+',rgba('+luz.bg+','+A+') 100%)';
+    L.q.style.cssText=L.base+d;
+    L.p.style.cssText=L.base+'width:'+2*R+'px;height:'+2*R+'px;background:radial-gradient(circle at '+R+'px '+R+'px,rgba('+luz.bg+','+A+') 0px'+g2+',rgba('+luz.bg+',0) 100%);opacity:'+luz.opP;
+    luz.estilo='';
+  }
+  function luzColor(){ // el color de la página (--bg) para las losas; se recalcula con el tema
+    var t=getComputedStyle(raiz).getPropertyValue('--bg').trim(), m=/^#([0-9a-f]{6})$/i.exec(t), v, c;
+    if(m){ v=parseInt(m[1],16); c=((v>>16)&255)+','+((v>>8)&255)+','+(v&255); } else c='250,249,246';
+    if(c===luz.bg) return; luz.bg=c; luzRadio(); luzEstilo();
+  }
+  function luzCrear(){
+    var L={}, k, nombres=['top','bot','izq','der','q','p'];
+    L.caja=document.createElement('div'); L.caja.setAttribute('aria-hidden','true'); L.caja.style.cssText='position:fixed;inset:0;z-index:-1;pointer-events:none;display:block';
+    L.base='position:absolute;left:0;top:0;will-change:transform;pointer-events:none;';
+    for(k=0;k<nombres.length;k++){ L[nombres[k]]=document.createElement('div'); L.caja.appendChild(L[nombres[k]]); }
+    cv.parentNode.insertBefore(L.caja,cv.nextSibling); L.R=72; luz.el=L; luz.bg=''; luzColor();
+  }
+  function luzEstilo(){ // posición (transform, redondeada al píxel físico para que las costuras no se vean) y opacidad del tapón
+    var L=luz.el, x, y, R, W1=W, H1=H, d=dpr, o;
+    if(!L) return;
+    L.caja.style.display=luz.activa&&cv.style.display!=='none'?'block':'none'; if(!luz.activa) return;
+    R=L.R; x=Math.round(luz.x*d)/d; y=Math.round(luz.y*d)/d; o=(1-luz.pico)/(1-LUZ_PISO); o=o<0?0:o>1?1:o;
+    L.top.style.transform='translate('+0+'px,'+(y-R-H1)+'px)'; L.bot.style.transform='translate(0px,'+(y+R)+'px)';
+    L.izq.style.transform='translate('+(x-R-W1)+'px,'+(y-R)+'px)'; L.der.style.transform='translate('+(x+R)+'px,'+(y-R)+'px)';
+    L.q.style.transform='translate('+(x-R)+'px,'+(y-R)+'px)'; L.p.style.transform='translate('+(x-R)+'px,'+(y-R)+'px)'; L.p.style.opacity=o.toFixed(3);
+    luz.n++;
+  }
+  function luzPaso(ts){
+    var dt=Math.min(.05,Math.max(.001,(ts-luz.ult)/1000)), tau, mov, ta;
+    luz.ult=ts;
+    if(luz.viaje>0) luz.viaje=Math.max(0,luz.viaje-dt/LUZ_VIAJE_T);
+    tau=LUZ_TAU+(LUZ_TAU_VIAJE-LUZ_TAU)*luz.viaje;
+    luz.x+=(luz.tx-luz.x)*(1-Math.exp(-dt/tau)); luz.y+=(luz.ty-luz.y)*(1-Math.exp(-dt/tau));
+    ta=luz.meta>luz.pico?(luz.visto&&!luz.fuera?LUZ_TAU_VUELVE:LUZ_TAU_ENTRA):LUZ_TAU_SALE; luz.pico+=(luz.meta-luz.pico)*(1-Math.exp(-dt/ta));
+    mov=Math.abs(luz.tx-luz.x)+Math.abs(luz.ty-luz.y)>.2||Math.abs(luz.meta-luz.pico)>.002||luz.viaje>0;
+    if(!mov){ luz.x=luz.tx; luz.y=luz.ty; luz.pico=luz.meta; luz.raf=0; }
+    if(luz.c){ ta=Math.sqrt(luzDist2(luz.x,luz.y))-(Math.sqrt(luz.R2)-luz.r); if(ta>luz.exc) luz.exc=ta; luz.nt++; }  // diagnóstico: cuánto se salió el disco de la luz de lo dibujado en el último cuadro (px; ≤ 0 = nada sin dibujar)
+    luzEstilo(); if(mov) luz.raf=requestAnimationFrame(luzPaso);
+  }
+  function luzMueve(){ if(!luz.raf){ luz.ult=performance.now(); luz.raf=requestAnimationFrame(luzPaso); } }
+  function luzSigue(x,y){
+    var t=performance.now(), dt=(t-luz.ptT)/1000;
+    if(dt>0&&dt<.25&&luz.ptT){ luz.vel+=(Math.hypot(x-luz.ptX,y-luz.ptY)/dt-luz.vel)*.4; } else luz.vel=0;
+    luz.ptT=t; luz.ptX=x; luz.ptY=y;
+    if(luz.fija) return;
+    if(!luz.visto||luz.fuera||luz.pico<.5) luz.viaje=1;                      // el primer movimiento, o la vuelta a la ventana: la luz viaja suave hasta el cursor
+    luz.visto=true; luz.fuera=false; luz.tx=x; luz.ty=y; luz.meta=1; luzMueve();
+  }
+  function luzSale(){ if(luz.fija) return; luz.fuera=true; luz.meta=LUZ_PISO; luz.vel=0; luzMueve(); }  // la luz queda donde estaba y se apaga
+  function luzFoco(cx,cy){ luz.foco={x:cx,y:cy}; if(!luz.visto&&!luz.fija){ luz.x=luz.tx=cx; luz.y=luz.ty=cy; luz.pico=LUZ_PISO; luz.meta=1; luzEstilo(); luzMueve(); } }
+  function luzPrep(){ // recorte de dibujar(): la cápsula entre la luz y su objetivo, más el radio exterior y un margen (la simulación se dibuja a menos cuadros que la máscara)
+    var m, R;
+    luz.c=luz.activa&&luz.pico>LUZ_PISO+.02;
+    if(!luz.c) return false;
+    m=LUZ_MARGEN+Math.min(LUZ_MARGEN_V,luz.vel*.05); R=luz.r+m; luz.R2=R*R;
+    luz.ax=luz.x; luz.ay=luz.y; luz.bx=luz.tx; luz.by=luz.ty; luz.dx=luz.bx-luz.ax; luz.dy=luz.by-luz.ay; luz.l2=luz.dx*luz.dx+luz.dy*luz.dy;
+    return true;
+  }
+  function luzDist2(x,y){
+    var px=x-luz.ax, py=y-luz.ay, t=luz.l2>.01?(px*luz.dx+py*luz.dy)/luz.l2:0;
+    if(t<0) t=0; else if(t>1) t=1; px-=t*luz.dx; py-=t*luz.dy; return px*px+py*py;
+  }
+  function enLuz(x,y){ return luzDist2(x,y)<luz.R2; }
 
   // El scroll: agita el fluido (según su velocidad) y marca que se está desplazando (la calma se levanta)
   window.addEventListener('scroll',function(){
@@ -725,7 +830,7 @@
   // concentración de su celda, por encima del fondo, supera su umbral: así el consumo (Monod) y el decaimiento lo adelgazan grano a grano. Más tenue bajo el texto.
   var AX=new Float32Array(GMAX*8), AY=new Float32Array(GMAX*8), AS=new Float32Array(GMAX*8), AB=new Uint8Array(GMAX*8), nGranos=0, nBajo=0;
   function arena(nv){
-    var k, j, e, g, w, sg, ng=nv.gr, c, tx, ty, p, vi, b, na=0, rel, ce, bajo, cx, cy, t, nb=0, kw, rho, sg0, ti, vi2, sol, al, rc, th, gr, m, fo;
+    var k, j, e, g, w, sg, ng=nv.gr, c, tx, ty, p, vi, b, na=0, ntot=0, rel, ce, bajo, cx, cy, t, nb=0, kw, rho, sg0, ti, vi2, sol, al, rc, th, gr, m, fo;
     for(k=0;k<cur.length;k++){
       e=cur[k]; g=e.g; if(!g||na+ng>GMAX*8) continue; w=e.a/AMAX; rho=RHO0+(RHO1-RHO0)*Math.sqrt(Math.min(1,e.D/DREF)); sg0=GSIG*e.s0; sg=sg0*rho; ti=0; vi2=0; kw=e.crece?ARENA_K*w:0; // mientras el cursor sigue ahí, el flujo de la fuente basta para los primeros granos (la grilla tarda en subir)
       if(!g.ini){ for(j=0;j<GMAX;j++){ tx=e.x+g.x[j]*sg0; ty=e.y+g.y[j]*sg0; g.c0[j]=tx<0||ty<0||tx>=W||ty>=H?0:CA[celda(tx,ty)]; } g.ini=true; }
@@ -739,18 +844,19 @@
         p=(relojC-g.tv[j])/g.d[j]; if(p>1) p=1; p=1-(1-p)*(1-p);
         cx=e.x+(tx-e.x)*p; cy=e.y+(ty-e.y)*p;
         rel=c/.6; b=rel<.34?0:rel<.67?1:2; bajo=nv.texto&&TXB[ce]>.5?1:0;
-        AX[na]=cx; AY[na]=cy; AS[na]=g.sz[j]; AB[na]=b*2+bajo; na++; nb+=bajo;
+        nb+=bajo; ntot++; if(luz.c&&!enLuz(cx,cy)) continue;                                  // 039: los granos fuera de la luz se cuentan pero no se dibujan
+        AX[na]=cx; AY[na]=cy; AS[na]=g.sz[j]; AB[na]=b*2+bajo; na++;
       }
       sol=(e.D-SOL0)/(SOL1-SOL0); sol=sol<0?0:sol>1?1:sol; sol=sol*sol*(3-2*sol); m=ti>0?vi2/ti:0; al=ALFA_NUC*sol*m*factor; // el núcleo: más sólido con lo depositado, más fino cuando se lo comen
       if(al>.01&&e.x>=0&&e.y>=0&&e.x<W&&e.y<H){
         rc=NUC_R*sg*Math.sqrt(m); if(nv.texto&&TXB[celda(e.x,e.y)]>.5) al*=ARENA_TXT;
         gr=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,rc*1.2); gr.addColorStop(0,'rgba('+rgb+','+al.toFixed(3)+')'); gr.addColorStop(.7,'rgba('+rgb+','+(al*.8).toFixed(3)+')'); gr.addColorStop(1,'rgba('+rgb+','+(al*.15).toFixed(3)+')');
-        e.nr=rc; e.na=al; ctx.fillStyle=gr; ctx.beginPath();
+        e.nr=rc; e.na=al; if(luz.c&&!enLuz(e.x,e.y)) continue; ctx.fillStyle=gr; ctx.beginPath();
         for(t=0;t<28;t++){ th=t*.2243995; fo=1+.12*Math.sin(2*th+g.f[0])+.08*Math.sin(3*th+g.f[1])+.05*Math.sin(5*th+g.f[2]); tx=e.x+Math.cos(th)*rc*fo; ty=e.y+Math.sin(th)*rc*fo; if(t) ctx.lineTo(tx,ty); else ctx.moveTo(tx,ty); }
         ctx.closePath(); ctx.fill();
       }
     }
-    nGranos=na; nBajo=nb;
+    nGranos=ntot; nBajo=nb;
     for(b=0;b<6;b++){
       ctx.beginPath(); t=0;
       for(j=0;j<na;j++) if(AB[j]===b){ ctx.rect(AX[j]-AS[j]*.5,AY[j]-AS[j]*.5,AS[j],AS[j]); t=1; }
@@ -759,7 +865,7 @@
   }
 
   function dibujar(){
-    var i, k, tp, c, s, a, x, y, sx, f, u, w, e, sesil, sz, pt, Le, g, r, d, nv=NIVELES[nivel], m, ex, ey, h, nf, hf, sg;
+    var i, k, tp, c, s, a, x, y, sx, f, u, w, e, sesil, sz, pt, Le, g, r, d, nv=NIVELES[nivel], m, ex, ey, h, nf, hf, sg, rec=luzPrep(), det;
     ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H); ctx.globalAlpha=1;
     ctx.lineCap='round'; ctx.lineJoin='round';
     if(nv.eps&&eneT){ // matriz (EPS): rastros finos y alargados, en tres tramos de intensidad, que se desvanecen con la edad
@@ -767,18 +873,19 @@
       ctx.lineWidth=1.05;
       for(b3=0;b3<3;b3++){
         ctx.beginPath(); r=0;
-        for(k=0;k<ne;k++){ ed=1-(tiempo-EN[k])/EPS_VIDA; if(ed<=0) continue; w=EW[k]*ed; if((w>.62?2:w>.3?1:0)!==b3) continue; ctx.moveTo(EA[k*4],EA[k*4+1]); ctx.lineTo(EA[k*4+2],EA[k*4+3]); r=1; }
+        for(k=0;k<ne;k++){ ed=1-(tiempo-EN[k])/EPS_VIDA; if(ed<=0||(rec&&!enLuz(EA[k*4],EA[k*4+1]))) continue; w=EW[k]*ed; if((w>.62?2:w>.3?1:0)!==b3) continue; ctx.moveTo(EA[k*4],EA[k*4+1]); ctx.lineTo(EA[k*4+2],EA[k*4+3]); r=1; }
         if(r){ ctx.strokeStyle='rgba('+rgb+','+(ALFA_EPS[b3]*factor).toFixed(3)+')'; ctx.stroke(); }
       }
     }
     if(cur.length) arena(nv);
     if(nt){ // trazadores: líneas finísimas, con una cola corta en el sentido contrario a la corriente
       ctx.strokeStyle=traza; ctx.lineWidth=.9; ctx.beginPath();
-      for(i=0;i<nt;i++){ flujo(TX[i],TY[i],tiempo,false); ctx.moveTo(TX[i],TY[i]); ctx.lineTo(TX[i]-fu*.5,TY[i]-fv*.5); }
+      for(i=0;i<nt;i++){ if(rec&&!enLuz(TX[i],TY[i])) continue; flujo(TX[i],TY[i],tiempo,false); ctx.moveTo(TX[i],TY[i]); ctx.lineTo(TX[i]-fu*.5,TY[i]-fv*.5); }
       ctx.stroke();
     }
     for(i=0;i<n;i++){
-      tp=T[i]; x=X[i]; y=Y[i]; sesil=S[i]; sz=SZ[i];
+      x=X[i]; y=Y[i]; det=!rec||enLuz(x,y); if(!det&&i%LUZ_MUESTRA) continue;                    // 039: fuera de la luz sólo se dibuja el cuerpo de 1 de cada LUZ_MUESTRA células (la tapa lo deja en ≈ 5 %)
+      tp=T[i]; sesil=S[i]; sz=SZ[i];
       u=sesil&&BM[i]>1.7?(BM[i]-1.7)/.3:0; if(u>1) u=1;                       // avance de la constricción (la célula se alarga y se estrecha al medio)
       if(nv.texto){ m=1-.45*(TXB[celda(x,y)]>1?1:TXB[celda(x,y)]); ctx.globalAlpha=m; } // más tenues bajo el texto
       if(IN[i]>0&&tp!==4){ // bdeloplasto: la presa con un C dentro se redondea (un círculo algo mayor, con un punto adentro)
@@ -798,7 +905,7 @@
         if(u>0){ Le=(h+r)*(1+.9625*u)*sz; g=.97*r*u*sz; ctx.moveTo(-(Le-r*sz),0); ctx.lineTo(-g,0); ctx.moveTo(g,0); ctx.lineTo(Le-r*sz,0); }       // constricción: dos lóbulos con cintura
         else{ ctx.moveTo(-h*sz,0); ctx.lineTo(h*sz,0); }
         ctx.stroke();
-        if(!sesil){                                                                                                                                 // flagelo: onda que viaja hacia atrás (largo en A, corto en B; detenido y sin dibujar si está adherida)
+        if(!sesil&&det){                                                                                                                            // flagelo: onda que viaja hacia atrás (largo en A, corto en B; detenido y sin dibujar si está adherida)
           nf=tp===1?12:6; hf=(h+r)*sz; ctx.strokeStyle=cola; ctx.lineWidth=.75; ctx.beginPath();
           if(RS[i]===1){                                                                                                                            // tumbo: el haz de flagelos se deshace en dos filamentos que se abren
             for(sg=-1;sg<=1;sg+=2){ ctx.moveTo(-hf,0); for(k=1;k<=nf;k++){ pt=k*.75; w=-hf-pt*.9; ctx.lineTo(w,sg*pt*.5+1.1*(pt/9)*Math.sin(KONDA[1]*w+f)); } }
@@ -851,9 +958,9 @@
   // minutos; a la tercera falla se detiene del todo. Así una sobrecarga pasajera (otra aplicación) no lo apaga para siempre.
   var fallos=0;
   function pesado(){
-    pausar(); cv.style.display='none'; raiz.classList.remove('fondo-vivo'); fallos++;
+    pausar(); cv.style.display='none'; luzEstilo(); raiz.classList.remove('fondo-vivo'); fallos++;
     if(fallos>=3){ parar(); return; }
-    setTimeout(function(){ if(!vivo||window.innerWidth<1024) return; cv.style.display='block'; fijarNivel(0); st.techo=1; st.estables=0; st.ventana=2000; arrancar(); },60000*fallos);
+    setTimeout(function(){ if(!vivo||window.innerWidth<1024) return; cv.style.display='block'; luzEstilo(); fijarNivel(0); st.techo=1; st.estables=0; st.ventana=2000; arrancar(); },60000*fallos);
   }
 
   function bucle(t){
@@ -867,12 +974,12 @@
   }
   function arrancar(){ if(raf||!vivo||document.hidden) return; raiz.classList.add('fondo-vivo'); ultimo=performance.now(); st.t0=ultimo; st.trab=0; st.cuadros=0; raf=requestAnimationFrame(bucle); }
   function pausar(){ if(raf){ cancelAnimationFrame(raf); raf=0; } }
-  function parar(){ vivo=false; pausar(); raiz.classList.remove('fondo-vivo'); if(cv.parentNode) cv.parentNode.removeChild(cv); }
+  function parar(){ vivo=false; pausar(); raiz.classList.remove('fondo-vivo'); if(luz.el&&luz.el.caja.parentNode) luz.el.caja.parentNode.removeChild(luz.el.caja); if(cv.parentNode) cv.parentNode.removeChild(cv); }
 
   document.addEventListener('visibilitychange',function(){ if(document.hidden) pausar(); else arrancar(); });
   window.addEventListener('resize',function(){
-    if(window.innerWidth<1024){ pausar(); cv.style.display='none'; raiz.classList.remove('fondo-vivo'); return; }
-    cv.style.display='block'; medir(); var i; for(i=0;i<n;i++){ if(X[i]>W) X[i]=Math.random()*W; if(Y[i]>H) Y[i]=Math.random()*H; }
+    if(window.innerWidth<1024){ pausar(); cv.style.display='none'; luzEstilo(); raiz.classList.remove('fondo-vivo'); return; }
+    cv.style.display='block'; medir(); luzEstilo(); var i; for(i=0;i<n;i++){ if(X[i]>W) X[i]=Math.random()*W; if(Y[i]>H) Y[i]=Math.random()*H; }
     for(i=0;i<nt;i++){ if(TX[i]>W) TX[i]=Math.random()*W; if(TY[i]>H) TY[i]=Math.random()*H; } arrancar();
   });
   new MutationObserver(colorDeTinta).observe(raiz,{attributes:true,attributeFilter:['data-theme']});
@@ -918,6 +1025,16 @@
       return {morfos:{A:mo[0],B:mo[1],N:mo[2],C:mo[3]},infectadas:ninf,subproducto:{activo:subp,medio:+(ps/GN).toFixed(4),max:+pm.toFixed(3)},nivel:nivel,celulas:n,nadando:nNadan,adheridas:nSesiles,colonias:co.n,mayorColonia:co.max,coloniasGrandes:co.grandes,nutrienteMedio:+(cs/GN).toFixed(3),nutrienteMax:+mx.toFixed(2),eventos:JSON.parse(JSON.stringify(ev)),cursor:cursorEstado(),eps:epsEstado(),trazadores:nt,fps:+st.fps.toFixed(1),trabajoMs:+st.trabajoMs.toFixed(2),fijo:st.fijo,choques:nv.choques,jeffery:nv.jeffery,historial:st.historial.slice()}; },
     posiciones:function(){ var s=Array.prototype.slice, es=[], k; for(k=0;k<n;k++) es.push(EST[T[k]]); return {x:s.call(X,0,n),y:s.call(Y,0,n),th:s.call(TH,0,n),fi:s.call(FI,0,n),sp:s.call(SP,0,n),tipo:s.call(T,0,n),estrategia:es,infectada:s.call(IN,0,n).map(function(v){ return v>0?1:0; }),quorum:s.call(QL,0,n),sesil:s.call(S,0,n),forma:s.call(ES,0,n),estado:s.call(RS,0,n),biomasa:s.call(BM,0,n)}; },
     avanzar:function(seg,r){ var k=Math.round(seg*30), dt=1/30*(r||1); for(var i=0;i<k;i++) paso(dt); dibujar(); },   // r: factor del reloj (0,6 = lectura en calma; seg son segundos de pared)
+    luz:function(o){ // 039: la luz. luz({activa, r, x, y, fija, piso}) para pruebas y videos: activa:false la apaga (el fondo se ve entero, como en la 038); r es el radio exterior en px (0 = 5 % del ancho); x, y la fijan (salta y no sigue al cursor hasta fija:false)
+      if(o){
+        if(o.activa!=null){ luz.activa=!!o.activa; if(!luz.activa) luz.c=false; }
+        if(o.r!=null){ luz.rEsp=o.r>0?+o.r:0; luzRadio(); }
+        if(o.x!=null&&o.y!=null){ luz.fija=true; luz.x=luz.tx=+o.x; luz.y=luz.ty=+o.y; luz.pico=luz.meta=1; luz.viaje=0; luz.fuera=false; }
+        if(o.fija===false){ luz.fija=false; luz.meta=ptr.ok?1:luz.meta; luzMueve(); }
+        if(o.reiniciarDiag) luz.exc=-1e9, luz.nt=0;
+        luzEstilo(); sucio=true;
+      }
+      return {activa:luz.activa,fija:luz.fija,r:+luz.r.toFixed(1),x:+luz.x.toFixed(1),y:+luz.y.toFixed(1),objetivoX:+luz.tx.toFixed(1),objetivoY:+luz.ty.toFixed(1),pico:+luz.pico.toFixed(3),meta:+luz.meta,piso:LUZ_PISO,visto:luz.visto,fuera:luz.fuera,recorta:luz.c,foco:luz.foco,estilos:luz.n,excesoMax:luz.exc<-1e8?null:+luz.exc.toFixed(1),ticks:luz.nt,opacidadTapon:luz.el?+luz.el.p.style.opacity:0}; },
     reiniciar:function(o){ reiniciar(!o||o.avanzado!==false); dibujar(); },
     movimiento:function(reset){ var o=JSON.parse(JSON.stringify(mov)); if(reset){ for(var k=0;k<5;k++){ mov.run[k]=[]; mov.giro[k]=[]; mov.der[k]=[0,0,0]; mov.n[k]=0; } mov.tw={saltos:0,dist:0,seg:0,fijadas:0}; } return o; },
     grilla:function(){ return {gx:GX,gy:GY,c:Array.prototype.slice.call(CA),p:Array.prototype.slice.call(CP),q:Array.prototype.slice.call(CI),m:Array.prototype.slice.call(CK),f:Array.prototype.slice.call(CF)}; },
@@ -926,5 +1043,5 @@
   };
 
   tScroll=performance.now(); ultScroll.y=window.pageYOffset||0; ultScroll.t=tScroll;
-  medir(); colorDeTinta(); fijarNivel(nivelInicial()); reiniciar(true); dibujar(); arrancar();  // el nutriente parte repartido cerca de las fuentes y la visita, con colonias ya formadas
+  medir(); luzCrear(); colorDeTinta(); fijarNivel(nivelInicial()); luzEstilo(); reiniciar(true); dibujar(); arrancar();  // el nutriente parte repartido cerca de las fuentes y la visita, con colonias ya formadas
 })();
