@@ -102,7 +102,7 @@
        (reiniciar({avanzado:false}) vuelve a la partida de la 037, para medir). Contraste: sobre fondo claro la opacidad se sube un 12 % y las adheridas se dibujan ×1,3 (antes ×1,18); el vibrio, de 0,40 a 0,46.
 
    La luz (039): el fondo sólo se ve alrededor del cursor, como el campo de un microscopio, para que quien lee explore el fondo con el mouse y descubra las interacciones donde apunta.
-     (En la 041 el piso es 0,2 en los márgenes y 0,05 en la columna, y la luz mide 28 %: ver más abajo.) Una «tapa» del color de la página cubre el canvas con alfa 0,95 (piso de 0,05 afuera: el rastro que deja intuir que hay vida) salvo en la luz: diámetro = 10 % del ancho de la ventana (radio exterior
+     (En la 041 el piso fue 0,2 en los márgenes y 0,05 en la columna, y la luz 28 %; en la 042, 0,4, 0,15 y 48 %: ver más abajo.) Una «tapa» del color de la página cubre el canvas con alfa 0,95 (piso de 0,05 afuera: el rastro que deja intuir que hay vida) salvo en la luz: diámetro = 10 % del ancho de la ventana (radio exterior
      0,05·ancho, 72 px a 1440), plena hasta el 35 % del radio y con caída suave (smoothstep, sin anillo) hasta el borde. Son seis capas (cuatro losas sólidas, un cuadrado con el degradado y un «tapón» que sube su opacidad
      para el fundido) que sólo se mueven con transform y opacidad: sin raster por cuadro. (Una máscara CSS —mask-image con un radial-gradient— sobre el canvas dejaba el nivel 3 en 36–51 de 60 fps con el compositor por software (y el nivel adaptativo no subía de 2), porque se
      re-rasteriza en cada cuadro; con capas el costo es nulo.) Siguen al cursor con un suavizado leve (τ = 45 ms, retraso de ≈ 37 ms·v) en su propio requestAnimationFrame, a la tasa de la pantalla aunque la simulación
@@ -143,7 +143,7 @@
        El especialista: en 360 s la punta avanza 165 px con P y 110 sin ellas (+ 49 %); las laterales crecen + 27 % y el largo de los pelos + 4 %.
      Con raiz({activa:false}) no hay raíz, exudados, franja ni especialista (vuelve la partida de la 039: 62 nadadoras en vez de 54); raiz({especialista:false}) quita las P y no entran más.
 
-   La luz más amplia, los márgenes y la raíz generada (041): tres cambios sobre la 039 y la 040.
+   La luz más amplia, los márgenes y la raíz generada (041): tres cambios sobre la 039 y la 040 (los valores de la luz y del fondo fueron cambiados por la 042, más abajo).
      Luz: el diámetro pasa de 10 a 28 % del ancho (LUZ_FRAC = 0,14: radio 201,6 px y diámetro 403 px a 1440) para ver bien la interacción entre bacterias; sigue plena hasta el 35 % del radio y con caída suave, sin anillo.
      Opacidad por zona (LUZ_PISO = 0,2 y LUZ_COL = 0,25): la tapa deja el fondo al 20 % en los márgenes, a los lados de la columna de texto, de modo que las bacterias se ven ligeramente interactuando; sobre la columna
        (el contenido de .pagina, con una transición de 2·LUZ_BORDE = 24 px en sus bordes) dibujar() pinta los cuerpos con alfa × LUZ_COL, así que quedan al 5 % (0,2 × 0,25), el rastro de la 039; y la luz los revela
@@ -151,7 +151,7 @@
        Fuera de la luz sólo se dibujan los cuerpos (sin flagelo ni pilo, matriz, trazadores, arena ni núcleos) y no los de las células de la raíz (RZc), que la delatarían; con la luz apagada (el cursor fuera de la ventana) tampoco hay detalle. Bajo la luz se ve todo:
        bacterias con flagelos, colonias, matriz, arena, raíz y rizoplano. La técnica de la 039 no cambia: capas movidas sólo con transform y opacidad, ahora dos juegos (la tapa del fondo, sobre el canvas de las bacterias, y una segunda tapa para la raíz).
      La raíz se esconde entera: ya no hay silueta siempre visible. La raíz (primaria, laterales, cofias, pelos y paredes) se pinta una vez en su propio canvas fuera de pantalla (el de trabajo) y se publica a un canvas fijo que va por DEBAJO del de las bacterias y de
-       la segunda tapa, que es casi opaca fuera del hueco (alfa 0,985, hueco hasta el 82 % del radio): la raíz sólo aparece bajo la luz y no cuesta nada por cuadro (la 040 copiaba su detalle al fondo en cada cuadro). Se redibuja sólo al crecer (cada 3 px de la punta).
+       la segunda tapa, que es casi opaca fuera del hueco (alfa 0,985 en la 041 y 0,995 desde la 042: con el fondo fuera de la luz al 40 %, la raíz queda detrás de dos tapas y sólo se le escapa (1 − 0,995)·(1 − 0,6) = 0,2 % de su contraste; hueco hasta el 82 % del radio): la raíz sólo aparece bajo la luz y no cuesta nada por cuadro (la 040 copiaba su detalle al fondo en cada cuadro). Se redibuja sólo al crecer (cada 3 px de la punta).
        Queda centrada en el margen izquierdo (eje medio en colIzq/2: 20 px a 1024, 92 a 1440, 212 a 1920) y se regenera con la misma semilla al cambiar el ancho o el alto de la ventana.
      La raíz generada (puntas activas con tropismos; referencias citadas de memoria: Drew 1975, New Phytol. 75:479, sobre la proliferación de laterales en un parche rico en nutriente; Hodge 2004, New Phytol. 162:9, sobre el forrajeo de nutrientes; Eapen et al. 2005, Trends Plant Sci. 10:44, sobre los tropismos;
        Péret et al. 2009, Trends Plant Sci. 14:399, sobre las laterales y el periciclo): una semilla por carga (Math.random; ?semilla=N en la URL la reproduce, y raiz({semilla}) la cambia en vivo) y un generador mulberry32 propio. Al cargar se pre-simula fuera de pantalla hasta la punta de la 040 (0,64 del alto)
@@ -161,6 +161,18 @@
        La raíz no come bacterias: son ellas las que se acercan a sus exudados, como en la 040. El grosor de las laterales baja con el largo; pelos radicales sólo en su zona, y exudados, rizoplano, especialista y franja de la rizosfera (para los hongos) salen de la geometría generada.
        Medido (t41.js): 5 semillas dan 5 raíces distintas y la misma semilla la reproduce igual; 5,3 laterales por raíz, todas ≥ 290 px detrás de la punta y la más vieja es la más larga en el 85 % de los pares (por lado); con un parche de c a un lado (24 semillas × 2 lados) hay 75 laterales a la derecha frente a 33 con el parche a la izquierda.
        El especialista sigue funcionando (esp40.js: +50 % de avance de la punta y +52 % de crecimiento de las laterales en 360 s); la colonización del rizoplano llega al tope (55) a los 90–150 s y las salidas de las laterales concentran adhesiones.
+
+   La luz 3 veces más grande en área, perfectamente circular, y más fondo visible fuera de ella (042): cambian tres constantes y se verifica la geometría; la técnica de la tapa de la 039 queda igual.
+     Luz: LUZ_FRAC = 0,2425 (el área pasa a ×3,0: el radio, de 0,14 a 0,2425 del ancho; diámetro 48,5 % del ancho = 698 px a 1440, 931 px a 1920 y 496 px a 1024). El borde difuso escala con el radio (plena hasta 0,35·r y smoothstep hasta r) y la caída se aproxima ahora
+       con 16 tramos (LUZ_PASOS, antes 6) para que, con el borde más largo (227 px a 1440), no se noten los quiebres de pendiente de la poligonal.
+     Fondo fuera de la luz: LUZ_PISO = 0,4 (márgenes al 40 %, alfa de la tapa 0,6) y LUZ_COL = 0,375 (sobre la columna 0,4 × 0,375 = 15 %). Cada bloque de texto ya lleva su velo (--velo, el color de la página al 60 %): bajo el texto el rastro queda en ≈ 6 % y entre bloques en 15 %.
+       Contraste medido (contraste42.js, cuadro congelado, 1440 y 1920, claro y oscuro, 12 posiciones del scroll × 2 tiempos; fondo = la página con el texto transparente): el texto del cuerpo (--ink) no baja de 14,4:1 en claro y de 8,4:1 en oscuro, el texto secundario (--muted)
+       de 6,1:1 y los vínculos de 9,9:1; sin cambiar el velo (el mínimo exigido es 4,5:1).
+     Circularidad (circ42.js: fondo negro, contenido y canvas ocultos, así que el color de cada píxel es el alfa de la tapa; perfil radial del alfa de 0 a 1,3·r en las 8 direcciones de 45°; 6 tamaños de ventana —1024×700, 1025×701, 1440×900, 1920×1080, 1337×811 a dpr 2 y 1920×1080 a dpr 2—,
+       la luz al centro, pegada a cada borde y a dos esquinas y en una posición fraccionaria, con el tapón al 0 y al 50 %): la tapa del fondo da un desvío máximo de 0,0054 de alfa entre las 8 direcciones (1,4 niveles de 8 bits, ≈ 1,4 px de radio en la zona más inclinada del borde) y, fuera del círculo,
+       el alfa vale 0,6000 en todos los píxeles (sin costuras, esquinas ni rayas), incluida la luz pegada a los bordes; la segunda tapa (la de la raíz, más inclinada) da ≤ 0,024 (≈ 0,7 px). Diámetro efectivo de la tapa del fondo (1024, 1440 y 1920 px): exterior 497, 698 y 931 px; al 50 % del alfa 338, 475 y 633 px;
+       plena (alfa 1) hasta 174, 244 y 326 px. No hizo falta cambiar la técnica: el cuadrado con el degradado radial y las cuatro losas no dejan bordes rectos a ningún tamaño ni posición.
+     Costo (adapt42.js, 4 corridas alternadas de 30 s con el cursor en movimiento, 1440 px): nivel 3 en 4 de 4 con la 041 y con la 042, 60 fps, 1,65 ms por cuadro (041) y 1,66 ms (042); la luz más grande no cuesta nada porque sólo cambia el tamaño de las capas y el recorte de dibujar().
 
    Resumen de las relaciones (035–037), sus interruptores (para medir; todos encendidos por defecto) y sus controles:
      competencia r/K (A bacilo, B cocobacilo y cocos)    sin interruptor: es la cinética de cada morfotipo (tablas EST, MU, KS…); control: A y B sin las demás relaciones
@@ -187,7 +199,7 @@
      raiz({activa, especialista, punta, semilla, parche})  (040, 041) la raíz: sin argumentos informa (semilla, eje, laterales con su base y su punta, zonas, colonización, velocidad de la punta); activa:false la quita con sus exudados y el especialista; especialista:false quita las P; punta fija la punta (fracción del alto);
                                 semilla la regenera con esa semilla; parche:[{x, y, r, v}] suma nutriente c sólo mientras se genera (para medir el quimiotropismo)
      rizosfera(x, y)           (040) la franja de la rizosfera: {d, w, dentro, zona, punto, normal}; avanzar(seg, r, pared) con pared:true hace avanzar 1/30 s de tiempo real por paso aunque r < 1 (la raíz y el cursor usan el tiempo real)
-     luz({activa, r, x, y, fija})  la luz (039): activa:false la apaga (el fondo se ve entero, como en la 038); r es el radio exterior en px (0 = 14 % del ancho, 041); x, y la fijan (salta ahí y no sigue al cursor hasta fija:false); sin argumentos sólo informa
+     luz({activa, r, x, y, fija})  la luz (039): activa:false la apaga (el fondo se ve entero, como en la 038); r es el radio exterior en px (0 = 24,25 % del ancho, 042); x, y la fijan (salta ahí y no sigue al cursor hasta fija:false); sin argumentos sólo informa
      reiniciar({avanzado})      vuelve al comienzo de una visita (avanzado:false = partida desde cero, como en la 037); movimiento(reset) entrega las corridas (duración y largo), los ángulos de tumbo, la velocidad propia media y los saltos del twitching
      parar()                    detiene y quita el canvas */
 (function(){
@@ -265,7 +277,7 @@
   var SEL_TEXTO='.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.grafico,.metodo,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.practicas,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina';
   var RESERVA=14, REFRACTARIA=20, NMAX=240, TMAX=40, GN=GX*GY;
   // 039: la luz (radio = LUZ_FRAC del ancho; plena hasta LUZ_R0 del radio; piso de alfa fuera; τ del seguimiento, del viaje y del fundido; margen del recorte)
-  var LUZ_FRAC=.14, LUZ_R0=.35, LUZ_PISO=.2, LUZ_COL=.25, LUZ_RAIZ0=.82, LUZ_RAIZA=.985, LUZ_BORDE=12, LUZ_PASOS=6, LUZ_TAU=.045, LUZ_TAU_VIAJE=.4, LUZ_VIAJE_T=1.2, LUZ_TAU_ENTRA=.33, LUZ_TAU_VUELVE=.12, LUZ_TAU_SALE=.85, LUZ_MARGEN=36, LUZ_MARGEN_V=110, LUZ_MUESTRA=1;
+  var LUZ_FRAC=.2425, LUZ_R0=.35, LUZ_PISO=.4, LUZ_COL=.375, LUZ_RAIZ0=.82, LUZ_RAIZA=.995, LUZ_BORDE=12, LUZ_PASOS=16, LUZ_TAU=.045, LUZ_TAU_VIAJE=.4, LUZ_VIAJE_T=1.2, LUZ_TAU_ENTRA=.33, LUZ_TAU_VUELVE=.12, LUZ_TAU_SALE=.85, LUZ_MARGEN=36, LUZ_MARGEN_V=110, LUZ_MUESTRA=1;
   // 040: arena sólo en los márgenes (ARENA_OV = cuánto entra, hacia el texto, la zona donde nace) y la raíz: punta (px/s sin el especialista; +RZ_PG a plena colonización, con media saturación RZ_KP células P en la punta),
   // saturación del efecto local (RZ_KB), posición inicial y tope de la punta (fracción del alto), paso de reconstrucción (px), largo de los pelos (px, × escala) y su aumento local (RZ_HB), σ de la exudación (px).
   // Exudados: AEC = aporte a la grilla de nutriente c (sube el nutriente cerca de la raíz: el efecto rizosfera); r = exudado de la raíz (ácidos orgánicos), con reposición REPOR y decaimiento DECR (1/s), en una franja de GRR columnas.
@@ -579,7 +591,7 @@
   // El fondo sólo se ve alrededor del cursor, como el campo de un microscopio. Una tapa del color de la página (alfa 1 − LUZ_PISO, con un hueco de caída suave)
   // lo recorta: sigue al cursor a la tasa de la pantalla (su propio requestAnimationFrame, aunque la simulación corra a 20 cuadros por segundo)
   // y no cuesta nada del presupuesto del canvas. Además dibujar() no pinta lo que cae fuera de la luz (más un margen): la simulación sigue entera, las colonias
-  // evolucionan donde no se las ve, y fuera sólo se pintan las células, sin flagelos (LUZ_MUESTRA = 1 de cada n), para el rastro. Diámetro = 10 % del ancho de la ventana (radio exterior r1 = 0,05·ancho).
+  // evolucionan donde no se las ve, y fuera sólo se pintan las células, sin flagelos (LUZ_MUESTRA = 1 de cada n), para el rastro. Diámetro = LUZ_FRAC·2 del ancho de la ventana (042: 48,5 %; en la 039 era 10 %).
   // Sin cursor (al cargar) la luz nace sobre la colonia más activa (fundido de ≈ 1 s) y al primer movimiento viaja hasta el cursor; si el cursor sale de la ventana
   // la luz se queda donde estaba y se apaga en ≈ 3 s hasta el piso.
   var luz={el:null,bg:'',opP:1,estilo:'',activa:true,fija:false,r:72,rEsp:0,x:0,y:0,tx:0,ty:0,pico:1,meta:1,viaje:0,visto:false,fuera:false,raf:0,ult:0,vel:0,ptT:0,ptX:0,ptY:0,foco:null,
@@ -1373,7 +1385,7 @@
       return {morfos:{A:mo[0],B:mo[1],N:mo[2],C:mo[3],P:mo[4]},infectadas:ninf,subproducto:{activo:subp,medio:+(ps/GN).toFixed(4),max:+pm.toFixed(3)},nivel:nivel,celulas:n,nadando:nNadan,adheridas:nSesiles,colonias:co.n,mayorColonia:co.max,coloniasGrandes:co.grandes,nutrienteMedio:+(cs/GN).toFixed(3),nutrienteMax:+mx.toFixed(2),eventos:JSON.parse(JSON.stringify(ev)),cursor:cursorEstado(),eps:epsEstado(),trazadores:nt,fps:+st.fps.toFixed(1),trabajoMs:+st.trabajoMs.toFixed(2),fijo:st.fijo,choques:nv.choques,jeffery:nv.jeffery,historial:st.historial.slice()}; },
     posiciones:function(){ var s=Array.prototype.slice, es=[], k; for(k=0;k<n;k++) es.push(EST[T[k]]); return {x:s.call(X,0,n),y:s.call(Y,0,n),th:s.call(TH,0,n),fi:s.call(FI,0,n),sp:s.call(SP,0,n),tipo:s.call(T,0,n),estrategia:es,infectada:s.call(IN,0,n).map(function(v){ return v>0?1:0; }),quorum:s.call(QL,0,n),sesil:s.call(S,0,n),forma:s.call(ES,0,n),estado:s.call(RS,0,n),biomasa:s.call(BM,0,n)}; },
     avanzar:function(seg,r,pared){ var k=Math.round(seg*30), dt=1/30*(r||1); for(var i=0;i<k;i++) paso(dt,pared?1/30:undefined); dibujar(); },   // r: factor del reloj (0,6 = lectura en calma; seg son segundos de pared); pared:true hace que el reloj de la raíz y del cursor (tiempo real) avance 1/30 s por paso aunque r < 1
-    luz:function(o){ // 039: la luz. luz({activa, r, x, y, fija, piso}) para pruebas y videos: activa:false la apaga (el fondo se ve entero, como en la 038); r es el radio exterior en px (0 = 14 % del ancho, 041); x, y la fijan (salta y no sigue al cursor hasta fija:false)
+    luz:function(o){ // 039: la luz. luz({activa, r, x, y, fija, piso}) para pruebas y videos: activa:false la apaga (el fondo se ve entero, como en la 038); r es el radio exterior en px (0 = 24,25 % del ancho, 042); x, y la fijan (salta y no sigue al cursor hasta fija:false)
       if(o){
         if(o.activa!=null){ luz.activa=!!o.activa; if(!luz.activa) luz.c=false; }
         if(o.r!=null){ luz.rEsp=o.r>0?+o.r:0; luzRadio(); }

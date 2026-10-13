@@ -239,10 +239,10 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
   .escena>.serie{grid-column:1;grid-row:1 / span 4;align-self:start;border:0;background:none;pointer-events:none}
   .serie.fijo{top:var(--bar);box-shadow:none}
   .serie>.pagina,.serie.fijo>.pagina{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:clamp(2rem,4vw,3.5rem);padding-top:0}
-  /* el fondo opaco llega al borde izquierdo de la página y al inicio de la columna derecha, para que la línea
-     de cada sección sólo se vea sobre el contenido */
-  .serie .hoja{position:relative;grid-column:1;margin:0 calc(-1 * clamp(2rem,4vw,3.5rem)) 0 0;padding:1.5rem clamp(2rem,4vw,3.5rem) .75rem 0;background:var(--bg);pointer-events:auto}
-  .serie .hoja::before{content:"";position:absolute;top:0;bottom:0;right:100%;width:100vw;background:var(--bg)}
+  /* 042: el fondo opaco ya no llega al borde izquierdo de la ventana ni al hueco entre columnas: sólo cubre la columna de la
+     figura (el ancho de .pagina/2 menos el hueco), que es lo que tapa el título que sube. Los costados del gráfico dejan ver
+     el fondo de células (antes un panel opaco de 100vw a la izquierda y el hueco a la derecha lo escondían). */
+  .serie .hoja{position:relative;grid-column:1;margin:0 calc(-1 * clamp(2rem,4vw,3.5rem)) 0 0;padding:1.5rem clamp(2rem,4vw,3.5rem) .75rem 0;background:linear-gradient(var(--bg),var(--bg)) left top/calc(100% - clamp(2rem,4vw,3.5rem)) 100% no-repeat;pointer-events:auto}
   #casos{grid-column:1;grid-row:1}#ingenieria{grid-column:1;grid-row:2}
   #investigacion{grid-column:1;grid-row:3}#educacion{grid-column:1;grid-row:4}
   /* en la primera fila el título parte bajo la figura, a la altura donde se pega */
@@ -1099,7 +1099,7 @@ var portada=(function(){
   try{
     var mm=window.matchMedia; if(!mm||!mm('(pointer: fine)').matches||window.innerWidth<1024||mm('(prefers-reduced-motion: reduce)').matches) return;
     var cx=navigator.connection; if(cx&&cx.saveData) return;
-    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.js?v=dd45894d3a'; s.async=true; document.head.appendChild(s); }
+    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.js?v=da4c107b79'; s.async=true; document.head.appendChild(s); }
     if(document.readyState==='complete') cargar(); else window.addEventListener('load',function(){ setTimeout(cargar,300); });
   }catch(e){}
 })();
