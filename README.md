@@ -98,6 +98,10 @@ pantallas anchas, el párrafo se ve completo. No cambia ningún texto ni gráfic
 
 ## Fondo con quimiotaxis en un fluido, sólo escritorio (iteraciones 024 y 025)
 
+> **Caché (2026-10-12):** `index.html` carga `quimiotaxis.js?v=<hash>`. Cada vez que cambie el script, corre
+> `scripts/version-js.sh` antes del commit para actualizar el hash; si no, los navegadores siguen con la versión vieja
+> hasta 10 min (GitHub Pages).
+
 `quimiotaxis.js` (≈ 144 KB, 55 KB gzip, sin dependencias, aparte de `index.html`: la única excepción a «JS en línea») dibuja detrás del
 contenido un canvas 2D con unas 100 células de 5 a 8 px que se mueven por quimiotaxis bacteriana en una corriente suave. Un
 cargador mínimo en `index.html` lo pide al terminar la página sólo si hay puntero fino (`(pointer: fine)`), el ancho es de
