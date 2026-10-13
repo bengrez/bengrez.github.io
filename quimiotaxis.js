@@ -162,22 +162,23 @@
        Medido (t41.js): 5 semillas dan 5 raíces distintas y la misma semilla la reproduce igual; 5,3 laterales por raíz, todas ≥ 290 px detrás de la punta y la más vieja es la más larga en el 85 % de los pares (por lado); con un parche de c a un lado (24 semillas × 2 lados) hay 75 laterales a la derecha frente a 33 con el parche a la izquierda.
        El especialista sigue funcionando (esp40.js: +50 % de avance de la punta y +52 % de crecimiento de las laterales en 360 s); la colonización del rizoplano llega al tope (55) a los 90–150 s y las salidas de las laterales concentran adhesiones.
 
-   La luz 3 veces más grande en área, perfectamente circular, con estela y más fondo visible fuera de ella (042); además, el gráfico ya no tiene un panel opaco a los lados (index.html).
-     Luz: LUZ_FRAC = 0,2425 (el área pasa a ×3,0: el radio, de 0,14 a 0,2425 del ancho; diámetro 48,5 % del ancho = 698 px a 1440, 931 px a 1920 y 496 px a 1024). El borde difuso escala con el radio (plena hasta 0,35·r y smoothstep hasta r).
-     Fondo fuera de la luz: LUZ_PISO = 0,4 (márgenes al 40 %, alfa de la tapa 0,6) y LUZ_COL = 0,375 (sobre la columna 0,4 × 0,375 = 15 %). Cada bloque de texto ya lleva su velo (--velo, el color de la página al 60 %): bajo el texto el rastro queda en ≈ 6 % y entre bloques en 15 %.
-       Contraste medido (contraste42.js, cuadro congelado, 1440 y 1920, claro y oscuro, 12 posiciones del scroll × 2 tiempos; fondo = la página con el texto transparente): el texto del cuerpo (--ink) no baja de 14,4:1 en claro y de 8,4:1 en oscuro, el texto secundario (--muted)
-       de 6,1:1 y los vínculos de 9,9:1; sin cambiar el velo (el mínimo exigido es 4,5:1).
-     La estela: el campo de visión sigue activo un par de segundos después de que pasa el cursor. Si el cursor recorre el costado derecho, ese costado se mantiene iluminado LUZ_RET = 1,2 s y se apaga de forma continua (smoothstep) en LUZ_CAE = 1,3 s hasta el piso (≈ 2,5 s en total), en el orden en que pasó el cursor.
+   La luz más grande, perfectamente circular, con estela y más fondo visible fuera de ella (042); además, el gráfico ya no tiene panel opaco y la raíz queda centrada en su espacio.
+     Luz: LUZ_FRAC = 0,325 (042 parte 3; en la parte 1 era 0,2425 y en la 041 0,14): diámetro 65 % del ancho = 936 px a 1440, 1248 px a 1920 y 666 px a 1024 (área ×1,8 sobre la parte 1 y ×5,4 sobre la 041). El borde difuso escala con el radio (plena hasta 0,35·r y smoothstep hasta r).
+     Fondo fuera de la luz: LUZ_PISO = 0,4 (márgenes al 40 %, alfa de la tapa 0,6) y LUZ_COL = 0,375 (sobre la columna 0,4 × 0,375 = 15 %). Cada bloque de texto lleva su velo (--velo, el color de la página al 60 %): bajo el texto el rastro queda en ≈ 6 % y entre bloques en 15 %.
+       Desde la parte 3 no hay ningún panel opaco detrás del gráfico (index.html: .serie .hoja sin fondo y sin la franja de 100 vw), así que su texto SVG también queda sobre el fondo al 15 %: ver el contraste medido en el README (contraste42.js incluye el texto de los gráficos).
+     La estela: el campo de visión sigue activo después de que pasa el cursor. Si el cursor recorre el costado derecho, ese costado se mantiene iluminado LUZ_RET = 2,0 s y se apaga de forma continua (smoothstep) en LUZ_CAE = 1,5 s hasta el piso (3,5 s en total), en el orden en que pasó el cursor.
        Como la unión de dos huecos no se puede hacer apilando capas (la opacidad de dos tapas se multiplica: el hueco de una queda tapado por la otra), la tapa dejó de ser la de capas movidas con transform (039–041) y pasó a dos canvas de baja resolución (1 píxel por LUZ_ESC = 12 px, escalados con suavizado por el navegador, de modo que el
        borde sigue siendo difuso): cada cuadro de la luz se calcula el mapa I(x, y) = máximo de «sellos» (un círculo con el perfil de la luz: tabla analítica de 512 entradas en función de d², con peso 1 la cabeza y w(edad) cada punto del recorrido) y se escribe el alfa del fondo A0·(1 − I) con putImageData.
-       La luz deja un sello cada LUZ_PASO_E = 80 px del recorrido (con varios por cuadro si el cursor salta; hasta LUZ_NE = 96, descartados al apagarse), y con tan poca separación el festoneado de la unión es < 0,01 de alfa. dibujar() también usa los sellos: dibuja el detalle (flagelos, matriz, trazadores, arena)
+       La luz deja un sello cada LUZ_PASO_F·r = 0,22·r px del recorrido (≈ 103 px a 1440; con varios por cuadro si el cursor salta; hasta LUZ_NE = 96, descartados al apagarse), y con esa separación el festoneado de la unión es < 0,01 de alfa. dibujar() también usa los sellos: dibuja el detalle (flagelos, matriz, trazadores, arena)
        dentro de cada sello vivo más el margen, y el factor de la columna depende de I, así que el costado recorrido se ve con todo el detalle mientras dura la estela. La tapa de la raíz usa el mismo mapa con el perfil de la raíz (hueco hasta 0,82·r, alfa 0,995) pero sólo en la franja del margen izquierdo (x < colIzq): con la tapa de la raíz a ventana completa
        los fps de la simulación bajaban a 47–57 en el compositor por software. luz({estela:false}) quita la estela (luz().estela informa los sellos vivos y luz().costoMs el costo medio de cada cuadro de la luz en JS).
-       Costo (ms42.js, var42.js, adapt42.js; cursor en movimiento a 1440 px, nivel 3): ≈ 0,8 ms de JS por cuadro de la luz (con 20 sellos vivos; 0,2 ms sin estela); fps de la simulación 58,5–60 y nivel 3 que no baja.
+       Con 16 px por celda la circularidad empeoraba (desvío 0,013 de alfa por la interpolación bilineal en las diagonales); con 12 px queda en ≤ 0,008.
+     La raíz centrada en su espacio (parte 3): el eje primario se centra en el punto medio entre el borde de la ventana y el de la columna (rz.x = colIzq/2, con colIzq medido del ancho de la ventana y recalculado en cada resize), y rzCentra() corrige el corrimiento del serpenteo moviendo el eje (y las laterales ya generadas)
+       para que su media quede exactamente ahí. Medido (centro42.js): media del eje 52, 92 y 212 px a 1280, 1440 y 1920 px de ventana (mitad del margen: 52, 92 y 212); también a 1100 px (20) y tras cambiar el tamaño.
      Circularidad (circ42.js: fondo negro, contenido y canvas de las bacterias ocultos, así que el color de cada píxel es el alfa de la tapa; perfil radial del alfa de 0 a 1,3·r en las 8 direcciones de 45°; 5 tamaños de ventana —1024×700, 1025×701, 1440×900, 1920×1080 y 1337×811 a dpr 2—,
-       la luz al centro, pegada a cada borde y a dos esquinas y en una posición fraccionaria): la tapa del fondo da un desvío máximo de 0,0060 de alfa entre las 8 direcciones (1,5 niveles de 8 bits, ≈ 1,5 px de radio en la zona más inclinada del borde) y, fuera del círculo, el alfa vale 0,596–0,600 en todos los píxeles
-       (sin costuras, esquinas ni rayas), incluida la luz pegada a los bordes. Diámetro efectivo de la tapa del fondo (1024, 1440 y 1920 px): exterior 497, 698 y 931 px; al 50 % del alfa 338, 475 y 633 px; plena (alfa 1) hasta 174, 244 y 326 px.
-       Antes de la estela (capas con transform) se midió lo mismo en la técnica de la 039 y también salía circular (≤ 0,0054), de modo que el cambio de técnica se debe a la estela y no a la forma.
+       la luz al centro, pegada a cada borde y a dos esquinas y en una posición fraccionaria): la tapa del fondo da un desvío máximo de 0,008 de alfa entre las 8 direcciones (2 niveles de 8 bits, ≈ 2,7 px de radio sobre un radio de 468 px) y, fuera del círculo, el alfa vale 0,600 en todos los píxeles
+       (sin costuras, esquinas ni rayas), incluida la luz pegada a los bordes. Diámetro efectivo de la tapa del fondo (1024, 1440 y 1920 px): exterior 666, 936 y 1248 px; al 50 % del alfa 453, 636 y 849 px; llega al 99 % del alfa a 652, 917 y 1217 px.
+     Costo (ms42.js, var42.js, adapt42.js; cursor en movimiento, nivel 3, máquina tranquila): ≈ 1,1–1,2 ms de JS por cuadro de la luz (con 23 sellos vivos; 0,2 ms sin estela); fps de la simulación 59,5–60 y nivel 3 que no baja (4 de 4 corridas, 1,55 ms por cuadro frente a 1,44 ms de la 041).
 
    Resumen de las relaciones (035–037), sus interruptores (para medir; todos encendidos por defecto) y sus controles:
      competencia r/K (A bacilo, B cocobacilo y cocos)    sin interruptor: es la cinética de cada morfotipo (tablas EST, MU, KS…); control: A y B sin las demás relaciones
@@ -204,7 +205,7 @@
      raiz({activa, especialista, punta, semilla, parche})  (040, 041) la raíz: sin argumentos informa (semilla, eje, laterales con su base y su punta, zonas, colonización, velocidad de la punta); activa:false la quita con sus exudados y el especialista; especialista:false quita las P; punta fija la punta (fracción del alto);
                                 semilla la regenera con esa semilla; parche:[{x, y, r, v}] suma nutriente c sólo mientras se genera (para medir el quimiotropismo)
      rizosfera(x, y)           (040) la franja de la rizosfera: {d, w, dentro, zona, punto, normal}; avanzar(seg, r, pared) con pared:true hace avanzar 1/30 s de tiempo real por paso aunque r < 1 (la raíz y el cursor usan el tiempo real)
-     luz({activa, r, x, y, fija, estela})  la luz (039; estela:false quita la que deja el recorrido, 042): activa:false la apaga (el fondo se ve entero, como en la 038); r es el radio exterior en px (0 = 24,25 % del ancho, 042); x, y la fijan (salta ahí y no sigue al cursor hasta fija:false); sin argumentos sólo informa
+     luz({activa, r, x, y, fija, estela})  la luz (039; estela:false quita la que deja el recorrido, 042): activa:false la apaga (el fondo se ve entero, como en la 038); r es el radio exterior en px (0 = 32,5 % del ancho, 042 p3); x, y la fijan (salta ahí y no sigue al cursor hasta fija:false); sin argumentos sólo informa
      reiniciar({avanzado})      vuelve al comienzo de una visita (avanzado:false = partida desde cero, como en la 037); movimiento(reset) entrega las corridas (duración y largo), los ángulos de tumbo, la velocidad propia media y los saltos del twitching
      parar()                    detiene y quita el canvas */
 (function(){
@@ -282,7 +283,7 @@
   var SEL_TEXTO='.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.grafico,.metodo,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.practicas,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina';
   var RESERVA=14, REFRACTARIA=20, NMAX=240, TMAX=40, GN=GX*GY;
   // 039: la luz (radio = LUZ_FRAC del ancho; plena hasta LUZ_R0 del radio; piso de alfa fuera; τ del seguimiento, del viaje y del fundido; margen del recorte)
-  var LUZ_FRAC=.2425, LUZ_R0=.35, LUZ_PISO=.4, LUZ_COL=.375, LUZ_RAIZ0=.82, LUZ_RAIZA=.995, LUZ_BORDE=12, LUZ_ESC=12, LUZ_RET=1.2, LUZ_CAE=1.3, LUZ_PASO_E=80, LUZ_NE=96, LUZ_LUTN=512, LUZ_TAU=.045, LUZ_TAU_VIAJE=.4, LUZ_VIAJE_T=1.2, LUZ_TAU_ENTRA=.33, LUZ_TAU_VUELVE=.12, LUZ_TAU_SALE=.85, LUZ_MARGEN=36, LUZ_MARGEN_V=110, LUZ_MUESTRA=1;
+  var LUZ_FRAC=.325, LUZ_R0=.35, LUZ_PISO=.4, LUZ_COL=.375, LUZ_RAIZ0=.82, LUZ_RAIZA=.995, LUZ_BORDE=12, LUZ_ESC=12, LUZ_RET=2, LUZ_CAE=1.5, LUZ_PASO_F=.22, LUZ_NE=96, LUZ_LUTN=512, LUZ_TAU=.045, LUZ_TAU_VIAJE=.4, LUZ_VIAJE_T=1.2, LUZ_TAU_ENTRA=.33, LUZ_TAU_VUELVE=.12, LUZ_TAU_SALE=.85, LUZ_MARGEN=36, LUZ_MARGEN_V=110, LUZ_MUESTRA=1;
   // 040: arena sólo en los márgenes (ARENA_OV = cuánto entra, hacia el texto, la zona donde nace) y la raíz: punta (px/s sin el especialista; +RZ_PG a plena colonización, con media saturación RZ_KP células P en la punta),
   // saturación del efecto local (RZ_KB), posición inicial y tope de la punta (fracción del alto), paso de reconstrucción (px), largo de los pelos (px, × escala) y su aumento local (RZ_HB), σ de la exudación (px).
   // Exudados: AEC = aporte a la grilla de nutriente c (sube el nutriente cerca de la raíz: el efecto rizosfera); r = exudado de la raíz (ácidos orgánicos), con reposición REPOR y decaimiento DECR (1/s), en una franja de GRR columnas.
@@ -665,14 +666,14 @@
     luz.n++;
   }
   function luzEstela(){ // 042: deja un sello cada LUZ_PASO_E px del recorrido de la luz (con varios por cuadro si el cursor saltó), con la hora a la que la luz pasó por ahí
-    var now=performance.now()/1000, d, n, k, f, i, x0, y0, t0;
+    var now=performance.now()/1000, d, n, k, f, i, x0, y0, t0, pe;
     if(!luz.estela||luz.fija||!luz.activa||luz.wh<.5){ luz.lok=false; return; }
     if(!luz.lok){ luz.lx=luz.x; luz.ly=luz.y; luz.lt=now; luz.lok=true; return; }
-    x0=luz.lx; y0=luz.ly; t0=luz.lt; d=Math.hypot(luz.x-x0,luz.y-y0); if(d<LUZ_PASO_E) return;
-    n=Math.floor(d/LUZ_PASO_E);
-    for(k=1;k<=n;k++){ f=k*LUZ_PASO_E/d; i=(luz.e0+luz.en)%LUZ_NE; luz.sx[i]=x0+(luz.x-x0)*f; luz.sy[i]=y0+(luz.y-y0)*f; luz.st[i]=t0+(now-t0)*f;
+    x0=luz.lx; y0=luz.ly; t0=luz.lt; d=Math.hypot(luz.x-x0,luz.y-y0); pe=Math.max(40,LUZ_PASO_F*luz.r); if(d<pe) return;
+    n=Math.floor(d/pe);
+    for(k=1;k<=n;k++){ f=k*pe/d; i=(luz.e0+luz.en)%LUZ_NE; luz.sx[i]=x0+(luz.x-x0)*f; luz.sy[i]=y0+(luz.y-y0)*f; luz.st[i]=t0+(now-t0)*f;
       if(luz.en<LUZ_NE) luz.en++; else luz.e0=(luz.e0+1)%LUZ_NE; }
-    f=n*LUZ_PASO_E/d; luz.lx=x0+(luz.x-x0)*f; luz.ly=y0+(luz.y-y0)*f; luz.lt=t0+(now-t0)*f;
+    f=n*pe/d; luz.lx=x0+(luz.x-x0)*f; luz.ly=y0+(luz.y-y0)*f; luz.lt=t0+(now-t0)*f;
   }
   function luzPaso(ts){
     var dt=Math.min(.05,Math.max(.001,(ts-luz.ult)/1000)), tau, mov, ta, t0;
@@ -797,6 +798,14 @@
     for(y=3;y<RZ_TIPMAX*H;y+=7){ hel.push({y:y+4*rzU(),lado:1,f:.62+.5*rzU(),tilt:-.1+.5*rzU()}); hel.push({y:y+4*rzU(),lado:-1,f:.62+.5*rzU(),tilt:-.1+.5*rzU()}); }
     hel.sort(function(a,b){ return a.y-b.y; });   // por la y de la base (rzCerca busca los pelos cercanos por bisección)
     while(rz.tipY<tip&&rz.priN<rz.pri.length-2) rzPaso();
+    rzCentra();
+  }
+  function rzCentra(){ // 042 p3: la media del eje primario queda exactamente en el punto medio del margen (rz.x = colIzq/2): se corrige el corrimiento que deja el serpenteo, moviendo también las laterales ya generadas
+    var k, j, m=0, dx, la;
+    for(k=0;k<rz.priN;k++) m+=rz.pri[k];
+    dx=rz.x-m/rz.priN; if(Math.abs(dx)<.05) return;
+    for(k=0;k<rz.priN;k++) rz.pri[k]+=dx;
+    for(k=0;k<rz.lat.length;k++){ la=rz.lat[k]; for(j=0;j<la.pts.length;j+=2) la.pts[j]+=dx; }
   }
   function rzR(s){ var c=22*rz.hz, u; if(s<=0) return 0; if(s<c){ u=1-s/c; return .8*rz.rr*(1-Math.pow(u,2.3)); } u=(s-c)/(88*rz.hz); u=u>1?1:u; return rz.rr*(.82+.18*u*u*(3-2*u)); }  // cofia en ojiva (casi un cono con la punta redondeada)
   function rzEps(s){ var t=[[0,1.3],[30,1.2],[48,1],[110,.95],[200,.6],[280,.4],[400,.2],[1500,.12]], k, h=rz.hz; if(s<=0) return 1.3; for(k=1;k<t.length;k++) if(s<=t[k][0]*h) return t[k-1][1]+(t[k][1]-t[k-1][1])*(s-t[k-1][0]*h)/((t[k][0]-t[k-1][0])*h); return .12; }
@@ -1444,7 +1453,7 @@
         if(o.reiniciarDiag){ luz.exc=-1e9; luz.nt=0; luz.ms=0; luz.pasos=0; }
         luzEstilo(); sucio=true;
       }
-      return {activa:luz.activa,fija:luz.fija,r:+luz.r.toFixed(1),x:+luz.x.toFixed(1),y:+luz.y.toFixed(1),objetivoX:+luz.tx.toFixed(1),objetivoY:+luz.ty.toFixed(1),pico:+luz.pico.toFixed(3),meta:+luz.meta,piso:LUZ_PISO,visto:luz.visto,fuera:luz.fuera,recorta:luz.c,foco:luz.foco,estilos:luz.n,excesoMax:luz.exc<-1e8?null:+luz.exc.toFixed(1),ticks:luz.nt,opacidadTapon:+Math.min(1,Math.max(0,(1-luz.pico)/(1-LUZ_PISO))).toFixed(3),costoMs:luz.pasos?+(luz.ms/luz.pasos).toFixed(3):0,pasos:luz.pasos,estela:{activa:luz.estela,sellos:luz.en,retiene:LUZ_RET,cae:LUZ_CAE,paso:LUZ_PASO_E}}; },
+      return {activa:luz.activa,fija:luz.fija,r:+luz.r.toFixed(1),x:+luz.x.toFixed(1),y:+luz.y.toFixed(1),objetivoX:+luz.tx.toFixed(1),objetivoY:+luz.ty.toFixed(1),pico:+luz.pico.toFixed(3),meta:+luz.meta,piso:LUZ_PISO,visto:luz.visto,fuera:luz.fuera,recorta:luz.c,foco:luz.foco,estilos:luz.n,excesoMax:luz.exc<-1e8?null:+luz.exc.toFixed(1),ticks:luz.nt,opacidadTapon:+Math.min(1,Math.max(0,(1-luz.pico)/(1-LUZ_PISO))).toFixed(3),costoMs:luz.pasos?+(luz.ms/luz.pasos).toFixed(3):0,pasos:luz.pasos,estela:{activa:luz.estela,sellos:luz.en,retiene:LUZ_RET,cae:LUZ_CAE,paso:+Math.max(40,LUZ_PASO_F*luz.r).toFixed(1)}}; },
     arena:function(o){ // 040: dónde nace la arena del cursor quieto: arena({sobrelapamiento}) cambia cuántos px hacia el texto entra la zona de los márgenes (para medirlo); sin argumentos sólo informa
       if(o&&o.sobrelapamiento!=null) ARENA_OV=+o.sobrelapamiento;
       return {izq:+colIzq.toFixed(1),der:+colDer.toFixed(1),sobrelapamiento:ARENA_OV,zonaIzq:[0,+(colIzq+ARENA_OV).toFixed(1)],zonaDer:[+(colDer-ARENA_OV).toFixed(1),W]};
