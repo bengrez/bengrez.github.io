@@ -103,7 +103,7 @@
 
    La luz (039): el fondo sólo se ve alrededor del cursor, como el campo de un microscopio, para que quien lee explore el fondo con el mouse y descubra las interacciones donde apunta.
      (En la 041 el piso fue 0,2 en los márgenes y 0,05 en la columna, y la luz 28 %; en la 042, 0,4, 0,15 y 48 %: ver más abajo.) Una «tapa» del color de la página cubre el canvas con alfa 0,95 (piso de 0,05 afuera: el rastro que deja intuir que hay vida) salvo en la luz: diámetro = 10 % del ancho de la ventana (radio exterior
-     0,05·ancho, 72 px a 1440), plena hasta el 35 % del radio y con caída suave (smoothstep, sin anillo) hasta el borde. Son seis capas (cuatro losas sólidas, un cuadrado con el degradado y un «tapón» que sube su opacidad
+     0,05·ancho, 72 px a 1440), plena hasta el 35 % del radio y con caída suave (smoothstep, sin anillo) hasta el borde. (En la 042 la tapa pasó a canvas de baja resolución para poder dejar una estela: ver más abajo.) Eran seis capas (cuatro losas sólidas, un cuadrado con el degradado y un «tapón» que sube su opacidad
      para el fundido) que sólo se mueven con transform y opacidad: sin raster por cuadro. (Una máscara CSS —mask-image con un radial-gradient— sobre el canvas dejaba el nivel 3 en 36–51 de 60 fps con el compositor por software (y el nivel adaptativo no subía de 2), porque se
      re-rasteriza en cada cuadro; con capas el costo es nulo.) Siguen al cursor con un suavizado leve (τ = 45 ms, retraso de ≈ 37 ms·v) en su propio requestAnimationFrame, a la tasa de la pantalla aunque la simulación
      corra a 20 cuadros por segundo. dibujar() no pinta lo que cae fuera de la luz más un margen (36 px más 0,05 s de la velocidad del cursor, hasta 110 px; el recorte cubre la cápsula entre la luz y su objetivo), ni los
@@ -149,9 +149,9 @@
        (el contenido de .pagina, con una transición de 2·LUZ_BORDE = 24 px en sus bordes) dibujar() pinta los cuerpos con alfa × LUZ_COL, así que quedan al 5 % (0,2 × 0,25), el rastro de la 039; y la luz los revela
        (el factor sube de 0,25 a 1 entre 1 y 0,75 del radio, así que no hay un anillo). Medido (piso41.js, cuadro congelado, tinta con luz / tinta sin luz de cada cuerpo; 1440 y 1920, claro y oscuro): margen 0,19–0,20; columna 0,04–0,05; centro de la luz 1,00; entre 0,3 y 0,7 del radio 0,6–0,96.
        Fuera de la luz sólo se dibujan los cuerpos (sin flagelo ni pilo, matriz, trazadores, arena ni núcleos) y no los de las células de la raíz (RZc), que la delatarían; con la luz apagada (el cursor fuera de la ventana) tampoco hay detalle. Bajo la luz se ve todo:
-       bacterias con flagelos, colonias, matriz, arena, raíz y rizoplano. La técnica de la 039 no cambia: capas movidas sólo con transform y opacidad, ahora dos juegos (la tapa del fondo, sobre el canvas de las bacterias, y una segunda tapa para la raíz).
+       bacterias con flagelos, colonias, matriz, arena, raíz y rizoplano. La técnica de la 039 no cambió en la 041 (capas movidas sólo con transform y opacidad, ahora dos juegos (la tapa del fondo, sobre el canvas de las bacterias, y una segunda tapa para la raíz); la 042 la reemplazó.)
      La raíz se esconde entera: ya no hay silueta siempre visible. La raíz (primaria, laterales, cofias, pelos y paredes) se pinta una vez en su propio canvas fuera de pantalla (el de trabajo) y se publica a un canvas fijo que va por DEBAJO del de las bacterias y de
-       la segunda tapa, que es casi opaca fuera del hueco (alfa 0,985 en la 041 y 0,995 desde la 042: con el fondo fuera de la luz al 40 %, la raíz queda detrás de dos tapas y sólo se le escapa (1 − 0,995)·(1 − 0,6) = 0,2 % de su contraste; hueco hasta el 82 % del radio): la raíz sólo aparece bajo la luz y no cuesta nada por cuadro (la 040 copiaba su detalle al fondo en cada cuadro). Se redibuja sólo al crecer (cada 3 px de la punta).
+       la segunda tapa, que es casi opaca fuera del hueco (alfa 0,985 en la 041 y 0,995 desde la 042: con el fondo fuera de la luz al 40 %, la raíz queda detrás de dos tapas y sólo se le escapa (1 − 0,995)·(1 − 0,6) = 0,2 % de su contraste; hueco hasta el 82 % del radio; desde la 042 es un canvas de baja resolución sólo en la franja del margen izquierdo): la raíz sólo aparece bajo la luz y no cuesta nada por cuadro (la 040 copiaba su detalle al fondo en cada cuadro). Se redibuja sólo al crecer (cada 3 px de la punta).
        Queda centrada en el margen izquierdo (eje medio en colIzq/2: 20 px a 1024, 92 a 1440, 212 a 1920) y se regenera con la misma semilla al cambiar el ancho o el alto de la ventana.
      La raíz generada (puntas activas con tropismos; referencias citadas de memoria: Drew 1975, New Phytol. 75:479, sobre la proliferación de laterales en un parche rico en nutriente; Hodge 2004, New Phytol. 162:9, sobre el forrajeo de nutrientes; Eapen et al. 2005, Trends Plant Sci. 10:44, sobre los tropismos;
        Péret et al. 2009, Trends Plant Sci. 14:399, sobre las laterales y el periciclo): una semilla por carga (Math.random; ?semilla=N en la URL la reproduce, y raiz({semilla}) la cambia en vivo) y un generador mulberry32 propio. Al cargar se pre-simula fuera de pantalla hasta la punta de la 040 (0,64 del alto)
@@ -162,17 +162,22 @@
        Medido (t41.js): 5 semillas dan 5 raíces distintas y la misma semilla la reproduce igual; 5,3 laterales por raíz, todas ≥ 290 px detrás de la punta y la más vieja es la más larga en el 85 % de los pares (por lado); con un parche de c a un lado (24 semillas × 2 lados) hay 75 laterales a la derecha frente a 33 con el parche a la izquierda.
        El especialista sigue funcionando (esp40.js: +50 % de avance de la punta y +52 % de crecimiento de las laterales en 360 s); la colonización del rizoplano llega al tope (55) a los 90–150 s y las salidas de las laterales concentran adhesiones.
 
-   La luz 3 veces más grande en área, perfectamente circular, y más fondo visible fuera de ella (042): cambian tres constantes y se verifica la geometría; la técnica de la tapa de la 039 queda igual.
-     Luz: LUZ_FRAC = 0,2425 (el área pasa a ×3,0: el radio, de 0,14 a 0,2425 del ancho; diámetro 48,5 % del ancho = 698 px a 1440, 931 px a 1920 y 496 px a 1024). El borde difuso escala con el radio (plena hasta 0,35·r y smoothstep hasta r) y la caída se aproxima ahora
-       con 16 tramos (LUZ_PASOS, antes 6) para que, con el borde más largo (227 px a 1440), no se noten los quiebres de pendiente de la poligonal.
+   La luz 3 veces más grande en área, perfectamente circular, con estela y más fondo visible fuera de ella (042); además, el gráfico ya no tiene un panel opaco a los lados (index.html).
+     Luz: LUZ_FRAC = 0,2425 (el área pasa a ×3,0: el radio, de 0,14 a 0,2425 del ancho; diámetro 48,5 % del ancho = 698 px a 1440, 931 px a 1920 y 496 px a 1024). El borde difuso escala con el radio (plena hasta 0,35·r y smoothstep hasta r).
      Fondo fuera de la luz: LUZ_PISO = 0,4 (márgenes al 40 %, alfa de la tapa 0,6) y LUZ_COL = 0,375 (sobre la columna 0,4 × 0,375 = 15 %). Cada bloque de texto ya lleva su velo (--velo, el color de la página al 60 %): bajo el texto el rastro queda en ≈ 6 % y entre bloques en 15 %.
        Contraste medido (contraste42.js, cuadro congelado, 1440 y 1920, claro y oscuro, 12 posiciones del scroll × 2 tiempos; fondo = la página con el texto transparente): el texto del cuerpo (--ink) no baja de 14,4:1 en claro y de 8,4:1 en oscuro, el texto secundario (--muted)
        de 6,1:1 y los vínculos de 9,9:1; sin cambiar el velo (el mínimo exigido es 4,5:1).
-     Circularidad (circ42.js: fondo negro, contenido y canvas ocultos, así que el color de cada píxel es el alfa de la tapa; perfil radial del alfa de 0 a 1,3·r en las 8 direcciones de 45°; 6 tamaños de ventana —1024×700, 1025×701, 1440×900, 1920×1080, 1337×811 a dpr 2 y 1920×1080 a dpr 2—,
-       la luz al centro, pegada a cada borde y a dos esquinas y en una posición fraccionaria, con el tapón al 0 y al 50 %): la tapa del fondo da un desvío máximo de 0,0054 de alfa entre las 8 direcciones (1,4 niveles de 8 bits, ≈ 1,4 px de radio en la zona más inclinada del borde) y, fuera del círculo,
-       el alfa vale 0,6000 en todos los píxeles (sin costuras, esquinas ni rayas), incluida la luz pegada a los bordes; la segunda tapa (la de la raíz, más inclinada) da ≤ 0,024 (≈ 0,7 px). Diámetro efectivo de la tapa del fondo (1024, 1440 y 1920 px): exterior 497, 698 y 931 px; al 50 % del alfa 338, 475 y 633 px;
-       plena (alfa 1) hasta 174, 244 y 326 px. No hizo falta cambiar la técnica: el cuadrado con el degradado radial y las cuatro losas no dejan bordes rectos a ningún tamaño ni posición.
-     Costo (adapt42.js, 4 corridas alternadas de 30 s con el cursor en movimiento, 1440 px): nivel 3 en 4 de 4 con la 041 y con la 042, 60 fps, 1,65 ms por cuadro (041) y 1,66 ms (042); la luz más grande no cuesta nada porque sólo cambia el tamaño de las capas y el recorte de dibujar().
+     La estela: el campo de visión sigue activo un par de segundos después de que pasa el cursor. Si el cursor recorre el costado derecho, ese costado se mantiene iluminado LUZ_RET = 1,2 s y se apaga de forma continua (smoothstep) en LUZ_CAE = 1,3 s hasta el piso (≈ 2,5 s en total), en el orden en que pasó el cursor.
+       Como la unión de dos huecos no se puede hacer apilando capas (la opacidad de dos tapas se multiplica: el hueco de una queda tapado por la otra), la tapa dejó de ser la de capas movidas con transform (039–041) y pasó a dos canvas de baja resolución (1 píxel por LUZ_ESC = 12 px, escalados con suavizado por el navegador, de modo que el
+       borde sigue siendo difuso): cada cuadro de la luz se calcula el mapa I(x, y) = máximo de «sellos» (un círculo con el perfil de la luz: tabla analítica de 512 entradas en función de d², con peso 1 la cabeza y w(edad) cada punto del recorrido) y se escribe el alfa del fondo A0·(1 − I) con putImageData.
+       La luz deja un sello cada LUZ_PASO_E = 80 px del recorrido (con varios por cuadro si el cursor salta; hasta LUZ_NE = 96, descartados al apagarse), y con tan poca separación el festoneado de la unión es < 0,01 de alfa. dibujar() también usa los sellos: dibuja el detalle (flagelos, matriz, trazadores, arena)
+       dentro de cada sello vivo más el margen, y el factor de la columna depende de I, así que el costado recorrido se ve con todo el detalle mientras dura la estela. La tapa de la raíz usa el mismo mapa con el perfil de la raíz (hueco hasta 0,82·r, alfa 0,995) pero sólo en la franja del margen izquierdo (x < colIzq): con la tapa de la raíz a ventana completa
+       los fps de la simulación bajaban a 47–57 en el compositor por software. luz({estela:false}) quita la estela (luz().estela informa los sellos vivos y luz().costoMs el costo medio de cada cuadro de la luz en JS).
+       Costo (ms42.js, var42.js, adapt42.js; cursor en movimiento a 1440 px, nivel 3): ≈ 0,8 ms de JS por cuadro de la luz (con 20 sellos vivos; 0,2 ms sin estela); fps de la simulación 58,5–60 y nivel 3 que no baja.
+     Circularidad (circ42.js: fondo negro, contenido y canvas de las bacterias ocultos, así que el color de cada píxel es el alfa de la tapa; perfil radial del alfa de 0 a 1,3·r en las 8 direcciones de 45°; 5 tamaños de ventana —1024×700, 1025×701, 1440×900, 1920×1080 y 1337×811 a dpr 2—,
+       la luz al centro, pegada a cada borde y a dos esquinas y en una posición fraccionaria): la tapa del fondo da un desvío máximo de 0,0060 de alfa entre las 8 direcciones (1,5 niveles de 8 bits, ≈ 1,5 px de radio en la zona más inclinada del borde) y, fuera del círculo, el alfa vale 0,596–0,600 en todos los píxeles
+       (sin costuras, esquinas ni rayas), incluida la luz pegada a los bordes. Diámetro efectivo de la tapa del fondo (1024, 1440 y 1920 px): exterior 497, 698 y 931 px; al 50 % del alfa 338, 475 y 633 px; plena (alfa 1) hasta 174, 244 y 326 px.
+       Antes de la estela (capas con transform) se midió lo mismo en la técnica de la 039 y también salía circular (≤ 0,0054), de modo que el cambio de técnica se debe a la estela y no a la forma.
 
    Resumen de las relaciones (035–037), sus interruptores (para medir; todos encendidos por defecto) y sus controles:
      competencia r/K (A bacilo, B cocobacilo y cocos)    sin interruptor: es la cinética de cada morfotipo (tablas EST, MU, KS…); control: A y B sin las demás relaciones
@@ -199,7 +204,7 @@
      raiz({activa, especialista, punta, semilla, parche})  (040, 041) la raíz: sin argumentos informa (semilla, eje, laterales con su base y su punta, zonas, colonización, velocidad de la punta); activa:false la quita con sus exudados y el especialista; especialista:false quita las P; punta fija la punta (fracción del alto);
                                 semilla la regenera con esa semilla; parche:[{x, y, r, v}] suma nutriente c sólo mientras se genera (para medir el quimiotropismo)
      rizosfera(x, y)           (040) la franja de la rizosfera: {d, w, dentro, zona, punto, normal}; avanzar(seg, r, pared) con pared:true hace avanzar 1/30 s de tiempo real por paso aunque r < 1 (la raíz y el cursor usan el tiempo real)
-     luz({activa, r, x, y, fija})  la luz (039): activa:false la apaga (el fondo se ve entero, como en la 038); r es el radio exterior en px (0 = 24,25 % del ancho, 042); x, y la fijan (salta ahí y no sigue al cursor hasta fija:false); sin argumentos sólo informa
+     luz({activa, r, x, y, fija, estela})  la luz (039; estela:false quita la que deja el recorrido, 042): activa:false la apaga (el fondo se ve entero, como en la 038); r es el radio exterior en px (0 = 24,25 % del ancho, 042); x, y la fijan (salta ahí y no sigue al cursor hasta fija:false); sin argumentos sólo informa
      reiniciar({avanzado})      vuelve al comienzo de una visita (avanzado:false = partida desde cero, como en la 037); movimiento(reset) entrega las corridas (duración y largo), los ángulos de tumbo, la velocidad propia media y los saltos del twitching
      parar()                    detiene y quita el canvas */
 (function(){
@@ -277,7 +282,7 @@
   var SEL_TEXTO='.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.grafico,.metodo,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.practicas,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina';
   var RESERVA=14, REFRACTARIA=20, NMAX=240, TMAX=40, GN=GX*GY;
   // 039: la luz (radio = LUZ_FRAC del ancho; plena hasta LUZ_R0 del radio; piso de alfa fuera; τ del seguimiento, del viaje y del fundido; margen del recorte)
-  var LUZ_FRAC=.2425, LUZ_R0=.35, LUZ_PISO=.4, LUZ_COL=.375, LUZ_RAIZ0=.82, LUZ_RAIZA=.995, LUZ_BORDE=12, LUZ_PASOS=16, LUZ_TAU=.045, LUZ_TAU_VIAJE=.4, LUZ_VIAJE_T=1.2, LUZ_TAU_ENTRA=.33, LUZ_TAU_VUELVE=.12, LUZ_TAU_SALE=.85, LUZ_MARGEN=36, LUZ_MARGEN_V=110, LUZ_MUESTRA=1;
+  var LUZ_FRAC=.2425, LUZ_R0=.35, LUZ_PISO=.4, LUZ_COL=.375, LUZ_RAIZ0=.82, LUZ_RAIZA=.995, LUZ_BORDE=12, LUZ_ESC=12, LUZ_RET=1.2, LUZ_CAE=1.3, LUZ_PASO_E=80, LUZ_NE=96, LUZ_LUTN=512, LUZ_TAU=.045, LUZ_TAU_VIAJE=.4, LUZ_VIAJE_T=1.2, LUZ_TAU_ENTRA=.33, LUZ_TAU_VUELVE=.12, LUZ_TAU_SALE=.85, LUZ_MARGEN=36, LUZ_MARGEN_V=110, LUZ_MUESTRA=1;
   // 040: arena sólo en los márgenes (ARENA_OV = cuánto entra, hacia el texto, la zona donde nace) y la raíz: punta (px/s sin el especialista; +RZ_PG a plena colonización, con media saturación RZ_KP células P en la punta),
   // saturación del efecto local (RZ_KB), posición inicial y tope de la punta (fracción del alto), paso de reconstrucción (px), largo de los pelos (px, × escala) y su aumento local (RZ_HB), σ de la exudación (px).
   // Exudados: AEC = aporte a la grilla de nutriente c (sube el nutriente cerca de la raíz: el efecto rizosfera); r = exudado de la raíz (ácidos orgánicos), con reposición REPOR y decaimiento DECR (1/s), en una franja de GRR columnas.
@@ -594,61 +599,92 @@
   // evolucionan donde no se las ve, y fuera sólo se pintan las células, sin flagelos (LUZ_MUESTRA = 1 de cada n), para el rastro. Diámetro = LUZ_FRAC·2 del ancho de la ventana (042: 48,5 %; en la 039 era 10 %).
   // Sin cursor (al cargar) la luz nace sobre la colonia más activa (fundido de ≈ 1 s) y al primer movimiento viaja hasta el cursor; si el cursor sale de la ventana
   // la luz se queda donde estaba y se apaga en ≈ 3 s hasta el piso.
-  var luz={el:null,bg:'',opP:1,estilo:'',activa:true,fija:false,r:72,rEsp:0,x:0,y:0,tx:0,ty:0,pico:1,meta:1,viaje:0,visto:false,fuera:false,raf:0,ult:0,vel:0,ptT:0,ptX:0,ptY:0,foco:null,
-           exc:-1e9,nt:0,c:false,ax:0,ay:0,bx:0,by:0,dx:0,dy:0,l2:0,R2:0,n:0};
-  // La «tapa» de la luz son capas que sólo se mueven con transform (la máscara CSS sobre el canvas se re-rasterizaba en cada cuadro y bajaba los fps en el compositor por software;
-  // con capas movidas por transform el costo es nulo): cuatro losas sólidas del color de la página (alfa 1 − piso) alrededor de un cuadrado de 2·r1 donde un degradado deja un hueco
-  // (transparente hasta r0, smoothstep hasta r1) y, encima, un «tapón» cuyo alfa p = A(1 − s)/(1 − A·s) devuelve el cuadrado entero al alfa A al subir su opacidad (el fundido de entrada y de salida).
+  var luz={el:null,bg:'',activa:true,fija:false,estela:true,r:72,r2i:0,rEsp:0,x:0,y:0,tx:0,ty:0,pico:1,meta:1,viaje:0,visto:false,fuera:false,raf:0,ult:0,vel:0,ptT:0,ptX:0,ptY:0,foco:null,
+           exc:-1e9,nt:0,ms:0,pasos:0,c:false,ch:false,wh:1,ns:0,ax:0,ay:0,bx:0,by:0,dx:0,dy:0,l2:0,R2:0,n:0,gw:0,gh:0,gw2:0,I:null,lut:null,lutR:null,
+           sx:new Float32Array(LUZ_NE),sy:new Float32Array(LUZ_NE),st:new Float64Array(LUZ_NE),e0:0,en:0,lx:0,ly:0,lt:0,lok:false,
+           qx:new Float32Array(LUZ_NE),qy:new Float32Array(LUZ_NE),qw:new Float32Array(LUZ_NE)};
+  // 042: la tapa ya no son capas movidas con transform sino dos canvas de baja resolución (1 píxel por LUZ_ESC × LUZ_ESC px de la ventana, escalados por el navegador con suavizado) que se
+  // rellenan con el alfa de la tapa en cada cuadro de la luz: A·(1 − I(x,y)), con I el máximo de los «sellos» (un círculo con el perfil de la luz: plena hasta LUZ_R0·r y smoothstep hasta r). Un sello es la cabeza
+  // (en la posición suavizada del cursor, con peso (pico − piso)/(1 − piso)) o un punto del recorrido: la luz deja un sello cada LUZ_PASO_E px y cada uno se mantiene entero LUZ_RET s y después se apaga con un smoothstep en
+  // LUZ_CAE s (la estela: el costado por donde pasó el cursor sigue iluminado un par de segundos). Con una tapa de capas no se podía: dos hoyos apilados se multiplican en vez de unirse (y la unión de hoyos es el máximo).
+  // El perfil es analítico (tabla de 512 entradas en función de d²), así que el círculo es exacto a cualquier tamaño de ventana. La tapa de la raíz usa el mismo mapa I con otro perfil (hueco hasta LUZ_RAIZ0·r).
   function luzRadio(){
-    var k, L=luz.el;
-    luz.r=luz.rEsp>0?luz.rEsp:LUZ_FRAC*W;
-    if(!L) return; L.R=Math.ceil(luz.r);
-    for(k=0;k<2;k++) luzCapas(L.s[k],k?LUZ_RAIZA:1-LUZ_PISO,k?LUZ_RAIZ0:LUZ_R0);
-    luz.estilo='';
+    var L=luz.el, k, N=LUZ_LUTN, dn, t, I, lo, hi, m, tr;
+    luz.r=luz.rEsp>0?luz.rEsp:LUZ_FRAC*W; luz.r2i=1/(luz.r*luz.r);
+    if(!luz.lut){ luz.lut=new Float32Array(N); luz.lutR=new Float32Array(256); }
+    for(k=0;k<N;k++){ dn=Math.sqrt((k+.5)/N); t=(dn-LUZ_R0)/(1-LUZ_R0); t=t<0?0:t>1?1:t; luz.lut[k]=1-t*t*(3-2*t); }          // perfil del fondo: 1 hasta LUZ_R0·r y 1 − smoothstep hasta r
+    for(k=0;k<256;k++){ I=k/255;                                                                                                // perfil de la raíz como función del mismo I (se invierte el del fondo): hueco hasta LUZ_RAIZ0·r
+      if(I>=1){ luz.lutR[k]=1; continue; } if(I<=0){ luz.lutR[k]=0; continue; }
+      lo=0; hi=1; for(m=0;m<30;m++){ t=(lo+hi)/2; if(1-t*t*(3-2*t)>I) lo=t; else hi=t; }
+      dn=LUZ_R0+t*(1-LUZ_R0); tr=(dn-LUZ_RAIZ0)/(1-LUZ_RAIZ0); tr=tr<0?0:tr>1?1:tr; luz.lutR[k]=1-tr*tr*(3-2*tr); }
+    if(!L) return;
+    luzTapas();
   }
-  function luzCapas(S,A,f0){ // estilos de un juego de capas: alfa A fuera, hueco transparente hasta f0·r1 y smoothstep hasta r1
-    var L=luz.el, R=L.R, r1=luz.r, k, t, sm, g='', g2='', d, sol=L.base+'background:rgba('+luz.bg+','+A+');', W_=W, H_=H;
-    S.top.style.cssText=sol+'width:'+W_+'px;height:'+H_+'px'; S.bot.style.cssText=sol+'width:'+W_+'px;height:'+H_+'px';
-    S.izq.style.cssText=sol+'width:'+W_+'px;height:'+2*R+'px'; S.der.style.cssText=sol+'width:'+W_+'px;height:'+2*R+'px';
-    for(k=0;k<=LUZ_PASOS;k++){ t=k/LUZ_PASOS; sm=t*t*(3-2*t); d=(f0*r1+t*(1-f0)*r1).toFixed(1); g+=',rgba('+luz.bg+','+(A*sm).toFixed(4)+') '+d+'px'; g2+=',rgba('+luz.bg+','+(A*(1-sm)/(1-A*sm)).toFixed(4)+') '+d+'px'; }
-    S.q.style.cssText=L.base+'width:'+2*R+'px;height:'+2*R+'px;background:radial-gradient(circle at '+R+'px '+R+'px,rgba('+luz.bg+',0) 0px'+g+',rgba('+luz.bg+','+A+') 100%)';
-    S.p.style.cssText=L.base+'width:'+2*R+'px;height:'+2*R+'px;background:radial-gradient(circle at '+R+'px '+R+'px,rgba('+luz.bg+','+A+') 0px'+g2+',rgba('+luz.bg+',0) 100%);opacity:'+luz.opP;
+  function luzTapas(){ // tamaño de los dos canvas y de sus ImageData: la tapa del fondo cubre la ventana; la de la raíz sólo la franja del margen izquierdo (donde está la raíz: x < colIzq), que es ≈ 7 veces menos área que componer
+    var L=luz.el, k, c, d, i, rgb3=luz.bg.split(','), gw;
+    luz.gw=Math.ceil(W/LUZ_ESC)+1; luz.gh=Math.ceil(H/LUZ_ESC)+1; luz.gw2=Math.min(luz.gw,Math.ceil((colIzq+8)/LUZ_ESC)+1); luz.I=new Float32Array(luz.gw*luz.gh);
+    for(k=0;k<2;k++){ c=L.cv[k]; gw=k?luz.gw2:luz.gw; c.width=gw; c.height=luz.gh; c.style.width=gw*LUZ_ESC+'px'; c.style.height=luz.gh*LUZ_ESC+'px';
+      L.im[k]=L.cx[k].createImageData(gw,luz.gh); d=L.im[k].data; for(i=0;i<d.length;i+=4){ d[i]=+rgb3[0]; d[i+1]=+rgb3[1]; d[i+2]=+rgb3[2]; } }
   }
-  function luzColor(){ // el color de la página (--bg) para las losas; se recalcula con el tema
+  function luzColor(){ // el color de la página (--bg) para la tapa; se recalcula con el tema
     var t=getComputedStyle(raiz).getPropertyValue('--bg').trim(), m=/^#([0-9a-f]{6})$/i.exec(t), v, c;
     if(m){ v=parseInt(m[1],16); c=((v>>16)&255)+','+((v>>8)&255)+','+(v&255); } else c='250,249,246';
     if(c===luz.bg) return; luz.bg=c; luzRadio(); luzEstilo();
   }
-  function luzCrear(){ // dos juegos de capas: la tapa del fondo (encima del canvas de las bacterias) y la de la raíz (debajo de él, encima del canvas de la raíz)
-    var L={s:[]}, k, j, nombres=['top','bot','izq','der','q','p'], S;
-    L.base='position:absolute;left:0;top:0;will-change:transform;pointer-events:none;';
-    for(j=0;j<2;j++){ S={caja:document.createElement('div')}; S.caja.setAttribute('aria-hidden','true'); S.caja.style.cssText='position:fixed;inset:0;z-index:-1;pointer-events:none;display:block';
-      for(k=0;k<nombres.length;k++){ S[nombres[k]]=document.createElement('div'); S.caja.appendChild(S[nombres[k]]); } L.s.push(S); }
-    L.caja=L.s[0].caja; L.caja2=L.s[1].caja;
-    cv.parentNode.insertBefore(L.caja2,cv); cv.parentNode.insertBefore(L.caja,cv.nextSibling); L.R=72; luz.el=L; luz.bg=''; luzColor();
+  function luzCrear(){ // dos tapas: la del fondo (encima del canvas de las bacterias) y la de la raíz (debajo de él, encima del canvas de la raíz); cada una es un div fijo con un canvas de baja resolución
+    var L={cv:[],cx:[],im:[],caja:null,caja2:null}, k, c, d;
+    for(k=0;k<2;k++){ d=document.createElement('div'); d.setAttribute('aria-hidden','true'); d.style.cssText='position:fixed;inset:0;z-index:-1;pointer-events:none;display:block;overflow:hidden';
+      c=document.createElement('canvas'); c.style.cssText='position:absolute;left:0;top:0;pointer-events:none;image-rendering:auto'; d.appendChild(c); L.cv.push(c); L.cx.push(c.getContext('2d')); if(k) L.caja2=d; else L.caja=d; }
+    cv.parentNode.insertBefore(L.caja2,cv); cv.parentNode.insertBefore(L.caja,cv.nextSibling); luz.el=L; luz.bg=''; luzColor();
   }
-  function luzEstilo(){ // posición (transform, redondeada al píxel físico para que las costuras no se vean) y opacidad del tapón
-    var L=luz.el, x, y, R, W1=W, H1=H, d=dpr, o, k, S, v;
+  function luzEstelas(now){ // sellos vivos (descarta los que ya se apagaron): llena qx, qy, qw (peso 1 durante LUZ_RET s y después 1 − smoothstep en LUZ_CAE s) y devuelve cuántos son
+    var k, i, n=0, a, w, t, tot=LUZ_RET+LUZ_CAE;
+    while(luz.en>0&&now-luz.st[luz.e0]>=tot){ luz.e0=(luz.e0+1)%LUZ_NE; luz.en--; }
+    for(k=0;k<luz.en;k++){ i=(luz.e0+k)%LUZ_NE; a=now-luz.st[i]; if(a<=LUZ_RET) w=1; else { t=(a-LUZ_RET)/LUZ_CAE; w=1-t*t*(3-2*t); }
+      luz.qx[n]=luz.sx[i]; luz.qy[n]=luz.sy[i]; luz.qw[n]=w; n++; }
+    return n;
+  }
+  function luzSello(x,y,w){ // I = máx(I, w · perfil) en las celdas del mapa dentro del radio (por filas: sólo el tramo del círculo)
+    var gw=luz.gw, gh=luz.gh, e=LUZ_ESC, gr=luz.r/e, cx=x/e-.5, cy=y/e-.5, j0=Math.max(0,Math.ceil(cy-gr)), j1=Math.min(gh-1,Math.floor(cy+gr)),
+        I=luz.I, lut=luz.lut, k2=luz.r2i*e*e*LUZ_LUTN, N=LUZ_LUTN, i, j, dx, dy, h, i0, i1, d2, v, row, g2=gr*gr;
+    for(j=j0;j<=j1;j++){ dy=j-cy; h=g2-dy*dy; if(h<=0) continue; h=Math.sqrt(h); i0=Math.max(0,Math.ceil(cx-h)); i1=Math.min(gw-1,Math.floor(cx+h)); row=j*gw;
+      for(i=i0;i<=i1;i++){ dx=i-cx; d2=(dx*dx+dy*dy)*k2; if(d2>=N) continue; v=lut[d2|0]*w; if(v>I[row+i]) I[row+i]=v; } }
+  }
+  function luzEstilo(){ // redibuja las dos tapas: el mapa I (estela + cabeza) → alfa del fondo A0·(1 − I) y de la raíz A1·(1 − perfilRaíz(I))
+    var L=luz.el, I=luz.I, n, k, p, v, d0, d1, A0=1-LUZ_PISO, A1=LUZ_RAIZA, lr=luz.lutR, ns, i, j, row, gw, gw2;
     if(!L) return;
     v=luz.activa&&cv.style.display!=='none'?'block':'none'; L.caja.style.display=v; L.caja2.style.display=v; if(rz.cvR) rz.cvR.style.display=cv.style.display==='none'?'none':'block'; if(!luz.activa) return;
-    R=L.R; x=Math.round(luz.x*d)/d; y=Math.round(luz.y*d)/d; o=(1-luz.pico)/(1-LUZ_PISO); o=o<0?0:o>1?1:o;
-    for(k=0;k<2;k++){ S=L.s[k];
-      S.top.style.transform='translate('+0+'px,'+(y-R-H1)+'px)'; S.bot.style.transform='translate(0px,'+(y+R)+'px)';
-      S.izq.style.transform='translate('+(x-R-W1)+'px,'+(y-R)+'px)'; S.der.style.transform='translate('+(x+R)+'px,'+(y-R)+'px)';
-      S.q.style.transform='translate('+(x-R)+'px,'+(y-R)+'px)'; S.p.style.transform='translate('+(x-R)+'px,'+(y-R)+'px)'; S.p.style.opacity=o.toFixed(3); }
+    I.fill(0); ns=luzEstelas(performance.now()/1000);
+    for(k=0;k<ns;k++) luzSello(luz.qx[k],luz.qy[k],luz.qw[k]);
+    luz.wh=(luz.pico-LUZ_PISO)/(1-LUZ_PISO); luz.wh=luz.wh<0?0:luz.wh>1?1:luz.wh; if(luz.wh>.002) luzSello(luz.x,luz.y,luz.wh);
+    if(luz.gw2!==Math.min(luz.gw,Math.ceil((colIzq+8)/LUZ_ESC)+1)) luzTapas();
+    d0=L.im[0].data; d1=L.im[1].data; n=I.length; gw=luz.gw; gw2=luz.gw2;
+    for(p=0,k=3;p<n;p++,k+=4){ v=I[p]; d0[k]=(A0*(1-v)*255+.5)|0; }
+    for(j=0;j<luz.gh;j++){ row=j*gw; k=3+4*j*gw2; for(i=0;i<gw2;i++,k+=4){ v=I[row+i]; d1[k]=(A1*(1-lr[(v*255+.5)|0])*255+.5)|0; } }
+    L.cx[0].putImageData(L.im[0],0,0); L.cx[1].putImageData(L.im[1],0,0);
     luz.n++;
   }
+  function luzEstela(){ // 042: deja un sello cada LUZ_PASO_E px del recorrido de la luz (con varios por cuadro si el cursor saltó), con la hora a la que la luz pasó por ahí
+    var now=performance.now()/1000, d, n, k, f, i, x0, y0, t0;
+    if(!luz.estela||luz.fija||!luz.activa||luz.wh<.5){ luz.lok=false; return; }
+    if(!luz.lok){ luz.lx=luz.x; luz.ly=luz.y; luz.lt=now; luz.lok=true; return; }
+    x0=luz.lx; y0=luz.ly; t0=luz.lt; d=Math.hypot(luz.x-x0,luz.y-y0); if(d<LUZ_PASO_E) return;
+    n=Math.floor(d/LUZ_PASO_E);
+    for(k=1;k<=n;k++){ f=k*LUZ_PASO_E/d; i=(luz.e0+luz.en)%LUZ_NE; luz.sx[i]=x0+(luz.x-x0)*f; luz.sy[i]=y0+(luz.y-y0)*f; luz.st[i]=t0+(now-t0)*f;
+      if(luz.en<LUZ_NE) luz.en++; else luz.e0=(luz.e0+1)%LUZ_NE; }
+    f=n*LUZ_PASO_E/d; luz.lx=x0+(luz.x-x0)*f; luz.ly=y0+(luz.y-y0)*f; luz.lt=t0+(now-t0)*f;
+  }
   function luzPaso(ts){
-    var dt=Math.min(.05,Math.max(.001,(ts-luz.ult)/1000)), tau, mov, ta;
+    var dt=Math.min(.05,Math.max(.001,(ts-luz.ult)/1000)), tau, mov, ta, t0;
     luz.ult=ts;
     if(luz.viaje>0) luz.viaje=Math.max(0,luz.viaje-dt/LUZ_VIAJE_T);
     tau=LUZ_TAU+(LUZ_TAU_VIAJE-LUZ_TAU)*luz.viaje;
     luz.x+=(luz.tx-luz.x)*(1-Math.exp(-dt/tau)); luz.y+=(luz.ty-luz.y)*(1-Math.exp(-dt/tau));
     ta=luz.meta>luz.pico?(luz.visto&&!luz.fuera?LUZ_TAU_VUELVE:LUZ_TAU_ENTRA):LUZ_TAU_SALE; luz.pico+=(luz.meta-luz.pico)*(1-Math.exp(-dt/ta));
     mov=Math.abs(luz.tx-luz.x)+Math.abs(luz.ty-luz.y)>.2||Math.abs(luz.meta-luz.pico)>.002||luz.viaje>0;
-    if(!mov){ luz.x=luz.tx; luz.y=luz.ty; luz.pico=luz.meta; luz.raf=0; }
-    if(luz.c){ ta=Math.sqrt(luzDist2(luz.x,luz.y))-(Math.sqrt(luz.R2)-luz.r); if(ta>luz.exc) luz.exc=ta; luz.nt++; }  // diagnóstico: cuánto se salió el disco de la luz de lo dibujado en el último cuadro (px; ≤ 0 = nada sin dibujar)
-    luzEstilo(); if(mov) luz.raf=requestAnimationFrame(luzPaso);
+    if(!mov){ luz.x=luz.tx; luz.y=luz.ty; luz.pico=luz.meta; }
+    if(luz.ch){ ta=Math.sqrt(luzDist2(luz.x,luz.y))-(Math.sqrt(luz.R2)-luz.r); if(ta>luz.exc) luz.exc=ta; luz.nt++; }  // diagnóstico: cuánto se salió el disco de la luz de lo dibujado en el último cuadro (px; ≤ 0 = nada sin dibujar)
+    t0=performance.now(); luz.wh=(luz.pico-LUZ_PISO)/(1-LUZ_PISO); luzEstela(); luzEstilo(); luz.ms+=performance.now()-t0; luz.pasos++; if(mov||luz.en>0) luz.raf=requestAnimationFrame(luzPaso); else luz.raf=0;
   }
   function luzMueve(){ if(!luz.raf){ luz.ult=performance.now(); luz.raf=requestAnimationFrame(luzPaso); } }
   function luzSigue(x,y){
@@ -661,20 +697,33 @@
   }
   function luzSale(){ if(luz.fija) return; luz.fuera=true; luz.meta=LUZ_PISO; luz.vel=0; luzMueve(); }  // la luz queda donde estaba y se apaga
   function luzFoco(cx,cy){ luz.foco={x:cx,y:cy}; if(!luz.visto&&!luz.fija){ luz.x=luz.tx=cx; luz.y=luz.ty=cy; luz.pico=LUZ_PISO; luz.meta=1; luzEstilo(); luzMueve(); } }
-  function luzPrep(){ // recorte de dibujar(): la cápsula entre la luz y su objetivo, más el radio exterior y un margen (la simulación se dibuja a menos cuadros que la máscara)
+  function luzPrep(){ // recorte de dibujar(): la cápsula entre la luz y su objetivo y los sellos de la estela, más el radio exterior y un margen (la simulación se dibuja a menos cuadros que la tapa)
     var m, R;
-    luz.c=luz.activa&&luz.pico>LUZ_PISO+.02;
+    luz.ch=luz.activa&&luz.pico>LUZ_PISO+.02; luz.wh=(luz.pico-LUZ_PISO)/(1-LUZ_PISO); luz.wh=luz.wh<0?0:luz.wh>1?1:luz.wh;
+    luz.ns=luz.activa?luzEstelas(performance.now()/1000):0;
+    luz.c=luz.ch||luz.ns>0;
     if(!luz.c) return false;
-    m=LUZ_MARGEN+Math.min(LUZ_MARGEN_V,luz.vel*.05); R=luz.r+m; luz.R2=R*R;
-    luz.ax=luz.x; luz.ay=luz.y; luz.bx=luz.tx; luz.by=luz.ty; luz.dx=luz.bx-luz.ax; luz.dy=luz.by-luz.ay; luz.l2=luz.dx*luz.dx+luz.dy*luz.dy;
+    if(luz.ch){ m=LUZ_MARGEN+Math.min(LUZ_MARGEN_V,luz.vel*.05); R=luz.r+m; luz.R2=R*R;
+      luz.ax=luz.x; luz.ay=luz.y; luz.bx=luz.tx; luz.by=luz.ty; luz.dx=luz.bx-luz.ax; luz.dy=luz.by-luz.ay; luz.l2=luz.dx*luz.dx+luz.dy*luz.dy; }
     return true;
   }
   function luzDist2(x,y){
     var px=x-luz.ax, py=y-luz.ay, t=luz.l2>.01?(px*luz.dx+py*luz.dy)/luz.l2:0;
     if(t<0) t=0; else if(t>1) t=1; px-=t*luz.dx; py-=t*luz.dy; return px*px+py*py;
   }
-  function enLuz(x,y){ return luzDist2(x,y)<luz.R2; }
-  function fuera(x,y){ return luz.activa&&(!luz.c||luzDist2(x,y)>=luz.R2); }       // 041: con la luz apagada no se dibuja el detalle (los márgenes sólo dejan ver los cuerpos de las células)
+  function enLuz(x,y){
+    var k, dx, dy, Rt=luz.r+LUZ_MARGEN;
+    if(luz.ch&&luzDist2(x,y)<luz.R2) return true;
+    Rt*=Rt; for(k=0;k<luz.ns;k++){ if(luz.qw[k]<.05) continue; dx=x-luz.qx[k]; dy=y-luz.qy[k]; if(dx*dx+dy*dy<Rt) return true; }
+    return false;
+  }
+  function fuera(x,y){ return luz.activa&&(!luz.c||!enLuz(x,y)); }       // 041: con la luz apagada no se dibuja el detalle (los márgenes sólo dejan ver los cuerpos de las células)
+  function luzI(x,y){ // 042: la intensidad de la luz en un punto (0..1): el máximo de la cabeza (cápsula hasta el objetivo) y de los sellos de la estela, con el mismo perfil que la tapa
+    var v=0, k, d2, u, r2=luz.r*luz.r, N=LUZ_LUTN, lut=luz.lut, k2=luz.r2i*N;
+    if(luz.ch){ d2=luzDist2(x,y); if(d2<r2){ v=lut[(d2*k2)|0]*luz.wh; } }
+    for(k=0;k<luz.ns;k++){ d2=(x-luz.qx[k])*(x-luz.qx[k])+(y-luz.qy[k])*(y-luz.qy[k]); if(d2<r2){ u=lut[(d2*k2)|0]*luz.qw[k]; if(u>v) v=u; } }
+    return v;
+  }
   function colF(x){ // 041: 1 en los márgenes, 0 en la columna de texto (con una transición de 2·LUZ_BORDE px en sus bordes)
     var u=(x-(colIzq-LUZ_BORDE))/(2*LUZ_BORDE), v=((colDer+LUZ_BORDE)-x)/(2*LUZ_BORDE);
     u=v<u?v:u; if(u<=0) return 0; if(u>=1) return 1; return u*u*(3-2*u);
@@ -1242,7 +1291,7 @@
     for(i=0;i<n;i++){
       x=X[i]; y=Y[i]; det=!lz||(rec&&enLuz(x,y)); if(!det&&(i%LUZ_MUESTRA||RZc[i])) continue;       // 039: fuera de la luz sólo se dibuja el cuerpo (041: y no el de las células de la raíz, que la delatarían)
       tp=T[i]; sesil=S[i]; sz=SZ[i];
-      mc=1; if(lz){ u=colF(x); if(u>0){ d2=rec?Math.sqrt(luzDist2(x,y))/r1:2; d2=(d2-.75)/.25; d2=d2<0?0:d2>1?1:d2*d2*(3-2*d2); mc=1-(1-LUZ_COL)*u*d2; } }   // 041: sobre la columna de texto el fondo queda casi oculto (LUZ_PISO·LUZ_COL), y la luz lo revela
+      mc=1; if(lz){ u=colF(x); if(u>0){ d2=rec?luzI(x,y):0; d2=d2>=.33?0:1-d2/.33; d2=d2*d2*(3-2*d2); mc=1-(1-LUZ_COL)*u*d2; } }   // 041: sobre la columna de texto el fondo queda casi oculto (LUZ_PISO·LUZ_COL), y la luz lo revela
       u=sesil&&BM[i]>1.7?(BM[i]-1.7)/.3:0; if(u>1) u=1;                       // avance de la constricción (la célula se alarga y se estrecha al medio)
       m=mc; if(nv.texto) m*=1-.45*(TXB[celda(x,y)]>1?1:TXB[celda(x,y)]); ctx.globalAlpha=m; // más tenues bajo el texto
       if(IN[i]>0&&tp!==4){ // bdeloplasto: la presa con un C dentro se redondea (un círculo algo mayor, con un punto adentro)
@@ -1385,16 +1434,17 @@
       return {morfos:{A:mo[0],B:mo[1],N:mo[2],C:mo[3],P:mo[4]},infectadas:ninf,subproducto:{activo:subp,medio:+(ps/GN).toFixed(4),max:+pm.toFixed(3)},nivel:nivel,celulas:n,nadando:nNadan,adheridas:nSesiles,colonias:co.n,mayorColonia:co.max,coloniasGrandes:co.grandes,nutrienteMedio:+(cs/GN).toFixed(3),nutrienteMax:+mx.toFixed(2),eventos:JSON.parse(JSON.stringify(ev)),cursor:cursorEstado(),eps:epsEstado(),trazadores:nt,fps:+st.fps.toFixed(1),trabajoMs:+st.trabajoMs.toFixed(2),fijo:st.fijo,choques:nv.choques,jeffery:nv.jeffery,historial:st.historial.slice()}; },
     posiciones:function(){ var s=Array.prototype.slice, es=[], k; for(k=0;k<n;k++) es.push(EST[T[k]]); return {x:s.call(X,0,n),y:s.call(Y,0,n),th:s.call(TH,0,n),fi:s.call(FI,0,n),sp:s.call(SP,0,n),tipo:s.call(T,0,n),estrategia:es,infectada:s.call(IN,0,n).map(function(v){ return v>0?1:0; }),quorum:s.call(QL,0,n),sesil:s.call(S,0,n),forma:s.call(ES,0,n),estado:s.call(RS,0,n),biomasa:s.call(BM,0,n)}; },
     avanzar:function(seg,r,pared){ var k=Math.round(seg*30), dt=1/30*(r||1); for(var i=0;i<k;i++) paso(dt,pared?1/30:undefined); dibujar(); },   // r: factor del reloj (0,6 = lectura en calma; seg son segundos de pared); pared:true hace que el reloj de la raíz y del cursor (tiempo real) avance 1/30 s por paso aunque r < 1
-    luz:function(o){ // 039: la luz. luz({activa, r, x, y, fija, piso}) para pruebas y videos: activa:false la apaga (el fondo se ve entero, como en la 038); r es el radio exterior en px (0 = 24,25 % del ancho, 042); x, y la fijan (salta y no sigue al cursor hasta fija:false)
+    luz:function(o){ // 039: la luz. luz({activa, r, x, y, fija, estela}) para pruebas y videos (estela:false quita la estela, 042): activa:false la apaga (el fondo se ve entero, como en la 038); r es el radio exterior en px (0 = 24,25 % del ancho, 042); x, y la fijan (salta y no sigue al cursor hasta fija:false)
       if(o){
         if(o.activa!=null){ luz.activa=!!o.activa; if(!luz.activa) luz.c=false; }
         if(o.r!=null){ luz.rEsp=o.r>0?+o.r:0; luzRadio(); }
-        if(o.x!=null&&o.y!=null){ luz.fija=true; luz.x=luz.tx=+o.x; luz.y=luz.ty=+o.y; luz.pico=luz.meta=1; luz.viaje=0; luz.fuera=false; }
+        if(o.estela!=null){ luz.estela=!!o.estela; if(!luz.estela){ luz.en=0; luz.lok=false; } }
+        if(o.x!=null&&o.y!=null){ luz.fija=true; luz.en=0; luz.x=luz.tx=+o.x; luz.y=luz.ty=+o.y; luz.pico=luz.meta=1; luz.viaje=0; luz.fuera=false; }
         if(o.fija===false){ luz.fija=false; luz.meta=ptr.ok?1:luz.meta; luzMueve(); }
-        if(o.reiniciarDiag) luz.exc=-1e9, luz.nt=0;
+        if(o.reiniciarDiag){ luz.exc=-1e9; luz.nt=0; luz.ms=0; luz.pasos=0; }
         luzEstilo(); sucio=true;
       }
-      return {activa:luz.activa,fija:luz.fija,r:+luz.r.toFixed(1),x:+luz.x.toFixed(1),y:+luz.y.toFixed(1),objetivoX:+luz.tx.toFixed(1),objetivoY:+luz.ty.toFixed(1),pico:+luz.pico.toFixed(3),meta:+luz.meta,piso:LUZ_PISO,visto:luz.visto,fuera:luz.fuera,recorta:luz.c,foco:luz.foco,estilos:luz.n,excesoMax:luz.exc<-1e8?null:+luz.exc.toFixed(1),ticks:luz.nt,opacidadTapon:luz.el?+luz.el.s[0].p.style.opacity:0}; },
+      return {activa:luz.activa,fija:luz.fija,r:+luz.r.toFixed(1),x:+luz.x.toFixed(1),y:+luz.y.toFixed(1),objetivoX:+luz.tx.toFixed(1),objetivoY:+luz.ty.toFixed(1),pico:+luz.pico.toFixed(3),meta:+luz.meta,piso:LUZ_PISO,visto:luz.visto,fuera:luz.fuera,recorta:luz.c,foco:luz.foco,estilos:luz.n,excesoMax:luz.exc<-1e8?null:+luz.exc.toFixed(1),ticks:luz.nt,opacidadTapon:+Math.min(1,Math.max(0,(1-luz.pico)/(1-LUZ_PISO))).toFixed(3),costoMs:luz.pasos?+(luz.ms/luz.pasos).toFixed(3):0,pasos:luz.pasos,estela:{activa:luz.estela,sellos:luz.en,retiene:LUZ_RET,cae:LUZ_CAE,paso:LUZ_PASO_E}}; },
     arena:function(o){ // 040: dónde nace la arena del cursor quieto: arena({sobrelapamiento}) cambia cuántos px hacia el texto entra la zona de los márgenes (para medirlo); sin argumentos sólo informa
       if(o&&o.sobrelapamiento!=null) ARENA_OV=+o.sobrelapamiento;
       return {izq:+colIzq.toFixed(1),der:+colDer.toFixed(1),sobrelapamiento:ARENA_OV,zonaIzq:[0,+(colIzq+ARENA_OV).toFixed(1)],zonaDer:[+(colDer-ARENA_OV).toFixed(1),W]};
