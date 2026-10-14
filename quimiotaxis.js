@@ -166,7 +166,7 @@
      Luz: LUZ_FRAC = 0,325 (042 parte 3; en la parte 1 era 0,2425 y en la 041 0,14): diámetro 65 % del ancho = 936 px a 1440, 1248 px a 1920 y 666 px a 1024 (área ×1,8 sobre la parte 1 y ×5,4 sobre la 041). El borde difuso escala con el radio (plena hasta 0,35·r y smoothstep hasta r).
      Fondo fuera de la luz: LUZ_PISO = 0,4 (márgenes al 40 %, alfa de la tapa 0,6) y LUZ_COL = 0,375 (sobre la columna 0,4 × 0,375 = 15 %). Cada bloque de texto lleva su velo (--velo, el color de la página al 60 %): bajo el texto el rastro queda en ≈ 6 % y entre bloques en 15 %.
        Desde la parte 3 no hay ningún panel opaco detrás del gráfico (index.html: .serie .hoja sin fondo y sin la franja de 100 vw), así que su texto SVG también queda sobre el fondo al 15 %: ver el contraste medido en el README (contraste42.js incluye el texto de los gráficos).
-     La estela: el campo de visión sigue activo después de que pasa el cursor. Si el cursor recorre el costado derecho, ese costado se mantiene iluminado LUZ_RET = 2,0 s y se apaga de forma continua (smoothstep) en LUZ_CAE = 1,5 s hasta el piso (3,5 s en total), en el orden en que pasó el cursor.
+     La estela: el campo de visión sigue activo después de que pasa el cursor. Si el cursor recorre el costado derecho, ese costado se mantiene iluminado LUZ_RET = 1,2 s y se apaga de forma continua (smoothstep) en LUZ_CAE = 1,3 s hasta el piso (2,5 s en total; 044: eran 2,0 + 1,5 = 3,5 s y se acortó para fomentar la interacción), en el orden en que pasó el cursor.
        Como la unión de dos huecos no se puede hacer apilando capas (la opacidad de dos tapas se multiplica: el hueco de una queda tapado por la otra), la tapa dejó de ser la de capas movidas con transform (039–041) y pasó a dos canvas de baja resolución (1 píxel por LUZ_ESC = 12 px, escalados con suavizado por el navegador, de modo que el
        borde sigue siendo difuso): cada cuadro de la luz se calcula el mapa I(x, y) = máximo de «sellos» (un círculo con el perfil de la luz: tabla analítica de 512 entradas en función de d², con peso 1 la cabeza y w(edad) cada punto del recorrido) y se escribe el alfa del fondo A0·(1 − I) con putImageData.
        La luz deja un sello cada LUZ_PASO_F·r = 0,22·r px del recorrido (≈ 103 px a 1440; con varios por cuadro si el cursor salta; hasta LUZ_NE = 96, descartados al apagarse), y con esa separación el festoneado de la unión es < 0,01 de alfa. dibujar() también usa los sellos: dibuja el detalle (flagelos, matriz, trazadores, arena)
@@ -191,6 +191,9 @@
      Más chica y corta: la escala de la raíz se multiplica por RZ_ESC = 0,7 (radio, zonas, pelos y laterales: ≈ 11 px de radio a 1440 en vez de 16), la punta parte en RZ_TIP0 = 42 % del alto (era 64 %) y crece hasta RZ_TIPMAX = 62 % (era 93 %).
      Los márgenes quedan libres de fondos: la barra de navegación y la franja oscura «Agentes de IA» sólo pintan su fondo sobre la columna (background-clip: content-box), de modo que el fondo vivo se ve a los lados (margen43.js: 0 de 38 400 puntos con fondo).
      La colisión de las células con la raíz revisa una segunda vez la salida (en el rincón entre una lateral y el eje una sola salida podía dejar a la célula dentro de la otra cápsula).
+   La estela más corta y la raíz sólo si hay lugar (044): LUZ_RET = 1,2 s y LUZ_CAE = 1,3 s (2,5 s en total, eran 3,5 s) para que el rastro no se quede y el usuario tenga que seguir moviendo el cursor. La raíz sólo se genera si el margen izquierdo mide al menos RZ_COLMIN = 140 px
+     (colIzq: ≈ 1366 px de ancho en adelante; a 1280 mide 104 y a 1024 mide 40, donde el radio quedaba en el mínimo de 4 px y la raíz era una raya) y la ventana al menos RZ_ALTOMIN = 480 px de alto. Si no cabe, rz.on = false: no hay geometría, ni exudado, ni especialista, ni colonistas (como raiz({activa:false})),
+     y al cambiar el tamaño de la ventana rzEspacio() la quita o la vuelve a generar (con la misma semilla y sus colonistas). raiz({activa:true}) sólo la pide: aparece si cabe (raiz().pedida, .cabe y .espacio informan por qué no está).
    Resumen de las relaciones (035–037), sus interruptores (para medir; todos encendidos por defecto) y sus controles:
      competencia r/K (A bacilo, B cocobacilo y cocos)    sin interruptor: es la cinética de cada morfotipo (tablas EST, MU, KS…); control: A y B sin las demás relaciones
      sintrofía A → B por p                                relaciones({subproducto:false})  (B sigue sintiendo la misma señal, con p = 0)
@@ -294,12 +297,12 @@
   var SEL_TEXTO='.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.grafico,.metodo,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.practicas,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina';
   var RESERVA=14, REFRACTARIA=20, NMAX=240, TMAX=40, GN=GX*GY;
   // 039: la luz (radio = LUZ_FRAC del ancho; plena hasta LUZ_R0 del radio; piso de alfa fuera; τ del seguimiento, del viaje y del fundido; margen del recorte)
-  var LUZ_FRAC=.325, LUZ_R0=.35, LUZ_PISO=.4, LUZ_COL=.375, LUZ_RAIZ0=.82, LUZ_RAIZA=.995, LUZ_BORDE=12, LUZ_ESC=12, LUZ_RET=2, LUZ_CAE=1.5, LUZ_PASO_F=.22, LUZ_NE=96, LUZ_LUTN=512, LUZ_TAU=.045, LUZ_TAU_VIAJE=.4, LUZ_VIAJE_T=1.2, LUZ_TAU_ENTRA=.33, LUZ_TAU_VUELVE=.12, LUZ_TAU_SALE=.85, LUZ_MARGEN=36, LUZ_MARGEN_V=110, LUZ_MUESTRA=1;
+  var LUZ_FRAC=.325, LUZ_R0=.35, LUZ_PISO=.4, LUZ_COL=.375, LUZ_RAIZ0=.82, LUZ_RAIZA=.995, LUZ_BORDE=12, LUZ_ESC=12, LUZ_RET=1.2, LUZ_CAE=1.3, LUZ_PASO_F=.22, LUZ_NE=96, LUZ_LUTN=512, LUZ_TAU=.045, LUZ_TAU_VIAJE=.4, LUZ_VIAJE_T=1.2, LUZ_TAU_ENTRA=.33, LUZ_TAU_VUELVE=.12, LUZ_TAU_SALE=.85, LUZ_MARGEN=36, LUZ_MARGEN_V=110, LUZ_MUESTRA=1;
   // 040: arena sólo en los márgenes (ARENA_OV = cuánto entra, hacia el texto, la zona donde nace) y la raíz: punta (px/s sin el especialista; +RZ_PG a plena colonización, con media saturación RZ_KP células P en la punta),
   // saturación del efecto local (RZ_KB), posición inicial y tope de la punta (fracción del alto), paso de reconstrucción (px), largo de los pelos (px, × escala) y su aumento local (RZ_HB), σ de la exudación (px).
   // Exudados: AEC = aporte a la grilla de nutriente c (sube el nutriente cerca de la raíz: el efecto rizosfera); r = exudado de la raíz (ácidos orgánicos), con reposición REPOR y decaimiento DECR (1/s), en una franja de GRR columnas.
   // Rizoplano: KRZ = tasa de adhesión al contacto (1/s) × afinidad por tipo (AFIN) × lugar (salidas de laterales y punta) × vecinas. P (PGPR tipo Azospirillum, tipo 5): crece con r (MUR, KR), lo gasta (QR), lo sigue (WRP); entran PIMM/s si hay menos de PMIN; tope PMAX.
-  var ARENA_OV=28, GRR=40, RZ_V0=.3, RZ_PG=.9, RZ_KP=4, RZ_KB=2.5, RZ_TIP0=.42, RZ_TIPMAX=.62, RZ_ESC=.7, RZ_AM=120, RZ_AC=8, RZ_DA=2200, RZ_YF=.27, RZ_NF=22, RZ_CONO=.1, RZ_GP=.6, RZ_PAT=1.4, RZ_PAS=3, RZ_PS=3, RZ_LS=4, RZ_SB=290, RZ_LV=.35, RZ_LB=.5, RZ_LF=1.2, RZ_PERC=40, RZ_KG=.06, RZ_KC=.05, RZ_KR=.06, RZ_ST=.03, RZ_HAIR=30, RZ_HB=.35, RZ_SIG=24, AEC=.45, REPOR=.35, DECR=.1,
+  var ARENA_OV=28, GRR=40, RZ_V0=.3, RZ_PG=.9, RZ_KP=4, RZ_KB=2.5, RZ_COLMIN=140, RZ_ALTOMIN=480, RZ_TIP0=.42, RZ_TIPMAX=.62, RZ_ESC=.7, RZ_AM=120, RZ_AC=8, RZ_DA=2200, RZ_YF=.27, RZ_NF=22, RZ_CONO=.1, RZ_GP=.6, RZ_PAT=1.4, RZ_PAS=3, RZ_PS=3, RZ_LS=4, RZ_SB=290, RZ_LV=.35, RZ_LB=.5, RZ_LF=1.2, RZ_PERC=40, RZ_KG=.06, RZ_KC=.05, RZ_KR=.06, RZ_ST=.03, RZ_HAIR=30, RZ_HB=.35, RZ_SIG=24, AEC=.45, REPOR=.35, DECR=.1,
       KRZ=.6, AFIN=[.5,.3,.4,1,0,3], MUR=.8, KR=.08, QR=.5, WRP=4, PMIN=3, PMAX=18, PIMM=.08,
       RZ_MAXN=[12,30,45,55];   // la superficie de la raíz es un hábitat más: sus células (adheridas con RZc) no cuentan para el tope del nivel (el resto sigue como en la 039) y tienen su propio tope por nivel (la superficie es finita)
 
@@ -412,7 +415,7 @@
 
   function medir(){
     W=window.innerWidth; H=window.innerHeight; dpr=Math.min(window.devicePixelRatio||1,2); hx=W/GX; hy=H/GY;
-    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); luzRadio(); columna(); if(rz.H0) rzGeom(false);
+    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); luzRadio(); columna(); rzEspacio(); if(rz.H0) rzGeom(false);
     var fr=fuentes.filter(function(f){ return f.base; });
     if(!fr.length) fuentesBase(); else fr.forEach(function(f,i){ f.x=base[i][0]*W; f.y=base[i][1]*H; f.s=base[i][3]*H; });
     sucio=true;
@@ -750,7 +753,7 @@
   // pelos (RH: x1, y1, x2, y2); rzCerca() da la distancia a la superficie, la normal y el punto de contacto, y es lo único que usan el choque, la adhesión y (041) los hongos.
   var colIzq=0, colDer=0, nPc=0, nPn=0, nPs=0, nPsn=0, nRz=0, nRzn=0, oX=0, oY=0, qx_=0, qy_=0, bD=1e9, bX=0, bY=0, bNx=1, bNy=0, bK=-1, hD=1e9, hX=0, hY=0, hK=-1;
   var RB=new Float32Array(5*460), RH=new Float32Array(4*340), CR=new Float32Array(GY*GRR), CR2=new Float32Array(GY*GRR), RZS=new Float32Array(GN), RZB=new Float32Array(GN);
-  var rz={on:true,esp:true,sc:1,hz:1,x:0,rr:13,tipY:0,v:0,nb:0,nbCuerpo:0,nh:0,hmax:0,xmax:0,ncr:6,ph:0,ph2:0,H0:0,lat:[],hel:[],hot:[],pend:0,tCol:0,cvR:null,cxR:null,tmp:null,cxT:null,cache:null,cxC:null,anchoD:0,
+  var rz={on:true,pide:true,esp:true,sc:1,hz:1,x:0,rr:13,tipY:0,v:0,nb:0,nbCuerpo:0,nh:0,hmax:0,xmax:0,ncr:6,ph:0,ph2:0,H0:0,lat:[],hel:[],hot:[],pend:0,tCol:0,cvR:null,cxR:null,tmp:null,cxT:null,cache:null,cxC:null,anchoD:0,
           pTip:0,nP:0,nCol:0,nColP:0,colBin:null,banda:60,gana:1,reb:0,fase:0,pri:null,priN:0,th:0,hw:60,xl:4,xr:150,nextPY:0,s:1,sem:0,W0:0,col0:0,
           ax:null,ay:null,av:null,na:0,am:120,ac:8,fuente:null,fuenteF:null};
   var rzMx=0, rzMy=0, rzMn=0;
@@ -758,6 +761,15 @@
     var els=document.querySelectorAll('.pagina'), a=1e9, b=-1e9, k, r, cs;
     for(k=0;k<els.length;k++){ r=els[k].getBoundingClientRect(); cs=getComputedStyle(els[k]); a=Math.min(a,r.left+(parseFloat(cs.paddingLeft)||0)); b=Math.max(b,r.right-(parseFloat(cs.paddingRight)||0)); }
     if(!(b>a)){ a=.12*W; b=.88*W; } colIzq=a; colDer=b;
+  }
+  function rzCabe(){ return colIzq>=RZ_COLMIN&&H>=RZ_ALTOMIN; }   // 044: la raíz sólo existe si el margen izquierdo tiene el ancho y la ventana el alto que necesita (si no, ni se genera ni exuda ni trae colonistas)
+  function rzEspacio(){ // 044: reconcilia rz.on con el espacio disponible (lo pedido por el usuario con raiz({activa}) y que quepa); devuelve true si cambió
+    var on=rz.pide&&rzCabe(), k;
+    if(on===rz.on) return false;
+    rz.on=on;
+    if(!on){ for(k=n-1;k>=0;k--) if(T[k]===5) quitar(k); for(k=0;k<n;k++) RZc[k]=0; CR.fill(0); rz.nP=0; rz.nCol=0; rz.nColP=0; rz.pTip=0; }   // (los contadores de la raíz sólo se recalculan con ella activa: quedarían con los de la última vez)
+    else if(n>0){ rz.H0=0; rzGeom(true); rzSembrar(); }                                 // vuelve a haber lugar (al agrandar la ventana): se genera de nuevo, con sus colonistas
+    sucio=true; return true;
   }
   function enMargen(x){ return x<colIzq+ARENA_OV||x>colDer-ARENA_OV; }
   function rzXc(y){ // x del eje primario a la altura y (el eje se guarda cada RZ_PS px de y)
@@ -1516,7 +1528,7 @@
     raiz:function(o){ // 040: la raíz. raiz({activa, especialista, punta}) para pruebas: activa:false la quita (con sus exudados y el especialista); especialista:false quita las P y no entran más; punta: fracción del alto; sin argumentos sólo informa
       var k, hz=rz.hz;
       if(o){
-        if(o.activa!=null&&!!o.activa!==rz.on){ rz.on=!!o.activa; if(!rz.on){ for(k=n-1;k>=0;k--) if(T[k]===5) quitar(k); for(k=0;k<n;k++) RZc[k]=0; CR.fill(0); } rz.H0=rz.on?0:rz.H0; rzGeom(rz.on); if(rz.on) rzSembrar(); sucio=true; }                    // al volver a crearla trae sus colonistas
+        if(o.activa!=null&&!!o.activa!==rz.pide){ rz.pide=!!o.activa; rzEspacio(); }                    // al volver a crearla trae sus colonistas
         if(o.especialista!=null){ rz.esp=!!o.especialista; if(!rz.esp) for(k=n-1;k>=0;k--) if(T[k]===5) quitar(k); }
         if(o.fuente!==undefined) rz.fuenteF=o.fuente;
         if((o.semilla!=null||o.parche!=null||o.punta!=null||o.fuente!==undefined)&&rz.on){ // semilla: regenera la raíz con esa semilla; parche: [{x,y,r,v}] suma nutriente c sólo mientras se genera (para medir el quimiotropismo); punta: fracción del alto
@@ -1526,7 +1538,7 @@
           rz.H0=H; rz.W0=W; rz.col0=colIzq; rzGenera(o.punta!=null?Math.max(.3*H,Math.min(RZ_TIPMAX*H,o.punta*H)):(o.tip!=null?o.tip*H:RZ_TIP0*H)); if(cA) CA.set(cA); rzBuild(); rzFuente(); rzTamano(); rzPintar(); sucio=true; }
         dibujar();
       }
-      return {activa:rz.on,semilla:rz.sem,especialista:rz.esp,x:+rz.x.toFixed(1),centro:+rz.x.toFixed(1),margen:[+rz.xl.toFixed(1),+rz.xr.toFixed(1)],eje:(function(){ var k, mn=1e9, mx=-1e9, sm=0, v; for(k=0;k<rz.priN;k++){ v=rz.pri[k]; if(v<mn) mn=v; if(v>mx) mx=v; sm+=v; } return {min:+mn.toFixed(1),max:+mx.toFixed(1),media:+(sm/Math.max(1,rz.priN)).toFixed(1)}; })(),lados:{izq:rz.lat.filter(function(l){ return l.lado<0; }).length,der:rz.lat.filter(function(l){ return l.lado>0; }).length},radio:+rz.rr.toFixed(1),escala:+rz.sc.toFixed(2),escalaAlto:+hz.toFixed(2),punta:+rz.tipY.toFixed(1),puntaFrac:+(rz.tipY/H).toFixed(3),velocidad:+rz.v.toFixed(3),velocidadBase:RZ_V0,
+      return {activa:rz.on,pedida:rz.pide,cabe:rzCabe(),espacio:{margen:+colIzq.toFixed(1),minimo:RZ_COLMIN,alto:H,minimoAlto:RZ_ALTOMIN},semilla:rz.sem,especialista:rz.esp,x:+rz.x.toFixed(1),centro:+rz.x.toFixed(1),margen:[+rz.xl.toFixed(1),+rz.xr.toFixed(1)],eje:(function(){ var k, mn=1e9, mx=-1e9, sm=0, v; for(k=0;k<rz.priN;k++){ v=rz.pri[k]; if(v<mn) mn=v; if(v>mx) mx=v; sm+=v; } return {min:+mn.toFixed(1),max:+mx.toFixed(1),media:+(sm/Math.max(1,rz.priN)).toFixed(1)}; })(),lados:{izq:rz.lat.filter(function(l){ return l.lado<0; }).length,der:rz.lat.filter(function(l){ return l.lado>0; }).length},radio:+rz.rr.toFixed(1),escala:+rz.sc.toFixed(2),escalaAlto:+hz.toFixed(2),punta:+rz.tipY.toFixed(1),puntaFrac:+(rz.tipY/H).toFixed(3),velocidad:+rz.v.toFixed(3),velocidadBase:RZ_V0,
         zonas:{cofia:[0,+(22*hz).toFixed(1)],meristema:[+(22*hz).toFixed(1),+(48*hz).toFixed(1)],elongacion:[+(48*hz).toFixed(1),+(110*hz).toFixed(1)],pelos:[+(110*hz).toFixed(1),+(280*hz).toFixed(1)],maduracion:[+(280*hz).toFixed(1),null]},
         fuente:rz.fuente?{x:+rz.fuente.x.toFixed(1),y:+rz.fuente.y.toFixed(1),ejeX:rz.pri?+rzXc(rz.fuente.y).toFixed(1):null}:null,atractores:(function(){ var k, v=0; for(k=0;k<rz.na;k++) if(rz.av[k]) v++; return {total:rz.na,vivos:v}; })(),laterales:rz.lat.map(function(l){ var q=l.pts; return {y:+l.y.toFixed(1),lado:l.lado,largo:+l.len.toFixed(1),x:+q[0].toFixed(1),punta:[+q[q.length-2].toFixed(1),+q[q.length-1].toFixed(1)],viva:l.vivo}; }),pelos:rz.nh,largoPelos:+(function(){ var k, t=0; for(k=0;k<rz.nh;k++) t+=Math.hypot(RH[k*4+2]-RH[k*4],RH[k*4+3]-RH[k*4+1]); return rz.nh?t/rz.nh:0; })().toFixed(2),capsulas:rz.nb,xmax:+rz.xmax.toFixed(1),banda:+rz.banda.toFixed(1),columnasR:rz.ncr,
         colonizacion:{rizoplano:rz.nCol,especialistaAdherido:rz.nColP,especialistaTotal:rz.nP,especialistaPunta:rz.pTip},reconstrucciones:rz.reb,eventos:{rizoplano:ev.rz||0,rizoplanoP:ev.rzP||0},columna:{izq:+colIzq.toFixed(1),der:+colDer.toFixed(1),sobrelapamiento:ARENA_OV}}; },
