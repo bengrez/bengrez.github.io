@@ -71,8 +71,8 @@ p+p{margin-top:1em}
 img{max-width:100%;height:auto}
 
 /* ---- barra ---- */
-.barra{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--rule)}
-.barra-in{display:flex;align-items:center;gap:1.25rem;min-height:var(--bar);font-family:var(--display);font-size:.95rem}
+.barra{position:sticky;top:0;z-index:10}   /* 043: el fondo de la barra sólo cubre la columna (.barra-in): los márgenes quedan libres para el fondo vivo */
+.barra-in{background:var(--bg);background-clip:content-box;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:1.25rem;min-height:var(--bar);font-family:var(--display);font-size:.95rem}
 .marca{font-weight:600;color:var(--ink);text-decoration:none;margin-right:auto;padding-block:.6rem}
 .indice{display:flex;gap:1.15rem}
 .indice a{color:var(--ink);text-decoration:none;padding-block:.75rem;white-space:nowrap}
@@ -363,7 +363,8 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 @media (max-width:640px){.herr-a{grid-template-columns:1fr}.campos{grid-template-columns:1fr;gap:.1rem}.campos dd+dt{margin-top:.5rem}}
 
 /* ---- agentes de IA: franja oscura ---- */
-.agentes{background:var(--panel);color:var(--p-ink);border-block:1px solid var(--p-rule)}
+.agentes{color:var(--p-ink);border-block:0;padding-block:0}   /* 043: la franja oscura sólo cubre la columna: los márgenes quedan libres para el fondo vivo */
+.agentes>.pagina{background:var(--panel);background-clip:content-box;border-block:1px solid var(--p-rule);padding-block:clamp(2.25rem,5.5vw,4rem)}
 .agentes a{color:var(--p-accent)}
 .agentes .kicker,.agentes .riel .donde{color:var(--p-muted)}
 .agentes .riel-top{background:var(--panel);border-bottom-color:var(--p-rule)}
@@ -1098,7 +1099,7 @@ var portada=(function(){
   try{
     var mm=window.matchMedia; if(!mm||!mm('(pointer: fine)').matches||window.innerWidth<1024||mm('(prefers-reduced-motion: reduce)').matches) return;
     var cx=navigator.connection; if(cx&&cx.saveData) return;
-    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.js?v=1d62c6a493'; s.async=true; document.head.appendChild(s); }
+    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.js?v=db0793ad0e'; s.async=true; document.head.appendChild(s); }
     if(document.readyState==='complete') cargar(); else window.addEventListener('load',function(){ setTimeout(cargar,300); });
   }catch(e){}
 })();
