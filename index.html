@@ -80,6 +80,7 @@ img{max-width:100%;height:auto}
 .indice a{color:var(--ink);text-decoration:none;padding-block:.75rem;white-space:nowrap}
 .indice a:hover,.marca:hover{text-decoration:underline;text-decoration-thickness:1px}
 @media (max-width:899px){.indice a:not(.fijo){display:none}}
+@media (max-width:1139px){.indice a.ext{display:none}}   /* 051: el enlace al hub sólo cabe en la barra desde 1140 px; antes queda el de la sección Docencia */
 .tema{display:inline-grid;place-items:center;width:2.5rem;height:2.5rem;margin-right:-.6rem;padding:0;border:0;background:none;color:inherit;cursor:pointer}
 .tema i{width:1.05rem;height:1.05rem;border-radius:50%;border:1.5px solid var(--ink);background:linear-gradient(90deg,var(--ink) 50%,transparent 50%)}
 
@@ -363,10 +364,16 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .herr h4 a{color:inherit;text-decoration-color:var(--accent)}
 .herr h4 a::after{content:"";position:absolute;inset:0}
 .herr .sub{font-family:var(--display);color:var(--muted);margin-top:.15rem}
-.herr .estado{display:block;margin-top:.4rem}
+.herr .estado{display:block;margin-top:.4rem;white-space:normal}   /* 051: el estado de la ficha de Atlas es largo y tiene que poder partirse en celular */
 .campos{display:grid;grid-template-columns:5.5rem 1fr;gap:.45rem 1rem;margin-top:.9rem;font-size:.98rem;line-height:1.45}
 .campos dt{font-family:var(--display);font-size:.9rem;color:var(--muted);padding-top:.08rem}
-@media (min-width:960px){.herr-a{grid-template-columns:1fr}.herr-a img{max-width:15rem}}
+/* 051: las fichas sin captura llevan un recuadro tipográfico (su fórmula o su título), el mismo del hub; y el enlace a todas */
+.tipo{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.4rem;aspect-ratio:3/2;padding:.75rem;text-align:center;background:var(--surface);border:1px solid var(--rule)}
+.tipo b{font-family:var(--display);font-weight:600;font-size:clamp(1.5rem,1.2vw + 1.1rem,2rem);letter-spacing:-.02em;line-height:1.05;color:var(--ink)}
+.tipo span{font-family:var(--mono);font-size:.74rem;color:var(--muted);line-height:1.35}
+.herr:hover .tipo{border-color:var(--accent)}
+.mas-herr{margin-top:1.5rem;font-family:var(--display);font-size:1.05rem}
+@media (min-width:960px){.herr-a{grid-template-columns:1fr}.herr-a img,.herr-a .tipo{max-width:15rem}}
 @media (max-width:640px){.herr-a{grid-template-columns:1fr}.campos{grid-template-columns:1fr;gap:.1rem}.campos dd+dt{margin-top:.5rem}}
 
 /* ---- agentes de IA: franja oscura ---- */
@@ -421,7 +428,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
    visible sólo dentro de la luz del cursor, el velo puede ser más leve y dejar ver lo que pasa bajo el texto; el texto secundario conserva ≥ 5:1 con una célula debajo) y sin
    borde, y su sombra del mismo color, con desenfoque, lo difumina hacia afuera sin tocar el diseño: las células pasan «por
    detrás» y se atenúan bajo el texto sin desaparecer. Los gráficos tienen su propia franja y la franja de Agentes es opaca. */
-.fondo-vivo :is(.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.grafico,.metodo,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.practicas,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina):not(.agentes *){
+.fondo-vivo :is(.mas-herr,.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.grafico,.metodo,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.practicas,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina):not(.agentes *){
   background:var(--velo);box-shadow:0 0 12px 9px var(--velo);border-radius:3px}
 .fondo-vivo .hero h1{box-shadow:0 0 16px 12px var(--velo)}
 
@@ -472,6 +479,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <a href="#ingenieria">Data science</a>
       <a href="#investigacion">Ecología</a>
       <a href="#educacion">Docencia</a>
+      <a class="ext" href="https://bengrez.github.io/aula-herramientas/">Aula herramientas</a>
       <a href="#agentes">Agentes de IA</a>
       <a href="#recorrido">Recorrido</a>
       <a class="fijo" href="#contacto">Contacto</a>
@@ -843,12 +851,12 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <p class="grafico"><b>El gráfico de Docencia</b>, con datos simulados y sólo promedios del curso: el logro en un tema, ensayo a ensayo, y un solo acento. El tema nuevo hace caer el logro; el refuerzo lo devuelve antes de la evaluación.</p>
       <ol class="metodo">
         <li><h3>Medir</h3><p>Lo disponible: las bases curriculares, un proyector y estudiantes con celular. Planifico por objetivo de aprendizaje, clase a clase: diagnóstico de prerrequisitos al inicio, evaluación formativa antes de la sumativa y, si el calendario se mueve, cronograma ajustado por escrito.</p></li>
-        <li><h3>Ver la desviación</h3><p>La formativa muestra qué tema no se entendió mientras hay tiempo de reforzarlo. Para practicar sin nota hice herramientas web propias, sin cuenta ni instalación y sin guardar ni enviar respuestas: dos están publicadas y en uso en clases.</p></li>
+        <li><h3>Ver la desviación</h3><p>La formativa muestra qué tema no se entendió mientras hay tiempo de reforzarlo. Para practicar sin nota hice herramientas web propias, sin cuenta ni instalación y sin guardar ni enviar respuestas: cinco están publicadas (dos en uso en clases) y viven juntas en <a href="https://bengrez.github.io/aula-herramientas/">Aula herramientas</a>.</p></li>
         <li><h3>Explicar y actuar</h3><p>Lo mismo a escala del colegio: un asistente de gestión escolar con IA que cruza las fuentes que ya tiene, busca patrones entre asignaturas y responde indicando la fuente. Local-first, con datos seudonimizados. Hoy es una demo con datos sintéticos; el piloto, con datos reales, desde 2027.</p></li>
       </ol>
 
       <h3 class="titulo">Herramientas publicadas</h3>
-      <p class="pie">Las imágenes son fragmentos de cada interfaz.</p>
+      <p class="pie">Las imágenes son fragmentos de cada interfaz; las fichas sin captura llevan su fórmula o su título.</p>
       <article class="herr herr-a">
         <img src="tabla-periodica.webp" width="1200" height="1000" alt="" loading="lazy" decoding="async">
         <div>
@@ -880,6 +888,52 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
           </dl>
         </div>
       </article>
+      <article class="herr herr-a">
+        <div class="tipo" aria-hidden="true"><b>1 − 1/R₀</b><span>umbral de inmunidad de rebaño</span></div>
+        <div>
+          <h4><a href="https://bengrez.github.io/aula-herramientas/vacunas-rebano/">Vacunas e inmunidad de rebaño</a></h4>
+          <p class="estado e-piloto">recién publicada</p>
+          <dl class="campos">
+            <dt>Para</dt>
+            <dd>Ciencias para la Ciudadanía, cuarto medio, Bienestar y Salud.</dd>
+            <dt>Entrena</dt>
+            <dd>Por qué la protección de un grupo cuida también a quien no se vacunó: el umbral 1 − 1/R₀, un simulador de dos casos (cobertura alta y baja) y la lectura de datos reales de COVID-19 entre 2020 y 2022.</dd>
+            <dt>Formato</dt>
+            <dd>Página de lectura vertical, pensada para el celular. No guarda ni envía nada.</dd>
+          </dl>
+        </div>
+      </article>
+      <article class="herr herr-a">
+        <div class="tipo" aria-hidden="true"><b>Atlas</b><span>mapa de aprendizaje, sin nota</span></div>
+        <div>
+          <h4><a href="https://bengrez.github.io/aula-herramientas/diagnostico-paes/">Atlas, diagnóstico PAES Ciencias</a></h4>
+          <p class="estado e-piloto">demostración técnica; aún no se aplica a estudiantes</p>
+          <dl class="campos">
+            <dt>Para</dt>
+            <dd>Enseñanza media, preparación de la PAES de Ciencias.</dd>
+            <dt>Entrena</dt>
+            <dd>Habilidades científicas del marco PAES. Una sesión breve que termina en un mapa cualitativo de lo que ya se domina y de lo que falta, y una práctica de Biología por unidad (banco en revisión docente).</dd>
+            <dt>Datos</dt>
+            <dd>Sin nombres ni nota. El avance queda en el dispositivo y funciona sin conexión.</dd>
+          </dl>
+        </div>
+      </article>
+      <article class="herr herr-a">
+        <div class="tipo" aria-hidden="true"><b lang="en">1347–1353</b><span lang="en">four sources, ten questions</span></div>
+        <div>
+          <h4><a href="https://bengrez.github.io/aula-herramientas/black-death-skills-lab/" lang="en">The Black Death: a historian’s skills lab</a></h4>
+          <p class="sub" lang="en">Year 8 HASS (History)</p>
+          <dl class="campos">
+            <dt>Para</dt>
+            <dd>Year 8, History. En inglés australiano; se completa junto a un adulto.</dd>
+            <dt>Entrena</dt>
+            <dd>Analizar fuentes («¿puedo confiar en esta fuente?»), encadenar causa y consecuencia y argumentar a partir de la evidencia, con cuatro fuentes y diez preguntas.</dd>
+            <dt>Datos</dt>
+            <dd>Las respuestas escritas se guardan sólo en el navegador; no se envía nada.</dd>
+          </dl>
+        </div>
+      </article>
+      <p class="mas-herr"><a href="https://bengrez.github.io/aula-herramientas/">Ver todas en Aula herramientas →</a></p>
 
       <h3 class="titulo" id="colegio">Medir un colegio</h3>
       <p class="estado e-dev">en desarrollo</p>
