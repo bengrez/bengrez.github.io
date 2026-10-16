@@ -197,6 +197,11 @@
    Raíz más realista (047): la cofia es un domo (una elipse, punta roma; antes una ojiva casi cónica) y el diámetro casi no cambia detrás de ella (rzR); las laterales mantienen su radio (rzRL; antes bajaba de .42 a .15 del radio de la primaria) y terminan en punta roma.
      Los pelos radicales ya no son iguales: cada uno nace a su propia distancia de la punta (z), crece en 54–94 px, tiene su curvatura y algunos quedan cortos; y las laterales también los tienen, más densos que la primaria (uno por lado cada 4 px de largo, RZ_PHL, de largo RZ_HL × el de la primaria), en su propia zona de diferenciación (desde 6–14 px de su punta, crecen en 28 px). Los pelos de las dos
      se juntan y se ordenan por la y de su base (rzPelo, rzBuild; la bisección de rzCerca usa ahora el alto vertical máximo de los pelos, rz.hv, porque los de las laterales pueden ir en vertical). Las paredes celulares son del tejido: una retícula fija en y, no se vuelven a sortear al crecer la punta (hU). El nematodo se dibuja más ancho y con el borde más grueso (fuera de la luz era una raya casi invisible) y el nivel 0 también tiene un eucariota (EU_CAPN = 1, 2, 4, 8).
+   Opacidad estandarizada y reposo al 10 % (052): (1) en reposo (sin la luz encima) TODO lo simulado queda al 10 % de su visibilidad plena: LUZ_PISO = 0,10 (la tapa del fondo deja 10 %: bacterias, protistas, C. elegans, matriz, arena, trazadores y estelas), LUZ_RAIZA = 0 (la tapa propia de la raíz ya no oculta nada: la tapa del fondo está encima de las dos, así que la raíz —el cuerpo, los pelos y las laterales— también queda al 10 %; antes 0,5 %)
+     y LUZ_COL = 1 (la columna de texto ya no baja más el fondo: el reposo es el mismo en todas partes; el texto mantiene su velo y el factor TEXTO_F bajo los bloques). La luz revela a plena opacidad como antes.
+     (2) UNA sola opacidad base por tipo, en una tabla (OPAC; bacterias por forma, cada eucariota, C. elegans, cada zona de la raíz, matriz, arena y trazadores) y todo lo demás es un factor común que la multiplica: el reposo y la luz (las tapas), la columna y el texto (luzMod: LUZ_COL, TEXTO_F),
+     el tema (GANA_CLARO) y el factor global opacidad(f), juntos G. Desaparecen las opacidades sueltas: las adheridas ya no son ×1,3, los flagelos y los pilos usan la base de su tipo, el punto del bdeloplasto es la base × R_N, y la arena, la matriz y los trazadores también llevan G;
+     las partes de un tipo (contorno, relleno, apéndices, detalle) se pintan con el peso de su papel (R_C, R_A, R_D, R_S, R_F), el mismo para todos. Quimiotaxis.opacidades() devuelve la tabla y los factores; opacidadEn(x, y) la opacidad de luz, columna y texto en un punto.
    Caenorhabditis elegans y reposo más tenue (050): (1) el fondo en reposo (sin la luz encima) baja 40 %: LUZ_PISO 0,4 → 0,24 (la tapa deja 24 % en los márgenes y 9 % sobre la columna); la luz los revela como antes y los cuatro grupos (bacterias, protistas, raíz y nematodo) comparten el mecanismo.
      (2) El nematodo es C. elegans: hermafrodita adulto de EU_NLEN = 150 px × 12,5 px (12:1; la mitad del de la 049), esqueleto de EU_NS = 18 puntos que sigue a la cabeza y, encima, la onda dorsoventral de la locomoción (longitud EU_NLAM = 0,7 del largo, amplitud EU_NA = 0,12 del largo, EU_NF = 0,75 Hz, de la cabeza a la cola
      al avanzar y al revés al retroceder; avanza EU_NVL = 0,25 largos por segundo, balancea la cabeza); de vez en cuando retrocede (nemFlip invierte el esqueleto: la cola pasa a ser la cabeza) o hace un giro omega. Se dibuja como esquema translúcido (nemPintar): contorno con perfil de ancho (cabeza redondeada, cola en látigo), faringe con metacorpo,
@@ -252,7 +257,27 @@
                {fps:30,cap:140,choques:true,traz:40,jeffery:true,eps:true,texto:true,grilla:1,gr:340},{fps:60,cap:160,choques:true,traz:40,jeffery:true,eps:true,texto:true,grilla:1,gr:420}];
   // Por tipo: 0 coco, 1 bacilo, 2 espirilo, 3 cocobacilo (035), 4 vibrio depredador (036). Velocidad de nado (px/s) y radio de choque (px)
   var VEL=[0,25,38,20,35,30], RAD=[2.8,3.4,3.6,3.0,2.2,3.3];   // (038: la tasa de giros y su ángulo pasaron a LAMR, PAUSA y angTumbo(); ver «movimiento»)
-  var ALFA=[.26,.37,.30,.33,.46,.40], ALFA_COLA=.40, ALFA_TRAZ=.14, ALFA_SES=1.3, GANA_CLARO=1.12, ALFA_EPS=[.07,.11,.16]; // opacidades (tinta del sitio); las adheridas, algo más; la matriz (EPS), muy tenue, en tres tramos de intensidad
+  // ============================================================================================================================================================================
+  // 052: LA OPACIDAD BASE DE CADA TIPO, EN UN SOLO LUGAR.
+  // Cada tipo (cada forma de bacteria, cada eucariota, C. elegans, cada zona de la raíz, la matriz, la arena y los trazadores) tiene UNA opacidad base, la de su tinta a plena luz en el tema oscuro (0 a 1).
+  // Todo lo demás es un factor común que multiplica esa base, igual para todos y sin excepciones por estado, forma o capa:
+  //   · el reposo y la luz: las tapas de la página (LUZ_PISO: el fondo queda al 10 % de su visibilidad plena sin la luz encima, y la luz lo revela al 100 %);
+  //   · la columna de texto y el texto (luzMod: LUZ_COL y TEXTO_F);
+  //   · el tema (GANA_CLARO: sobre fondo claro la misma opacidad se lee menos, y se compensa un 12 %) y el factor global opacidad(f) —juntos, G—.
+  // Las partes de un mismo tipo (contorno, relleno, apéndices, detalle) se pintan con el peso de su papel (R_C, R_A, R_D, R_S, R_F, R_N), el mismo para todos los tipos: no son opacidades propias de nadie.
+  // Los tipos se distinguen sólo por su base; si dos difieren es por lo que dice el comentario de su fila.
+  var OPAC={
+    coco:.26, bacilo:.37, espirilo:.30, cocobacilo:.33,            // bacterias: los cocos, más tenues porque son los más chicos y abundantes; el espirilo, algo más que el coco; los bacilos y cocobacilos, la base de la comunidad
+    vibrio:.46, pgpr:.40,                                          // el vibrio depredador y el PGPR (Azospirillum): más oscuros para poder seguirlos, son los protagonistas de las interacciones
+    flagelado:.85, dinoflagelado:.85, ameba:.85, paramecio:.85, euglena:.85,   // eucariotas: ≈ 2–3 veces las bacterias, porque Benjamin pidió verlos (046); mismos para todos los tipos
+    elegans:.85,                                                   // C. elegans: como los eucariotas
+    silueta:.26, cofia:.34, meristema:.34, elongacion:.34, zonaPelos:.34, maduracion:.34, lateral:.36, peloRadical:.40, fuente:.45,   // la raíz: el contorno de todo el cuerpo, y cada zona con su base; los pelos y las laterales, algo más
+    matriz:.11, arena:.34, nucleoArena:.30, traza:.14              // la matriz (EPS), la arena del cursor y su núcleo, y los trazadores de la corriente: muy tenues
+  };
+  var TRAMOS_EPS=[.64,1,1.45], TRAMOS_ARENA=[.59,1,1.32];          // la matriz y los granos de arena se pintan en tres clases de cantidad (su intensidad), como múltiplos de la base de su tipo
+  var R_C=1, R_A=.85, R_D=.7, R_S=.4, R_F=.18, R_N=1.6;            // el peso de cada papel: contorno, apéndice (flagelo, cilios), detalle (orgánulos, paredes), sutil, relleno y el punto del bdeloplasto
+  var TEXTO_F=.55, GANA_CLARO=1.12, G=1;                           // el factor del texto (un bloque de texto deja el fondo al 55 %), la ganancia del tema y el factor común (se recalcula con el tema)
+  var BAC_OP=[OPAC.coco,OPAC.bacilo,OPAC.espirilo,OPAC.cocobacilo,OPAC.vibrio,OPAC.pgpr], EU_OP=[OPAC.flagelado,OPAC.dinoflagelado,OPAC.ameba,OPAC.paramecio,OPAC.euglena,OPAC.elegans];   // por índice de tipo (bacterias 0..5; eucariotas 0..4 y C. elegans 5)
   var PATRON=[1,3,1,0,1,3,2,1,3,1];  // de cada 10: 5 bacilos (A), 3 cocobacilos y 1 coco (B) y 1 espirilo (neutro)
   var TAU=.9, GAIN=[0,5,3.2,5,0,5], C0=.02, BRO=7, HUECO=.6, RIGIDEZ=.45, LMIN=.08, LMAX=5;
   var ETA=.55, KONDA=[0,.95,.698,.95,1.2,.8];  // propulsión: v = η·(ω/k); número de onda (rad/px) del flagelo del bacilo (λ 5 px) y del cuerpo del espirilo (λ 9 px)
@@ -271,10 +296,10 @@
   var TP=20, KP=2, TAUL=400, M0=8, BLIND=4, HW=.8;
   // 031: arena bajo el cursor quieto. σ de los granos (fracción del σ de la fuente), tope de granos (el mayor de NIVELES), tamaño (px), nivel de fondo de c (el que había en su celda al nacer la fuente),
   // umbral de c sobre ese fondo (mínimo y máximo, para que se vea un grano), alfa por tramo de concentración (tope en el centro) y bajo el texto (factor)
-  var GSIG=.25, GMAX=420, GSZ0=1, GSZ1=1.6, GTH0=.002, GTH1=.75, ALFA_AR=[.2,.34,.45], ARENA_TXT=.55, ARENA_K=.3, GV0=2.5, GV1=5;
+  var GSIG=.25, GMAX=420, GSZ0=1, GSZ1=1.6, GTH0=.002, GTH1=.75, ARENA_K=.3, GV0=2.5, GV1=5;
   // 034: el núcleo crece con lo depositado (σ de los granos × ρ(D), ρ = RHO0 + (RHO1 − RHO0)·√(D/DREF): el área sigue a la masa y avanza al ritmo del pulso) y se vuelve
   // una masa sólida: un cuerpo continuo e irregular (radio NUC_R σ, ×√ fracción de granos del centro que quedan) cuya opacidad sube con D hasta ALFA_NUC.
-  var RHO0=.5, RHO1=1.7, DREF=36.9, NUC_R=1.15, ALFA_NUC=.3, SOL0=2, SOL1=26;  // GV: duración del viaje de cada grano (s)
+  var RHO0=.5, RHO1=1.7, DREF=36.9, NUC_R=1.15, SOL0=2, SOL1=26;  // GV: duración del viaje de cada grano (s)
   // 035: morfotipos. EST: 0 = A (estrategia r), 1 = B (K), 2 = neutro. Por tipo [coco, bacilo, espirilo, cocobacilo]:
   // μmax (crecimiento relativo a la 034), Ks (constante de Monod), consumo (por biomasa: A gasta ≈ el doble que B por lo que crece), umbral de c para adherirse,
   // prob. de adhesión (factor), umbral de hambre (c bajo el cual cuenta como hambre), umbral de muerte en medio pobre, matriz (EPS: factor de frecuencia).
@@ -318,7 +343,7 @@
   var CUR_R=75, CUR_V=40;   // 046: el cursor repele levemente a las bacterias nadadoras (no a los eucariotas): radio (px) y velocidad de empuje en el centro (px/s); el empuje cae con el cuadrado de la distancia
   var RESERVA=14, REFRACTARIA=20, NMAX=240, TMAX=40, GN=GX*GY;
   // 039: la luz (radio = LUZ_FRAC del ancho; plena hasta LUZ_R0 del radio; piso de alfa fuera; τ del seguimiento, del viaje y del fundido; margen del recorte)
-  var LUZ_FRAC=.325, LUZ_R0=.35, LUZ_PISO=.24, LUZ_COL=.375, LUZ_RAIZ0=.82, LUZ_RAIZA=.995, LUZ_BORDE=12, LUZ_ESC=12, LUZ_RET=.7, LUZ_CAE=.8, LUZ_PASO_F=.22, LUZ_NE=96, LUZ_LUTN=512, LUZ_TAU=.045, LUZ_TAU_VIAJE=.4, LUZ_VIAJE_T=1.2, LUZ_TAU_ENTRA=.33, LUZ_TAU_VUELVE=.12, LUZ_TAU_SALE=.85, LUZ_MARGEN=36, LUZ_MARGEN_V=110, LUZ_MUESTRA=1;
+  var LUZ_FRAC=.325, LUZ_R0=.35, LUZ_PISO=.10, LUZ_COL=1, LUZ_RAIZ0=.82, LUZ_RAIZA=0, LUZ_BORDE=12, LUZ_ESC=12, LUZ_RET=.7, LUZ_CAE=.8, LUZ_PASO_F=.22, LUZ_NE=96, LUZ_LUTN=512, LUZ_TAU=.045, LUZ_TAU_VIAJE=.4, LUZ_VIAJE_T=1.2, LUZ_TAU_ENTRA=.33, LUZ_TAU_VUELVE=.12, LUZ_TAU_SALE=.85, LUZ_MARGEN=36, LUZ_MARGEN_V=110, LUZ_MUESTRA=1;
   // 040: arena sólo en los márgenes (ARENA_OV = cuánto entra, hacia el texto, la zona donde nace) y la raíz: punta (px/s sin el especialista; +RZ_PG a plena colonización, con media saturación RZ_KP células P en la punta),
   // saturación del efecto local (RZ_KB), posición inicial y tope de la punta (fracción del alto), paso de reconstrucción (px), largo de los pelos (px, × escala) y su aumento local (RZ_HB), σ de la exudación (px).
   // Exudados: AEC = aporte a la grilla de nutriente c (sube el nutriente cerca de la raíz: el efecto rizosfera); r = exudado de la raíz (ácidos orgánicos), con reposición REPOR y decaimiento DECR (1/s), en una franja de GRR columnas.
@@ -347,7 +372,7 @@
   function eps(x1,y1,x2,y2,w){ var o=eneT%NE, q=o*4; EA[q]=x1; EA[q+1]=y1; EA[q+2]=x2; EA[q+3]=y2; EW[o]=w>1?1:w; EN[o]=tiempo; eneT++; }
   var TX=new Float32Array(TMAX), TY=new Float32Array(TMAX), nt=0;
   var CA=new Float32Array(GN), CB=new Float32Array(GN), CP=new Float32Array(GN), CQ=new Float32Array(GN), CI=new Float32Array(GN), CJ=new Float32Array(GN), CK=new Float32Array(GN), CL=new Float32Array(GN), CF=new Float32Array(GN), CG=new Float32Array(GN), subp=true, mut=true, excl=[], depr=true, quor=true, SG=new Float32Array(GN), TXT=new Float32Array(GN), TXB=new Float32Array(GN), TXC=new Float32Array(GN), sucio=true, acum=0, cuadro=0;
-  var n=0, nivel=0, raf=0, ultimo=0, vivo=true, tiempo=0, factor=1, colores=['','','','','',''], coloresS=['','','','','',''], bdel='', cola='', traza='', rgb='0,0,0', euF=1;
+  var n=0, nivel=0, raf=0, ultimo=0, vivo=true, tiempo=0, factor=1, colores=['','','','','',''], bdelK=['','','','','',''], traza='', rgb='0,0,0', euT=0;
   var relojC=0, agit=0, empuje=0, tScroll=0, ritmo=1, ultScroll={y:0,t:0}, textoEls=[], tMasc=-1e9, cur=[], ptr={x:0,y:0,ok:false}, anc={x:0,y:0,t:0,sy:0}, creciendo=null, cid=0, ultHuella=-9, ev={adh:0,div:0,disp:0,hambre:0,pobre:0,sal:0,ent:0}, fuentes=[], campoFn=null, usuario=false, nNadan=0, nSesiles=0;
   // fuentes propias: fracción de la ventana (x, y), amplitud y ancho como fracción del alto; hacia los márgenes, para que las
   // colonias se vean sin pasar detrás del texto
@@ -446,11 +471,12 @@
     // monocromo con la tinta del sitio; cada forma con su opacidad (se recalcula al cambiar de tema)
     var t=getComputedStyle(raiz).getPropertyValue('--ink').trim(), m=/^#([0-9a-f]{6})$/i.exec(t);
     if(m){ var v=parseInt(m[1],16); rgb=((v>>16)&255)+','+((v>>8)&255)+','+(v&255); }
-    var lum=m?(((parseInt(m[1],16)>>16)&255)*.2126+((parseInt(m[1],16)>>8)&255)*.7152+(parseInt(m[1],16)&255)*.0722)/255:0, gc=lum<.5?GANA_CLARO:1, f=factor*gc;  // 038: sobre fondo claro la misma opacidad se lee menos (contraste 1,8–2,8:1 frente a 2,1–3,8:1 en oscuro); se compensa un 12 %
-    for(var k=0;k<6;k++){ colores[k]='rgba('+rgb+','+Math.min(1,ALFA[k]*f).toFixed(3)+')'; coloresS[k]='rgba('+rgb+','+Math.min(1,ALFA[k]*ALFA_SES*f).toFixed(3)+')'; }
+    var lum=m?(((parseInt(m[1],16)>>16)&255)*.2126+((parseInt(m[1],16)>>8)&255)*.7152+(parseInt(m[1],16)&255)*.0722)/255:0, gc=lum<.5?GANA_CLARO:1;  // 038: sobre fondo claro la misma opacidad se lee menos (contraste 1,8–2,8:1 frente a 2,1–3,8:1 en oscuro); se compensa un 12 %
+    G=factor*gc;                                                                                                                  // 052: el factor común de tema y global; las opacidades base están en OPAC
+    for(var k=0;k<6;k++){ colores[k]='rgba('+rgb+','+Math.min(1,BAC_OP[k]*G).toFixed(3)+')'; bdelK[k]='rgba('+rgb+','+Math.min(1,BAC_OP[k]*R_N*G).toFixed(3)+')'; }
     if(luz.el) luzColor();
-    euF=f; rz.gana=f; if(rz.cvR&&rz.nb) rzPintar();
-    bdel='rgba('+rgb+','+Math.min(1,.62*f).toFixed(3)+')'; cola='rgba('+rgb+','+Math.min(1,ALFA_COLA*f).toFixed(3)+')'; traza='rgba('+rgb+','+Math.min(1,ALFA_TRAZ*factor).toFixed(3)+')';
+    rz.gana=G; if(rz.cvR&&rz.nb) rzPintar();
+    traza='rgba('+rgb+','+Math.min(1,OPAC.traza*G).toFixed(3)+')';
   }
 
   // ---- Células ----
@@ -690,15 +716,15 @@
   function luzEstilo(){ // redibuja las dos tapas: el mapa I (estela + cabeza) → alfa del fondo A0·(1 − I) y de la raíz A1·(1 − perfilRaíz(I))
     var L=luz.el, I=luz.I, n, k, p, v, d0, d1, A0=1-LUZ_PISO, A1=LUZ_RAIZA, lr=luz.lutR, ns, i, j, row, gw, gw2;
     if(!L) return;
-    v=luz.activa&&cv.style.display!=='none'?'block':'none'; L.caja.style.display=v; L.caja2.style.display=v; if(rz.cvR) rz.cvR.style.display=cv.style.display==='none'?'none':'block'; if(!luz.activa) return;
+    v=luz.activa&&cv.style.display!=='none'?'block':'none'; L.caja.style.display=v; L.caja2.style.display=A1>0?v:'none';   // 052: con LUZ_RAIZA = 0 la tapa de la raíz no hace nada (la raíz queda al 10 % por la tapa del fondo, que está encima de las dos) y no se compone if(rz.cvR) rz.cvR.style.display=cv.style.display==='none'?'none':'block'; if(!luz.activa) return;
     I.fill(0); ns=luzEstelas(performance.now()/1000);
     for(k=0;k<ns;k++) luzSello(luz.qx[k],luz.qy[k],luz.qw[k]);
     luz.wh=(luz.pico-LUZ_PISO)/(1-LUZ_PISO); luz.wh=luz.wh<0?0:luz.wh>1?1:luz.wh; if(luz.wh>.002) luzSello(luz.x,luz.y,luz.wh);
     if(luz.gw2!==Math.min(luz.gw,Math.ceil((colIzq+8)/LUZ_ESC)+1)) luzTapas();
     d0=L.im[0].data; d1=L.im[1].data; n=I.length; gw=luz.gw; gw2=luz.gw2;
     for(p=0,k=3;p<n;p++,k+=4){ v=I[p]; d0[k]=(A0*(1-v)*255+.5)|0; }
-    for(j=0;j<luz.gh;j++){ row=j*gw; k=3+4*j*gw2; for(i=0;i<gw2;i++,k+=4){ v=I[row+i]; d1[k]=(A1*(1-lr[(v*255+.5)|0])*255+.5)|0; } }
-    L.cx[0].putImageData(L.im[0],0,0); L.cx[1].putImageData(L.im[1],0,0);
+    if(A1>0) for(j=0;j<luz.gh;j++){ row=j*gw; k=3+4*j*gw2; for(i=0;i<gw2;i++,k+=4){ v=I[row+i]; d1[k]=(A1*(1-lr[(v*255+.5)|0])*255+.5)|0; } }
+    L.cx[0].putImageData(L.im[0],0,0); if(A1>0) L.cx[1].putImageData(L.im[1],0,0);
     luz.n++;
   }
   function luzEstela(){ // 042: deja un sello cada LUZ_PASO_E px del recorrido de la luz (con varios por cuadro si el cursor saltó), con la hora a la que la luz pasó por ahí
@@ -1046,7 +1072,7 @@
     if(rz.cvR.width!==wd||rz.cvR.height!==hd){ rz.cvR.width=wd; rz.cvR.height=hd; rz.tmp.width=wd; rz.tmp.height=hd; rz.cache.width=wd; rz.cache.height=hd; cambio=true; }
     rz.cvR.style.width=w+'px'; rz.cvR.style.height=H+'px'; return cambio;   // true si cambió el tamaño (cambiarlo borra los canvases: hay que repintar de una vez)
   }
-  function rzTinta(a){ return 'rgba('+rgb+','+Math.min(1,a*rz.gana).toFixed(3)+')'; }
+  function rzT(zona,r){ return 'rgba('+rgb+','+Math.min(1,OPAC[zona]*r*rz.gana).toFixed(3)+')'; }   // 052: la opacidad base de la zona (OPAC) × el peso del papel × el factor común
   function rzCapsulas(c,extra,r0,hasta){ var k, o; c.lineCap='round'; for(k=0;k<hasta;k++){ o=k*5; c.lineWidth=Math.max(.2,2*RB[o+4]+extra); c.beginPath(); c.moveTo(RB[o],RB[o+1]); c.lineTo(RB[o+2],RB[o+3]); c.stroke(); } }
   function rzPintar(){ rz.fase=0; rzSil(); rzDet(); }   // silueta y detalle de una vez (al empezar, al cambiar el tema o el tamaño); al crecer la raíz se reparten en cuadros distintos (rzCrece)
   function rzSil(){ // silueta (contorno y relleno tenues); se dibuja en el canvas de trabajo y se publica al terminar el detalle (rzDet)
@@ -1057,52 +1083,53 @@
     nb_=rz.nb; ci='rgb('+rgb+')';
     t.setTransform(d,0,0,d,0,0); t.clearRect(0,0,w,H); t.strokeStyle=ci;                                   // contorno: las cápsulas ensanchadas menos las cápsulas
     rzCapsulas(t,2.4,0,nb_); t.globalCompositeOperation='destination-out'; rzCapsulas(t,0,0,nb_); t.globalCompositeOperation='source-over';
-    c.globalAlpha=Math.min(1,.26*rz.gana); c.drawImage(rz.tmp,0,0);
+    c.globalAlpha=Math.min(1,OPAC.silueta*R_C*rz.gana); c.drawImage(rz.tmp,0,0);
     t.clearRect(0,0,w,H); rzCapsulas(t,-.4,0,nb_);                                                        // relleno muy tenue
-    c.globalAlpha=Math.min(1,.045*rz.gana); c.drawImage(rz.tmp,0,0); c.globalAlpha=1;
+    c.globalAlpha=Math.min(1,OPAC.silueta*R_F*rz.gana); c.drawImage(rz.tmp,0,0); c.globalAlpha=1;
   }
   function rzPub(){ var c=rz.cxR; if(!c) return; c.setTransform(1,0,0,1,0,0); c.clearRect(0,0,rz.cvR.width,rz.cvR.height); c.drawImage(rz.cache,0,0); }
-  function rzDet(){ // detalle (paredes celulares, pelos, mucílago, cofias): se suma a la silueta y se publica (la raíz entera sólo se ve bajo la luz)
-    var c, w, d=dpr, k, o, y, s, r, x, e, u, hz=rz.hz, sc=rz.sc, a, sg, j, dy, hx_, hy_, hl, nx, ny;
+  function rzZona(s){ var h=rz.hz; return s<48*h?'meristema':s<110*h?'elongacion':s<280*h?'zonaPelos':'maduracion'; }   // 052: la zona del tejido a s px de la punta (la cofia es aparte)
+  var RZ_ZONAS=['meristema','elongacion','zonaPelos','maduracion'];
+  function rzDet(){ // detalle (paredes celulares, pelos, mucílago, cofias): se suma a la silueta y se publica (la raíz entera sólo se ve con la luz encima; en reposo, al 10 %)
+    var c, w, d=dpr, k, o, y, s, r, x, e, u, hz=rz.hz, sc=rz.sc, a, sg, j, dy, hx_, hy_, hl, nx, ny, P={}, z, zk, lastZ;
     if(!rz.cvR||!rz.cxC) return;
     w=rz.anchoD; c=rz.cxC;
     if(!rz.on||!rz.nb){ rzPub(); return; }
     c.setTransform(d,0,0,d,0,0); c.lineCap='round'; c.lineJoin='round';
     // mucílago de la cofia (un halo de gel) y células de borde que se desprenden
-    x=rzXc(rz.tipY); y=rz.tipY-8*hz; sg=c.createRadialGradient(x,y,2,x,y,40*sc); sg.addColorStop(0,rzTinta(.16)); sg.addColorStop(.6,rzTinta(.07)); sg.addColorStop(1,rzTinta(0)); c.fillStyle=sg; c.beginPath(); c.arc(x,y,40*sc,0,6.2832); c.fill();
-    c.strokeStyle=rzTinta(.34); c.lineWidth=.8; for(k=0;k<8;k++){ a=1.1+k*.42+.2*Math.sin(k*5.1+rz.ph); r=(24+7*((k*37)%5)/4)*sc*(1+.12*Math.sin(k*2.3)); c.beginPath(); c.arc(x+Math.cos(a)*r*.9,rz.tipY+Math.sin(a)*r*.75-6*hz,1.5*sc,0,6.2832); c.stroke(); }
+    x=rzXc(rz.tipY); y=rz.tipY-8*hz; sg=c.createRadialGradient(x,y,2,x,y,40*sc); sg.addColorStop(0,rzT('cofia',R_S)); sg.addColorStop(.6,rzT('cofia',R_S*.45)); sg.addColorStop(1,rzT('cofia',0)); c.fillStyle=sg; c.beginPath(); c.arc(x,y,40*sc,0,6.2832); c.fill();
+    c.strokeStyle=rzT('cofia',R_C); c.lineWidth=.8; for(k=0;k<8;k++){ a=1.1+k*.42+.2*Math.sin(k*5.1+rz.ph); r=(24+7*((k*37)%5)/4)*sc*(1+.12*Math.sin(k*2.3)); c.beginPath(); c.arc(x+Math.cos(a)*r*.9,rz.tipY+Math.sin(a)*r*.75-6*hz,1.5*sc,0,6.2832); c.stroke(); }
     // cofia: columela (arcos) y su borde con el meristema; centro quiescente
-    c.strokeStyle=rzTinta(.28); c.lineWidth=.7; for(k=0;k<3;k++){ u=.34+.26*k; c.beginPath(); c.ellipse(x,rz.tipY-22*hz,RZ_RC*rz.rr*u,22*hz*u,0,0,3.14159); c.stroke(); }
-    c.strokeStyle=rzTinta(.4); c.beginPath(); c.moveTo(x-RZ_RC*rz.rr+1,rz.tipY-22*hz+1.5); c.quadraticCurveTo(x,rz.tipY-22*hz-3,x+RZ_RC*rz.rr-1,rz.tipY-22*hz+1.5); c.stroke();
+    c.strokeStyle=rzT('cofia',R_D); c.lineWidth=.7; for(k=0;k<3;k++){ u=.34+.26*k; c.beginPath(); c.ellipse(x,rz.tipY-22*hz,RZ_RC*rz.rr*u,22*hz*u,0,0,3.14159); c.stroke(); }
+    c.strokeStyle=rzT('cofia',R_C); c.beginPath(); c.moveTo(x-RZ_RC*rz.rr+1,rz.tipY-22*hz+1.5); c.quadraticCurveTo(x,rz.tipY-22*hz-3,x+RZ_RC*rz.rr-1,rz.tipY-22*hz+1.5); c.stroke();
     c.beginPath(); c.arc(x,rz.tipY-25*hz,1.7*sc,0,6.2832); c.stroke();
-    // paredes de las células: transversales (más cortas hacia la punta) y las capas (epidermis, endodermis, cilindro vascular)
-    c.strokeStyle=rzTinta(.24); c.lineWidth=.6; c.beginPath();
+    // paredes de las células (transversales, más cortas hacia la punta), las capas (epidermis, endodermis, cilindro vascular) y el xilema: cada tramo con la opacidad base de su zona
+    RZ_ZONAS.forEach(function(q){ P[q]={pa:new Path2D(),ca:new Path2D(),xi:new Path2D()}; });
     dy=3.2*hz;   // 047: las paredes son del tejido: una retícula fija en y (no depende de dónde esté la punta) y cada pared está o no según el largo de célula de su zona; al avanzar la punta sólo cambian las que cruzan un umbral
     for(j=Math.floor((rz.tipY-24*hz)/dy);j>-2;j--){ y=j*dy; s=rz.tipY-y; e=s<48*hz?3.6:s<110*hz?3.6+11.4*(s-48*hz)/(62*hz):s<280*hz?15:19; if(hU(j*7+(rz.sem|0))>=Math.min(1,dy/e)) continue;
-      y+=(hU(j*7+(rz.sem|0)+3)-.5)*dy*.7; r=rzR(rz.tipY-y); x=rzXc(y);
-      c.moveTo(x-r+1.2,y); c.lineTo(x-.32*r,y); c.moveTo(x+.32*r,y); c.lineTo(x+r-1.2,y); }
-    c.stroke();
-    c.strokeStyle=rzTinta(.28); c.lineWidth=.7;
-    [[.74,48],[-.74,48],[.32,48],[-.32,48]].forEach(function(l){ c.beginPath(); for(y=rz.tipY-l[1]*hz,k=0;y>-4;y-=6,k++){ s=rz.tipY-y; r=rzR(s); x=rzXc(y)+l[0]*r; if(k) c.lineTo(x,y); else c.moveTo(x,y); } c.stroke(); });
-    c.setLineDash([3,3]); c.strokeStyle=rzTinta(.3); c.beginPath(); for(y=rz.tipY-110*hz,k=0;y>-4;y-=6,k++){ x=rzXc(y); if(k) c.lineTo(x,y); else c.moveTo(x,y); } c.stroke(); c.setLineDash([]);     // xilema
+      y+=(hU(j*7+(rz.sem|0)+3)-.5)*dy*.7; r=rzR(rz.tipY-y); x=rzXc(y); zk=P[rzZona(rz.tipY-y)].pa;
+      zk.moveTo(x-r+1.2,y); zk.lineTo(x-.32*r,y); zk.moveTo(x+.32*r,y); zk.lineTo(x+r-1.2,y); }
+    [[.74,48],[-.74,48],[.32,48],[-.32,48]].forEach(function(l){ lastZ=null; for(y=rz.tipY-l[1]*hz,k=0;y>-4;y-=6,k++){ s=rz.tipY-y; r=rzR(s); x=rzXc(y)+l[0]*r; z=rzZona(s); zk=P[z].ca; if(z!==lastZ){ if(lastZ) zk.moveTo(x,y); else zk.moveTo(x,y); lastZ=z; } else zk.lineTo(x,y); } });
+    lastZ=null; for(y=rz.tipY-110*hz,k=0;y>-4;y-=6,k++){ s=rz.tipY-y; x=rzXc(y); z=rzZona(s); zk=P[z].xi; if(z!==lastZ){ zk.moveTo(x,y); lastZ=z; } else zk.lineTo(x,y); }
+    c.lineWidth=.6; RZ_ZONAS.forEach(function(q){ c.strokeStyle=rzT(q,R_D); c.lineWidth=.6; c.stroke(P[q].pa); c.lineWidth=.7; c.stroke(P[q].ca); c.setLineDash([3,3]); c.stroke(P[q].xi); c.setLineDash([]); });
     // laterales: su origen en el periciclo (del borde del cilindro vascular hacia afuera) y las paredes de su corteza
-    rz.lat.forEach(function(la){ var ox=rzXc(la.y), s0=rz.tipY-la.y, r0=rzR(s0), lado=la.lado; c.strokeStyle=rzTinta(.36); c.lineWidth=.8;
+    rz.lat.forEach(function(la){ var ox=rzXc(la.y), s0=rz.tipY-la.y, r0=rzR(s0), lado=la.lado; c.strokeStyle=rzT('lateral',R_C); c.lineWidth=.8;
       c.beginPath(); c.moveTo(ox+lado*.32*r0,la.y-3.2*sc); c.lineTo(ox+lado*r0*.88,la.y-3.4*sc); c.moveTo(ox+lado*.32*r0,la.y+3.2*sc); c.lineTo(ox+lado*r0*.88,la.y+3.4*sc); c.stroke();
       if(la.len<3){ c.beginPath(); c.arc(ox+lado*.45*r0,la.y,3.4*sc,lado>0?-1.6:1.5,lado>0?1.6:4.6); c.stroke(); } });
     // la cofia de cada lateral (punta activa): un arco de columela detrás de la punta, células de borde y un halo de mucílago
     rz.lat.forEach(function(la){ var q=la.pts, m=q.length, tx, ty, dx, dy, dl, ux, uy, an, rg;
       if(m<6) return; tx=q[m-2]; ty=q[m-1]; dx=tx-q[m-6]; dy=ty-q[m-5]; dl=Math.sqrt(dx*dx+dy*dy)||1; ux=dx/dl; uy=dy/dl; an=Math.atan2(uy,ux);
-      rg=c.createRadialGradient(tx,ty,1,tx,ty,13*sc); rg.addColorStop(0,rzTinta(.14)); rg.addColorStop(1,rzTinta(0)); c.fillStyle=rg; c.beginPath(); c.arc(tx,ty,13*sc,0,6.2832); c.fill();
-      c.strokeStyle=rzTinta(.34); c.lineWidth=.7; c.beginPath(); c.arc(tx-ux*2.2,ty-uy*2.2,3*sc,an-1.35,an+1.35); c.stroke();
+      rg=c.createRadialGradient(tx,ty,1,tx,ty,13*sc); rg.addColorStop(0,rzT('lateral',R_S)); rg.addColorStop(1,rzT('lateral',0)); c.fillStyle=rg; c.beginPath(); c.arc(tx,ty,13*sc,0,6.2832); c.fill();
+      c.strokeStyle=rzT('lateral',R_C); c.lineWidth=.7; c.beginPath(); c.arc(tx-ux*2.2,ty-uy*2.2,3*sc,an-1.35,an+1.35); c.stroke();
       c.beginPath(); c.arc(tx+ux*5*sc+uy*3,ty+uy*5*sc-ux*3,.9,0,6.2832); c.arc(tx+ux*7*sc-uy*2,ty+uy*7*sc+ux*2,.9,0,6.2832); c.stroke(); });
     // pelos radicales (curvos, con un engrosamiento en la base)
-    c.strokeStyle=rzTinta(.4); c.lineWidth=.8; c.beginPath();
+    c.strokeStyle=rzT('peloRadical',R_C); c.lineWidth=.8; c.beginPath();
     for(k=0;k<rz.nh;k++){ o=k*4; hx_=RH[o+2]-RH[o]; hy_=RH[o+3]-RH[o+1]; hl=Math.sqrt(hx_*hx_+hy_*hy_)||1; e=RHC[k]*.2*hl; nx=-hy_/hl; ny=hx_/hl; c.moveTo(RH[o],RH[o+1]); c.quadraticCurveTo((RH[o]+RH[o+2])/2+nx*e,(RH[o+1]+RH[o+3])/2+ny*e,RH[o+2],RH[o+3]); }   // 047: la curvatura es del pelo (RHC), perpendicular a él
     c.stroke();
-    c.strokeStyle=rzTinta(.3); c.lineWidth=1.5; c.beginPath(); for(k=0;k<rz.nh;k++){ o=k*4; c.moveTo(RH[o],RH[o+1]); c.lineTo(RH[o]+(RH[o+2]-RH[o])*.14,RH[o+1]+(RH[o+3]-RH[o+1])*.14); } c.stroke();
+    c.strokeStyle=rzT('peloRadical',R_D); c.lineWidth=1.5; c.beginPath(); for(k=0;k<rz.nh;k++){ o=k*4; c.moveTo(RH[o],RH[o+1]); c.lineTo(RH[o]+(RH[o+2]-RH[o])*.14,RH[o+1]+(RH[o+3]-RH[o+1])*.14); } c.stroke();
     if(rz.fuente){ // 043: la fuente de nutriente (un parche de materia orgánica: halo y granos)
-      x=rz.fuente.x; y=rz.fuente.y; sg=c.createRadialGradient(x,y,1,x,y,22*sc); sg.addColorStop(0,rzTinta(.14)); sg.addColorStop(1,rzTinta(0)); c.fillStyle=sg; c.beginPath(); c.arc(x,y,22*sc,0,6.2832); c.fill();
-      c.fillStyle=rzTinta(.5); c.beginPath(); for(k=0;k<16;k++){ a=k*2.399+rz.ph; r=(3+13*Math.sqrt((k+.5)/16))*sc; c.moveTo(x+Math.cos(a)*r+1.1,y+Math.sin(a)*r); c.arc(x+Math.cos(a)*r,y+Math.sin(a)*r,(.9+.5*((k*7)%3))*Math.max(.7,sc),0,6.2832); } c.fill(); }
+      x=rz.fuente.x; y=rz.fuente.y; sg=c.createRadialGradient(x,y,1,x,y,22*sc); sg.addColorStop(0,rzT('fuente',R_S*.8)); sg.addColorStop(1,rzT('fuente',0)); c.fillStyle=sg; c.beginPath(); c.arc(x,y,22*sc,0,6.2832); c.fill();
+      c.fillStyle=rzT('fuente',R_C); c.beginPath(); for(k=0;k<16;k++){ a=k*2.399+rz.ph; r=(3+13*Math.sqrt((k+.5)/16))*sc; c.moveTo(x+Math.cos(a)*r+1.1,y+Math.sin(a)*r); c.arc(x+Math.cos(a)*r,y+Math.sin(a)*r,(.9+.5*((k*7)%3))*Math.max(.7,sc),0,6.2832); } c.fill(); }
     rzPub();
   }
   function rzCrear(){
@@ -1375,9 +1402,9 @@
         nb+=bajo; ntot++; if(fuera(cx,cy)) continue;                                  // 039: los granos fuera de la luz se cuentan pero no se dibujan
         AX[na]=cx; AY[na]=cy; AS[na]=g.sz[j]; AB[na]=b*2+bajo; na++;
       }
-      sol=(e.D-SOL0)/(SOL1-SOL0); sol=sol<0?0:sol>1?1:sol; sol=sol*sol*(3-2*sol); m=ti>0?vi2/ti:0; al=ALFA_NUC*sol*m*factor; // el núcleo: más sólido con lo depositado, más fino cuando se lo comen
+      sol=(e.D-SOL0)/(SOL1-SOL0); sol=sol<0?0:sol>1?1:sol; sol=sol*sol*(3-2*sol); m=ti>0?vi2/ti:0; al=OPAC.nucleoArena*sol*m*G; // el núcleo: más sólido con lo depositado, más fino cuando se lo comen
       if(al>.01&&e.x>=0&&e.y>=0&&e.x<W&&e.y<H){
-        rc=NUC_R*sg*Math.sqrt(m); if(nv.texto&&TXB[celda(e.x,e.y)]>.5) al*=ARENA_TXT;
+        rc=NUC_R*sg*Math.sqrt(m); if(nv.texto&&TXB[celda(e.x,e.y)]>.5) al*=TEXTO_F;
         gr=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,rc*1.2); gr.addColorStop(0,'rgba('+rgb+','+al.toFixed(3)+')'); gr.addColorStop(.7,'rgba('+rgb+','+(al*.8).toFixed(3)+')'); gr.addColorStop(1,'rgba('+rgb+','+(al*.15).toFixed(3)+')');
         e.nr=rc; e.na=al; if(fuera(e.x,e.y)) continue; ctx.fillStyle=gr; ctx.beginPath();
         for(t=0;t<28;t++){ th=t*.2243995; fo=1+.12*Math.sin(2*th+g.f[0])+.08*Math.sin(3*th+g.f[1])+.05*Math.sin(5*th+g.f[2]); tx=e.x+Math.cos(th)*rc*fo; ty=e.y+Math.sin(th)*rc*fo; if(t) ctx.lineTo(tx,ty); else ctx.moveTo(tx,ty); }
@@ -1388,14 +1415,14 @@
     for(b=0;b<6;b++){
       ctx.beginPath(); t=0;
       for(j=0;j<na;j++) if(AB[j]===b){ ctx.rect(AX[j]-AS[j]*.5,AY[j]-AS[j]*.5,AS[j],AS[j]); t=1; }
-      if(t){ ctx.fillStyle='rgba('+rgb+','+(ALFA_AR[b>>1]*(b&1?ARENA_TXT:1)*factor).toFixed(3)+')'; ctx.fill(); }
+      if(t){ ctx.fillStyle='rgba('+rgb+','+(OPAC.arena*TRAMOS_ARENA[b>>1]*(b&1?TEXTO_F:1)*G).toFixed(3)+')'; ctx.fill(); }
     }
   }
 
   function luzMod(x,y,rec,lz,nv){ // 048: la opacidad que da la luz (el hueco), la columna de texto (LUZ_COL) y el texto (TXB) a todo lo vivo del fondo: bacterias, protistas y nematodo usan esta misma función
     var m=1, u, d2, ce;
     if(lz){ u=colF(x); if(u>0){ d2=rec?luzI(x,y):0; d2=d2>=.33?0:1-d2/.33; d2=d2*d2*(3-2*d2); m=1-(1-LUZ_COL)*u*d2; } }   // 041: sobre la columna de texto el fondo queda casi oculto (LUZ_PISO·LUZ_COL), y la luz lo revela
-    if(nv.texto){ ce=TXB[celda(x,y)]; m*=1-.45*(ce>1?1:ce); }                                                          // más tenues bajo el texto
+    if(nv.texto){ ce=TXB[celda(x,y)]; m*=1-(1-TEXTO_F)*(ce>1?1:ce); }                                                  // más tenues bajo el texto (TEXTO_F)
     return m;
   }
   function dibujar(){
@@ -1408,7 +1435,7 @@
       for(b3=0;b3<3;b3++){
         ctx.beginPath(); r=0;
         for(k=0;k<ne;k++){ ed=1-(tiempo-EN[k])/EPS_VIDA; if(ed<=0||fuera(EA[k*4],EA[k*4+1])) continue; w=EW[k]*ed; if((w>.62?2:w>.3?1:0)!==b3) continue; ctx.moveTo(EA[k*4],EA[k*4+1]); ctx.lineTo(EA[k*4+2],EA[k*4+3]); r=1; }
-        if(r){ ctx.strokeStyle='rgba('+rgb+','+(ALFA_EPS[b3]*factor).toFixed(3)+')'; ctx.stroke(); }
+        if(r){ ctx.strokeStyle='rgba('+rgb+','+(OPAC.matriz*TRAMOS_EPS[b3]*G).toFixed(3)+')'; ctx.stroke(); }
       }
     }
     if(cur.length) arena(nv);
@@ -1423,11 +1450,11 @@
       u=sesil&&BM[i]>1.7?(BM[i]-1.7)/.3:0; if(u>1) u=1;                       // avance de la constricción (la célula se alarga y se estrecha al medio)
       m=luzMod(x,y,rec,lz,nv); ctx.globalAlpha=m;   // 048: la misma opacidad que los eucariotas
       if(IN[i]>0&&tp!==4){ // bdeloplasto: la presa con un C dentro se redondea (un círculo algo mayor, con un punto adentro)
-        r=(tp===0?2.9:3.5)*sz; ctx.fillStyle=sesil?coloresS[tp]:colores[tp]; ctx.beginPath(); ctx.arc(x,y,r,0,6.283185307); ctx.fill();
-        ctx.fillStyle=bdel; ctx.beginPath(); ctx.arc(x,y,r*.34,0,6.283185307); ctx.fill(); continue;
+        r=(tp===0?2.9:3.5)*sz; ctx.fillStyle=colores[tp]; ctx.beginPath(); ctx.arc(x,y,r,0,6.283185307); ctx.fill();
+        ctx.fillStyle=bdelK[tp]; ctx.beginPath(); ctx.arc(x,y,r*.34,0,6.283185307); ctx.fill(); continue;
       }
       if(tp===0){
-        ctx.fillStyle=sesil?coloresS[0]:colores[0]; r=2.8*sz; ctx.beginPath();
+        ctx.fillStyle=colores[0]; r=2.8*sz; ctx.beginPath();
         if(u>0){ d=3.25*u*sz; ex=Math.cos(TH[i])*d; ey=Math.sin(TH[i])*d; ctx.arc(x-ex,y-ey,r,0,6.283185307); ctx.moveTo(x+ex+r,y+ey); ctx.arc(x+ex,y+ey,r,0,6.283185307); } // dos lóbulos que se separan
         else ctx.arc(x,y,r,0,6.283185307);
         ctx.fill(); continue;
@@ -1435,31 +1462,31 @@
       a=TH[i]; c=Math.cos(a)*dpr; s=Math.sin(a)*dpr; ctx.setTransform(c,s,-s,c,x*dpr,y*dpr); f=FI[i];
       if(tp===1||tp===3){
         h=tp===1?2.45:.9; r=tp===1?1.55:1.75;                                                                                                       // bacilo (A): cápsula de 8 × 3,1 px; cocobacilo (B): 5,3 × 3,5 px, casi tan ancho como largo
-        ctx.strokeStyle=sesil?coloresS[tp]:colores[tp]; ctx.lineWidth=2*r*sz; ctx.beginPath();
+        ctx.strokeStyle=colores[tp]; ctx.lineWidth=2*r*sz; ctx.beginPath();
         if(u>0){ Le=(h+r)*(1+.9625*u)*sz; g=.97*r*u*sz; ctx.moveTo(-(Le-r*sz),0); ctx.lineTo(-g,0); ctx.moveTo(g,0); ctx.lineTo(Le-r*sz,0); }       // constricción: dos lóbulos con cintura
         else{ ctx.moveTo(-h*sz,0); ctx.lineTo(h*sz,0); }
         ctx.stroke();
         if(!sesil&&det){                                                                                                                            // flagelo: onda que viaja hacia atrás (largo en A, corto en B; detenido y sin dibujar si está adherida)
-          nf=tp===1?12:6; hf=(h+r)*sz; ctx.strokeStyle=cola; ctx.lineWidth=.75; ctx.beginPath();
+          nf=tp===1?12:6; hf=(h+r)*sz; ctx.strokeStyle=colores[tp]; ctx.lineWidth=.75; ctx.beginPath();
           if(RS[i]===1){                                                                                                                            // tumbo: el haz de flagelos se deshace en dos filamentos que se abren
             for(sg=-1;sg<=1;sg+=2){ ctx.moveTo(-hf,0); for(k=1;k<=nf;k++){ pt=k*.75; w=-hf-pt*.9; ctx.lineTo(w,sg*pt*.5+1.1*(pt/9)*Math.sin(KONDA[1]*w+f)); } }
           }else{ ctx.moveTo(-hf,0); for(k=1;k<=nf;k++){ pt=k*.75; w=-hf-pt; ctx.lineTo(w,1.5*(pt/9)*Math.sin(KONDA[1]*w+f)); } }
           ctx.stroke();
         }else if(S[i]===2&&(TWD[i]>0||RT[i]<.3)){                                                                                                   // twitching: el pilo tipo IV se extiende hacia adelante y se retrae al tirar de la célula
           pt=TWD[i]>0?PILO*Math.min(1,TWD[i]/HOP):PILO*(1-RT[i]/.3); w=TWA[i]-a; ex=Math.cos(w); ey=Math.sin(w); hf=(h+r)*sz*(ex>=0?1:-1);
-          ctx.strokeStyle=cola; ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(hf,0); ctx.lineTo(hf+ex*pt,ey*pt); ctx.stroke();
+          ctx.strokeStyle=colores[tp]; ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(hf,0); ctx.lineTo(hf+ex*pt,ey*pt); ctx.stroke();
         }
       }else if(tp===5){                                                                                                                              // PGPR (040, tipo Azospirillum): bastón curvo de ≈ 8 px con un flagelo polar (nadando)
-        ctx.strokeStyle=sesil?coloresS[5]:colores[5]; ctx.lineWidth=2.5*sz; ctx.beginPath(); ctx.moveTo(-3.7*sz,1.1*sz); ctx.quadraticCurveTo(0,-2.3*sz,3.7*sz,1.1*sz); ctx.stroke();
-        if(!sesil&&det){ ctx.strokeStyle=cola; ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(-3.7*sz,1.1*sz); for(k=1;k<=9;k++){ pt=k*.75; w=-3.7*sz-pt; ctx.lineTo(w,1.1*sz+1.3*(pt/7)*Math.sin(KONDA[5]*w+f)); } ctx.stroke(); }
+        ctx.strokeStyle=colores[5]; ctx.lineWidth=2.5*sz; ctx.beginPath(); ctx.moveTo(-3.7*sz,1.1*sz); ctx.quadraticCurveTo(0,-2.3*sz,3.7*sz,1.1*sz); ctx.stroke();
+        if(!sesil&&det){ ctx.strokeStyle=colores[tp]; ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(-3.7*sz,1.1*sz); for(k=1;k<=9;k++){ pt=k*.75; w=-3.7*sz-pt; ctx.lineTo(w,1.1*sz+1.3*(pt/7)*Math.sin(KONDA[5]*w+f)); } ctx.stroke(); }
       }else if(tp===4){                                                                                                                              // vibrio (C): una coma de 5 px, mucho más chica que A y B, con un flagelo polar de onda rápida
         ctx.strokeStyle=colores[4]; ctx.lineWidth=1.7*sz; ctx.beginPath();
         for(sg=RS[i]===1?2.1:.95,k=0;k<=6;k++){ sx=(-2.4+k*.8); if(k) ctx.lineTo(sx*sz,sg*sz*(1-sx*sx/5.76)); else ctx.moveTo(sx*sz,0); }    // (en el flick la coma se dobla más)
-        ctx.stroke(); ctx.strokeStyle=cola; ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(-2.4*sz,0);
+        ctx.stroke(); ctx.strokeStyle=colores[tp]; ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(-2.4*sz,0);
         for(k=1;k<=9;k++){ pt=k*.75; w=-2.4*sz-pt; ctx.lineTo(w,1.3*(pt/7)*Math.sin(KONDA[4]*w+f)); }
         ctx.stroke();
       }else{                                                                                                                                         // espirilo: trazo ondulado de 9 px (con constricción: dos mitades)
-        ctx.strokeStyle=sesil?coloresS[2]:colores[2]; ctx.lineWidth=1.35*sz; ctx.beginPath();
+        ctx.strokeStyle=colores[2]; ctx.lineWidth=1.35*sz; ctx.beginPath();
         if(u>0){ Le=4.5*(1+.9*u)*sz; g=.7*u*sz; for(k=0;k<=8;k++){ sx=-Le+(Le-g)*k/8; if(k) ctx.lineTo(sx,1.5*sz*Math.sin(KONDA[2]*sx+f)); else ctx.moveTo(sx,1.5*sz*Math.sin(KONDA[2]*sx+f)); }
           for(k=0;k<=8;k++){ sx=g+(Le-g)*k/8; if(k) ctx.lineTo(sx,1.5*sz*Math.sin(KONDA[2]*sx+f)); else ctx.moveTo(sx,1.5*sz*Math.sin(KONDA[2]*sx+f)); } }
         else for(k=0;k<=12;k++){ sx=(-4.5+k*.75)*sz; if(k) ctx.lineTo(sx,1.5*sz*Math.sin(KONDA[2]*sx+f)); else ctx.moveTo(sx,1.5*sz*Math.sin(KONDA[2]*sx+f)); }
@@ -1482,13 +1509,13 @@
   //   El nematodo llega por el borde izquierdo hacia la punta de la raíz (quimiotaxis a los exudados), la rodea 28–45 s comiendo y se va. El primero llega 12–22 s después de cargar la página (para que se vea); desde entonces, en promedio cada ≈ 185 s (mínimo 25 s desde que se fue el anterior).
   var EU_CAPN=[1,2,4,8], EU_MAX=[4,2,2,2,2], EU_MIN=[1,1,1,1,1];                    // tope de protistas por nivel de calidad, por tipo, y piso (si bajan de él, entra uno por un borde). Tipos: 0 flagelado, 1 dinoflagelado, 2 ameba, 3 paramecio, 4 euglena
   var EU_R=[3.9,8.2,13,15,8], EU_V=[42,50,9,58,28], EU_PER=[44,72,42,76,0], EU_W=[6,4,1.3,5,3], EU_SIG=[2.4,1.5,.9,1.5,1.2];   // radio (px), velocidad de crucero (px/s), percepción de presas (px), giro máximo (rad/s) y ruido del rumbo
-  var EU_E0=[3,4,4,4,3], EU_EDIV=[7,9,9,10,6], EU_MET=[.0125,.01,.007,.011,-.006], EU_MANEJO=[.8,1.2,.35,.3,0], EU_DIG=7, EU_HUIDA=44, EU_AL=1.55, EU_AMAX=.85, EU_VEL=.7;   // energía inicial y de división, gasto (1/s; la euglena gana), tiempo de manejo (s), digestión (s), radio de alarma (px) y factor de opacidad (más oscuros que las bacterias)
+  var EU_E0=[3,4,4,4,3], EU_EDIV=[7,9,9,10,6], EU_MET=[.0125,.01,.007,.011,-.006], EU_MANEJO=[.8,1.2,.35,.3,0], EU_DIG=7, EU_HUIDA=44, EU_AL=1, EU_VEL=.7;   // energía inicial y de división, gasto (1/s; la euglena gana), tiempo de manejo (s), digestión (s), radio de alarma (px) y factor de opacidad (más oscuros que las bacterias)
   // probabilidad de captura por segundo de contacto: [bacteria nadadora, bacteria adherida, flagelado, dinoflagelado, ameba, paramecio, euglena]
   var EU_COME=[[.9,0,0,0,0,0,0],[.5,.2,.9,0,0,0,.5],[.5,.9,.45,0,0,0,.3],[.9,.5,.7,0,0,0,.5],[0,0,0,0,0,0,0]], EU_VALOR=[1,2.5,4,6,5,3];   // energía que da una presa: bacteria, flagelado, dinoflagelado, ameba, paramecio, euglena
   var EU_NS=18, EU_NL=96, EU_NFRAC=.55, EU_NT0=25, EU_NMEDIA=160, EU_NPRIM=12, EU_NCOME=[.8,.6,.7,.5,.35,.35,.5];   // nematodo: puntos del cuerpo, largo (px), velocidad (px/s), espera mínima y media (s), primera visita (s tras cargar), captura por segundo [nadadora, adherida, flagelado, dino, ameba, paramecio, euglena]
   var eu=[], nem=null, euOn=true, euTn=0, euEv={comio:[0,0,0,0,0,0],div:0,muere:0,ent:0,huida:0,nem:0,nemComio:[0,0,0,0,0,0],exc:0};
   function angd(a,b){ var d=a-b; d=(d+Math.PI)%6.283185307; if(d<0) d+=6.283185307; return d-Math.PI; }
-  function euC(a){ a*=EU_AL; return 'rgba('+rgb+','+Math.min(1,(a>EU_AMAX?EU_AMAX:a)*(euF||1)).toFixed(3)+')'; }   // 048: la opacidad base nunca pasa de EU_AMAX, así la ganancia del tema (euF, la misma de las bacterias) no se pierde en el tope de 1
+  function euC(r){ return 'rgba('+rgb+','+Math.min(1,EU_OP[euT]*EU_AL*r*G).toFixed(3)+')'; }   // 052: la opacidad base del tipo que se está dibujando (euT; EU_OP viene de OPAC) × el peso del papel de la parte (r) × el factor común G   // 048: la opacidad base nunca pasa de EU_AMAX, así la ganancia del tema (euF, la misma de las bacterias) no se pierde en el tope de 1
   function euNuevo(tp,x,y,th,E){
     var o={t:tp,x:x,y:y,th:th,ph:Math.random()*6.2832,E:E==null?EU_E0[tp]:E,h:0,burst:0,cd:0,dead:0,vac:[],R:EU_R[tp]*(.9+.22*Math.random()),f1:Math.random()*6.28,f2:Math.random()*6.28,f3:Math.random()*6.28,pa:0,vg:0};
     eu.push(o); return o;
@@ -1574,7 +1601,7 @@
     tx=Math.max(xl,Math.min(xr,tx)); ty=Math.max(30,Math.min(H-30,ty)); seg=L/(EU_NS-1);
     nem={tx:tx,ty:ty,L:L,hw:hw,ext:ext,lado:lado,seg:seg,S:L/96,cx:tx,cy:ty,sg:Math.random()<.5?1:-1,tg:0,mod:0,modT:0,nEv:tiempo+10+8*Math.random(),om:1,inv:false,vent:Math.random()<.5?1:-1,capa:Math.random()<EU_NCAPA?0:1,capaT:0,quieto:!!quieto};
     nem.p=new Float32Array(2*EU_NS); nem.ph=quieto?1.1:Math.random()*6.28; nem.st=0; nem.t0=tiempo; nem.tf=0; nem.vac=[]; nem.h=0; nem.E=5; nem.salio=0; nem.dir=1;
-    if(quieto){ nem.st=1; nem.tf=1e12; x0=tx; y=ty; nem.th=1.4; for(k=0;k<EU_NS;k++){ nem.p[2*k]=x0+.04*L*k/EU_NS; nem.p[2*k+1]=y-k*seg; } nem.x=x0; nem.y=y; euEv.nem++; return; }   // quieto: ya está en su lugar (para ver su forma y con movimiento reducido)
+    if(quieto){ nem.st=1; nem.tf=1e12; x0=rz.on&&rz.pri?Math.max(xl,Math.min(xr,rzXc(ty)-.75*L)):tx; y=ty; nem.th=1.4; for(k=0;k<EU_NS;k++){ nem.p[2*k]=x0+.04*L*k/EU_NS; nem.p[2*k+1]=y-k*seg; } nem.x=x0; nem.y=y; euEv.nem++; return; }   // quieto: ya está en su lugar (para ver su forma y con movimiento reducido)
     top=ty<H*.5; x0=Math.max(xl,Math.min(xr,tx+(Math.random()-.5)*.5*(xr-xl))); y=top?-4:H+4; th=top?1.5708:-1.5708;
     nem.x=x0; nem.y=y; nem.th=th; for(k=0;k<EU_NS;k++){ nem.p[2*k]=x0; nem.p[2*k+1]=y+(top?-1:1)*k*seg; }
     euEv.nem++;
@@ -1619,60 +1646,60 @@
   function euVacD(o,det,sx){ // vacuolas alimentarias (en el marco del cuerpo): un anillo que se achica al digerir
     var k, m, f, r, a, rr;
     for(k=0;k<o.vac.length;k++){ m=o.vac[k]; f=(tiempo-m.t0)/m.dig; if(f>1) f=1; r=(m.s===0?1.5:m.s===1?2.2:3.4)*(1-.65*f); a=m.a+.1*Math.sin(tiempo+k); rr=m.r*o.R*sx;
-      ctx.beginPath(); ctx.arc(Math.cos(a)*rr,Math.sin(a)*rr*.7,r,0,6.2832); ctx.strokeStyle=euC(.5*(1-.5*f)); ctx.lineWidth=.8; ctx.stroke(); if(f<.5){ ctx.fillStyle=euC(.25); ctx.fill(); } }
+      ctx.beginPath(); ctx.arc(Math.cos(a)*rr,Math.sin(a)*rr*.7,r,0,6.2832); ctx.strokeStyle=euC(R_S*(1-.5*f)); ctx.lineWidth=.8; ctx.stroke(); if(f<.5){ ctx.fillStyle=euC(R_F); ctx.fill(); } }
   }
   function euNucleo(x,y,rx,ry,a){ // el núcleo: relleno oscuro con borde (siempre se ve)
-    ctx.beginPath(); ctx.ellipse(x,y,rx,ry,a||0,0,6.2832); ctx.fillStyle=euC(.34); ctx.fill(); ctx.strokeStyle=euC(.8); ctx.lineWidth=.9; ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(x,y,rx,ry,a||0,0,6.2832); ctx.fillStyle=euC(R_S); ctx.fill(); ctx.strokeStyle=euC(R_D); ctx.lineWidth=.9; ctx.stroke();
   }
   function euDibujar(rec,lz,nv){
     var i, k, o, tp, R, x, y, c, s, det, al, a, t=tiempo, ph, u, q, nk, rr, th, e, px, py, ex, ey, ox, oy, ry, nx, ny, l;
     ctx.lineCap='round'; ctx.lineJoin='round';
     for(i=0;i<eu.length;i++){
       o=eu[i]; tp=o.t; R=o.R; x=o.x; y=o.y; det=!lz||(rec&&enLuz(x,y)); al=euM(x,y,rec,lz,nv); if(o.dead){ u=1-(t-o.dead)/1.6; if(u<=0) continue; al*=u; }
-      ctx.globalAlpha=al; th=o.th; c=Math.cos(th)*dpr; s=Math.sin(th)*dpr; ctx.setTransform(c,s,-s,c,x*dpr,y*dpr); ph=o.ph;
+      euT=tp; ctx.globalAlpha=al; th=o.th; c=Math.cos(th)*dpr; s=Math.sin(th)*dpr; ctx.setTransform(c,s,-s,c,x*dpr,y*dpr); ph=o.ph;
       if(tp===0){ // flagelado heterótrofo: ovoide con núcleo, un flagelo largo que ondula al frente y otro corto atrás
-        ctx.beginPath(); ctx.ellipse(0,0,R*1.2,R*.8,0,0,6.2832); ctx.fillStyle=euC(.16); ctx.fill(); ctx.strokeStyle=euC(.9); ctx.lineWidth=1.05; ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(0,0,R*1.2,R*.8,0,0,6.2832); ctx.fillStyle=euC(R_F); ctx.fill(); ctx.strokeStyle=euC(R_C); ctx.lineWidth=1.05; ctx.stroke();
         euNucleo(R*.3,0,R*.36,R*.34); euVacD(o,det,.6);
-        ctx.strokeStyle=euC(.8); ctx.lineWidth=.9; ctx.beginPath(); ctx.moveTo(R*1.2,0); for(k=1;k<=12;k++){ ex=R*1.2+k*1.1; ctx.lineTo(ex,2.1*(k/12)*Math.sin(t*38-k*.9+ph)); } ctx.stroke();
-        ctx.strokeStyle=euC(.65); ctx.beginPath(); ctx.moveTo(-R*1.1,R*.25); for(k=1;k<=8;k++){ ex=-R*1.1-k*.95; ctx.lineTo(ex,R*.25+1.4*(k/8)*Math.sin(t*30-k*.8+ph)); } ctx.stroke();
+        ctx.strokeStyle=euC(R_D); ctx.lineWidth=.9; ctx.beginPath(); ctx.moveTo(R*1.2,0); for(k=1;k<=12;k++){ ex=R*1.2+k*1.1; ctx.lineTo(ex,2.1*(k/12)*Math.sin(t*38-k*.9+ph)); } ctx.stroke();
+        ctx.strokeStyle=euC(R_D); ctx.beginPath(); ctx.moveTo(-R*1.1,R*.25); for(k=1;k<=8;k++){ ex=-R*1.1-k*.95; ctx.lineTo(ex,R*.25+1.4*(k/8)*Math.sin(t*30-k*.8+ph)); } ctx.stroke();
       }else if(tp===1){ // dinoflagelado: cuerpo con cíngulo (cinturón transversal) y sulco, núcleo grande con cromosomas en bandas y dos flagelos (uno ondula en el cíngulo y el otro arrastra)
-        ctx.beginPath(); ctx.ellipse(0,0,R*1.05,R*.92,0,0,6.2832); ctx.fillStyle=euC(.14); ctx.fill(); ctx.strokeStyle=euC(.9); ctx.lineWidth=1.05; ctx.stroke();
-        ctx.beginPath(); ctx.ellipse(R*.12,0,R*.22,R*.98,0,0,6.2832); ctx.strokeStyle=euC(.6); ctx.lineWidth=.9; ctx.stroke();                      // el cíngulo: un surco que rodea al cuerpo
-        ctx.beginPath(); ctx.moveTo(-R*.15,0); ctx.lineTo(-R*1.0,R*.3); ctx.strokeStyle=euC(.55); ctx.lineWidth=.8; ctx.stroke();                     // el sulco hacia atrás
+        ctx.beginPath(); ctx.ellipse(0,0,R*1.05,R*.92,0,0,6.2832); ctx.fillStyle=euC(R_F); ctx.fill(); ctx.strokeStyle=euC(R_C); ctx.lineWidth=1.05; ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(R*.12,0,R*.22,R*.98,0,0,6.2832); ctx.strokeStyle=euC(R_D); ctx.lineWidth=.9; ctx.stroke();                      // el cíngulo: un surco que rodea al cuerpo
+        ctx.beginPath(); ctx.moveTo(-R*.15,0); ctx.lineTo(-R*1.0,R*.3); ctx.strokeStyle=euC(R_D); ctx.lineWidth=.8; ctx.stroke();                     // el sulco hacia atrás
         euNucleo(-R*.38,-R*.1,R*.38,R*.38);                                                                                                          // el núcleo (dinocarion)
-        ctx.beginPath(); for(k=-1;k<=1;k++){ ctx.moveTo(-R*.38+k*R*.14,-R*.1-R*.26); ctx.lineTo(-R*.38+k*R*.14,-R*.1+R*.26); } ctx.strokeStyle=euC(.4); ctx.lineWidth=.6; ctx.stroke(); euVacD(o,det,.55);
-        ctx.strokeStyle=euC(.55); ctx.lineWidth=.7; ctx.beginPath(); for(k=0;k<5;k++){ a=ph+t*5+k*1.2566; px=R*.12+R*.22*Math.cos(a); py=R*.98*Math.sin(a); ctx.moveTo(px,py); ctx.lineTo(px+Math.cos(a)*2,py+Math.sin(a)*2.4); } ctx.stroke();   // los cilios del cíngulo giran
-        ctx.strokeStyle=euC(.8); ctx.lineWidth=.9; ctx.beginPath(); ctx.moveTo(-R*1.0,R*.3); for(k=1;k<=18;k++){ ex=-R*1.0-k*1.05; ctx.lineTo(ex,R*.3+2.8*(k/18)*Math.sin(t*26-k*.7+ph)); } ctx.stroke();
+        ctx.beginPath(); for(k=-1;k<=1;k++){ ctx.moveTo(-R*.38+k*R*.14,-R*.1-R*.26); ctx.lineTo(-R*.38+k*R*.14,-R*.1+R*.26); } ctx.strokeStyle=euC(R_S); ctx.lineWidth=.6; ctx.stroke(); euVacD(o,det,.55);
+        ctx.strokeStyle=euC(R_D); ctx.lineWidth=.7; ctx.beginPath(); for(k=0;k<5;k++){ a=ph+t*5+k*1.2566; px=R*.12+R*.22*Math.cos(a); py=R*.98*Math.sin(a); ctx.moveTo(px,py); ctx.lineTo(px+Math.cos(a)*2,py+Math.sin(a)*2.4); } ctx.stroke();   // los cilios del cíngulo giran
+        ctx.strokeStyle=euC(R_D); ctx.lineWidth=.9; ctx.beginPath(); ctx.moveTo(-R*1.0,R*.3); for(k=1;k<=18;k++){ ex=-R*1.0-k*1.05; ctx.lineTo(ex,R*.3+2.8*(k/18)*Math.sin(t*26-k*.7+ph)); } ctx.stroke();
       }else if(tp===2){ // ameba: contorno irregular con seudópodo al frente, núcleo, vacuola contráctil que pulsa y gránulos en el citoplasma
         nk=16; u=.5+.5*Math.sin(t*.9+ph); ctx.beginPath();
         for(k=0;k<nk;k++){ a=k*6.2832/nk; rr=R*(1+.13*Math.sin(2*a+t*.5+o.f1)+.09*Math.sin(3*a-t*.4+o.f2)+.55*u*Math.pow(Math.max(0,Math.cos(a)),3)+.3*Math.pow(Math.max(0,Math.cos(a-1.9-.4*Math.sin(t*.3+o.f3))),4)*(1-u)); ox=Math.cos(a)*rr; oy=Math.sin(a)*rr;
           if(k===0){ px=ox; py=oy; ex=ox; ey=oy; ctx.moveTo(ox,oy); } else{ ctx.quadraticCurveTo(px,py,(px+ox)/2,(py+oy)/2); px=ox; py=oy; } }
-        ctx.quadraticCurveTo(px,py,(px+ex)/2,(py+ey)/2); ctx.closePath(); ctx.fillStyle=euC(.12); ctx.fill(); ctx.strokeStyle=euC(.88); ctx.lineWidth=1.1; ctx.stroke();
-        euNucleo(-R*.12,0,R*.3,R*.28); ctx.beginPath(); ctx.arc(-R*.12,0,R*.09,0,6.2832); ctx.fillStyle=euC(.7); ctx.fill();
-        ctx.beginPath(); ctx.arc(-R*.62,R*.32,R*.12*(.6+.4*Math.abs(Math.sin(t*.8+ph))),0,6.2832); ctx.strokeStyle=euC(.6); ctx.lineWidth=.8; ctx.stroke(); euVacD(o,det,.62);
-        if(det){ ctx.fillStyle=euC(.35); ctx.beginPath(); for(k=0;k<9;k++){ a=k*2.4+o.f1; rr=(.3+.5*((k*37)%7)/7)*R; ctx.moveTo(Math.cos(a)*rr+.7,Math.sin(a)*rr*.8); ctx.arc(Math.cos(a)*rr,Math.sin(a)*rr*.8,.7,0,6.2832); } ctx.fill();
-          ctx.beginPath(); ctx.arc(0,0,R*(1.05+.5*u),-.7,.7); ctx.strokeStyle=euC(.4); ctx.lineWidth=.8; ctx.stroke(); }
+        ctx.quadraticCurveTo(px,py,(px+ex)/2,(py+ey)/2); ctx.closePath(); ctx.fillStyle=euC(R_F); ctx.fill(); ctx.strokeStyle=euC(R_C); ctx.lineWidth=1.1; ctx.stroke();
+        euNucleo(-R*.12,0,R*.3,R*.28); ctx.beginPath(); ctx.arc(-R*.12,0,R*.09,0,6.2832); ctx.fillStyle=euC(R_D); ctx.fill();
+        ctx.beginPath(); ctx.arc(-R*.62,R*.32,R*.12*(.6+.4*Math.abs(Math.sin(t*.8+ph))),0,6.2832); ctx.strokeStyle=euC(R_D); ctx.lineWidth=.8; ctx.stroke(); euVacD(o,det,.62);
+        if(det){ ctx.fillStyle=euC(R_S); ctx.beginPath(); for(k=0;k<9;k++){ a=k*2.4+o.f1; rr=(.3+.5*((k*37)%7)/7)*R; ctx.moveTo(Math.cos(a)*rr+.7,Math.sin(a)*rr*.8); ctx.arc(Math.cos(a)*rr,Math.sin(a)*rr*.8,.7,0,6.2832); } ctx.fill();
+          ctx.beginPath(); ctx.arc(0,0,R*(1.05+.5*u),-.7,.7); ctx.strokeStyle=euC(R_S); ctx.lineWidth=.8; ctx.stroke(); }
       }else if(tp===3){ // Paramecium: cuerpo en zapatilla (más ancho atrás), surco oral con citostoma, dos vacuolas contráctiles estrelladas (una en cada extremo), macronúcleo con micronúcleo y una cubierta de cilios con onda metacrónica
         ry=R*.44; nk=40; ctx.beginPath();
         for(k=0;k<=nk;k++){ a=k*6.2832/nk; px=R*Math.cos(a); py=ry*Math.sin(a)*(1-.22*Math.cos(a)); if(k) ctx.lineTo(px,py); else ctx.moveTo(px,py); }
-        ctx.closePath(); ctx.fillStyle=euC(.15); ctx.fill(); ctx.strokeStyle=euC(.9); ctx.lineWidth=1.1; ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(R*.8,ry*.3); ctx.quadraticCurveTo(R*.35,ry*.55,R*.0,ry*.28); ctx.strokeStyle=euC(.65); ctx.lineWidth=.9; ctx.stroke();                      // el surco oral
-        ctx.beginPath(); ctx.ellipse(-R*.02,ry*.3,R*.09,ry*.14,0,0,6.2832); ctx.strokeStyle=euC(.7); ctx.lineWidth=.8; ctx.stroke();                                       // el citostoma
-        euNucleo(-R*.02,-ry*.28,R*.24,ry*.26); ctx.beginPath(); ctx.arc(R*.24,-ry*.2,R*.05,0,6.2832); ctx.fillStyle=euC(.85); ctx.fill();                                // macronúcleo y micronúcleo
-        for(l=0;l<2;l++){ px=l?-R*.6:R*.58; u=.5+.5*Math.sin(t*1.7+ph+l*3.14); ctx.beginPath(); ctx.arc(px,0,R*.09*(.5+.7*u),0,6.2832); ctx.strokeStyle=euC(.6); ctx.lineWidth=.8; ctx.stroke();
-          ctx.beginPath(); for(k=0;k<6;k++){ a=k*1.0472+ph; ctx.moveTo(px+Math.cos(a)*R*.1*u,Math.sin(a)*R*.1*u*.8); ctx.lineTo(px+Math.cos(a)*R*.24,Math.sin(a)*R*.24*.55); } ctx.strokeStyle=euC(.45); ctx.lineWidth=.6; ctx.stroke(); }
+        ctx.closePath(); ctx.fillStyle=euC(R_F); ctx.fill(); ctx.strokeStyle=euC(R_C); ctx.lineWidth=1.1; ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(R*.8,ry*.3); ctx.quadraticCurveTo(R*.35,ry*.55,R*.0,ry*.28); ctx.strokeStyle=euC(R_D); ctx.lineWidth=.9; ctx.stroke();                      // el surco oral
+        ctx.beginPath(); ctx.ellipse(-R*.02,ry*.3,R*.09,ry*.14,0,0,6.2832); ctx.strokeStyle=euC(R_D); ctx.lineWidth=.8; ctx.stroke();                                       // el citostoma
+        euNucleo(-R*.02,-ry*.28,R*.24,ry*.26); ctx.beginPath(); ctx.arc(R*.24,-ry*.2,R*.05,0,6.2832); ctx.fillStyle=euC(R_C); ctx.fill();                                // macronúcleo y micronúcleo
+        for(l=0;l<2;l++){ px=l?-R*.6:R*.58; u=.5+.5*Math.sin(t*1.7+ph+l*3.14); ctx.beginPath(); ctx.arc(px,0,R*.09*(.5+.7*u),0,6.2832); ctx.strokeStyle=euC(R_D); ctx.lineWidth=.8; ctx.stroke();
+          ctx.beginPath(); for(k=0;k<6;k++){ a=k*1.0472+ph; ctx.moveTo(px+Math.cos(a)*R*.1*u,Math.sin(a)*R*.1*u*.8); ctx.lineTo(px+Math.cos(a)*R*.24,Math.sin(a)*R*.24*.55); } ctx.strokeStyle=euC(R_S); ctx.lineWidth=.6; ctx.stroke(); }
         euVacD(o,det,.7);
-        ctx.strokeStyle=euC(.55); ctx.lineWidth=.7; ctx.beginPath();                                                                                                    // los cilios: ondas que viajan por el cuerpo
+        ctx.strokeStyle=euC(R_D); ctx.lineWidth=.7; ctx.beginPath();                                                                                                    // los cilios: ondas que viajan por el cuerpo
         for(k=0;k<44;k++){ a=k*.1428; px=R*Math.cos(a); py=ry*Math.sin(a)*(1-.22*Math.cos(a)); nx=Math.cos(a); ny=Math.sin(a)*1.1; q=.5+.5*Math.sin(t*20-k*.6+ph); ctx.moveTo(px,py); ctx.lineTo(px+nx*2.8-q*1.1,py+ny*2.8); }
         ctx.stroke();
-        if(det){ ctx.strokeStyle=euC(.3); ctx.lineWidth=.55; ctx.beginPath(); for(k=0;k<14;k++){ a=.4+k*.44; px=R*.86*Math.cos(a); py=ry*.8*Math.sin(a); ctx.moveTo(px,py); ctx.lineTo(px*.9,py*.88); } ctx.stroke(); }   // tricocistos bajo la superficie
+        if(det){ ctx.strokeStyle=euC(R_S); ctx.lineWidth=.55; ctx.beginPath(); for(k=0;k<14;k++){ a=.4+k*.44; px=R*.86*Math.cos(a); py=ry*.8*Math.sin(a); ctx.moveTo(px,py); ctx.lineTo(px*.9,py*.88); } ctx.stroke(); }   // tricocistos bajo la superficie
       }else{ // euglena: flagelado fusiforme con un flagelo largo, mancha ocular, núcleo y cloroplastos; el cuerpo cambia de forma al nadar (metabolia)
         nk=28; ctx.beginPath(); ry=R*.34*(1+.15*Math.sin(t*3+ph));
         for(k=0;k<=nk;k++){ a=k*6.2832/nk; u=Math.cos(a); px=R*u*(1+.06*Math.sin(t*3+ph+u)); py=ry*Math.sin(a)*(u>=0?1:Math.pow(1+u,.6)); if(k) ctx.lineTo(px,py); else ctx.moveTo(px,py); }
-        ctx.closePath(); ctx.fillStyle=euC(.15); ctx.fill(); ctx.strokeStyle=euC(.9); ctx.lineWidth=1.05; ctx.stroke();
-        euNucleo(-R*.1,0,R*.25,ry*.55); ctx.beginPath(); ctx.arc(R*.62,-ry*.3,1.1,0,6.2832); ctx.fillStyle=euC(.95); ctx.fill();                                          // núcleo y mancha ocular
-        ctx.fillStyle=euC(.32); ctx.beginPath(); for(k=0;k<5;k++){ px=R*(.1+.14*k)*(k%2?1:-1)-R*.15; py=ry*(k%2?.38:-.38); ctx.moveTo(px+1.6,py); ctx.ellipse(px,py,1.6,1,0,0,6.2832); } ctx.fill();   // cloroplastos
-        ctx.strokeStyle=euC(.8); ctx.lineWidth=.9; ctx.beginPath(); ctx.moveTo(R,0); for(k=1;k<=22;k++){ ex=R+k*1.1; ctx.lineTo(ex,2.6*Math.min(1,k/8)*Math.sin(t*30-k*.55+ph)); } ctx.stroke();                    // flagelo largo
+        ctx.closePath(); ctx.fillStyle=euC(R_F); ctx.fill(); ctx.strokeStyle=euC(R_C); ctx.lineWidth=1.05; ctx.stroke();
+        euNucleo(-R*.1,0,R*.25,ry*.55); ctx.beginPath(); ctx.arc(R*.62,-ry*.3,1.1,0,6.2832); ctx.fillStyle=euC(R_C); ctx.fill();                                          // núcleo y mancha ocular
+        ctx.fillStyle=euC(R_S); ctx.beginPath(); for(k=0;k<5;k++){ px=R*(.1+.14*k)*(k%2?1:-1)-R*.15; py=ry*(k%2?.38:-.38); ctx.moveTo(px+1.6,py); ctx.ellipse(px,py,1.6,1,0,0,6.2832); } ctx.fill();   // cloroplastos
+        ctx.strokeStyle=euC(R_D); ctx.lineWidth=.9; ctx.beginPath(); ctx.moveTo(R,0); for(k=1;k<=22;k++){ ex=R+k*1.1; ctx.lineTo(ex,2.6*Math.min(1,k/8)*Math.sin(t*30-k*.55+ph)); } ctx.stroke();                    // flagelo largo
       }
       ctx.setTransform(dpr,0,0,dpr,0,0);
     }
@@ -1707,29 +1734,29 @@
     c.lineCap='round'; c.lineJoin='round';
     c.beginPath(); for(i=0;i<NM;i++) c.lineTo(nmX[i]+nmNx[i]*nmW[i],nmY[i]+nmNy[i]*nmW[i]); for(i=NM-1;i>=0;i--) c.lineTo(nmX[i]-nmNx[i]*nmW[i],nmY[i]-nmNy[i]*nmW[i]); c.closePath();
     if(nem.capa===1&&vis>.02){ c.save(); c.fillStyle='rgba('+luz.bg+','+(.9*vis).toFixed(3)+')'; c.fill(); c.restore(); }          // por delante de la raíz: un fondo del color de la página que esconde lo que hay debajo
-    c.fillStyle=euC(.14); c.fill(); c.strokeStyle=euC(.85); c.lineWidth=1.1; c.stroke();
-    if(det){ c.strokeStyle=euC(.2); c.lineWidth=.45; c.beginPath(); for(ua=.1;ua<.9;ua+=.028){ nemPt(ua,.94,nmP); qx=nmP[0]; qy=nmP[1]; nemPt(ua,-.94,nmP); c.moveTo(qx,qy); c.lineTo(nmP[0],nmP[1]); } c.stroke();            // anillos de la cutícula
-      c.strokeStyle=euC(.28); c.lineWidth=.55; c.beginPath(); nemTrazo(c,.1,.88,.7,18); c.stroke(); c.beginPath(); nemTrazo(c,.1,.88,-.7,18); c.stroke(); }                                                      // alae: las dos líneas laterales
+    c.fillStyle=euC(R_F); c.fill(); c.strokeStyle=euC(R_C); c.lineWidth=1.1; c.stroke();
+    if(det){ c.strokeStyle=euC(R_F); c.lineWidth=.45; c.beginPath(); for(ua=.1;ua<.9;ua+=.028){ nemPt(ua,.94,nmP); qx=nmP[0]; qy=nmP[1]; nemPt(ua,-.94,nmP); c.moveTo(qx,qy); c.lineTo(nmP[0],nmP[1]); } c.stroke();            // anillos de la cutícula
+      c.strokeStyle=euC(R_F); c.lineWidth=.55; c.beginPath(); nemTrazo(c,.1,.88,.7,18); c.stroke(); c.beginPath(); nemTrazo(c,.1,.88,-.7,18); c.stroke(); }                                                      // alae: las dos líneas laterales
     // intestino: franja más oscura desde la faringe hasta el ano, con la luz (lumen) al centro
-    c.beginPath(); nemTrazo(c,.135,.9,.5,16); for(k=16;k>=0;k--){ nemPt(.135+(.9-.135)*k/16,-.5,nmP); c.lineTo(nmP[0],nmP[1]); } c.closePath(); c.fillStyle=euC(.2); c.fill(); c.strokeStyle=euC(.35); c.lineWidth=.7; c.stroke();
-    c.beginPath(); nemTrazo(c,.14,.9,0,16); c.strokeStyle=euC(.3); c.lineWidth=.6; c.stroke();
+    c.beginPath(); nemTrazo(c,.135,.9,.5,16); for(k=16;k>=0;k--){ nemPt(.135+(.9-.135)*k/16,-.5,nmP); c.lineTo(nmP[0],nmP[1]); } c.closePath(); c.fillStyle=euC(R_F); c.fill(); c.strokeStyle=euC(R_S); c.lineWidth=.7; c.stroke();
+    c.beginPath(); nemTrazo(c,.14,.9,0,16); c.strokeStyle=euC(R_S); c.lineWidth=.6; c.stroke();
     // faringe: procorpus, metacorpo (bulbo anterior), istmo estrecho y bulbo terminal con el molino; el anillo nervioso rodea el istmo
-    c.beginPath(); nemTrazo(c,.012,.13,.3,10); for(k=10;k>=0;k--){ ua=.012+(.13-.012)*k/10; nemPt(ua,-(ua>.07&&ua<.1?.14:.3),nmP); c.lineTo(nmP[0],nmP[1]); } c.closePath(); c.fillStyle=euC(.12); c.fill(); c.strokeStyle=euC(.55); c.lineWidth=.8; c.stroke();
+    c.beginPath(); nemTrazo(c,.012,.13,.3,10); for(k=10;k>=0;k--){ ua=.012+(.13-.012)*k/10; nemPt(ua,-(ua>.07&&ua<.1?.14:.3),nmP); c.lineTo(nmP[0],nmP[1]); } c.closePath(); c.fillStyle=euC(R_F); c.fill(); c.strokeStyle=euC(R_D); c.lineWidth=.8; c.stroke();
     [[.052,.5,.03],[.116,.6,.035]].forEach(function(bb){ var cx0, cy0, a2; nemPt(bb[0],0,nmP); cx0=nmP[0]; cy0=nmP[1]; nemPt(bb[0]+.01,0,nmP); a2=Math.atan2(nmP[1]-cy0,nmP[0]-cx0);
-      c.beginPath(); c.ellipse(cx0,cy0,bb[2]*L,bb[1]*W2,a2,0,6.2832); c.fillStyle=euC(.22); c.fill(); c.strokeStyle=euC(.7); c.lineWidth=.9; c.stroke();
-      if(bb[0]>.1){ c.beginPath(); c.moveTo(cx0-Math.cos(a2)*1.2+Math.sin(a2)*1.4,cy0-Math.sin(a2)*1.2-Math.cos(a2)*1.4); c.lineTo(cx0+Math.cos(a2)*1.2,cy0+Math.sin(a2)*1.2); c.lineTo(cx0-Math.cos(a2)*1.2-Math.sin(a2)*1.4,cy0-Math.sin(a2)*1.2+Math.cos(a2)*1.4); c.strokeStyle=euC(.7); c.lineWidth=.7; c.stroke(); } });   // el molino
-    nemPt(.088,-.8,nmP); qx=nmP[0]; qy=nmP[1]; nemPt(.088,.8,nmP); c.beginPath(); c.moveTo(qx,qy); c.lineTo(nmP[0],nmP[1]); c.strokeStyle=euC(.65); c.lineWidth=1.3; c.stroke();     // anillo nervioso
+      c.beginPath(); c.ellipse(cx0,cy0,bb[2]*L,bb[1]*W2,a2,0,6.2832); c.fillStyle=euC(R_F); c.fill(); c.strokeStyle=euC(R_D); c.lineWidth=.9; c.stroke();
+      if(bb[0]>.1){ c.beginPath(); c.moveTo(cx0-Math.cos(a2)*1.2+Math.sin(a2)*1.4,cy0-Math.sin(a2)*1.2-Math.cos(a2)*1.4); c.lineTo(cx0+Math.cos(a2)*1.2,cy0+Math.sin(a2)*1.2); c.lineTo(cx0-Math.cos(a2)*1.2-Math.sin(a2)*1.4,cy0-Math.sin(a2)*1.2+Math.cos(a2)*1.4); c.strokeStyle=euC(R_D); c.lineWidth=.7; c.stroke(); } });   // el molino
+    nemPt(.088,-.8,nmP); qx=nmP[0]; qy=nmP[1]; nemPt(.088,.8,nmP); c.beginPath(); c.moveTo(qx,qy); c.lineTo(nmP[0],nmP[1]); c.strokeStyle=euC(R_D); c.lineWidth=1.3; c.stroke();     // anillo nervioso
     // gónadas: dos brazos en U (anterior y posterior) desde la vulva, con ovocitos; huevos en el útero; vulva ventral hacia el 60 % del cuerpo
-    [[.585,.36],[.615,.86]].forEach(function(g){ var d0=g[1]>g[0]?1:-1, kb; c.beginPath(); nemTrazo(c,g[0],g[1],.5,10); nemPt(g[1]+d0*.012,.1,nmP); c.lineTo(nmP[0],nmP[1]); nemTrazo(c,g[1]+d0*.006,g[0]+d0*.03,-.12,10); c.strokeStyle=euC(.5); c.lineWidth=1.5; c.stroke();
-      if(det){ c.fillStyle=euC(.55); for(kb=0;kb<6;kb++){ ua=g[0]+(g[1]-g[0])*(.15+.14*kb); nemPt(ua,.5,nmP); c.beginPath(); c.arc(nmP[0],nmP[1],.9,0,6.2832); c.fill(); } } });
-    for(k=0;k<4;k++){ ua=.555+.036*k; nemPt(ua,.12*(k%2?1:-1),nmP); nemPt(ua+.01,.12*(k%2?1:-1),nmP); qx=nmP[0]; qy=nmP[1]; nemPt(ua,.12*(k%2?1:-1),nmP); ang=Math.atan2(qy-nmP[1],qx-nmP[0]); c.beginPath(); c.ellipse(nmP[0],nmP[1],2.3,1.5,ang,0,6.2832); c.fillStyle=euC(.2); c.fill(); c.strokeStyle=euC(.55); c.lineWidth=.7; c.stroke(); }
-    nemPt(.6,1.02,nmP); px=nmP[0]; py=nmP[1]; nemPt(.6,.4,nmP); c.beginPath(); c.moveTo(px,py); c.lineTo(nmP[0],nmP[1]); c.strokeStyle=euC(.7); c.lineWidth=1.2; c.stroke();       // vulva
-    nemPt(.9,.95,nmP); px=nmP[0]; py=nmP[1]; nemPt(.9,.4,nmP); c.beginPath(); c.moveTo(px,py); c.lineTo(nmP[0],nmP[1]); c.strokeStyle=euC(.5); c.lineWidth=.8; c.stroke();            // ano
-    for(k=0;k<nem.vac.length;k++){ m=nem.vac[k]; u=(tiempo-m.t0)/m.dig; if(u>1) u=1; nemPt(.3+.075*(k%8),0,nmP); c.beginPath(); c.arc(nmP[0],nmP[1],(m.s===0?.9:m.s===1?1.2:1.6)*(1-.6*u),0,6.2832); c.fillStyle=euC(.6*(1-.5*u)); c.fill(); }   // lo que come, en el intestino
+    [[.585,.36],[.615,.86]].forEach(function(g){ var d0=g[1]>g[0]?1:-1, kb; c.beginPath(); nemTrazo(c,g[0],g[1],.5,10); nemPt(g[1]+d0*.012,.1,nmP); c.lineTo(nmP[0],nmP[1]); nemTrazo(c,g[1]+d0*.006,g[0]+d0*.03,-.12,10); c.strokeStyle=euC(R_S); c.lineWidth=1.5; c.stroke();
+      if(det){ c.fillStyle=euC(R_D); for(kb=0;kb<6;kb++){ ua=g[0]+(g[1]-g[0])*(.15+.14*kb); nemPt(ua,.5,nmP); c.beginPath(); c.arc(nmP[0],nmP[1],.9,0,6.2832); c.fill(); } } });
+    for(k=0;k<4;k++){ ua=.555+.036*k; nemPt(ua,.12*(k%2?1:-1),nmP); nemPt(ua+.01,.12*(k%2?1:-1),nmP); qx=nmP[0]; qy=nmP[1]; nemPt(ua,.12*(k%2?1:-1),nmP); ang=Math.atan2(qy-nmP[1],qx-nmP[0]); c.beginPath(); c.ellipse(nmP[0],nmP[1],2.3,1.5,ang,0,6.2832); c.fillStyle=euC(R_F); c.fill(); c.strokeStyle=euC(R_D); c.lineWidth=.7; c.stroke(); }
+    nemPt(.6,1.02,nmP); px=nmP[0]; py=nmP[1]; nemPt(.6,.4,nmP); c.beginPath(); c.moveTo(px,py); c.lineTo(nmP[0],nmP[1]); c.strokeStyle=euC(R_D); c.lineWidth=1.2; c.stroke();       // vulva
+    nemPt(.9,.95,nmP); px=nmP[0]; py=nmP[1]; nemPt(.9,.4,nmP); c.beginPath(); c.moveTo(px,py); c.lineTo(nmP[0],nmP[1]); c.strokeStyle=euC(R_S); c.lineWidth=.8; c.stroke();            // ano
+    for(k=0;k<nem.vac.length;k++){ m=nem.vac[k]; u=(tiempo-m.t0)/m.dig; if(u>1) u=1; nemPt(.3+.075*(k%8),0,nmP); c.beginPath(); c.arc(nmP[0],nmP[1],(m.s===0?.9:m.s===1?1.2:1.6)*(1-.6*u),0,6.2832); c.fillStyle=euC(R_D*(1-.5*u)); c.fill(); }   // lo que come, en el intestino
   }
   function nemDibujar(rec,lz,nv){ // 050: según su capa (nem.capa: 0 pasa por detrás de la raíz, 1 por delante) y la visibilidad de la raíz en ese punto (vis: 0 en reposo, 1 bajo la luz)
     var k, x, y, det, al, vis=0, I, x0=1e9, y0=1e9, x1=-1e9, y1=-1e9, pad=nem.ext+10, bx, by, bw, bh, o, d=dpr, oc;
-    nemEsq(); x=nem.x; y=nem.y; det=!lz||(rec&&enLuz(x,y)); al=euM(x,y,rec,lz,nv);
+    euT=5; nemEsq(); x=nem.x; y=nem.y; det=!lz||(rec&&enLuz(x,y)); al=euM(x,y,rec,lz,nv);
     if(rz.on&&rz.cvR){ I=rec?luzI(nem.x,nem.y):1; vis=1-LUZ_RAIZA*(1-luz.lutR[(Math.max(0,Math.min(1,I))*255+.5)|0]); if(!lz) vis=1; }
     if(nem.capa===0&&rz.on&&vis>.02){
       for(k=0;k<NM;k++){ if(nmX[k]<x0) x0=nmX[k]; if(nmX[k]>x1) x1=nmX[k]; if(nmY[k]<y0) y0=nmY[k]; if(nmY[k]>y1) y1=nmY[k]; }
@@ -1741,7 +1768,7 @@
       oc.globalCompositeOperation='destination-out'; oc.globalAlpha=Math.min(1,vis*1.05); oc.lineCap='round'; oc.strokeStyle='#000';        // la raíz le tapa el cuerpo (sólo donde la raíz se ve)
       for(k=0;k<rz.nb;k++){ o=k*5; if(RB[o]<bx-30||RB[o]>bx+bw+30||(RB[o+1]<by-30&&RB[o+3]<by-30)||(RB[o+1]>by+bh+30&&RB[o+3]>by+bh+30)) continue; oc.lineWidth=2*RB[o+4]+1.6; oc.beginPath(); oc.moveTo(RB[o],RB[o+1]); oc.lineTo(RB[o+2],RB[o+3]); oc.stroke(); }
       oc.globalCompositeOperation='source-over'; oc.globalAlpha=1;
-      ctx.globalAlpha=al*.9; ctx.setTransform(1,0,0,1,0,0); ctx.drawImage(nemOff,0,0,Math.ceil(bw*d),Math.ceil(bh*d),Math.round(bx*d),Math.round(by*d),Math.ceil(bw*d),Math.ceil(bh*d)); ctx.setTransform(dpr,0,0,dpr,0,0);
+      ctx.globalAlpha=al; ctx.setTransform(1,0,0,1,0,0); ctx.drawImage(nemOff,0,0,Math.ceil(bw*d),Math.ceil(bh*d),Math.round(bx*d),Math.round(by*d),Math.ceil(bw*d),Math.ceil(bh*d)); ctx.setTransform(dpr,0,0,dpr,0,0);
     } else { ctx.globalAlpha=al; nemPintar(ctx,det,vis); }
     ctx.globalAlpha=1;
   }
@@ -1823,8 +1850,9 @@
     quitar:function(id){ for(var i=0;i<fuentes.length;i++) if(fuentes[i].id===id){ fuentes.splice(i,1); sucio=true; return; } },
     usarCampo:function(fn){ campoFn=fn||null; },
     campo:function(x,y){ return campo(x,y); },
-    opacidad:function(f){ factor=f; colorDeTinta(); },
-    opacidad:function(x,y){ var rec=luzPrep(); return +luzMod(x,y,rec,luz.activa,NIVELES[nivel]).toFixed(4); },   // 048: la opacidad que reciben (por la luz, la columna y el texto) las bacterias y los eucariotas en (x, y): es la misma función
+    opacidad:function(f){ factor=f; colorDeTinta(); sucio=true; },
+    opacidades:function(){ return {base:JSON.parse(JSON.stringify(OPAC)),papeles:{contorno:R_C,apendice:R_A,detalle:R_D,sutil:R_S,relleno:R_F,puntoBdeloplasto:R_N},tramosMatriz:TRAMOS_EPS.slice(),tramosArena:TRAMOS_ARENA.slice(),texto:TEXTO_F,columna:LUZ_COL,reposo:LUZ_PISO,reposoRaiz:+((1-LUZ_RAIZA)*LUZ_PISO).toFixed(3),temaClaro:GANA_CLARO,factorGlobal:factor,G:+G.toFixed(4),eucariotas:EU_AL}; },   // 052: la tabla de opacidades base y todos los factores comunes (para medir y revisar)
+    opacidadEn:function(x,y){ var rec=luzPrep(); return +luzMod(x,y,rec,luz.activa,NIVELES[nivel]).toFixed(4); },   // 048 (052: se llama opacidadEn; opacidad(f) es el factor global): la opacidad que reciben (por la luz, la columna y el texto) las bacterias y los eucariotas en (x, y): es la misma función
     repulsion:function(o){ // 046: repulsión del cursor sobre las bacterias: repulsion({radio, fuerza}) (fuerza 0 la apaga); sin argumento informa
       if(o){ if(o.radio!=null) CUR_R=Math.max(1,+o.radio); if(o.fuerza!=null) CUR_V=Math.max(0,+o.fuerza); }
       return {radio:CUR_R,fuerza:CUR_V,activa:CUR_V>0};
@@ -1835,7 +1863,7 @@
         if(o.activa!=null&&!!o.activa!==euOn){ euOn=!!o.activa; if(euOn) euInicio(); else { eu.length=0; nem=null; } }
         if(o.reiniciar) euInicio();
         if(o.agregar&&euOn) for(k=0;k<o.agregar.length;k++){ q=o.agregar[k]; euNuevo(q.t!=null?q.t:q,q.x!=null?q.x:Math.random()*W,q.y!=null?q.y:Math.random()*H,Math.random()*6.2832); }
-        if(o.largoNematodo!=null) EU_NLEN=Math.max(40,+o.largoNematodo); if(o.velocidad!=null) EU_VEL=Math.max(.05,+o.velocidad); if(o.opacidad!=null) EU_AL=Math.max(.2,+o.opacidad);   // 048: EU_NESC (aumento del nematodo; el que quepa en el margen) y EU_VEL (velocidad de los protistas, 0,7) se pueden cambiar para probar
+        if(o.largoNematodo!=null) EU_NLEN=Math.max(40,+o.largoNematodo); if(o.velocidad!=null) EU_VEL=Math.max(.05,+o.velocidad); if(o.opacidad!=null) EU_AL=Math.max(.2,+o.opacidad);   // 052: multiplica la base de todos los eucariotas (1 = la tabla OPAC)   // 048: EU_NESC (aumento del nematodo; el que quepa en el margen) y EU_VEL (velocidad de los protistas, 0,7) se pueden cambiar para probar
         if(o.nematodo&&euOn&&!nem) nemNace(!!o.quieto);
         if(o.capa!=null&&nem){ nem.capa=o.capa?1:0; nem.capaT=tiempo+1e9; }   // 050: fija la capa del nematodo (0 pasa por detrás de la raíz, 1 por delante) para probar y fotografiar
       }
