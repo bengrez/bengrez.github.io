@@ -39,7 +39,7 @@
   --display:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
   --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
-  --page:72rem; --sesgo:.75; --gutter:clamp(1rem,4vw,2.5rem); --bar:3.25rem;
+  --page:72rem; --sesgo:.75; --lento:1.8; --gutter:clamp(1rem,4vw,2.5rem); --bar:3.25rem;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
@@ -144,14 +144,14 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
      retardos y duraciones crecientes, pero las dos líneas duran lo mismo (1 s; retardos .05 y .15 s): banda, referencia y
      nota 0,4 s; leyenda 0,5 s tras .35 s; alerta y acento 0,5 s tras .9 s; puntos con barras 0,4 s + 0,02 s por punto, con
      retardo .05 s + 0,05 s por punto. Secuencia completa ≈ 1,4 s (020: 2,0 s). */
-  .fig.traza .linea{stroke-dasharray:1;stroke-dashoffset:1;animation:trazar 1s cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
-  .fig.traza .linea.b{animation-delay:.05s}
-  .fig.traza .linea.a{animation-delay:.15s}
-  .fig.traza .banda,.fig.traza .ref,.fig.traza .nota{opacity:0;animation:aparecer .4s cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
+  .fig.traza .linea{stroke-dasharray:1;stroke-dashoffset:1;animation:trazar calc(1s*var(--lento)) cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
+  .fig.traza .linea.b{animation-delay:calc(.05s*var(--lento))}
+  .fig.traza .linea.a{animation-delay:calc(.15s*var(--lento))}
+  .fig.traza .banda,.fig.traza .ref,.fig.traza .nota{opacity:0;animation:aparecer calc(.4s*var(--lento)) cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
   .fig.traza .banda{animation-name:aparecer-banda}
-  .fig.traza .alerta,.fig.traza .acento{opacity:0;animation:aparecer .5s cubic-bezier(.6,0,.4,1) .9s forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
-  .fig.traza .leyenda{opacity:0;animation:aparecer .5s cubic-bezier(.6,0,.4,1) .35s forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
-  .fig.traza .pt{opacity:0;animation:aparecer .4s cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1);animation-duration:calc(.4s + var(--i,0)*.02s);animation-delay:calc(.05s + var(--i,0)*.05s)}
+  .fig.traza .alerta,.fig.traza .acento{opacity:0;animation:aparecer calc(.5s*var(--lento)) cubic-bezier(.6,0,.4,1) calc(.9s*var(--lento)) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
+  .fig.traza .leyenda{opacity:0;animation:aparecer calc(.5s*var(--lento)) cubic-bezier(.6,0,.4,1) calc(.35s*var(--lento)) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1)}
+  .fig.traza .pt{opacity:0;animation:aparecer calc(.4s*var(--lento)) cubic-bezier(.6,0,.4,1) forwards;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1);animation-duration:calc((.4s + var(--i,0)*.02s)*var(--lento));animation-delay:calc((.05s + var(--i,0)*.05s)*var(--lento))}
   @keyframes trazar{to{stroke-dashoffset:0}}
   @keyframes aparecer{to{opacity:1}}
   @keyframes aparecer-banda{to{opacity:.07}}
@@ -168,15 +168,15 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
    scroll, nunca un fade-and-slide automático al cargar. */
 @supports (animation-timeline:view()){
   @media (prefers-reduced-motion:no-preference){
-    .dos>div:not(.riel)>*,.dos>.ruta{--rango:12rem;animation:sube linear both;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1);animation-timeline:view();animation-range:entry 0% entry var(--rango)}
-    .dos>div:not(.riel)>:nth-child(2){--rango:14rem}
-    .dos>div:not(.riel)>:nth-child(3){--rango:16rem}
-    .dos>div:not(.riel)>:nth-child(4){--rango:18rem}
-    .dos>div:not(.riel)>:nth-child(5){--rango:20rem}
-    .dos>div:not(.riel)>:nth-child(6){--rango:22rem}
-    .dos>div:not(.riel)>:nth-child(7){--rango:24rem}
-    .dos>div:not(.riel)>:nth-child(8){--rango:26rem}
-    .dos>div:not(.riel)>:nth-child(9){--rango:28rem}
+    .dos>div:not(.riel)>*,.dos>.ruta{--rango:calc(12rem*var(--lento));animation:sube linear both;animation-timing-function:linear(0,.123 35%,.737 70%,.832 76%,.905 82%,.958 88%,.989 94%,1);animation-timeline:view();animation-range:entry 0% entry var(--rango)}
+    .dos>div:not(.riel)>:nth-child(2){--rango:calc(14rem*var(--lento))}
+    .dos>div:not(.riel)>:nth-child(3){--rango:calc(16rem*var(--lento))}
+    .dos>div:not(.riel)>:nth-child(4){--rango:calc(18rem*var(--lento))}
+    .dos>div:not(.riel)>:nth-child(5){--rango:calc(20rem*var(--lento))}
+    .dos>div:not(.riel)>:nth-child(6){--rango:calc(22rem*var(--lento))}
+    .dos>div:not(.riel)>:nth-child(7){--rango:calc(24rem*var(--lento))}
+    .dos>div:not(.riel)>:nth-child(8){--rango:calc(26rem*var(--lento))}
+    .dos>div:not(.riel)>:nth-child(9){--rango:calc(28rem*var(--lento))}
     @keyframes sube{from{transform:translateY(1.75rem)}to{transform:none}}
   }
 }
@@ -210,7 +210,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .kicker{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
 @media (min-width:960px){
   .dos{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(2rem,4vw,3.5rem)}
-  .riel{position:sticky;top:calc(var(--bar) + var(--fig-h,0px) + 1.5rem);align-self:start}
+  .riel{position:sticky;top:calc(var(--bar) + var(--fig-h,0px) + 2rem);align-self:start}   /* 047: 2 rem bajo la figura (antes 1,5): el título que sale por arriba se desvanece en ese espacio y no cruza el gráfico */
   .fuera .riel{top:calc(var(--bar) + 1.5rem)}
 }
 @media (max-width:959px){
@@ -245,7 +245,12 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
   #casos{grid-column:1;grid-row:1}#ingenieria{grid-column:1;grid-row:2}
   #investigacion{grid-column:1;grid-row:3}#educacion{grid-column:1;grid-row:4}
   /* en la primera fila el título parte bajo la figura, a la altura donde se pega */
-  #casos .riel{margin-top:calc(var(--fig-h,15rem) - clamp(2.25rem,5.5vw,4rem) + 1.5rem)}
+  #casos .riel{margin-top:calc(var(--fig-h,15rem) - clamp(2.25rem,5.5vw,4rem) + 2rem)}
+  /* 047: el título (riel) de una sección que se va hacia arriba pasaba por detrás del gráfico, que no tiene fondo, y se montaba sobre él. Ahora el JS (cortar(), más abajo) mide
+     cuánto de su borde superior queda por encima del borde inferior de la figura (--corte) y el título se desvanece hacia ese borde con una máscara de 30 px: nunca cruza el gráfico y el fondo vivo
+     de la columna sigue a la vista (la máscara es más ancha que el título para no recortar el velo y su sombra). */
+  .escena .riel.corta{-webkit-mask-image:linear-gradient(to bottom,transparent calc(var(--corte,0px) + 40px),#000 calc(var(--corte,0px) + 70px));mask-image:linear-gradient(to bottom,transparent calc(var(--corte,0px) + 40px),#000 calc(var(--corte,0px) + 70px));
+    -webkit-mask-size:calc(100% + 80px) calc(100% + 80px);mask-size:calc(100% + 80px) calc(100% + 80px);-webkit-mask-position:-40px -40px;mask-position:-40px -40px;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
   /* el gráfico llena la columna; la variante ancha desde 1200 px, la angosta (más alta) antes */
   .plot{height:auto;aspect-ratio:400/220;max-width:calc(44vh * 400 / 220)}
   .fig{width:100%;height:auto}
@@ -936,7 +941,7 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 
 <script>
 /* El título de la portada se encoge con el scroll: --k va de 0 (grande) a 1 (compacto) en los primeros
-   píxeles, con la curva común (lento al partir, rápido y llegada suave, suave()) a lo largo de D = 160 px, y se queda compacto. Sólo depende de la posición,
+   píxeles, con la curva común (lento al partir, rápido y llegada suave, suave()) a lo largo de D = 160 px × --lento (047), y se queda compacto. Sólo depende de la posición,
    salvo al saltar a una sección: la portada se compacta antes de medir, porque si no se encogiera en
    pleno salto la sección quedaría más arriba de lo calculado y escondida tras la figura fija. */
 /* Curva común de los movimientos en JS (la misma de linear() en el CSS): p en [0,1] → avance en [0,1]. Lenta al partir
@@ -951,7 +956,7 @@ function suave(p){
 var portada=(function(){
   var hero=document.querySelector('.hero'); if(!hero) return {saltar:function(el){ el.scrollIntoView(); }};
   var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var D=160, ult=-1, raf=0, forzado=false, ft=0;
+  var LENTO=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--lento'))||1, D=160*LENTO, ult=-1, raf=0, forzado=false, ft=0;
   function poner(v){ if(v!==0&&v!==1&&Math.abs(v-ult)<.004) return; ult=v; hero.style.setProperty('--k',v.toFixed(3)); }
   function aplicar(){ raf=0; poner(forzado?1:suave((window.pageYOffset||0)/D)); }
   function soltar(){ forzado=false; aplicar(); }
@@ -968,7 +973,7 @@ var portada=(function(){
   function saltar(el){
     forzado=true; poner(1); clearTimeout(ft); ft=setTimeout(soltar,500); parar();
     if(reduce){ el.scrollIntoView({behavior:'auto',block:'start'}); return; }
-    var y0=window.pageYOffset||0, d0=Math.abs(destino(el)-y0), dur=Math.min(1500,Math.max(800,d0*.42)), t0=performance.now();
+    var y0=window.pageYOffset||0, d0=Math.abs(destino(el)-y0), dur=Math.min(1500,Math.max(800,d0*.42))*Math.min(1.5,LENTO), t0=performance.now();
     var puesto=y0;
     function paso(now){
       // si otra cosa movió la página (un foco, otro salto), se suelta
@@ -1019,6 +1024,15 @@ var portada=(function(){
       kAct=-1, raf=0, pendiente=false;
   if(hojas.length!==3||!escena||secs.some(function(x){ return !x; })) return;
   function medir(){ document.documentElement.style.setProperty('--fig-h',fig.offsetHeight+'px'); }
+  // 047: el título de la sección que se va hacia arriba se desvanece al llegar al borde inferior de la figura (desde 960 px, donde la figura no tiene fondo y comparte columna con los títulos)
+  var rieles=[].slice.call(document.querySelectorAll('#escena .riel')), cortes=rieles.map(function(){ return null; });
+  function cortar(){
+    var fb=fig.getBoundingClientRect().bottom, k, c, r, on;
+    for(k=0;k<rieles.length;k++){ r=rieles[k];
+      c=dos.matches?Math.round(fb-r.getBoundingClientRect().top):-1e4; on=c>-30;                      // 30 px: el ancho del desvanecimiento; con el título pegado (2 rem bajo la figura) no se aplica
+      if(!on){ if(cortes[k]!==null){ cortes[k]=null; r.classList.remove('corta'); r.style.removeProperty('--corte'); } continue; }
+      if(cortes[k]!==c){ cortes[k]=c; r.classList.add('corta'); r.style.setProperty('--corte',c+'px'); } }
+  }
   function trazar(h){
     // Sólo la variante visible (.w o .n): si la otra se activara al cambiar de ancho, arrancaría sola.
     var svgs=[].slice.call(h.querySelectorAll('svg.fig'));
@@ -1039,7 +1053,7 @@ var portada=(function(){
     return k;
   }
   function evaluar(){
-    raf=0; encoger();
+    raf=0; encoger(); cortar();
     var base=(bar?bar.offsetHeight:52)+fig.offsetHeight;
     if(escena.getBoundingClientRect().bottom<=base){ kAct=-1; pendiente=false; return; } // la escena salió por arriba
     mostrar(estado());
@@ -1083,7 +1097,8 @@ var portada=(function(){
   if(!window.matchMedia||window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if(window.CSS&&CSS.supports&&CSS.supports('animation-timeline','view()')) return;
   var els=[].slice.call(document.querySelectorAll('.dos>div:not(.riel)>*,.dos>.ruta')), raf=0;
-  var rangos=els.map(function(e){ var i=e.parentNode.classList.contains('dos')?0:[].indexOf.call(e.parentNode.children,e); return 12+2*Math.min(i,8); });
+  var lento=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--lento'))||1,
+      rangos=els.map(function(e){ var i=e.parentNode.classList.contains('dos')?0:[].indexOf.call(e.parentNode.children,e); return (12+2*Math.min(i,8))*lento; });
   function poner(){
     raf=0; var vh=window.innerHeight, rem=parseFloat(getComputedStyle(document.documentElement).fontSize)||16;
     els.forEach(function(e,j){ var top=e.getBoundingClientRect().top-(e._o||0), p=(vh-top)/(rangos[j]*rem), o=1.75*rem*(1-suave(p));
@@ -1099,7 +1114,7 @@ var portada=(function(){
   try{
     var mm=window.matchMedia; if(!mm||!mm('(pointer: fine)').matches||window.innerWidth<1024||mm('(prefers-reduced-motion: reduce)').matches) return;
     var cx=navigator.connection; if(cx&&cx.saveData) return;
-    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.js?v=e7d3b7cf6e'; s.async=true; document.head.appendChild(s); }
+    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.js?v=c44acf5727'; s.async=true; document.head.appendChild(s); }
     if(document.readyState==='complete') cargar(); else window.addEventListener('load',function(){ setTimeout(cargar,300); });
   }catch(e){}
 })();
