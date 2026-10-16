@@ -34,7 +34,7 @@
 :root{
   --bg:#FAF9F6; --surface:#F0EEE8; --ink:#1B1A17; --muted:#5B5955; --rule:#DAD7CF; --rule-strong:#B5B1A6;
   --accent:#900008; --accent-ink:#7A0007; --alert:#D9481F;
-  --panel:#231B1A; --p-ink:#ECE9E2; --p-muted:#C9C3B8; --p-rule:#3B312F; --p-accent:#FF9A82;
+  --panel:rgba(230,222,208,.8); --panel-suave:rgba(230,222,208,.42); --panel-solido:#E9E4D9; --p-ink:#1B1A17; --p-muted:#35322D; --p-rule:rgba(27,26,23,.26); --p-accent:#650005;   /* 049: la franja de agentes es translúcida (se ve el fondo vivo a través) y sigue el tema: arena con tinta oscura en claro, marrón cálido con tinta clara en oscuro */
   --serie-a:#EF5536; --serie-b:#900008; --velo:rgba(250,249,246,.6);
   --display:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
   --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
@@ -47,12 +47,14 @@
     --bg:#131211; --surface:#1C1A18; --ink:#ECE9E2; --muted:#A39F97; --rule:#2C2926; --rule-strong:#45413C;
     --accent:#FF8F74; --accent-ink:#FFA893; --alert:#F86848;
     --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark;
+    --panel:rgba(46,33,30,.8); --panel-suave:rgba(46,33,30,.5); --panel-solido:#241C1A; --p-ink:#F2EFE8; --p-muted:#E2DCCF; --p-rule:rgba(236,233,226,.24); --p-accent:#FFB8A5;
   }
 }
 :root[data-theme="dark"]{
   --bg:#131211; --surface:#1C1A18; --ink:#ECE9E2; --muted:#A39F97; --rule:#2C2926; --rule-strong:#45413C;
   --accent:#FF8F74; --accent-ink:#FFA893; --alert:#F86848;
   --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark;
+  --panel:rgba(46,33,30,.8); --panel-suave:rgba(46,33,30,.5); --panel-solido:#241C1A; --p-ink:#F2EFE8; --p-muted:#E2DCCF; --p-rule:rgba(236,233,226,.24); --p-accent:#FFB8A5;
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar) + var(--fig-h,0px) + 1rem);overflow-anchor:none}
@@ -369,16 +371,32 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 
 /* ---- agentes de IA: franja oscura ---- */
 .agentes{color:var(--p-ink);border-block:0;padding-block:0}   /* 043: la franja oscura sólo cubre la columna: los márgenes quedan libres para el fondo vivo */
-.agentes>.pagina{background:var(--panel);background-clip:content-box;border-block:1px solid var(--p-rule);padding-block:clamp(2.25rem,5.5vw,4rem)}
+.agentes>.pagina{position:relative;isolation:isolate;padding-block:clamp(2.25rem,5.5vw,4rem)}
+/* 049: la franja ya no es un panel opaco: es un tinte translúcido con borde suave (sombra del mismo color, como el velo del texto) y reglas finas; las células pasan por detrás y la luz del cursor las revela */
+.agentes>.pagina::before{content:"";position:absolute;inset:0 var(--gutter);z-index:-1;background:var(--panel-suave);box-shadow:0 0 14px 10px var(--panel-suave);border-block:1px solid var(--p-rule)}
+/* con el fondo vivo, el tinte de la franja es suave (las células se ven a través) y cada bloque de texto lleva su velo, como en el resto del sitio (026): el contraste se mide con una célula de tinta plena debajo del texto */
+.fondo-vivo .agentes :is(.riel-top,.lede,.practicas){background:var(--panel);box-shadow:0 0 12px 9px var(--panel);border-radius:3px}
+.fondo-vivo .agentes .riel-top{margin-inline:0;padding-inline:.4rem;margin-left:-.4rem}
 .agentes a{color:var(--p-accent)}
 .agentes .kicker,.agentes .riel .donde{color:var(--p-muted)}
-.agentes .riel-top{background:var(--panel);border-bottom-color:var(--p-rule)}
+.agentes .riel-top{background:none;border-bottom-color:var(--p-rule)}
+@media (max-width:959px){.agentes .riel-top{background:var(--panel-solido)}}
 .agentes .lede{color:var(--p-ink);margin-top:0;font-size:1.12rem;max-width:30em}
 .practicas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(1.25rem,3vw,2rem);align-content:start;margin-top:1.25rem}
 .practicas div{padding-block:.85rem 1.1rem;border-top:1px solid var(--p-rule)}
 .practicas dt{font-family:var(--mono);font-size:.8rem;color:var(--p-accent);margin-bottom:.3rem}
 .practicas dd{font-size:1rem;line-height:1.45}
 @media (max-width:520px){.practicas{grid-template-columns:1fr}}
+
+/* ---- 049: la caja de pruebas (entorno aislado) bajo el título de agentes ----
+   Un recuadro de borde punteado con marcas de esquina; adentro, una célula grande que el cursor atrae pero que no puede salir (se frena en el borde y el borde pulsa donde la toca).
+   Es decorativa: role="img" con una descripción corta, sin foco; el JS la anima sólo mientras se ve (con movimiento reducido queda quieta al centro; sin puntero fino deambula sola). */
+.caja{margin-top:1.5rem;max-width:30rem}
+.caja-in{position:relative;aspect-ratio:16/9;background:var(--panel);border-radius:2px;box-shadow:0 0 0 1px var(--p-rule) inset}   /* la caja es una ventana más opaca: las células del fondo no entran en el entorno aislado */
+.caja-in canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.caja-et{position:absolute;left:.75rem;top:.55rem;font:500 .68rem/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--p-muted)}
+.caja-et::before{content:"";display:inline-block;width:.5em;height:.5em;margin-right:.6em;border:1.5px solid var(--p-accent);border-radius:50%;vertical-align:.05em}
+.caja-pie{margin-top:.55rem;font:.76rem/1.4 var(--mono);color:var(--p-muted)}
 
 /* ---- recorrido: estaciones sobre una línea vertical ---- */
 .ruta{display:grid;font-size:.98rem;line-height:1.45}
@@ -892,6 +910,10 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
   <div class="pagina dos">
     <header class="riel">
       <div class="riel-top"><p class="kicker">Cómo trabajo</p><h2 id="h-ia">Agentes de IA, en entornos controlados</h2></div>
+      <figure class="caja" id="caja" role="img" aria-label="Ilustración decorativa: una célula se mueve dentro de un recuadro de borde punteado, un entorno aislado. El cursor la atrae, pero no puede sacarla: autonomía dentro de límites explícitos.">
+        <div class="caja-in" aria-hidden="true"><canvas></canvas><span class="caja-et">entorno aislado</span></div>
+        <figcaption class="caja-pie" aria-hidden="true">autonomía dentro de límites explícitos</figcaption>
+      </figure>
     </header>
     <div>
       <p class="lede">Uso agentes de IA a diario, sobre un contexto que persiste y se versiona. Evalúo antes de desplegar.</p>
@@ -1106,6 +1128,68 @@ var portada=(function(){
   }
   function pedir(){ if(!raf) raf=requestAnimationFrame(poner); }
   window.addEventListener('scroll',pedir,{passive:true}); window.addEventListener('resize',pedir); poner();
+})();
+
+/* La caja de pruebas (049), bajo el título de «Agentes de IA»: un entorno aislado con una célula grande que el cursor atrae pero no puede sacar. Su propio canvas chico, sin
+   depender del fondo (funciona también donde el fondo no se carga). Sólo corre mientras se ve (IntersectionObserver) y la pestaña está visible: ≈ 0,2 ms por cuadro.
+   La célula persigue el cursor (si está fuera de la caja, el punto más cercano del borde: nunca sale); se frena al llegar al borde y el borde pulsa donde la toca.
+   Con movimiento reducido queda quieta al centro (un solo dibujo); sin puntero fino (celular) deambula sola a 30 cuadros por segundo. */
+(function(){
+  var fig=document.getElementById('caja'); if(!fig) return;
+  var cv=fig.querySelector('canvas'), ctx=cv&&cv.getContext&&cv.getContext('2d'); if(!ctx) return;
+  var mm=window.matchMedia?function(q){ return window.matchMedia(q).matches; }:function(){ return false; },
+      quieto=mm('(prefers-reduced-motion: reduce)'), fino=mm('(pointer: fine)'), cx=navigator.connection, ahorro=!!(cx&&cx.saveData),
+      W=0,H=0,dpr=1, M=24, vis=false, raf=0, tUlt=0, tn=0, ptr=null, colI='#888', colA='#c33', colF='#888', cNext=0,
+      c={x:0,y:0,th:0,v:0,ph:0,imp:0}, pulsos=[];
+  function leer(){ var cs=getComputedStyle(fig); colI=cs.getPropertyValue('--p-ink').trim()||colI; colA=cs.getPropertyValue('--p-accent').trim()||colA; colF=cs.getPropertyValue('--p-muted').trim()||colF; }
+  function medir(){ var r=cv.getBoundingClientRect(); if(!r.width) return; dpr=Math.min(2,window.devicePixelRatio||1); W=r.width; H=r.height; cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+    if(!c.x){ c.x=W/2; c.y=H/2; c.th=-.4; }
+    c.x=Math.max(M,Math.min(W-M,c.x)); c.y=Math.max(M,Math.min(H-M,c.y)); pintar(performance.now()/1000); }
+  function pulso(x,y,v){ if(pulsos.length>5) pulsos.shift(); pulsos.push({x:x,y:y,t:0,a:Math.min(1,.45+v/120)}); }
+  function paso(dt,t){
+    var tx, ty, r, d, dx, dy, vt, da, nx, ny, w=.45;
+    if(fino&&ptr){ r=cv.getBoundingClientRect(); tx=ptr.x-r.left; ty=ptr.y-r.top; }
+    else{ if(t>=tn){ tn=t+1.8+2.4*Math.random(); c.tx=M+(W-2*M)*Math.random(); c.ty=M+(H-2*M)*Math.random(); } tx=c.tx; ty=c.ty; }
+    tx=Math.max(M,Math.min(W-M,tx)); ty=Math.max(M,Math.min(H-M,ty));                                   // el objetivo siempre cae dentro de la caja: el cursor de afuera no la saca
+    dx=tx-c.x; dy=ty-c.y; d=Math.sqrt(dx*dx+dy*dy);
+    da=Math.atan2(dy,dx)-c.th; da=Math.atan2(Math.sin(da),Math.cos(da)); c.th+=Math.max(-3.4*dt,Math.min(3.4*dt,da*5*dt))+.55*(Math.random()-.5)*Math.sqrt(dt)*3;
+    vt=(fino&&ptr?30+78*Math.min(1,d/90):50)*(d<4?0:1); c.v+=(vt-c.v)*Math.min(1,dt*4.5);
+    nx=c.x+Math.cos(c.th)*c.v*dt; ny=c.y+Math.sin(c.th)*c.v*dt;
+    if(nx<M||nx>W-M){ if(c.v>20&&c.imp<=0){ pulso(nx<M?0:W,ny,c.v); c.imp=.7; } nx=Math.max(M,Math.min(W-M,nx)); c.th=Math.PI-c.th; c.v*=.45; }       // el borde es una barrera: la frena, la desvía y pulsa
+    if(ny<M||ny>H-M){ if(c.v>20&&c.imp<=0){ pulso(nx,ny<M?0:H,c.v); c.imp=.7; } ny=Math.max(M,Math.min(H-M,ny)); c.th=-c.th; c.v*=.45; }
+    c.imp-=dt; c.x=nx; c.y=ny; c.ph+=dt*13;
+  }
+  function borde(a,dash){ ctx.save(); ctx.globalAlpha=a; ctx.strokeStyle=colI; ctx.lineWidth=1.2; ctx.setLineDash(dash?[5,4]:[]); ctx.strokeRect(.6,.6,W-1.2,H-1.2); ctx.restore(); }
+  function pintar(t){
+    var k, p, i, a, L=12, y;
+    ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H); ctx.lineCap='round'; ctx.lineJoin='round';
+    borde(.5,true);
+    ctx.save(); ctx.strokeStyle=colA; ctx.lineWidth=2; ctx.globalAlpha=.95; ctx.beginPath();                      // marcas de esquina
+    ctx.moveTo(.8,L); ctx.lineTo(.8,.8); ctx.lineTo(L,.8); ctx.moveTo(W-L,.8); ctx.lineTo(W-.8,.8); ctx.lineTo(W-.8,L); ctx.moveTo(W-.8,H-L); ctx.lineTo(W-.8,H-.8); ctx.lineTo(W-L,H-.8); ctx.moveTo(L,H-.8); ctx.lineTo(.8,H-.8); ctx.lineTo(.8,H-L); ctx.stroke(); ctx.restore();
+    for(i=pulsos.length-1;i>=0;i--){ p=pulsos[i]; a=p.a*Math.exp(-p.t/.45); if(a<.03){ pulsos.splice(i,1); continue; }           // pulso: el borde se enciende alrededor del punto de contacto
+      ctx.save(); ctx.beginPath(); ctx.arc(p.x,p.y,22+p.t*190,0,6.2832); ctx.clip(); ctx.strokeStyle=colA; ctx.lineWidth=2.4; ctx.globalAlpha=a; ctx.strokeRect(.6,.6,W-1.2,H-1.2); ctx.restore(); }
+    ctx.save(); ctx.translate(c.x,c.y); ctx.rotate(c.th);                                                         // la célula: un bacilo grande con su flagelo
+    ctx.strokeStyle=colI; ctx.globalAlpha=.55; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(-13,0); for(k=1;k<=16;k++){ y=4.2*(k/16)*Math.sin(c.ph-k*.62); ctx.lineTo(-13-k*2.4,y); } ctx.stroke();
+    ctx.globalAlpha=.92; ctx.strokeStyle=colA; ctx.lineWidth=12; ctx.beginPath(); ctx.moveTo(-8,0); ctx.lineTo(8,0); ctx.stroke();
+    ctx.globalAlpha=.9; ctx.strokeStyle=colI; ctx.lineWidth=1.1; ctx.beginPath(); ctx.moveTo(-8,-6); ctx.lineTo(8,-6); ctx.moveTo(-8,6); ctx.lineTo(8,6); ctx.stroke();
+    ctx.beginPath(); ctx.arc(8,0,6,-1.5708,1.5708); ctx.arc(-8,0,6,1.5708,4.7124); ctx.stroke();
+    ctx.globalAlpha=.7; ctx.fillStyle=colI; ctx.beginPath(); ctx.ellipse(-1,0,4.5,2.2,0,0,6.2832); ctx.fill(); ctx.restore();
+  }
+  function cuadro(now){
+    raf=0; if(!vis||document.hidden) return; var t=now/1000, dt=Math.min(.05,tUlt?t-tUlt:.016);
+    if(!fino&&tUlt&&t-tUlt<.033){ raf=requestAnimationFrame(cuadro); return; }                                       // celular: 30 cuadros por segundo
+    tUlt=t; var p0=performance.now(); if(t>cNext){ leer(); cNext=t+1; } paso(dt,t); pintar(t); fig._ms=(fig._ms||0)*.9+(performance.now()-p0)*.1; fig._n=(fig._n||0)+1; raf=requestAnimationFrame(cuadro);   // _ms y _n: el costo medio por cuadro y el número de cuadros (para medir)
+  }
+  fig._est=function(){ return {x:c.x,y:c.y,v:c.v,W:W,H:H,M:M,pulsos:pulsos.length,fino:fino,vivo:!!raf,quieto:quieto}; };
+  function arrancar(){ if(quieto||ahorro||raf||!vis||document.hidden) return; tUlt=0; raf=requestAnimationFrame(cuadro); }
+  leer(); medir();
+  if(window.ResizeObserver) new ResizeObserver(medir).observe(cv); else window.addEventListener('resize',medir);
+  if(quieto||ahorro){ if(window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener&&window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){ leer(); pintar(0); });
+    var mo=new MutationObserver(function(){ leer(); pintar(0); }); mo.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']}); return; }   // quieta: se vuelve a dibujar sólo al cambiar el tema
+  if('IntersectionObserver' in window) new IntersectionObserver(function(es){ vis=es[0].isIntersecting; if(vis) arrancar(); },{rootMargin:'80px'}).observe(fig); else { vis=true; arrancar(); }
+  document.addEventListener('visibilitychange',arrancar);
+  window.addEventListener('pointermove',function(e){ if(e.pointerType==='mouse'||e.pointerType==='pen') ptr={x:e.clientX,y:e.clientY}; },{passive:true});
+  document.documentElement.addEventListener('mouseleave',function(){ ptr=null; });
 })();
 
 /* Fondo con quimiotaxis (024), sólo escritorio: puntero fino, 1024 px o más, sin movimiento reducido ni ahorro de datos. Si no se
