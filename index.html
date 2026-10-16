@@ -39,7 +39,7 @@
   --display:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
   --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
-  --page:72rem; --gutter:clamp(1rem,4vw,2.5rem); --bar:3.25rem;
+  --page:72rem; --sesgo:.75; --gutter:clamp(1rem,4vw,2.5rem); --bar:3.25rem;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
@@ -58,7 +58,7 @@
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar) + var(--fig-h,0px) + 1rem);overflow-anchor:none}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
-.pagina{max-width:var(--page);margin-inline:auto;padding-inline:var(--gutter)}
+.pagina{max-width:var(--page);margin-left:max(0px,calc((100% - var(--page))*var(--sesgo)));margin-right:auto;padding-inline:var(--gutter)}   /* 046: la columna ya no está centrada: del espacio que sobra, el 75 % va a la izquierda (donde vive la simulación) y el 25 % a la derecha; el ancho del texto no cambia */
 a{color:var(--accent-ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
 a:hover{text-decoration-thickness:2px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
@@ -1099,7 +1099,7 @@ var portada=(function(){
   try{
     var mm=window.matchMedia; if(!mm||!mm('(pointer: fine)').matches||window.innerWidth<1024||mm('(prefers-reduced-motion: reduce)').matches) return;
     var cx=navigator.connection; if(cx&&cx.saveData) return;
-    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.js?v=98286f0614'; s.async=true; document.head.appendChild(s); }
+    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.js?v=e7d3b7cf6e'; s.async=true; document.head.appendChild(s); }
     if(document.readyState==='complete') cargar(); else window.addEventListener('load',function(){ setTimeout(cargar,300); });
   }catch(e){}
 })();
