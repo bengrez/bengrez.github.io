@@ -256,7 +256,8 @@
   var NIVELES=[{fps:20,cap:60,choques:false,traz:0,jeffery:false,eps:false,texto:false,grilla:3,gr:100},{fps:30,cap:120,choques:false,traz:24,jeffery:true,eps:true,texto:true,grilla:1,gr:260},
                {fps:30,cap:140,choques:true,traz:40,jeffery:true,eps:true,texto:true,grilla:1,gr:340},{fps:60,cap:160,choques:true,traz:40,jeffery:true,eps:true,texto:true,grilla:1,gr:420}];
   // Por tipo: 0 coco, 1 bacilo, 2 espirilo, 3 cocobacilo (035), 4 vibrio depredador (036). Velocidad de nado (px/s) y radio de choque (px)
-  var VEL=[0,25,38,20,35,30], RAD=[2.8,3.4,3.6,3.0,2.2,3.3];   // (038: la tasa de giros y su ángulo pasaron a LAMR, PAUSA y angTumbo(); ver «movimiento»)
+  // 053: el vibrio (C) nada a 72 px/s (≈ 60 µm/s con la escala de 1,207 px por µm/s de la 037: 35 px/s eran 29 µm/s), el doble que hasta la 052; el run-reverse-flick (TREV, VREV, FLICK) y el twitching no cambian
+  var VEL=[0,25,38,20,72,30], RAD=[2.8,3.4,3.6,3.0,2.2,3.3];   // (038: la tasa de giros y su ángulo pasaron a LAMR, PAUSA y angTumbo(); ver «movimiento»)
   // ============================================================================================================================================================================
   // 052: LA OPACIDAD BASE DE CADA TIPO, EN UN SOLO LUGAR.
   // Cada tipo (cada forma de bacteria, cada eucariota, C. elegans, cada zona de la raíz, la matriz, la arena y los trazadores) tiene UNA opacidad base, la de su tinta a plena luz en el tema oscuro (0 a 1).
@@ -1591,9 +1592,31 @@
   // Avanza EU_NVL largos por segundo, balancea la cabeza al explorar y de vez en cuando retrocede (invierte el esqueleto: la cola pasa a ser la cabeza) o hace un giro omega (la cabeza se enrosca hacia la cola).
   var EU_NLEN=150, EU_NVL=.25, EU_NA=.12, EU_NLAM=.7, EU_NF=.75, EU_NANCHO=12, EU_NCAPA=.5;   // largo (px), largos por segundo, amplitud y longitud de onda (× largo), Hz de la onda, largo/ancho, probabilidad de pasar por detrás de la raíz
   function nemCarril(l){ var ancho=(l?W-colDer:colIzq)-8; return Math.min(EU_NLEN,EU_NFRAC*H,ancho/.44); }   // 050: el mayor largo que cabe en el margen (l: 0 izquierdo, 1 derecho): ≤ EU_NLEN, ≤ EU_NFRAC del alto y con la onda (±0,17 × largo) dentro del margen
+  // 053: el cruce del párrafo de presentación. Si el párrafo de la portada (EU_NCSEL) está a la vista cuando toca un nematodo, éste entra por el borde izquierdo o el derecho a la altura del párrafo, lo cruza
+  // de lado a lado a EU_NCV veces su velocidad (con una ondulación suave de rumbo para que serpentee dentro de la franja) y sale por el otro borde. Es el único momento en que un eucariota pasa por la columna de
+  // texto: empuje.js (Pretext) lee su silueta con Quimiotaxis.silueta() y reacomoda las líneas del párrafo. Sin el párrafo a la vista (o con euca({cruce:false})) sigue la visita de siempre a la punta de la raíz.
+  var EU_CRUCE=true, EU_NCOP=1, EU_NCV=2, EU_NCSEL='.hero .lede', nemLede=null, nemLedeR={t:-1e9,ok:false,x:0,y:0,w:0,h:0};
+  function nemLedeRect(){ // la caja del párrafo en la ventana (se relee cada 0,25 s); null si no está a la vista
+    var e, r, ahora=performance.now();
+    if(ahora-nemLedeR.t<250) return nemLedeR.ok?nemLedeR:null;
+    nemLedeR.t=ahora; nemLedeR.ok=false; e=nemLede&&nemLede.isConnected?nemLede:(nemLede=document.querySelector(EU_NCSEL)); if(!e) return null;
+    r=e.getBoundingClientRect(); if(r.width<240||r.bottom<.12*H||r.top>.88*H) return null;
+    nemLedeR.x=r.left; nemLedeR.y=r.top; nemLedeR.w=r.width; nemLedeR.h=r.height; nemLedeR.ok=true; return nemLedeR;
+  }
+  function nemCruce(){ // un nematodo que cruza el párrafo; false si no hay párrafo a la vista
+    var r=nemLedeRect(), L, lado, dir, seg, k, x0, y0;
+    if(!r) return false;
+    L=Math.min(EU_NLEN,EU_NFRAC*H); if(L<70) return false;
+    lado=Math.random()<.5?0:1; dir=lado?-1:1; seg=L/(EU_NS-1); x0=lado?W+4:-4; y0=Math.max(40,Math.min(H-40,r.y+r.h*.5));
+    nem={tx:lado?-L-20:W+L+20,ty:y0,L:L,hw:L/EU_NANCHO/2,ext:(EU_NA+.045+.03)*L,lado:lado,seg:seg,S:L/96,cx:0,cy:0,sg:1,tg:0,mod:0,modT:0,nEv:1e12,om:1,inv:false,vent:Math.random()<.5?1:-1,capa:Math.random()<EU_NCAPA?0:1,capaT:0,quieto:false,cr:dir,cph:Math.random()*6.28};
+    nem.p=new Float32Array(2*EU_NS); nem.ph=Math.random()*6.28; nem.st=3; nem.t0=tiempo; nem.tf=0; nem.vac=[]; nem.h=0; nem.E=5; nem.salio=0; nem.dir=1; nem.th=lado?Math.PI:0; nem.x=x0; nem.y=y0;
+    for(k=0;k<EU_NS;k++){ nem.p[2*k]=x0-dir*k*seg; nem.p[2*k+1]=y0; }
+    euEv.nem++; return true;
+  }
   function nemNace(quieto){ // un C. elegans entra por el borde de arriba o de abajo, dentro de un margen lateral (nunca entra a la columna de texto), y va a la punta de la raíz (o al medio del margen si no hay raíz); cruza la raíz por detrás o por delante
     var y, k, hz=rz.hz||1, L, lado, hw, ext, xl, xr, tx, ty, th, x0, top, seg;
     euTn=1e12;                                                                                           // el siguiente se programa cuando éste se va (la espera se cuenta desde que se fue)
+    if(!quieto&&EU_CRUCE&&nemCruce()) return;                                                            // 053: con el párrafo de la portada a la vista, lo cruza
     lado=(rz.on&&rz.pri)||colIzq>=W-colDer?0:1; L=nemCarril(lado); if(L<70){ lado=1-lado; L=nemCarril(lado); }
     if(L<70){ euTn=tiempo+60; return; }                                                                  // ningún margen tiene lugar
     hw=L/EU_NANCHO/2; ext=(EU_NA+.045+.03)*L; xl=lado?colDer+4+ext:4+ext; xr=lado?W-4-ext:colIzq-4-ext; if(xr<xl) xr=xl=(xl+xr)/2;
@@ -1612,19 +1635,21 @@
     nem.inv=!nem.inv; nem.th=Math.atan2(p[1]-p[3],p[0]-p[2]); nem.x=p[0]; nem.y=p[1];
   }
   function nemPaso(dt){
-    var p=nem.p, seg=nem.seg, L=nem.L, hw=nem.hw, ext=nem.ext, lado=nem.lado, k, dx, dy, d, phi, w, v, x, y, nw=0, ce, o, m, xl, xr, reach, af, mn, md=nem.mod, f, ang, vr;
+    var p=nem.p, seg=nem.seg, L=nem.L, hw=nem.hw, ext=nem.ext, lado=nem.lado, k, dx, dy, d, phi, w, v, x, y, nw=0, ce, o, m, xl, xr, reach, af, mn, md=nem.mod, f, ang, vr, lr, yy;
     if(nem.quieto){ nem.h-=dt; return; }
     xl=lado?colDer+4+ext:4+ext; xr=lado?W-4-ext:colIzq-4-ext; if(xr<xl) xr=xl=(xl+xr)/2;                // el margen puede cambiar si se redimensiona la ventana
+    if(nem.cr){ xl=-L-80; xr=W+L+80; }                                                                    // 053: el que cruza el párrafo recorre la ventana entera
     x=nem.x; y=nem.y; nem.h-=dt;
     if(nem.st<2&&md===0&&y>20&&y<H-20&&tiempo>nem.nEv){ if(Math.random()<.62){ nem.mod=md=1; nem.modT=tiempo+2.2+1.6*Math.random(); nemFlip(); x=nem.x; y=nem.y; } else { nem.mod=md=2; nem.modT=tiempo+2.6; nem.om=Math.random()<.5?1:-1; } nem.nEv=tiempo+9+12*Math.random(); }   // de vez en cuando retrocede o hace un giro omega
     else if(md===1&&tiempo>nem.modT){ nemFlip(); x=nem.x; y=nem.y; nem.mod=md=0; } else if(md===2&&tiempo>nem.modT) nem.mod=md=0;
-    if(nem.st===0){ if(tiempo-nem.t0>90){ nem.st=2; nem.tf=tiempo; } nem.tx=Math.max(xl,Math.min(xr,nem.tx)); dx=nem.tx-x; dy=nem.ty-y; if(dx*dx+dy*dy<(.45*L)*(.45*L)){ nem.st=1; nem.tf=tiempo+40+22*Math.random(); nem.tg=tiempo+8+6*Math.random(); } phi=Math.atan2(dy,dx); }
+    if(nem.st===3){ lr=nemLedeRect(); yy=(lr?lr.y+lr.h*.5:nem.ty)+(lr?lr.h:60)*.3*Math.sin(tiempo*.45+nem.cph); nem.ty=yy; phi=Math.atan2(yy-y,260*nem.cr); }   // 053: cruza el párrafo, serpenteando dentro de su franja
+    else if(nem.st===0){ if(tiempo-nem.t0>90){ nem.st=2; nem.tf=tiempo; } nem.tx=Math.max(xl,Math.min(xr,nem.tx)); dx=nem.tx-x; dy=nem.ty-y; if(dx*dx+dy*dy<(.45*L)*(.45*L)){ nem.st=1; nem.tf=tiempo+40+22*Math.random(); nem.tg=tiempo+8+6*Math.random(); } phi=Math.atan2(dy,dx); }
     else if(nem.st===1){ dx=nem.cx-x; dy=nem.cy-y; if(dx*dx+dy*dy<(.2*L)*(.2*L)||tiempo>nem.tg){ nem.sg=-nem.sg; nem.cx=Math.max(xl,Math.min(xr,nem.tx+nem.sg*(.45+.25*Math.random())*L)); nem.cy=Math.max(30,Math.min(H-30,nem.ty+(Math.random()-.5)*.5*L)); nem.tg=tiempo+8+6*Math.random(); dx=nem.cx-x; dy=nem.cy-y; }   // explora la punta: va y viene cruzando la raíz
       phi=Math.atan2(dy,dx); if(tiempo>nem.tf) nem.st=2; }
     else { phi=(y<H*.5?-1.5708:1.5708)+.2*Math.sin(tiempo*.4); }                                          // se va por el borde de arriba o de abajo, el más cercano
     if(md===1) phi=nem.th+.5*Math.sin(tiempo*1.3); else if(md===2) phi=nem.th+nem.om*2.2;
     w=(md===2?3.1:1.5)*dt; d=angd(phi,nem.th); nem.th+=d>w?w:d<-w?-w:d;
-    v=EU_NVL*L*(md===1?.8:md===2?.6:1)*(nem.st===1?.85:1)*(nem.h>0?.5:1); nem.ph+=6.283*EU_NF*(.6+.4*v/(EU_NVL*L))*dt;
+    v=EU_NVL*L*(md===1?.8:md===2?.6:1)*(nem.st===1?.85:nem.st===3?EU_NCV:1)*(nem.h>0?.5:1); nem.ph+=6.283*EU_NF*(.6+.4*v/(EU_NVL*L))*dt;
     x+=Math.cos(nem.th)*v*dt; y+=Math.sin(nem.th)*v*dt;
     if(x<xl){ x=xl; if(Math.cos(nem.th)<0) nem.th=Math.PI-nem.th; } else if(x>xr){ x=xr; if(Math.cos(nem.th)>0) nem.th=Math.PI-nem.th; }   // limitado al margen: rebota suavemente en sus bordes
     p[0]=x; p[1]=y;
@@ -1640,6 +1665,7 @@
       for(k=0;k<eu.length;k++){ o=eu[k]; if(o.dead) continue; dx=o.x-x; dy=o.y-y; if(dx*dx+dy*dy>(10+o.R*.5+.6*hw)*(10+o.R*.5+.6*hw)) continue; if(Math.random()<EU_NCOME[2+o.t]*dt*Math.sqrt(af)){ o.dead=tiempo; euEv.muere++; euEv.nemComio[1+o.t]++; euVac(nem,EU_VALOR[1+o.t],2); nem.E+=EU_VALOR[1+o.t]; nem.h=2.2; break; } }
     }
     for(k=nem.vac.length-1;k>=0;k--){ m=nem.vac[k]; if(tiempo-m.t0>m.dig){ ce=celda(x,y); CA[ce]=Math.min(1,CA[ce]+.03*m.val); euEv.exc++; nem.vac.splice(k,1); } }
+    if(nem.st===3&&tiempo-nem.t0>5){ nw=1; for(k=0;k<EU_NS;k++) if(nem.cr>0?p[2*k]<W+2:p[2*k]>-2){ nw=0; break; } if(nw||tiempo-nem.t0>200){ nem=null; euTn=tiempo+EU_NT0+EU_NMEDIA*-Math.log(1-Math.random()); return; } }   // 053: salió por el otro borde
     if(nem.st===2&&tiempo-nem.tf>3){ nw=1; for(k=0;k<EU_NS;k++) if(p[2*k+1]>-2&&p[2*k+1]<H+2){ nw=0; break; } if(nw||tiempo-nem.tf>70){ nem=null; euTn=tiempo+EU_NT0+EU_NMEDIA*-Math.log(1-Math.random()); } }       // se fue por el borde de arriba o de abajo: el siguiente tarda al menos EU_NT0 s
   }
   function euM(x,y,rec,lz,nv){ return luzMod(x,y,rec,lz,nv); }   // 048: la misma función que las bacterias (antes era una copia)
@@ -1756,7 +1782,7 @@
   }
   function nemDibujar(rec,lz,nv){ // 050: según su capa (nem.capa: 0 pasa por detrás de la raíz, 1 por delante) y la visibilidad de la raíz en ese punto (vis: 0 en reposo, 1 bajo la luz)
     var k, x, y, det, al, vis=0, I, x0=1e9, y0=1e9, x1=-1e9, y1=-1e9, pad=nem.ext+10, bx, by, bw, bh, o, d=dpr, oc;
-    euT=5; nemEsq(); x=nem.x; y=nem.y; det=!lz||(rec&&enLuz(x,y)); al=euM(x,y,rec,lz,nv);
+    euT=5; nemEsq(); x=nem.x; y=nem.y; det=!lz||(rec&&enLuz(x,y)); al=euM(x,y,rec,lz,nv); if(nem.cr) al=Math.min(1,al*EU_NCOP);   // 053: EU_NCOP (1 = la tabla OPAC) sube la opacidad del que cruza el párrafo si se quiere verlo apartar el texto
     if(rz.on&&rz.cvR){ I=rec?luzI(nem.x,nem.y):1; vis=1-LUZ_RAIZA*(1-luz.lutR[(Math.max(0,Math.min(1,I))*255+.5)|0]); if(!lz) vis=1; }
     if(nem.capa===0&&rz.on&&vis>.02){
       for(k=0;k<NM;k++){ if(nmX[k]<x0) x0=nmX[k]; if(nmX[k]>x1) x1=nmX[k]; if(nmY[k]<y0) y0=nmY[k]; if(nmY[k]>y1) y1=nmY[k]; }
@@ -1864,14 +1890,16 @@
         if(o.reiniciar) euInicio();
         if(o.agregar&&euOn) for(k=0;k<o.agregar.length;k++){ q=o.agregar[k]; euNuevo(q.t!=null?q.t:q,q.x!=null?q.x:Math.random()*W,q.y!=null?q.y:Math.random()*H,Math.random()*6.2832); }
         if(o.largoNematodo!=null) EU_NLEN=Math.max(40,+o.largoNematodo); if(o.velocidad!=null) EU_VEL=Math.max(.05,+o.velocidad); if(o.opacidad!=null) EU_AL=Math.max(.2,+o.opacidad);   // 052: multiplica la base de todos los eucariotas (1 = la tabla OPAC)   // 048: EU_NESC (aumento del nematodo; el que quepa en el margen) y EU_VEL (velocidad de los protistas, 0,7) se pueden cambiar para probar
+        if(o.cruce!=null) EU_CRUCE=!!o.cruce; if(o.velocidadCruce!=null) EU_NCV=Math.max(.2,+o.velocidadCruce); if(o.opacidadCruce!=null) EU_NCOP=Math.max(.2,+o.opacidadCruce);   // 053: euca({cruce:false}) deja las visitas sólo a la punta de la raíz (como hasta la 052)
         if(o.nematodo&&euOn&&!nem) nemNace(!!o.quieto);
         if(o.capa!=null&&nem){ nem.capa=o.capa?1:0; nem.capaT=tiempo+1e9; }   // 050: fija la capa del nematodo (0 pasa por detrás de la raíz, 1 por delante) para probar y fotografiar
       }
       for(k=0;k<eu.length;k++) if(!eu[k].dead){ c[eu[k].t]++; vac+=eu[k].vac.length; lst.push({t:eu[k].t,x:+eu[k].x.toFixed(1),y:+eu[k].y.toFixed(1),E:+eu[k].E.toFixed(2),h:+Math.max(0,eu[k].h).toFixed(2)}); }
-      return {activa:euOn,total:c[0]+c[1]+c[2]+c[3]+c[4],porTipo:{flagelado:c[0],dinoflagelado:c[1],ameba:c[2],paramecio:c[3],euglena:c[4]},largoNematodo:EU_NLEN,velocidad:EU_VEL,opacidad:EU_AL,tope:EU_CAPN[nivel],vacuolas:vac,lista:lst,
-        nematodo:nem?{x:+nem.x.toFixed(1),y:+nem.y.toFixed(1),estado:['llega','explora la punta','se va'][nem.st],modo:['avanza','retrocede','giro omega'][nem.mod],capa:nem.capa?'delante de la raíz':'detrás de la raíz',edad:+(tiempo-nem.t0).toFixed(1),objetivo:[+nem.tx.toFixed(1),+nem.ty.toFixed(1)],comio:euEv.nemComio.slice(),largo:+nem.L.toFixed(1),ancho:+(nem.L/EU_NANCHO).toFixed(1),aumento:+nem.S.toFixed(2),lado:nem.lado?'derecho':'izquierdo',ventral:nem.vent,invertido:nem.inv,fase:+nem.ph.toFixed(2),onda:(function(){ if(!nem.wv) nemEsq(); return Array.prototype.slice.call(nem.wv).map(function(v){ return +v.toFixed(2); }); })(),puntos:Array.prototype.slice.call(nem.p).map(function(v){ return +v.toFixed(1); })}:null,
+      return {activa:euOn,cruce:EU_CRUCE,velocidadCruce:EU_NCV,opacidadCruce:EU_NCOP,total:c[0]+c[1]+c[2]+c[3]+c[4],porTipo:{flagelado:c[0],dinoflagelado:c[1],ameba:c[2],paramecio:c[3],euglena:c[4]},largoNematodo:EU_NLEN,velocidad:EU_VEL,opacidad:EU_AL,tope:EU_CAPN[nivel],vacuolas:vac,lista:lst,
+        nematodo:nem?{x:+nem.x.toFixed(1),y:+nem.y.toFixed(1),estado:['llega','explora la punta','se va','cruza el párrafo'][nem.st],modo:['avanza','retrocede','giro omega'][nem.mod],capa:nem.capa?'delante de la raíz':'detrás de la raíz',edad:+(tiempo-nem.t0).toFixed(1),objetivo:[+nem.tx.toFixed(1),+nem.ty.toFixed(1)],comio:euEv.nemComio.slice(),largo:+nem.L.toFixed(1),ancho:+(nem.L/EU_NANCHO).toFixed(1),aumento:+nem.S.toFixed(2),lado:nem.lado?'derecho':'izquierdo',ventral:nem.vent,invertido:nem.inv,fase:+nem.ph.toFixed(2),onda:(function(){ if(!nem.wv) nemEsq(); return Array.prototype.slice.call(nem.wv).map(function(v){ return +v.toFixed(2); }); })(),puntos:Array.prototype.slice.call(nem.p).map(function(v){ return +v.toFixed(1); })}:null,
         proximoNematodoEn:+Math.max(0,euTn-tiempo).toFixed(1),eventos:{comioBacterias:euEv.comio[0],comioFlagelados:euEv.comio[1],comioDinoflagelados:euEv.comio[2],comioAmebas:euEv.comio[3],comioParamecios:euEv.comio[4],comioEuglenas:euEv.comio[5],divisiones:euEv.div,muertes:euEv.muere,entradas:euEv.ent,huidas:euEv.huida,nematodos:euEv.nem,excrecion:euEv.exc}};
     },
+    silueta:function(){ if(!nem) return null; nemEsq(); return {n:NM,x:nmX,y:nmY,w:nmW,cruza:!!nem.cr,largo:nem.L,ancho:nem.L/EU_NANCHO}; },   // 053: la silueta del nematodo (NM puntos del eje con su semiancho, en píxeles de la ventana); los arreglos son los de la simulación y valen hasta la siguiente llamada
     nivel:function(k){ if(k==null) return nivel; st.fijo=true; fijarNivel(k); st.t0=performance.now(); st.trab=0; st.cuadros=0; return nivel; },
     relaciones:function(o){ var k;
       if(o&&o.subproducto!=null){ subp=!!o.subproducto; if(!subp) CP.fill(0); }

@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Benjamín Moreira-Grez</title>
-<meta name="description" content="Resuelvo problemas con lo que hay disponible. Medir, ver la desviación a tiempo, explicar y actuar: el mismo método en una empresa de transporte, en investigación y en un colegio. Trabajo con agentes de IA en entornos controlados, con búsqueda vectorial y embeddings.">
+<meta name="description" content="Ecólogo microbiano (Ph.D.). Desarrollo sistemas de datos para una empresa de transporte, enseño ciencias en un colegio y trabajo con agentes de IA en entornos controlados, con búsqueda vectorial y embeddings.">
 <meta property="og:title" content="Benjamín Moreira-Grez">
-<meta property="og:description" content="Resuelvo problemas con lo que hay disponible. Medir, ver la desviación a tiempo, explicar y actuar: el mismo método en una empresa de transporte, en investigación y en un colegio. Trabajo con agentes de IA en entornos controlados, con búsqueda vectorial y embeddings.">
+<meta property="og:description" content="Ecólogo microbiano (Ph.D.). Desarrollo sistemas de datos para una empresa de transporte, enseño ciencias en un colegio y trabajo con agentes de IA en entornos controlados, con búsqueda vectorial y embeddings.">
 <meta property="og:type" content="profile">
 <meta property="og:locale" content="es_CL">
 <meta property="og:url" content="https://bengrez.github.io/">
 <meta property="og:image" content="https://bengrez.github.io/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Titular «Resuelvo problemas con lo que hay disponible» sobre un gráfico con estilo de paper: la temperatura del refrigerante de dos buses, la banda de referencia y la alerta cuando uno se sale de ella (datos simulados).">
+<meta property="og:image:alt" content="Titular «Trabajo con datos, ecología y docencia» sobre un gráfico con estilo de paper: la temperatura del refrigerante de dos buses, la banda de referencia y la alerta cuando uno se sale de ella (datos simulados).">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FAF9F6" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#131211" media="(prefers-color-scheme: dark)">
@@ -91,6 +91,10 @@ img{max-width:100%;height:auto}
 .lugar{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
 h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75rem,1.4vw + 1.3rem,2.6rem)*var(--k));line-height:calc(.98 + .04*var(--k));letter-spacing:-.035em;max-width:calc(11.5em + 11em*var(--k));margin-top:calc(.9rem - .45rem*var(--k))}
 .lede{font-size:clamp(1.12rem,.5vw + 1rem,1.32rem);line-height:1.5;max-width:35em;margin-top:calc(clamp(1.25rem,3vw,2rem)*(1 - var(--k)) + .9rem*var(--k))}
+/* 053: empuje.js reacomoda las líneas de este párrafo alrededor del C. elegans que lo cruza: el texto real no se toca; mientras dura el empuje se pinta encima una copia por líneas (.emp, decorativa y sin selección) y el original se hace transparente. */
+.hero .lede{position:relative}
+.lede.emp-on{color:transparent}
+.hero .acciones{transition:transform .6s ease}
 .acciones{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:calc(clamp(1.25rem,3vw,1.9rem)*(1 - var(--k)) + .9rem*var(--k));font-family:var(--display)}
 .btn{display:inline-block;padding:.7rem 1.15rem;border:1px solid var(--ink);border-radius:2px;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:500;line-height:1.2}
 .btn.sec{background:none;color:var(--ink)}
@@ -354,6 +358,8 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .metricas dt{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
 .metricas dd{font-family:var(--display);font-size:1.5rem;font-weight:600;line-height:1.15;font-variant-numeric:tabular-nums}
 .metricas .cuando{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-left:auto}
+.metricas .cuando dt{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}   /* 053: la fuente ya es un par dt/dd válido dentro de la lista (axe: definition-list); el rótulo «fuente» sólo lo leen los lectores de pantalla */
+.metricas .cuando dd{font-family:var(--mono);font-size:.78rem;font-weight:400;line-height:inherit;color:var(--muted)}
 
 /* ---- herramientas publicadas: dos piezas distintas, cada una con su captura ---- */
 .herr{position:relative;display:grid;gap:1rem clamp(1.25rem,3vw,2rem);margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--rule)}
@@ -492,9 +498,9 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 
 <div class="hero pagina">
   <p class="lugar">Santiago, Chile</p>
-  <h1>Resuelvo problemas con lo que hay disponible.</h1>
-  <p class="lede">Soy Benjamín Moreira-Grez, ecólogo microbiano (Ph.D.). Hoy construyo, en Andes, sistemas de datos para una empresa de transporte, trabajo con agentes de IA en entornos controlados y enseño ciencias en un colegio. El método viene del doctorado: medir, ver la desviación a tiempo, explicar y actuar.</p>
-  <p class="acciones"><a class="btn" href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a><a class="btn sec" href="#casos">Ver los tres casos</a></p>
+  <h1>Trabajo con datos, ecología y docencia.</h1>
+  <p class="lede">Soy Benjamín Moreira-Grez, ecólogo microbiano (Ph.D.). En Andes desarrollo sistemas de datos para una empresa de transporte, trabajo con agentes de IA en entornos controlados y enseño ciencias en un colegio. Mi método viene del doctorado: medir, ver la desviación, explicar y actuar.</p>
+  <p class="acciones"><a class="btn" href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a><a class="btn sec" href="#casos">Ver los tres trabajos</a></p>
 </div>
 
 <div class="escena" id="escena">
@@ -718,10 +724,10 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
 <section class="seccion" id="casos" aria-labelledby="h-casos">
   <div class="pagina dos">
     <header class="riel">
-      <div class="riel-top"><p class="kicker">Tres casos</p><h2 id="h-casos">Un método, tres lugares</h2></div>
+      <div class="riel-top"><p class="kicker">Resumen</p><h2 id="h-casos">Tres trabajos, el mismo método</h2></div>
     </header>
     <div>
-      <p class="intro">Medir, ver la desviación a tiempo, explicar y actuar, en una empresa de transporte, en el doctorado y en un colegio. Cada cosa dice en qué estado está.</p>
+      <p class="intro">Medir, ver la desviación, explicar y actuar: lo he aplicado en una empresa de transporte, en el doctorado y en un colegio. Cada trabajo indica su estado.</p>
       <ul class="estados" aria-label="Estados que usa esta página">
         <li class="estado e-uso">publicado o en uso</li>
         <li class="estado e-piloto">en piloto</li>
@@ -743,12 +749,12 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <div class="riel-meta"><p class="estado e-piloto">en piloto</p><p class="donde">Para una empresa de transporte.</p></div>
     </header>
     <div>
-      <p class="problema">Una flota de buses sin visibilidad de sus vehículos ni de las fallas que venían.</p>
-      <p class="grafico"><b>El gráfico de Data science</b>, con datos simulados: refrigerante de dos buses. La banda es la referencia de los primeros 10 días ± 2σ. Un bus se queda dentro; el otro deriva, sale y salta la alerta, y la revisión lo devuelve a lo normal antes de la falla.</p>
+      <p class="problema">Una flota de buses sin datos sobre el estado de sus vehículos y sin aviso de las fallas que venían.</p>
+      <p class="grafico"><b>El gráfico de Data science</b>, con datos simulados: refrigerante de dos buses. La banda es la referencia de los primeros 10 días ± 2σ. Un bus se queda dentro; el otro deriva, sale de la banda y genera la alerta, y tras la revisión vuelve a lo normal antes de fallar.</p>
       <ol class="metodo">
         <li><h3>Medir</h3><p>Las señales del bus CAN llegaban sin procesar. Armé la telemetría: bus CAN y GNSS, base de series temporales con contrato de datos versionado, API y mapa en vivo que reconstruye tramos. FMS, tacógrafos y GNSS los aprendí sobre la marcha.</p></li>
         <li><h3>Ver la desviación</h3><p>Sin fallas registradas suficientes, construí un simulador de telemetría y un banco de evaluación a ciegas, y sobre eso un detector de anomalías, con reglas y modelos, que estima el riesgo de falla.</p></li>
-        <li><h3>Explicar y actuar</h3><p>Despliego un modelo sólo si supera a las reglas simples. Hoy decide sobre datos en tiempo real, en piloto y con monitoreo propio. Los datos de conductores, que iban por correo, pasaron a una plataforma con resguardos, diseñada para la Ley 21.719, vigente desde diciembre de 2026.</p></li>
+        <li><h3>Explicar y actuar</h3><p>Despliego un modelo sólo si supera a las reglas simples. Hoy funciona con datos en tiempo real, en piloto y con monitoreo propio. Los datos de conductores, que iban por correo, pasaron a una plataforma con resguardos, diseñada para la Ley 21.719, vigente desde diciembre de 2026.</p></li>
       </ol>
       <figure class="evidencia" data-nosnippet>
         <ol class="flujo flota" aria-label="Esquema del sistema: del bus CAN y GNSS a la ingesta, la base de series temporales, la API y el mapa en vivo; desde la base, una rama evalúa las señales con un detector de anomalías y produce alertas.">
@@ -800,13 +806,13 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
       <ol class="metodo">
         <li><h3>Medir</h3><p>Muestras escasas y caras, secuenciación ruidosa, ninguna referencia clara de suelo sano. Por eso importa el diseño: réplicas en cada muestreo, en terreno, en zonas áridas de Western Australia; marcaje isotópico (RNA-SIP) para saber qué organismo hace qué; metagenómica.</p></li>
         <li><h3>Ver la desviación</h3><p>Estadística multivariante para separar señal de ruido y la intervención de la variabilidad del sitio: si la comunidad vuelve a su referencia o se estabiliza por debajo.</p></li>
-        <li><h3>Explicar y actuar</h3><p>Revisé los supuestos con que se monitorea la restauración y escribí los resultados también para quienes deciden sobre ella. Después usé el mismo enfoque en arroceras, trigo y residuos de bauxita. Quedaron la tesis y publicaciones que otros han citado.</p></li>
+        <li><h3>Explicar y actuar</h3><p>Revisé los supuestos con que se monitorea la restauración y escribí los resultados también para quienes deciden sobre ella. Después usé el mismo enfoque en arroceras, trigo y residuos de bauxita. De ahí salieron la tesis y publicaciones, citadas 738 veces según Google Scholar (mayo de 2026).</p></li>
       </ol>
       <dl class="metricas">
         <div><dt>citas totales</dt><dd>738</dd></div>
         <div><dt>índice h</dt><dd>12</dd></div>
         <div><dt>índice i10</dt><dd>14</dd></div>
-        <span class="cuando">Google Scholar, mayo de 2026</span>
+        <div class="cuando"><dt>fuente</dt><dd>Google Scholar, mayo de 2026</dd></div>
       </dl>
       <figure class="evidencia sip">
         <div class="arte"><svg viewBox="0 0 320 200" role="img" aria-label="Esquema con curvas ilustrativas: dos perfiles de ARN según la densidad; el marcado con carbono 13 queda desplazado hacia las fracciones pesadas.">
@@ -964,9 +970,9 @@ footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:
   <div class="pagina dos">
     <header class="riel">
       <div class="riel-top"><p class="kicker">Cómo trabajo</p><h2 id="h-ia">Agentes de IA, en entornos controlados</h2></div>
-      <figure class="caja" id="caja" role="img" aria-label="Ilustración decorativa: una célula se mueve dentro de un recuadro de borde punteado, un entorno aislado. El cursor la atrae, pero no puede sacarla: autonomía dentro de límites explícitos.">
+      <figure class="caja" id="caja" role="img" aria-label="Ilustración decorativa: una célula se mueve dentro de un recuadro de borde punteado, un entorno aislado. El cursor la atrae, pero no puede sacarla: el agente actúa dentro de límites explícitos.">
         <div class="caja-in" aria-hidden="true"><canvas></canvas><span class="caja-et">entorno aislado</span></div>
-        <figcaption class="caja-pie" aria-hidden="true">autonomía dentro de límites explícitos</figcaption>
+        <figcaption class="caja-pie" aria-hidden="true">el agente actúa dentro de límites explícitos</figcaption>
       </figure>
     </header>
     <div>
@@ -1252,7 +1258,7 @@ var portada=(function(){
   try{
     var mm=window.matchMedia; if(!mm||!mm('(pointer: fine)').matches||window.innerWidth<1024||mm('(prefers-reduced-motion: reduce)').matches) return;
     var cx=navigator.connection; if(cx&&cx.saveData) return;
-    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.js?v=37f11d51a5'; s.async=true; document.head.appendChild(s); }
+    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.js?v=a7bc77bfcb'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.js?v=e0b77f9ccc'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 053: empuje.js (texto que se aparta del nematodo, con Pretext) se pide después del fondo; la librería se baja sólo cuando el nematodo cruza el párrafo */
     if(document.readyState==='complete') cargar(); else window.addEventListener('load',function(){ setTimeout(cargar,300); });
   }catch(e){}
 })();
