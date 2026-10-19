@@ -36,6 +36,7 @@
   --accent:#900008; --accent-ink:#7A0007; --alert:#D9481F;
   --panel:rgba(230,222,208,.8); --panel-suave:rgba(230,222,208,.42); --panel-solido:#E9E4D9; --p-ink:#1B1A17; --p-muted:#35322D; --p-rule:rgba(27,26,23,.26); --p-accent:#650005;   /* 049: la franja de agentes es translúcida (se ve el fondo vivo a través) y sigue el tema: arena con tinta oscura en claro, marrón cálido con tinta clara en oscuro */
   --serie-a:#EF5536; --serie-b:#900008; --velo:rgba(250,249,246,.6);
+  --e-uso:#3F7A55; --e-dev:#77746D;   /* 055: color del símbolo de estado: verde apagado (publicado), terracota de la paleta (--accent, piloto) y gris (desarrollo) */
   --display:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
   --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
@@ -46,14 +47,14 @@
   :root:not([data-theme="light"]){
     --bg:#131211; --surface:#1C1A18; --ink:#ECE9E2; --muted:#A39F97; --rule:#2C2926; --rule-strong:#45413C;
     --accent:#FF8F74; --accent-ink:#FFA893; --alert:#F86848;
-    --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark;
+    --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark; --e-uso:#7FB394; --e-dev:#8F8B83;
     --panel:rgba(46,33,30,.8); --panel-suave:rgba(46,33,30,.5); --panel-solido:#241C1A; --p-ink:#F2EFE8; --p-muted:#E2DCCF; --p-rule:rgba(236,233,226,.24); --p-accent:#FFB8A5;
   }
 }
 :root[data-theme="dark"]{
   --bg:#131211; --surface:#1C1A18; --ink:#ECE9E2; --muted:#A39F97; --rule:#2C2926; --rule-strong:#45413C;
   --accent:#FF8F74; --accent-ink:#FFA893; --alert:#F86848;
-  --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark;
+  --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark; --e-uso:#7FB394; --e-dev:#8F8B83;
   --panel:rgba(46,33,30,.8); --panel-suave:rgba(46,33,30,.5); --panel-solido:#241C1A; --p-ink:#F2EFE8; --p-muted:#E2DCCF; --p-rule:rgba(236,233,226,.24); --p-accent:#FFB8A5;
 }
 *,*::before,*::after{box-sizing:border-box}
@@ -116,14 +117,14 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 @media (min-width:900px){.plot{height:clamp(10rem,28vh,14rem)}.fig.w{display:block}.fig.n{display:none}}
 @media (max-width:639px){.plot{height:auto;aspect-ratio:400/220;max-height:30vh}.fig{width:100%;height:auto;max-height:100%}}
 @media (max-height:520px){.plot{height:5.5rem;aspect-ratio:auto}.fig{width:auto;height:100%}.fig .tick,.fig .nota,.fig .sello,.fig .leyenda{display:none}}
-.fig text{font-family:var(--mono);font-size:13px;fill:var(--muted)}
-.fig .titulo{font-family:var(--display);font-size:15px;font-weight:500;fill:var(--ink)}
-.fig.n .titulo{font-size:14px}
-.fig .sello{font-size:12.5px;fill:var(--muted)}
+.fig text{font-family:var(--mono);font-size:15px;fill:var(--muted)}
+.fig .titulo{font-family:var(--display);font-size:17px;font-weight:500;fill:var(--ink)}
+.fig.n .titulo{font-size:16px}
+.fig .sello{font-size:14.5px;fill:var(--muted)}
 .fig .eje{fill:none;stroke:var(--ink);stroke-width:1.1}
 .fig .banda{fill:var(--ink);opacity:.07}
 .fig .ref{fill:none;stroke:var(--muted);stroke-width:1;stroke-dasharray:5 4}
-.fig .nota{font-size:12px}
+.fig .nota{font-size:14px}
 .fig .linea{fill:none;stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
 .fig .linea.a,.fig .a circle,.fig .leyenda .a{stroke:var(--serie-a);fill:none}
 .fig .a circle,.fig .leyenda .a{fill:var(--serie-a)}
@@ -138,9 +139,9 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .fig .pt.a circle{stroke:none}
 .fig .alerta .guia{fill:none;stroke:var(--serie-b);stroke-width:1;stroke-dasharray:3 3}
 .fig .alerta circle{fill:none;stroke:var(--serie-b);stroke-width:2}
-.fig .alerta text,.fig .acento text{font-family:var(--display);font-size:13px;fill:var(--accent-ink)}
+.fig .alerta text,.fig .acento text{font-family:var(--display);font-size:15px;fill:var(--accent-ink)}
 .fig .acento circle{fill:var(--serie-b)}
-.fig .leyenda text{font-size:12px;fill:var(--ink)}
+.fig .leyenda text{font-size:14px;fill:var(--ink)}
 /* El trazo: las líneas se dibujan (pathLength="1"), la banda y la referencia aparecen antes, la alerta, los
    puntos y el acento después. Al volver a la sección se repite, porque el JS quita y vuelve a poner .traza. */
 @media (prefers-reduced-motion:no-preference){
@@ -200,8 +201,9 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 /* ---- estados: cada cosa de la página dice en qué está ---- */
 .estado{font-family:var(--mono);font-size:.8rem;line-height:1.4;color:var(--ink);white-space:nowrap}
 .estado::before{content:"";display:inline-block;width:.66em;height:.66em;margin-right:.5em;border-radius:50%;border:1.5px solid var(--accent)}
-.e-uso::before{background:var(--accent)}
+.e-uso::before{background:var(--e-uso);border-color:var(--e-uso)}
 .e-piloto::before{background:linear-gradient(90deg,var(--accent) 50%,transparent 50%)}
+.e-dev::before{border-color:var(--e-dev)}
 
 /* ---- dos columnas, 50/50 (iteración 012; centradas desde la 016) ----
    Cada sección es un riel a la izquierda (título, fijo mientras dura la sección) y el contenido a la
@@ -228,6 +230,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
   .riel-meta{margin-top:.5rem}
   .fuera .riel-top{top:var(--bar)}
   .riel-top .kicker{display:none}
+  #casos .riel-top{position:static}   /* 055: el pie de figura de la portada no se pega bajo el gráfico */
   .riel h2{font-size:1.05rem;line-height:1.25;margin:0;letter-spacing:-.01em}
   .riel-meta{display:flex;flex-wrap:wrap;gap:.2rem 1.25rem;align-items:baseline}
   .riel .donde{margin-top:0}
@@ -269,12 +272,19 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 
 /* ---- índice de casos ---- */
 .intro{max-width:36em}
+.intro .kicker{display:block;margin-bottom:.4rem}
+/* 055: pie de figura de la portada (la figura 1, el gráfico de Data science), en lugar del título «Tres trabajos, el mismo método» */
+.pie-fig{font-family:var(--mono);font-size:.75rem;line-height:1.55;color:var(--muted);margin:0;max-width:34em}
 .estados{display:flex;flex-wrap:wrap;gap:.3rem 1.5rem;margin-top:.9rem}
 .lista{margin-top:clamp(1.25rem,3vw,2rem)}
 .lista a{display:grid;grid-template-columns:7.5rem 1fr auto;align-items:baseline;gap:.2rem 1.5rem;padding-block:1rem;color:inherit;text-decoration:none}
 .lista .tit{font-family:var(--display);font-weight:500;font-size:clamp(1.12rem,.8vw + 1rem,1.4rem);line-height:1.2;letter-spacing:-.01em}
 .lista a:hover .tit{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em;text-decoration-color:var(--accent)}
 .lista .est{display:flex;flex-direction:column;align-items:flex-start}
+/* 055: flecha sutil al final de cada título; se corre 4 px a la derecha con el cursor o el foco (sin movimiento si se pidió reducirlo). La flecha es decoración: no entra en el nombre accesible del enlace. */
+.lista .tit::after{content:"\00a0\00a0→";content:"\00a0\00a0→" / "";position:relative;left:0;color:var(--muted);font-weight:400;transition:left .2s ease,color .2s ease}
+.lista a:hover .tit::after,.lista a:focus-visible .tit::after{left:4px;color:var(--accent-ink)}
+@media (prefers-reduced-motion:reduce){.lista .tit::after{transition:none}.lista a:hover .tit::after,.lista a:focus-visible .tit::after{left:0}}
 @media (max-width:760px),(min-width:960px){.lista a{grid-template-columns:1fr}}
 
 /* ---- un caso: el problema, el método en tres pasos, la evidencia y el detalle plegado ---- */
@@ -418,6 +428,18 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .ruta>div:last-child::before{background:var(--accent)}
 .ruta dt{font-family:var(--display);font-weight:600;line-height:1.25;margin-bottom:.35rem}
 .ruta .sub{display:block;font-family:var(--display);font-size:.86rem;color:var(--muted);margin-top:.4rem}
+/* 055: cada hito se abre con 1–2 frases (botón en el nombre, aria-expanded). Sin JS el texto queda visible; con JS, cerrado no ocupa alto (0fr) ni se lee (visibility). */
+.ruta dd{margin:0}
+.rec-btn{position:relative;display:block;width:100%;margin:0;padding:0;border:0;background:none;color:inherit;font:inherit;line-height:inherit;text-align:left;cursor:pointer}
+.rec-btn:hover .rec-t{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
+.rec-ind{display:inline-block;margin-left:.55em;font-family:var(--mono);font-weight:400;color:var(--muted);transition:transform .25s ease}
+.rec-abierto .rec-ind{transform:rotate(45deg)}
+@media (max-width:430px){.rec-ind{position:absolute;top:0;right:-.6rem;margin:0}}   /* en celular el indicador va en la holgura derecha: dentro de la línea hacía que «The University of Western Australia, Perth» se partiera y el Recorrido creciera */
+.rec-js .rec-mas{display:grid;grid-template-rows:0fr;visibility:hidden;opacity:0;transition:grid-template-rows .3s cubic-bezier(.4,0,.2,1),opacity .25s ease,visibility 0s .3s}
+.rec-js .rec-abierto .rec-mas{grid-template-rows:1fr;visibility:visible;opacity:1;transition-delay:0s}
+.rec-mas>div{min-height:0;overflow:hidden}
+.rec-mas p{margin:.55rem 0 0;font-size:.92rem;line-height:1.5;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.rec-ind,.rec-js .rec-mas{transition:none}}
 
 /* Con la serie fija, el borde de salto ya lleva su alto (scroll-padding); lo que está fuera de .escena no. */
 #agentes,#recorrido,#contacto{scroll-margin-top:calc(0px - var(--fig-h,0px))}
@@ -484,7 +506,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
       <a href="#ingenieria">Data science</a>
       <a href="#investigacion">Ecología</a>
       <a href="#educacion">Docencia</a>
-      <a class="ext" href="https://bengrez.github.io/aula-herramientas/">Aula herramientas</a>
+      <a class="ext" href="https://bengrez.github.io/aula-herramientas/">Herramientas de aula</a>
       <a href="#agentes">Agentes de IA</a>
       <a href="#recorrido">Recorrido</a>
       <a class="fijo" href="#contacto">Contacto</a>
@@ -633,7 +655,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <path class="eje" d="M50 36h-4"/>
   <text class="tick" x="43" y="40" text-anchor="end">100</text>
   <text class="titulo" x="219" y="213" text-anchor="middle">Meses desde la inoculación</text>
-  <text class="titulo" transform="translate(13 99) rotate(-90)" text-anchor="middle">Función (% de la referencia)</text>
+  <text class="titulo" transform="translate(13 109) rotate(-90)" text-anchor="middle">Función (% de la referencia)</text>
   <text class="sello" x="388" y="13" text-anchor="end">Datos simulados</text>
   <path class="ref" d="M50 36H388"/>
   <text class="nota" x="384" y="31" text-anchor="end">referencia</text>
@@ -720,13 +742,13 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   </div>
 </div>
 
-<section class="seccion" id="casos" aria-labelledby="h-casos">
+<section class="seccion" id="casos" aria-labelledby="k-casos">
   <div class="pagina dos">
     <header class="riel">
-      <div class="riel-top"><p class="kicker">Resumen</p><h2 id="h-casos">Tres trabajos, el mismo método</h2></div>
+      <div class="riel-top"><p class="pie-fig">Fig. 1 — Monitoreo de temperatura de refrigerante: detección temprana de desviación térmica frente al comportamiento basal de la flota.</p></div>
     </header>
     <div>
-      <p class="intro">Medir, ver la desviación, explicar y actuar: lo he aplicado en una empresa de transporte, en el doctorado y en un colegio. Cada trabajo indica su estado.</p>
+      <p class="intro"><span class="kicker" id="k-casos">Tres contextos, el mismo método</span>Aplicaciones en transporte, investigación doctoral y educación escolar. Cada proyecto indica su estado actual:</p>
       <ul class="estados" aria-label="Estados que usa esta página">
         <li class="estado e-uso">publicado o en uso</li>
         <li class="estado e-piloto">en piloto</li>
@@ -735,7 +757,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
       <ol class="lista">
         <li><a href="#ingenieria"><span class="kicker">Data science</span><span class="tit">Telemetría y detección de fallas en una flota de buses</span><span class="est"><span class="estado e-piloto">en piloto</span></span></a></li>
         <li><a href="#investigacion"><span class="kicker">Ecología</span><span class="tit">Suelos mineros: medir si se recuperan</span><span class="est"><span class="estado e-uso">publicado</span></span></a></li>
-        <li><a href="#educacion"><span class="kicker">Docencia</span><span class="tit">Enseñar ciencias y medir un colegio</span><span class="est"><span class="estado e-uso">en uso en clases</span><span class="estado e-dev">asistente en desarrollo</span></span></a></li>
+        <li><a href="#educacion"><span class="kicker">Docencia</span><span class="tit">Enseñar ciencias y medir el aprendizaje escolar</span><span class="est"><span class="estado e-uso">en uso en clases</span><span class="estado e-dev">asistente en desarrollo</span></span></a></li>
       </ol>
     </div>
   </div>
@@ -848,7 +870,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 <section class="seccion" id="educacion" aria-labelledby="h-edu">
   <div class="pagina dos">
     <header class="riel">
-      <div class="riel-top"><p class="kicker">Docencia</p><h2 id="h-edu">Enseñar ciencias y medir un colegio</h2></div>
+      <div class="riel-top"><p class="kicker">Docencia</p><h2 id="h-edu">Enseñar ciencias y medir el aprendizaje escolar</h2></div>
       <div class="riel-meta"><p class="estado e-uso">en uso en clases</p><p class="estado e-dev">asistente en desarrollo</p><p class="donde">En un colegio.</p></div>
     </header>
     <div>
@@ -856,7 +878,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
       <p class="grafico"><b>El gráfico de Docencia</b>, con datos simulados y sólo promedios del curso: el logro en un tema, ensayo a ensayo, y un solo acento. El tema nuevo hace caer el logro; el refuerzo lo devuelve antes de la evaluación.</p>
       <ol class="metodo">
         <li><h3>Medir</h3><p>Lo disponible: las bases curriculares, un proyector y estudiantes con celular. Planifico por objetivo de aprendizaje, clase a clase: diagnóstico de prerrequisitos al inicio, evaluación formativa antes de la sumativa y, si el calendario se mueve, cronograma ajustado por escrito.</p></li>
-        <li><h3>Ver la desviación</h3><p>La formativa muestra qué tema no se entendió mientras hay tiempo de reforzarlo. Para practicar sin nota hice herramientas web propias, sin cuenta ni instalación y sin guardar ni enviar respuestas: cinco están publicadas (dos en uso en clases) y viven juntas en <a href="https://bengrez.github.io/aula-herramientas/">Aula herramientas</a>.</p></li>
+        <li><h3>Ver la desviación</h3><p>La formativa muestra qué tema no se entendió mientras hay tiempo de reforzarlo. Para practicar sin nota hice herramientas web propias, sin cuenta ni instalación y sin guardar ni enviar respuestas: cinco están publicadas (dos en uso en clases) y viven juntas en <a href="https://bengrez.github.io/aula-herramientas/">Herramientas de aula</a>.</p></li>
         <li><h3>Explicar y actuar</h3><p>Lo mismo a escala del colegio: un asistente de gestión escolar con IA que cruza las fuentes que ya tiene, busca patrones entre asignaturas y responde indicando la fuente. Local-first, con datos seudonimizados. Hoy es una demo con datos sintéticos; el piloto, con datos reales, desde 2027.</p></li>
       </ol>
 
@@ -938,7 +960,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
           </dl>
         </div>
       </article>
-      <p class="mas-herr"><a href="https://bengrez.github.io/aula-herramientas/">Ver todas en Aula herramientas →</a></p>
+      <p class="mas-herr"><a href="https://bengrez.github.io/aula-herramientas/">Ver todas en Herramientas de aula →</a></p>
 
       <h3 class="titulo" id="colegio">Medir un colegio</h3>
       <p class="estado e-dev">en desarrollo</p>
@@ -992,10 +1014,10 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
       <div class="riel-top"><p class="kicker">Hasta hoy</p><h2 id="h-rec">Recorrido</h2></div>
     </header>
     <dl class="ruta">
-      <div><dt>Pontificia Universidad Católica de Valparaíso</dt><dd>Licenciado en Biología y título profesional de Biólogo.</dd></div>
-      <div><dt>The University of Western Australia, Perth</dt><dd>Ph.D., tesis de 2020 (<a href="https://doi.org/10.26182/5e995c216ca93">doi:10.26182/5e995c216ca93</a>). Financiado con la beca de Doctorado Becas Chile, 2014–2018.<span class="sub">Enfoque: reacondicionamiento de suelos degradados, dinámica de comunidades microbianas y restauración ecológica post-minera.</span></dd></div>
-      <div><dt>The University of Western Australia</dt><dd>Research Associate, 2020–2022.</dd></div>
-      <div><dt>Santiago, hoy</dt><dd>En Andes, desarrollo y análisis de datos para una empresa de transporte; docencia de ciencias en un colegio.</dd></div>
+      <div><dt>Pontificia Universidad Católica de Valparaíso</dt><dd>Licenciado en Biología y título profesional de Biólogo.</dd><dd class="rec-mas"><div><p>Formación de base en biología, antes del doctorado en ecología microbiana de suelos.</p></div></dd></div>
+      <div><dt>The University of Western Australia, Perth</dt><dd>Ph.D., tesis de 2020 (<a href="https://doi.org/10.26182/5e995c216ca93">doi:10.26182/5e995c216ca93</a>). Financiado con la beca de Doctorado Becas Chile, 2014–2018.<span class="sub">Enfoque: reacondicionamiento de suelos degradados, dinámica de comunidades microbianas y restauración ecológica post-minera.</span></dd><dd class="rec-mas"><div><p>La tesis preguntó si un suelo minero degradado se recupera al devolverle microorganismos, o sólo lo parece. Usé marcaje isotópico (RNA-SIP), metagenómica y estadística multivariante, con muestreos en terreno en zonas áridas de Western Australia.</p></div></dd></div>
+      <div><dt>The University of Western Australia</dt><dd>Research Associate, 2020–2022.</dd><dd class="rec-mas"><div><p>Apliqué el mismo enfoque en arroceras, trigo y residuos de bauxita. La tesis y las publicaciones suman 738 citas según Google Scholar (mayo de 2026).</p></div></dd></div>
+      <div><dt>Santiago, hoy</dt><dd>En Andes, desarrollo y análisis de datos para una empresa de transporte; docencia de ciencias en un colegio.</dd><dd class="rec-mas"><div><p>En Andes armé la telemetría y el detector de anomalías de una flota de buses, hoy en piloto. En el colegio enseño ciencias y hice herramientas web para practicar sin nota.</p></div></dd></div>
     </dl>
   </div>
 </section>
@@ -1273,6 +1295,21 @@ var portada=(function(){
     rotular();
   });
   rotular(); b.hidden=false;
+})();
+</script>
+<script>
+/* 055: Recorrido desplegable. El nombre de cada hito pasa a ser un botón (aria-expanded) que abre una o dos frases; cada hito se abre y se cierra por su cuenta. Sin JS el texto queda a la vista. */
+(function(){
+  var ruta=document.querySelector('.ruta'); if(!ruta) return;
+  [].forEach.call(ruta.children,function(it,i){
+    var dt=it.querySelector('dt'), mas=it.querySelector('.rec-mas'); if(!dt||!mas) return;
+    var b=document.createElement('button'), t=document.createElement('span'), ind=document.createElement('span');
+    mas.id='rec-mas-'+(i+1); b.type='button'; b.className='rec-btn'; b.setAttribute('aria-expanded','false'); b.setAttribute('aria-controls',mas.id);
+    t.className='rec-t'; while(dt.firstChild) t.appendChild(dt.firstChild); ind.className='rec-ind'; ind.setAttribute('aria-hidden','true'); ind.textContent='+';
+    b.appendChild(t); b.appendChild(ind); dt.appendChild(b);
+    b.addEventListener('click',function(){ var a=!it.classList.contains('rec-abierto'); it.classList.toggle('rec-abierto',a); b.setAttribute('aria-expanded',a?'true':'false'); });
+  });
+  ruta.classList.add('rec-js');
 })();
 </script>
 </body>
