@@ -74,7 +74,7 @@ img{max-width:100%;height:auto}
 
 /* ---- barra ---- */
 .barra{position:sticky;top:0;z-index:10}   /* 043: el fondo de la barra sólo cubre la columna (.barra-in): los márgenes quedan libres para el fondo vivo */
-.barra-in{background:var(--bg);background-clip:content-box;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:1.25rem;min-height:var(--bar);font-family:var(--display);font-size:.95rem}
+.barra-in{background:var(--bg);background-clip:content-box;display:flex;align-items:center;gap:1.25rem;min-height:var(--bar);font-family:var(--display);font-size:.95rem}
 .marca{font-weight:600;color:var(--ink);text-decoration:none;margin-right:auto;padding-block:.6rem}
 .indice{display:flex;gap:1.15rem}
 .indice a{color:var(--ink);text-decoration:none;padding-block:.75rem;white-space:nowrap}
@@ -106,7 +106,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
    elementos: Data science, dos series, banda ± 2σ y la alerta; Ecología, dos series con barras de error;
    Docencia, una línea y un acento. Se ve una a la vez, la del caso que se está leyendo (sin botones: la
    navegación es la barra y el scroll), y se traza al entrar a la sección (clase .traza, que pone el JS cada vez); con movimiento reducido, o sin JS, aparece completa. */
-.serie{background:var(--bg);color:var(--ink);border-block:1px solid var(--rule-strong)}
+.serie{background:var(--bg);color:var(--ink)}
 .agentes :focus-visible{outline-color:var(--p-accent)}
 .hoja{margin-block:.4rem .7rem}
 .hoja[hidden]{display:none}
@@ -208,8 +208,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
    derecha, que avanza con el scroll. Desde 960 px el gráfico queda en la misma columna, sobre el título
    (bloque «escritorio» más abajo). En celular el riel se parte: el título queda fijo y chico bajo
    el gráfico, y el estado y el lugar pasan al flujo, sobre el contenido. */
-.seccion{border-top:1px solid var(--rule-strong);padding-block:clamp(2.25rem,5.5vw,4rem)}
-#casos{border-top:0}
+.seccion{padding-block:clamp(2.25rem,5.5vw,4rem)}
 .dos{display:grid;grid-template-columns:minmax(0,1fr);gap:1.1rem 0}
 .riel h2{font-size:clamp(1.5rem,1.2vw + 1.15rem,2rem);margin-block:.45rem .9rem}
 .riel .donde{font-family:var(--display);font-size:.92rem;color:var(--muted);margin-top:.6rem}
@@ -225,7 +224,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
   html{scroll-padding-top:calc(var(--bar) + var(--fig-h,0px))}
   .seccion{padding-top:0}
   .riel{display:contents}
-  .riel-top{position:sticky;top:calc(var(--bar) + var(--fig-h,0px));z-index:5;background:var(--bg);margin-inline:calc(-1*var(--gutter));padding:.6rem var(--gutter) .65rem;border-bottom:1px solid var(--rule)}
+  .riel-top{position:sticky;top:calc(var(--bar) + var(--fig-h,0px));z-index:5;background:var(--bg);margin-inline:calc(-1*var(--gutter));padding:.6rem var(--gutter) .65rem}
   .riel-meta{margin-top:.5rem}
   .fuera .riel-top{top:var(--bar)}
   .riel-top .kicker{display:none}
@@ -271,8 +270,8 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 /* ---- índice de casos ---- */
 .intro{max-width:36em}
 .estados{display:flex;flex-wrap:wrap;gap:.3rem 1.5rem;margin-top:.9rem}
-.lista{margin-top:clamp(1.25rem,3vw,2rem);border-bottom:1px solid var(--rule-strong)}
-.lista a{display:grid;grid-template-columns:7.5rem 1fr auto;align-items:baseline;gap:.2rem 1.5rem;padding-block:1rem;border-top:1px solid var(--rule-strong);color:inherit;text-decoration:none}
+.lista{margin-top:clamp(1.25rem,3vw,2rem)}
+.lista a{display:grid;grid-template-columns:7.5rem 1fr auto;align-items:baseline;gap:.2rem 1.5rem;padding-block:1rem;color:inherit;text-decoration:none}
 .lista .tit{font-family:var(--display);font-weight:500;font-size:clamp(1.12rem,.8vw + 1rem,1.4rem);line-height:1.2;letter-spacing:-.01em}
 .lista a:hover .tit{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em;text-decoration-color:var(--accent)}
 .lista .est{display:flex;flex-direction:column;align-items:flex-start}
@@ -282,8 +281,8 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .problema{font-family:var(--display);font-size:clamp(1.2rem,.9vw + 1rem,1.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;max-width:28em;text-wrap:balance}
 .grafico{max-width:44rem;margin-top:.9rem;font-family:var(--mono);font-size:.78rem;line-height:1.55;color:var(--muted)}
 .grafico b{font-weight:500;color:var(--ink)}
-.metodo{margin-top:clamp(1.5rem,3vw,2.25rem);border-top:2px solid var(--ink)}
-.metodo li{display:grid;grid-template-columns:minmax(0,1fr);gap:.35rem 1.5rem;padding-block:.9rem 1.1rem;border-bottom:1px solid var(--rule)}
+.metodo{margin-top:clamp(1.5rem,3vw,2.25rem)}
+.metodo li{display:grid;grid-template-columns:minmax(0,1fr);gap:.35rem 1.5rem;padding-block:.9rem 1.1rem}
 .metodo h3{font-size:1rem;font-weight:600;line-height:1.3;margin:0;padding-top:.1rem}
 .metodo li:nth-child(2) h3{color:var(--accent-ink)}
 .metodo p{font-size:1rem;line-height:1.5;max-width:40em}
@@ -323,7 +322,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .colegio .aparte{margin-top:-.6rem}
 
 /* ---- más detalle, plegado ---- */
-.mas{margin-top:clamp(1.5rem,3vw,2rem);border-block:1px solid var(--rule-strong)}
+.mas{margin-top:clamp(1.5rem,3vw,2rem)}
 .mas summary{display:flex;align-items:baseline;gap:.7rem;padding-block:.85rem;font-family:var(--display);font-weight:500;cursor:pointer;list-style:none}
 .mas summary::-webkit-details-marker{display:none}
 .mas summary::before{content:"+";font-family:var(--mono);color:var(--accent-ink);width:.7em}
@@ -332,15 +331,15 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .mas>:last-child{margin-bottom:1.25rem}
 .ficha{display:grid;grid-template-columns:11.5rem 1fr}
 @media (min-width:960px){.ficha{grid-template-columns:8.5rem 1fr}}
-.ficha dt{font-family:var(--display);font-size:.95rem;color:var(--muted);padding:.75rem 1rem .75rem 0;border-top:1px solid var(--rule)}
-.ficha dd{padding:.75rem 0;border-top:1px solid var(--rule)}
+.ficha dt{font-family:var(--display);font-size:.95rem;color:var(--muted);padding:.75rem 1rem .75rem 0}
+.ficha dd{padding:.75rem 0}
 .ficha .estado{display:block;margin-top:.3rem}
-@media (max-width:560px){.ficha{grid-template-columns:1fr}.ficha dd{border-top:0;padding-top:0}.ficha dt{padding-bottom:.2rem}}
-.pubs li{display:grid;grid-template-columns:3.5rem 1fr;gap:0 1rem;padding:.6rem 0;border-top:1px solid var(--rule)}
+@media (max-width:560px){.ficha{grid-template-columns:1fr}.ficha dd{padding-top:0}.ficha dt{padding-bottom:.2rem}}
+.pubs li{display:grid;grid-template-columns:3.5rem 1fr;gap:0 1rem;padding:.6rem 0}
 .pubs .year{font-family:var(--mono);font-size:.85rem;color:var(--muted);padding-top:.2rem}
 .pubs .venue{display:block;font-style:italic;color:var(--muted);font-size:.95rem;margin-top:.1rem}
 .pubs .note{font-style:normal;font-family:var(--display);font-size:.85rem}
-.outlinks{font-family:var(--display);padding-top:.9rem;border-top:1px solid var(--rule)}
+.outlinks{font-family:var(--display);padding-top:.9rem}
 
 /* ---- investigación: perfil RNA-SIP junto a la nota ---- */
 .sip{display:grid;grid-template-columns:minmax(0,22rem) minmax(0,1fr);gap:1.25rem clamp(1.5rem,3vw,2.5rem);align-items:start}
@@ -353,7 +352,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .arte text{font-family:var(--display);font-size:11px;fill:var(--muted)}
 .arte .t13{fill:var(--accent-ink)}
 @media (max-width:700px),(min-width:960px){.sip{grid-template-columns:1fr}.sip .arte{max-width:22rem}}
-.metricas{display:flex;flex-wrap:wrap;align-items:flex-end;gap:.9rem 2.25rem;margin-top:clamp(1.5rem,3vw,2rem);padding-block:.9rem;border-block:1px solid var(--rule)}
+.metricas{display:flex;flex-wrap:wrap;align-items:flex-end;gap:.9rem 2.25rem;margin-top:clamp(1.5rem,3vw,2rem);padding-block:.9rem}
 .metricas div{display:flex;flex-direction:column-reverse}
 .metricas dt{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
 .metricas dd{font-family:var(--display);font-size:1.5rem;font-weight:600;line-height:1.15;font-variant-numeric:tabular-nums}
@@ -362,7 +361,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .metricas .cuando dd{font-family:var(--mono);font-size:.78rem;font-weight:400;line-height:inherit;color:var(--muted)}
 
 /* ---- herramientas publicadas: dos piezas distintas, cada una con su captura ---- */
-.herr{position:relative;display:grid;gap:1rem clamp(1.25rem,3vw,2rem);margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--rule)}
+.herr{position:relative;display:grid;gap:1rem clamp(1.25rem,3vw,2rem);margin-top:1.25rem;padding-top:1.25rem}
 .herr-a{grid-template-columns:minmax(0,17rem) minmax(0,1fr)}
 .herr img{display:block;width:100%;border:1px solid var(--rule)}
 .herr:hover img{border-color:var(--accent)}
@@ -383,20 +382,20 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 @media (max-width:640px){.herr-a{grid-template-columns:1fr}.campos{grid-template-columns:1fr;gap:.1rem}.campos dd+dt{margin-top:.5rem}}
 
 /* ---- agentes de IA: franja oscura ---- */
-.agentes{color:var(--p-ink);border-block:0;padding-block:0}   /* 043: la franja oscura sólo cubre la columna: los márgenes quedan libres para el fondo vivo */
+.agentes{color:var(--p-ink);padding-block:0}   /* 043: la franja oscura sólo cubre la columna: los márgenes quedan libres para el fondo vivo */
 .agentes>.pagina{position:relative;isolation:isolate;padding-block:clamp(2.25rem,5.5vw,4rem)}
 /* 049: la franja ya no es un panel opaco: es un tinte translúcido con borde suave (sombra del mismo color, como el velo del texto) y reglas finas; las células pasan por detrás y la luz del cursor las revela */
-.agentes>.pagina::before{content:"";position:absolute;inset:0 var(--gutter);z-index:-1;background:var(--panel-suave);box-shadow:0 0 14px 10px var(--panel-suave);border-block:1px solid var(--p-rule)}
+.agentes>.pagina::before{content:"";position:absolute;inset:0 var(--gutter);z-index:-1;background:var(--panel-suave);box-shadow:0 0 14px 10px var(--panel-suave)}
 /* con el fondo vivo, el tinte de la franja es suave (las células se ven a través) y cada bloque de texto lleva su velo, como en el resto del sitio (026): el contraste se mide con una célula de tinta plena debajo del texto */
 .fondo-vivo .agentes :is(.riel-top,.lede,.practicas){background:var(--panel);box-shadow:0 0 12px 9px var(--panel);border-radius:3px}
 .fondo-vivo .agentes .riel-top{margin-inline:0;padding-inline:.4rem;margin-left:-.4rem}
 .agentes a{color:var(--p-accent)}
 .agentes .kicker,.agentes .riel .donde{color:var(--p-muted)}
-.agentes .riel-top{background:none;border-bottom-color:var(--p-rule)}
+.agentes .riel-top{background:none}
 @media (max-width:959px){.agentes .riel-top{background:var(--panel-solido)}}
 .agentes .lede{color:var(--p-ink);margin-top:0;font-size:1.12rem;max-width:30em}
 .practicas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(1.25rem,3vw,2rem);align-content:start;margin-top:1.25rem}
-.practicas div{padding-block:.85rem 1.1rem;border-top:1px solid var(--p-rule)}
+.practicas div{padding-block:.85rem 1.1rem}
 .practicas dt{font-family:var(--mono);font-size:.8rem;color:var(--p-accent);margin-bottom:.3rem}
 .practicas dd{font-size:1rem;line-height:1.45}
 @media (max-width:520px){.practicas{grid-template-columns:1fr}}
@@ -472,7 +471,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
   .ruta>div{padding-bottom:1.75rem}
   .sip{gap:1.5rem}
 }
-footer{border-top:1px solid var(--rule);padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line-height:1.6;color:var(--muted)}
+footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line-height:1.6;color:var(--muted)}
 </style>
 </head>
 <body>
