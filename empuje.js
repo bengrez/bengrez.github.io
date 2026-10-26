@@ -9,13 +9,13 @@
 (function(){
   'use strict';
   if(window.Empuje) return;
-  var SEL='.hero .lede', BASE=(document.currentScript&&document.currentScript.src)||'', LIB=BASE?BASE.replace(/[^\/]*(\?.*)?$/,'')+'vendor/pretext/pretext.min.js?v=1.0.0':'vendor/pretext/pretext.min.js?v=1.0.0';
+  var SEL='.hero .lede', BASE=(document.currentScript&&document.currentScript.src)||'', LIB=BASE?BASE.replace(/[^\/]*(\?.*)?$/,'')+'vendor/pretext/pretext.min.js?v=1.0.0-056':'vendor/pretext/pretext.min.js?v=1.0.0-056';
   var DESPEJE=14, HUECO=16, HUECO_Y=22, EXTRA=2, EXT_MAX=240, V_ABRE=900, T_ABRE=.06, T_CIERRA=2, SLOT_EM=7, CERCA=90, SOLO_ANCHO=900;   // holgura a cada lado del cuerpo (px), anticipación vertical (la línea se aparta cuando el cuerpo está a menos de HUECO_Y px de ella, para que el hueco ya esté abierto cuando llegue), líneas extra de reserva, espacio máximo a la derecha del párrafo (px), velocidad máxima con que se abre un hueco (px/s) y constantes de tiempo (s) con que se abre (T_ABRE) y se cierra (T_CIERRA = 2: el borde que queda atrás sigue al cuerpo con ≈ 2 s de retraso, y por eso el texto termina de volver ≈ 2 s después de que la cola sale) y SLOT_EM, el ancho mínimo de un tramo en em (más angosto que eso se deja vacío: no quedan palabras sueltas), distancia a la que se despierta, ancho mínimo de ventana
   var P=null, acc=null, dy=0, lib=null, pedida=false, corre=0, activo=false, ov=null, rows=[], bd=[], prep=null, fKey='', txt='', minw=60, colorOrig='', ult=0, apagado=false, forz=false, mqR=null, mqF=null;
   var est={cuadros:0,ms:0,msMax:0,activaciones:0,lineas:0,lineasMax:0,extraMax:0,reacomodos:0,versionLib:'',cargada:false,errores:0,vigila:0,llamadas:0,cambios:0};
 
   function ancho(){ return window.innerWidth>=SOLO_ANCHO; }
-  function permitido(){ return !apagado&&ancho()&&!(mqR&&mqR.matches)&&!(mqF&&mqF.matches); }   // sin movimiento reducido ni colores forzados (con éstos el texto original no se puede poner transparente)
+  function permitido(){ return !apagado&&ancho()&&!(mqR&&mqR.matches)&&!(mqF&&mqF.matches)&&!document.documentElement.hasAttribute('data-pausa'); }   // sin movimiento reducido ni colores forzados (con éstos el texto original no se puede poner transparente) ni la pausa de la barra (056)
   function cargarLib(){
     if(lib||pedida) return; pedida=true;
     var s=document.createElement('script'); s.src=LIB; s.async=true;

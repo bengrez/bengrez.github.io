@@ -10,15 +10,15 @@
 <meta property="og:type" content="profile">
 <meta property="og:locale" content="es_CL">
 <meta property="og:url" content="https://bengrez.github.io/">
-<meta property="og:image" content="https://bengrez.github.io/og.png">
+<meta property="og:image" content="https://bengrez.github.io/og.png?v=056">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Titular «Trabajo con datos, ecología y docencia» sobre un gráfico con estilo de paper: la temperatura del refrigerante de dos buses, la banda de referencia y la alerta cuando uno se sale de ella (datos simulados).">
+<meta property="og:image:alt" content="Benjamín Moreira-Grez. Titular «Trabajo con datos, ecología y docencia» sobre un gráfico con estilo de paper: la temperatura del refrigerante de dos buses, la banda de referencia y la alerta cuando uno se sale de ella (datos simulados).">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FAF9F6" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#131211" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23FFFFFF'/%3E%3Cpath d='M6 5V27H28' fill='none' stroke='%231A1A1A' stroke-width='1.6'/%3E%3Cpath d='M12 9v10M9.5 9h5M9.5 19h5M22 13v10M19.5 13h5M19.5 23h5' fill='none' stroke='%23900008' stroke-width='1.6' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='14' r='3' fill='%23F86848'/%3E%3Ccircle cx='22' cy='18' r='3' fill='%23900008'/%3E%3C/svg%3E">
-<script>try{var t=localStorage.getItem('tema');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script>(function(){var r=document.documentElement,mm=window.matchMedia,cx=navigator.connection;r.classList.add('js');if((mm&&mm('(prefers-reduced-motion: reduce)').matches)||(cx&&cx.saveData))r.classList.add('sin-mov');try{var t=localStorage.getItem('tema');if(t==='dark'||t==='light')r.setAttribute('data-theme',t);if(localStorage.getItem('pausa')==='1')r.setAttribute('data-pausa','')}catch(e){}})()</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
@@ -84,6 +84,18 @@ img{max-width:100%;height:auto}
 @media (max-width:1139px){.indice a.ext{display:none}}   /* 051: el enlace al hub sólo cabe en la barra desde 1140 px; antes queda el de la sección Docencia */
 .tema{display:inline-grid;place-items:center;width:2.5rem;height:2.5rem;margin-right:-.6rem;padding:0;border:0;background:none;color:inherit;cursor:pointer}
 .tema i{width:1.05rem;height:1.05rem;border-radius:50%;border:1.5px solid var(--ink);background:linear-gradient(90deg,var(--ink) 50%,transparent 50%)}
+/* 056: pausa del movimiento (WCAG 2.2.2): detiene el fondo, el C. elegans que empuja el párrafo y la caja de Agentes. Va pegada al botón del tema (sin el espacio de la barra);
+   dos barras mientras hay movimiento y un triángulo cuando está pausado (aria-pressed). Sin JS, o con movimiento reducido o ahorro de datos, no se muestra: no hay nada que pausar. */
+.pausa{display:inline-grid;place-items:center;width:2.5rem;height:2.5rem;margin-right:-1.25rem;padding:0;border:0;background:none;color:inherit;cursor:pointer;flex-shrink:0}
+.pausa i{width:.8rem;height:.95rem;border-inline:.24rem solid var(--ink)}
+.pausa[aria-pressed="true"] i{width:0;height:0;border-block:.5rem solid transparent;border-inline:.85rem solid var(--ink);border-inline-end:0;margin-left:.2rem}
+.tema{flex-shrink:0}
+.tema[hidden],.pausa[hidden]{display:none}   /* 056: el display de arriba le ganaba al atributo hidden: sin JS (o, en la pausa, con movimiento reducido) el botón se veía y no hacía nada */
+.js .tema[hidden],.js:not(.sin-mov) .pausa[hidden]{display:inline-grid;visibility:hidden}   /* 056: con JS el lugar de los botones queda reservado desde el comienzo (el script del <head> pone .js y, sin movimiento, .sin-mov): al mostrarlos, «Contacto» no se corre (CLS) */
+/* 056: bajo 420 px el nombre no se parte en dos líneas (la barra crecía a 71 px y tapaba lo que va pegado debajo) y, con el botón de pausa, todo cabe sin
+   desborde horizontal hasta 320 px: letra algo menor, menos espacio, botones de 34 px y la barra con 1 rem de margen lateral (5 px menos que el texto). */
+@media (max-width:419px){.marca{white-space:nowrap;font-size:.84rem}.barra-in{gap:.6rem;padding-inline:1rem}.pausa,.tema{width:2.125rem;height:2.125rem}.pausa{margin-right:-.6rem}.tema{margin-right:-.45rem}}
+@media (max-width:359px){.marca{font-size:.8rem}.barra-in{gap:.5rem}.pausa{margin-right:-.5rem}}
 
 /* ---- portada ---- */
 /* El título se encoge con el scroll: el script fija --k (0 arriba, 1 compacto) y el tamaño de letra, el
@@ -379,7 +391,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .herr h4 a{color:inherit;text-decoration-color:var(--accent)}
 .herr h4 a::after{content:"";position:absolute;inset:0}
 .herr .sub{font-family:var(--display);color:var(--muted);margin-top:.15rem}
-.herr .estado{display:block;margin-top:.4rem;white-space:normal}   /* 051: el estado de la ficha de Atlas es largo y tiene que poder partirse en celular */
+.herr .estado{display:block;margin-top:.4rem;white-space:normal}   /* 051: un estado largo tiene que poder partirse en celular */
 .campos{display:grid;grid-template-columns:5.5rem 1fr;gap:.45rem 1rem;margin-top:.9rem;font-size:.98rem;line-height:1.45}
 .campos dt{font-family:var(--display);font-size:.9rem;color:var(--muted);padding-top:.08rem}
 /* 051: las fichas sin captura llevan un recuadro tipográfico (su fórmula o su título), el mismo del hub; y el enlace a todas */
@@ -416,7 +428,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .caja{margin-top:1.5rem;max-width:30rem}
 .caja-in{position:relative;aspect-ratio:16/9;background:var(--panel);border-radius:2px;box-shadow:0 0 0 1px var(--p-rule) inset}   /* la caja es una ventana más opaca: las células del fondo no entran en el entorno aislado */
 .caja-in canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.caja-et{position:absolute;left:.75rem;top:.55rem;font:500 .68rem/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--p-muted)}
+.caja-et{position:absolute;left:.75rem;top:.55rem;font:500 .75rem/1 var(--mono);color:var(--p-muted)}   /* 056: en minúsculas, como el resto de los rótulos (antipatrón 6) */
 .caja-et::before{content:"";display:inline-block;width:.5em;height:.5em;margin-right:.6em;border:1.5px solid var(--p-accent);border-radius:50%;vertical-align:.05em}
 .caja-pie{margin-top:.55rem;font:.76rem/1.4 var(--mono);color:var(--p-muted)}
 
@@ -442,7 +454,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 @media (prefers-reduced-motion:reduce){.rec-ind,.rec-js .rec-mas{transition:none}}
 
 /* Con la serie fija, el borde de salto ya lleva su alto (scroll-padding); lo que está fuera de .escena no. */
-#agentes,#recorrido,#contacto{scroll-margin-top:calc(0px - var(--fig-h,0px))}
+@media (max-width:959px){#agentes,#recorrido,#contacto{scroll-margin-top:calc(0px - var(--fig-h,0px))}}   /* 056: antes era global y, por ir después, anulaba la regla de escritorio (scroll-margin-top:0): «Agentes de IA» dejaba el título 98 px fuera de la vista */
 
 /* ---- contacto ---- */
 .correo{display:inline-block;font-family:var(--display);font-weight:600;font-size:clamp(1.3rem,3.6vw,2.6rem);overflow-wrap:anywhere;letter-spacing:-.02em;line-height:1.15;color:var(--ink);text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:.16em}
@@ -468,9 +480,9 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
   body{line-height:1.7;letter-spacing:.004em;word-spacing:.05em}
   .serie>.pagina{padding-inline:.6rem}
   .hoja{margin-block:.55rem .65rem}
-  /* 023: con JS la franja arranca con el gráfico más chico (76 % del ancho) y, al bajar, se encoge hasta 56 % y se aclara hasta
-     45 % de opacidad; --enc (0 a 1) lo pone el JS según el scroll. Sin JS queda como en la 022. El alto se libera: el texto sube. */
-  .serie.enc .plot{width:calc(76% - 20% * var(--enc,0));margin-inline:auto;opacity:calc(1 - .55 * var(--enc,0))}
+  /* 023: con JS la franja lleva el gráfico más chico (76 % del ancho). 056: ya no se encoge ni se aclara al bajar (llegaba a 56 % y 45 % de opacidad: rótulos de
+     7–8 px con contraste de 2–3,9:1, WCAG 1.4.3 y 1.4.11); el 76 % es el piso y la opacidad queda en 1. Sin JS queda como en la 022, a todo el ancho. */
+  .js .serie .plot{width:76%;margin-inline:auto}   /* con la clase .js del <head>: ya en la primera pintura, sin esperar al script del final (CLS) */
   .riel-top{padding-block:.75rem .8rem}
   .seccion{padding-bottom:3.5rem}
   .estados{margin-top:1.25rem;gap:.5rem 1.5rem}
@@ -511,6 +523,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
       <a href="#recorrido">Recorrido</a>
       <a class="fijo" href="#contacto">Contacto</a>
     </nav>
+    <button type="button" class="pausa" id="pausa" aria-label="Pausar animación" aria-pressed="false" hidden><i aria-hidden="true"></i></button>
     <button type="button" class="tema" id="tema" hidden><i aria-hidden="true"></i></button>
   </div>
 </header>
@@ -827,13 +840,13 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
       <ol class="metodo">
         <li><h3>Medir</h3><p>Muestras escasas y caras, secuenciación ruidosa, ninguna referencia clara de suelo sano. Por eso importa el diseño: réplicas en cada muestreo, en terreno, en zonas áridas de Western Australia; marcaje isotópico (RNA-SIP) para saber qué organismo hace qué; metagenómica.</p></li>
         <li><h3>Ver la desviación</h3><p>Estadística multivariante para separar señal de ruido y la intervención de la variabilidad del sitio: si la comunidad vuelve a su referencia o se estabiliza por debajo.</p></li>
-        <li><h3>Explicar y actuar</h3><p>Revisé los supuestos con que se monitorea la restauración y escribí los resultados también para quienes deciden sobre ella. Después usé el mismo enfoque en arroceras, trigo y residuos de bauxita. De ahí salieron la tesis y publicaciones, citadas 738 veces según Google Scholar (mayo de 2026).</p></li>
+        <li><h3>Explicar y actuar</h3><p>Revisé los supuestos con que se monitorea la restauración y escribí los resultados también para quienes deciden sobre ella. Después usé el mismo enfoque en arroceras, trigo y residuos de bauxita. De ahí salieron la tesis y publicaciones, citadas 796 veces según Google Scholar (octubre de 2026).</p></li>
       </ol>
       <dl class="metricas">
-        <div><dt>citas totales</dt><dd>738</dd></div>
-        <div><dt>índice h</dt><dd>12</dd></div>
-        <div><dt>índice i10</dt><dd>14</dd></div>
-        <div class="cuando"><dt>fuente</dt><dd>Google Scholar, mayo de 2026</dd></div>
+        <div><dt>citas totales</dt><dd>796</dd></div>
+        <div><dt>índice h</dt><dd>13</dd></div>
+        <div><dt>índice i10</dt><dd>15</dd></div>
+        <div class="cuando"><dt>fuente</dt><dd>Google Scholar, octubre de 2026</dd></div>
       </dl>
       <figure class="evidencia sip">
         <div class="arte"><svg viewBox="0 0 320 200" role="img" aria-label="Esquema con curvas ilustrativas: dos perfiles de ARN según la densidad; el marcado con carbono 13 queda desplazado hacia las fracciones pesadas.">
@@ -878,20 +891,21 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
       <p class="grafico"><b>El gráfico de Docencia</b>, con datos simulados y sólo promedios del curso: el logro en un tema, ensayo a ensayo, y un solo acento. El tema nuevo hace caer el logro; el refuerzo lo devuelve antes de la evaluación.</p>
       <ol class="metodo">
         <li><h3>Medir</h3><p>Lo disponible: las bases curriculares, un proyector y estudiantes con celular. Planifico por objetivo de aprendizaje, clase a clase: diagnóstico de prerrequisitos al inicio, evaluación formativa antes de la sumativa y, si el calendario se mueve, cronograma ajustado por escrito.</p></li>
-        <li><h3>Ver la desviación</h3><p>La formativa muestra qué tema no se entendió mientras hay tiempo de reforzarlo. Para practicar sin nota hice herramientas web propias, sin cuenta ni instalación y sin guardar ni enviar respuestas: cinco están publicadas (dos en uso en clases) y viven juntas en <a href="https://bengrez.github.io/aula-herramientas/">Herramientas de aula</a>.</p></li>
+        <li><h3>Ver la desviación</h3><p>La formativa muestra qué tema no se entendió mientras hay tiempo de reforzarlo. Para practicar sin nota hice herramientas web propias, sin cuenta ni instalación y sin guardar ni enviar respuestas: varias están publicadas y viven juntas en <a href="https://bengrez.github.io/aula-herramientas/">Herramientas de aula</a>.</p></li>
         <li><h3>Explicar y actuar</h3><p>Lo mismo a escala del colegio: un asistente de gestión escolar con IA que cruza las fuentes que ya tiene, busca patrones entre asignaturas y responde indicando la fuente. Local-first, con datos seudonimizados. Hoy es una demo con datos sintéticos; el piloto, con datos reales, desde 2027.</p></li>
       </ol>
 
       <h3 class="titulo">Herramientas publicadas</h3>
-      <p class="pie">Las imágenes son fragmentos de cada interfaz; las fichas sin captura llevan su fórmula o su título.</p>
+      <p class="pie">Las imágenes son fragmentos de cada interfaz; la ficha sin captura lleva su fórmula.</p>
       <article class="herr herr-a">
         <img src="tabla-periodica.webp" width="1200" height="1000" alt="" loading="lazy" decoding="async">
         <div>
           <h4><a href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/">Tabla periódica reactiva</a></h4>
           <p class="sub">Imán y Escudo</p>
+          <p class="estado e-uso">en uso en clases</p>
           <dl class="campos">
             <dt>Para</dt>
-            <dd>Química, 8.º básico (CN08 OA14). En uso en clases, en la unidad de tabla periódica.</dd>
+            <dd>Química, 8.º básico (CN08 OA14), en la unidad de tabla periódica.</dd>
             <dt>Entrena</dt>
             <dd>Tendencias periódicas por posición, sin memorizar valores: radio atómico, energía de ionización, electronegatividad y tipo de enlace.</dd>
             <dt>Modos</dt>
@@ -903,6 +917,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
         <img src="autodiagnostico.webp" width="1400" height="386" alt="" loading="lazy" decoding="async">
         <div>
           <h4><a href="https://bengrez.github.io/aula-herramientas/autodiagnostico-bienestar-salud/">Autodiagnóstico de Bienestar y Salud</a></h4>
+          <p class="estado e-uso">en uso en clases</p>
           <dl class="campos">
             <dt>Para</dt>
             <dd>Ciencias para la Ciudadanía, tercero medio, unidad 4.</dd>
@@ -919,7 +934,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
         <div class="tipo" aria-hidden="true"><b>1 − 1/R₀</b><span>umbral de inmunidad de rebaño</span></div>
         <div>
           <h4><a href="https://bengrez.github.io/aula-herramientas/vacunas-rebano/">Vacunas e inmunidad de rebaño</a></h4>
-          <p class="estado e-piloto">recién publicada</p>
+          <p class="estado e-uso">publicada</p>
           <dl class="campos">
             <dt>Para</dt>
             <dd>Ciencias para la Ciudadanía, cuarto medio, Bienestar y Salud.</dd>
@@ -927,36 +942,6 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
             <dd>Por qué la protección de un grupo cuida también a quien no se vacunó: el umbral 1 − 1/R₀, un simulador de dos casos (cobertura alta y baja) y la lectura de datos reales de COVID-19 entre 2020 y 2022.</dd>
             <dt>Formato</dt>
             <dd>Página de lectura vertical, pensada para el celular. No guarda ni envía nada.</dd>
-          </dl>
-        </div>
-      </article>
-      <article class="herr herr-a">
-        <div class="tipo" aria-hidden="true"><b>Atlas</b><span>mapa de aprendizaje, sin nota</span></div>
-        <div>
-          <h4><a href="https://bengrez.github.io/aula-herramientas/diagnostico-paes/">Atlas, diagnóstico PAES Ciencias</a></h4>
-          <p class="estado e-piloto">demostración técnica; aún no se aplica a estudiantes</p>
-          <dl class="campos">
-            <dt>Para</dt>
-            <dd>Enseñanza media, preparación de la PAES de Ciencias.</dd>
-            <dt>Entrena</dt>
-            <dd>Habilidades científicas del marco PAES. Una sesión breve que termina en un mapa cualitativo de lo que ya se domina y de lo que falta, y una práctica de Biología por unidad (banco en revisión docente).</dd>
-            <dt>Datos</dt>
-            <dd>Sin nombres ni nota. El avance queda en el dispositivo y funciona sin conexión.</dd>
-          </dl>
-        </div>
-      </article>
-      <article class="herr herr-a">
-        <div class="tipo" aria-hidden="true"><b lang="en">1347–1353</b><span lang="en">four sources, ten questions</span></div>
-        <div>
-          <h4><a href="https://bengrez.github.io/aula-herramientas/black-death-skills-lab/" lang="en">The Black Death: a historian’s skills lab</a></h4>
-          <p class="sub" lang="en">Year 8 HASS (History)</p>
-          <dl class="campos">
-            <dt>Para</dt>
-            <dd>Year 8, History. En inglés australiano; se completa junto a un adulto.</dd>
-            <dt>Entrena</dt>
-            <dd>Analizar fuentes («¿puedo confiar en esta fuente?»), encadenar causa y consecuencia y argumentar a partir de la evidencia, con cuatro fuentes y diez preguntas.</dd>
-            <dt>Datos</dt>
-            <dd>Las respuestas escritas se guardan sólo en el navegador; no se envía nada.</dd>
           </dl>
         </div>
       </article>
@@ -974,13 +959,6 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
         </ol>
         <figcaption>Esquema de «medir un colegio»: asistente de gestión escolar en un equipo del propio colegio, diseñado para la Ley 21.719.</figcaption>
       </figure>
-      <details class="mas">
-        <summary>Práctica PAES</summary>
-        <dl class="ficha">
-          <dt>Práctica PAES</dt>
-          <dd>Una app de práctica de habilidad científica con orientación para la remediación. Sin nota ni ranking; no se usa con estudiantes hasta revisar el banco.<span class="estado e-dev">en desarrollo</span></dd>
-        </dl>
-      </details>
     </div>
   </div>
 </section>
@@ -1016,7 +994,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
     <dl class="ruta">
       <div><dt>Pontificia Universidad Católica de Valparaíso</dt><dd>Licenciado en Biología y título profesional de Biólogo.</dd><dd class="rec-mas"><div><p>Formación de base en biología, antes del doctorado en ecología microbiana de suelos.</p></div></dd></div>
       <div><dt>The University of Western Australia, Perth</dt><dd>Ph.D., tesis de 2020 (<a href="https://doi.org/10.26182/5e995c216ca93">doi:10.26182/5e995c216ca93</a>). Financiado con la beca de Doctorado Becas Chile, 2014–2018.<span class="sub">Enfoque: reacondicionamiento de suelos degradados, dinámica de comunidades microbianas y restauración ecológica post-minera.</span></dd><dd class="rec-mas"><div><p>La tesis preguntó si un suelo minero degradado se recupera al devolverle microorganismos, o sólo lo parece. Usé marcaje isotópico (RNA-SIP), metagenómica y estadística multivariante, con muestreos en terreno en zonas áridas de Western Australia.</p></div></dd></div>
-      <div><dt>The University of Western Australia</dt><dd>Research Associate, 2020–2022.</dd><dd class="rec-mas"><div><p>Apliqué el mismo enfoque en arroceras, trigo y residuos de bauxita. La tesis y las publicaciones suman 738 citas según Google Scholar (mayo de 2026).</p></div></dd></div>
+      <div><dt>The University of Western Australia</dt><dd>Research Associate, 2020–2022.</dd><dd class="rec-mas"><div><p>Apliqué el mismo enfoque en arroceras, trigo y residuos de bauxita. La tesis y las publicaciones suman 796 citas según Google Scholar (octubre de 2026).</p></div></dd></div>
       <div><dt>Santiago, hoy</dt><dd>En Andes, desarrollo y análisis de datos para una empresa de transporte; docencia de ciencias en un colegio.</dd><dd class="rec-mas"><div><p>En Andes armé la telemetría y el detector de anomalías de una flota de buses, hoy en piloto. En el colegio enseño ciencias y hice herramientas web para practicar sin nota.</p></div></dd></div>
     </dl>
   </div>
@@ -1040,7 +1018,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 </section>
 
 </main>
-<footer><div class="pagina">Santiago, Chile. Métricas de citación de Google Scholar al 26 de mayo de 2026. Los gráficos usan datos simulados; los esquemas, curvas ilustrativas.</div></footer>
+<footer><div class="pagina">Santiago, Chile. Métricas de citación de Google Scholar al 26 de octubre de 2026. Los gráficos usan datos simulados; los esquemas, curvas ilustrativas.</div></footer>
 
 <script>
 /* El título de la portada se encoge con el scroll: --k va de 0 (grande) a 1 (compacto) en los primeros
@@ -1156,22 +1134,14 @@ var portada=(function(){
     return k;
   }
   function evaluar(){
-    raf=0; encoger(); cortar();
+    raf=0; cortar();
     var base=(bar?bar.offsetHeight:52)+fig.offsetHeight;
     if(escena.getBoundingClientRect().bottom<=base){ kAct=-1; pendiente=false; return; } // la escena salió por arriba
     mostrar(estado());
     if(pendiente&&aLaVista()){ pendiente=false; trazar(hojas[kAct]); }
   }
-  // Celular (023): la figura de la franja se encoge y se aclara al bajar, ligada a la posición del scroll (no a la
-  // sección), con la curva común suave(): de 0 a 1 entre 260 y 1460 px de scroll (hasta la mitad del primer caso) (la portada ya está compacta desde 160).
-  // Con movimiento reducido queda en el tamaño chico, fijo. Piso: 56 % del ancho y 45 % de opacidad (en el CSS).
-  var movil=window.matchMedia?window.matchMedia('(max-width:639px)'):{matches:false},
-      quieto=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches, encUlt=-1;
-  function encoger(){
-    if(!movil.matches){ if(encUlt!==-2){ fig.classList.remove('enc'); fig.style.removeProperty('--enc'); encUlt=-2; } return; }
-    var v=quieto?0:suave(((window.pageYOffset||0)-260)/1200);
-    fig.classList.add('enc'); if(Math.abs(v-encUlt)>.002||v===0||v===1){ encUlt=v; fig.style.setProperty('--enc',v.toFixed(3)); }
-  }
+  // Celular (023): la figura de la franja va en su tamaño chico (76 % del ancho). 056: fijo y todo en el CSS (.js .serie .plot), sin encogerse ni aclararse con el
+  // scroll (antes bajaba hasta 56 % y 45 % de opacidad entre 260 y 1460 px): los rótulos quedan legibles y el scroll ya no recalcula el ancho de la figura en cada cuadro.
   function pedirEval(){ if(!raf) raf=requestAnimationFrame(evaluar); }
   window.addEventListener('scroll',pedirEval,{passive:true});
   window.addEventListener('resize',function(){ medir(); pedirEval(); });
@@ -1262,13 +1232,17 @@ var portada=(function(){
     tUlt=t; var p0=performance.now(); if(t>cNext){ leer(); cNext=t+1; } paso(dt,t); pintar(t); fig._ms=(fig._ms||0)*.9+(performance.now()-p0)*.1; fig._n=(fig._n||0)+1; raf=requestAnimationFrame(cuadro);   // _ms y _n: el costo medio por cuadro y el número de cuadros (para medir)
   }
   fig._est=function(){ return {x:c.x,y:c.y,v:c.v,W:W,H:H,M:M,pulsos:pulsos.length,fino:fino,vivo:!!raf,quieto:quieto}; };
-  function arrancar(){ if(quieto||ahorro||raf||!vis||document.hidden) return; tUlt=0; raf=requestAnimationFrame(cuadro); }
+  function pausada(){ return document.documentElement.hasAttribute('data-pausa'); }   // 056: el botón «Pausar animación» la deja quieta donde está
+  function arrancar(){ if(quieto||ahorro||raf||!vis||document.hidden||pausada()) return; tUlt=0; raf=requestAnimationFrame(cuadro); }
   leer(); medir();
   if(window.ResizeObserver) new ResizeObserver(medir).observe(cv); else window.addEventListener('resize',medir);
-  if(quieto||ahorro){ if(window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener&&window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){ leer(); pintar(0); });
-    var mo=new MutationObserver(function(){ leer(); pintar(0); }); mo.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']}); return; }   // quieta: se vuelve a dibujar sólo al cambiar el tema
+  function repintar(){ if(!raf){ leer(); pintar(0); } }   // quieta o en pausa (056): se vuelve a dibujar sólo al cambiar el tema; corriendo, cuadro() lee los colores cada segundo
+  if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').addEventListener) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',repintar);
+  new MutationObserver(repintar).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  if(quieto||ahorro) return;
   if('IntersectionObserver' in window) new IntersectionObserver(function(es){ vis=es[0].isIntersecting; if(vis) arrancar(); },{rootMargin:'80px'}).observe(fig); else { vis=true; arrancar(); }
   document.addEventListener('visibilitychange',arrancar);
+  new MutationObserver(function(){ if(pausada()){ if(raf){ cancelAnimationFrame(raf); raf=0; } } else arrancar(); }).observe(document.documentElement,{attributes:true,attributeFilter:['data-pausa']});
   window.addEventListener('pointermove',function(e){ if(e.pointerType==='mouse'||e.pointerType==='pen') ptr={x:e.clientX,y:e.clientY}; },{passive:true});
   document.documentElement.addEventListener('mouseleave',function(){ ptr=null; });
 })();
@@ -1279,7 +1253,7 @@ var portada=(function(){
   try{
     var mm=window.matchMedia; if(!mm||!mm('(pointer: fine)').matches||window.innerWidth<1024||mm('(prefers-reduced-motion: reduce)').matches) return;
     var cx=navigator.connection; if(cx&&cx.saveData) return;
-    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.js?v=a7bc77bfcb'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.js?v=e0b77f9ccc'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 053: empuje.js (texto que se aparta del nematodo, con Pretext) se pide después del fondo; la librería se baja sólo cuando el nematodo cruza el párrafo */
+    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.min.js?v=146a982a23'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.min.js?v=e91042a4c0'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 053: empuje.js (texto que se aparta del nematodo, con Pretext) se pide después del fondo; la librería se baja sólo cuando el nematodo cruza el párrafo. 056: se cargan los .min.js que genera scripts/version-js.sh (la fuente legible son quimiotaxis.js y empuje.js) */
     if(document.readyState==='complete') cargar(); else window.addEventListener('load',function(){ setTimeout(cargar,300); });
   }catch(e){}
 })();
@@ -1295,6 +1269,21 @@ var portada=(function(){
     rotular();
   });
   rotular(); b.hidden=false;
+})();
+
+/* 056: pausa del movimiento (WCAG 2.2.2). El estado vive en <html data-pausa> (lo pone el script del <head> si quedó guardado) y cada animación lo consulta:
+   el fondo (quimiotaxis.js) y el empuje del párrafo (empuje.js) se detienen y la caja de Agentes queda quieta. Se recuerda en este navegador ('pausa' = '1'). */
+(function(){
+  var b=document.getElementById('pausa'), root=document.documentElement; if(!b) return;
+  if(root.classList.contains('sin-mov')) return;   // movimiento reducido o ahorro de datos (lo decide el script del <head>): nada se mueve y el botón no hace falta
+  function marcar(){ b.setAttribute('aria-pressed',root.hasAttribute('data-pausa')?'true':'false'); }
+  b.addEventListener('click',function(){
+    var p=!root.hasAttribute('data-pausa');
+    if(p) root.setAttribute('data-pausa',''); else root.removeAttribute('data-pausa');
+    try{ localStorage.setItem('pausa',p?'1':'0'); }catch(e){}
+    marcar();
+  });
+  marcar(); b.hidden=false;
 })();
 </script>
 <script>

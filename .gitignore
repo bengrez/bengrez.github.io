@@ -6,3 +6,6 @@ AGENTS.md
 CLAUDE.md
 GEMINI.md
 scripts/__pycache__/
+
+# og.png: lo arma scripts/og.py (056); se regenera, no se versiona
+scripts/og.html

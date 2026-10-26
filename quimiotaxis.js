@@ -246,7 +246,8 @@
      rizosfera(x, y)           (040) la franja de la rizosfera: {d, w, dentro, zona, punto, normal}; avanzar(seg, r, pared) con pared:true hace avanzar 1/30 s de tiempo real por paso aunque r < 1 (la raíz y el cursor usan el tiempo real)
      luz({activa, r, x, y, fija, estela})  la luz (039; estela:false quita la que deja el recorrido, 042): activa:false la apaga (el fondo se ve entero, como en la 038); r es el radio exterior en px (0 = 32,5 % del ancho, 042 p3); x, y la fijan (salta ahí y no sigue al cursor hasta fija:false); sin argumentos sólo informa
      reiniciar({avanzado})      vuelve al comienzo de una visita (avanzado:false = partida desde cero, como en la 037); movimiento(reset) entrega las corridas (duración y largo), los ángulos de tumbo, la velocidad propia media y los saltos del twitching
-     parar()                    detiene y quita el canvas */
+     parar()                    detiene y quita el canvas
+   Pausa (056): con <html data-pausa> (botón «Pausar animación» de la barra) el bucle se detiene y el último cuadro queda a la vista; al quitarlo, sigue. */
 (function(){
   'use strict';
   if(window.Quimiotaxis) return;
@@ -1838,7 +1839,8 @@
     a=performance.now(); paso(dt*ritmo,real); dibujar(); st.trab+=performance.now()-a; st.cuadros++;
     if(t-st.t0>=st.ventana) evaluar(t);
   }
-  function arrancar(){ if(raf||!vivo||document.hidden) return; raiz.classList.add('fondo-vivo'); ultimo=performance.now(); st.t0=ultimo; st.trab=0; st.cuadros=0; raf=requestAnimationFrame(bucle); }
+  function pausado(){ return raiz.hasAttribute('data-pausa'); }   // 056: el botón «Pausar animación» de la barra (index.html) deja el fondo quieto en su último cuadro; el velo del texto se mantiene
+  function arrancar(){ if(raf||!vivo||document.hidden) return; raiz.classList.add('fondo-vivo'); if(pausado()) return; ultimo=performance.now(); st.t0=ultimo; st.trab=0; st.cuadros=0; raf=requestAnimationFrame(bucle); }
   function pausar(){ if(raf){ cancelAnimationFrame(raf); raf=0; } }
   function parar(){ vivo=false; pausar(); raiz.classList.remove('fondo-vivo'); if(luz.el&&luz.el.caja.parentNode){ luz.el.caja.parentNode.removeChild(luz.el.caja); luz.el.caja2.parentNode.removeChild(luz.el.caja2); } if(rz.cvR&&rz.cvR.parentNode) rz.cvR.parentNode.removeChild(rz.cvR); if(cv.parentNode) cv.parentNode.removeChild(cv); }
 
@@ -1849,6 +1851,7 @@
     for(i=0;i<nt;i++){ if(TX[i]>W) TX[i]=Math.random()*W; if(TY[i]>H) TY[i]=Math.random()*H; } arrancar();
   });
   new MutationObserver(colorDeTinta).observe(raiz,{attributes:true,attributeFilter:['data-theme']});
+  new MutationObserver(function(){ if(pausado()) pausar(); else arrancar(); }).observe(raiz,{attributes:true,attributeFilter:['data-pausa']});
   if(window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',colorDeTinta);
 
   function colonias(){ // cuenta las colonias (componentes conexas de células adheridas, vecinas a < 1,6 × VECINO) y su tamaño máximo
