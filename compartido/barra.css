@@ -1,0 +1,26 @@
+/* barra.css, versión 1 (iteración 057): la barra y el pie comunes para las páginas que NO cargan base.css (cada herramienta del hub tiene su propio
+   diseño, y el reinicio global de base.css le movería márgenes y listas). Todo va acotado a .barra-comun y .pie-comun, sin tocar nada más de la página.
+   Mismo par de sitios que la barra de base.css, en el mismo orden: «Benjamín Moreira-Grez / Herramientas de aula», con aria-current="true" en el
+   hub (es el enlace de vuelta a su portada). Las dos franjas son <nav> (no <header> ni <footer>): la herramienta ya puede tener los suyos, y dos
+   banner o dos contentinfo en la misma página son un error de accesibilidad. Colores del tema claro; si la página pone <html data-theme="dark">, los del oscuro. Una franja de
+   2,75 rem, no fija: la herramienta conserva su propia cabecera debajo. Si cambia la barra de base.css, se cambia también aquí (ver LEEME.md). */
+@font-face{font-family:"Bricolage Grotesque";font-style:normal;font-weight:400 700;font-stretch:100%;font-display:swap;src:url(fuentes/bricolage-grotesque.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Bricolage Respaldo";src:local("Arial"),local("Liberation Sans"),local("Helvetica Neue"),local("Helvetica");size-adjust:95%}
+.barra-comun,.pie-comun{--bc-bg:#FAF9F6;--bc-ink:#1B1A17;--bc-muted:#5B5955;--bc-link:#7A0007;--bc-foco:#900008;
+  box-sizing:border-box;font-family:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;line-height:1.2;letter-spacing:normal;text-align:left}
+:root[data-theme="dark"] :is(.barra-comun,.pie-comun){--bc-bg:#131211;--bc-ink:#ECE9E2;--bc-muted:#A39F97;--bc-link:#FFA893;--bc-foco:#FF8F74}
+.barra-comun{display:flex;align-items:baseline;gap:.55rem;min-height:2.75rem;margin:0;padding:0 clamp(1rem,4vw,2.5rem);background:var(--bc-bg);color:var(--bc-ink);font-size:.95rem}
+.barra-comun a{color:var(--bc-ink);text-decoration:none;white-space:nowrap;padding-block:.6rem;font-weight:400}
+.barra-comun a+a::before{content:"/";content:"/" / "";display:inline-block;margin-right:.55rem;color:var(--bc-muted)}
+.barra-comun [aria-current]{font-weight:600}
+.barra-comun a:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
+.barra-comun a+a:hover::before{text-decoration:none}
+.barra-comun a:focus-visible,.pie-comun a:focus-visible{outline:2px solid var(--bc-foco);outline-offset:3px;border-radius:2px}
+@media (max-width:639px){.barra-comun .largo{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}}
+@media (max-width:479px){.barra-comun{font-size:.84rem;padding-inline:1rem;gap:.4rem}.barra-comun a+a::before{margin-right:.4rem}}
+/* El pie: el mismo par, al final de la página */
+.pie-comun{display:flex;flex-wrap:wrap;gap:.2rem 1.5rem;margin:0;padding:1.25rem clamp(1rem,4vw,2.5rem) 2rem;background:var(--bc-bg);font-size:.9rem}
+.pie-comun a{display:inline-block;padding-block:.35rem;color:var(--bc-link);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
+.pie-comun a:hover{text-decoration-thickness:2px}
+.pie-comun [aria-current]{color:var(--bc-ink);text-decoration:none}
+@media print{.barra-comun,.pie-comun{display:none}}

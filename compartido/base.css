@@ -1,0 +1,138 @@
+/* base.css, versión 1 (iteración 057): el diseño común de bengrez.github.io y de Herramientas de aula (bengrez.github.io/aula-herramientas/).
+   Lo cargan las dos páginas antes de su <style> propio; cada página agrega encima sólo lo suyo (la portada, los gráficos, la red del hub...).
+   Contiene: las fuentes (servidas desde /compartido/fuentes/, sin Google Fonts), la paleta clara y oscura, la tipografía de base, los estados,
+   la ficha de herramienta, la cabecera (barra) y el pie. El contrato (qué clases y variables existen y qué no se puede cambiar sin una versión nueva)
+   está en /compartido/LEEME.md. */
+
+/* ---- fuentes ----
+   Los mismos archivos que entregaba Google Fonts al sitio hasta la 056 (subconjunto latino; Bricolage y Source Serif son variables, con tamaño
+   óptico), así que el dibujo de cada letra no cambia. Los caracteres fuera de ese subconjunto (→, ≥, ≈, σ, ₀) siguen saliendo de la fuente de
+   respaldo, como antes. Licencia SIL OFL 1.1: los textos están en /compartido/fuentes/. */
+@font-face{font-family:"Bricolage Grotesque";font-style:normal;font-weight:400 700;font-stretch:100%;font-display:swap;src:url(fuentes/bricolage-grotesque.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url(fuentes/ibm-plex-mono-400.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url(fuentes/ibm-plex-mono-500.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+/* Source Serif lleva dos caras (400 y 600) sobre el mismo archivo variable, como las declaraba Google: un 500 se dibuja en 400 y un 700 (<b>) en 600. */
+@font-face{font-family:"Source Serif 4";font-style:normal;font-weight:400;font-display:swap;src:url(fuentes/source-serif-4.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Source Serif 4";font-style:normal;font-weight:600;font-display:swap;src:url(fuentes/source-serif-4.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Source Serif 4";font-style:italic;font-weight:400;font-display:swap;src:url(fuentes/source-serif-4-italica.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+/* Respaldos locales ajustados al ancho de las fuentes web (medido: Bricolage ocupa el 95 % de Arial; Source Serif, el 100,7 % de Georgia):
+   la página no salta al cargar la fuente real. */
+@font-face{font-family:"Bricolage Respaldo";src:local("Arial"),local("Liberation Sans"),local("Helvetica Neue"),local("Helvetica");size-adjust:95%}
+@font-face{font-family:"Source Serif Respaldo";src:local("Georgia"),local("Liberation Serif"),local("Times New Roman");size-adjust:100.7%}
+
+/* ---- paleta (013), clara y oscura ----
+   Tomada de las figuras del paper de biocrust (Frontiers in Microbiology 2019): papel cálido con tinta casi negra y acento burdeos #900008; en
+   oscuro el burdeos se aclara a coral para que lea. El tema sigue al sistema y el botón lo fija en <html data-theme> (clave «tema» de localStorage,
+   la misma en las dos páginas). Estados (055 y 057): verde apagado (en uso o publicado), el acento (en piloto) y gris (en desarrollo). */
+:root{
+  --bg:#FAF9F6; --surface:#F0EEE8; --ink:#1B1A17; --muted:#5B5955; --rule:#DAD7CF; --rule-strong:#B5B1A6;
+  --accent:#900008; --accent-ink:#7A0007;
+  --e-uso:#3F7A55; --e-piloto:var(--accent); --e-dev:#77746D;
+  --display:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+  --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
+  --page:72rem; --sesgo:.75; --gutter:clamp(1rem,4vw,2.5rem); --bar:3.25rem;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#131211; --surface:#1C1A18; --ink:#ECE9E2; --muted:#A39F97; --rule:#2C2926; --rule-strong:#45413C;
+    --accent:#FF8F74; --accent-ink:#FFA893; --e-uso:#7FB394; --e-dev:#8F8B83; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131211; --surface:#1C1A18; --ink:#ECE9E2; --muted:#A39F97; --rule:#2C2926; --rule-strong:#45413C;
+  --accent:#FF8F74; --accent-ink:#FFA893; --e-uso:#7FB394; --e-dev:#8F8B83; color-scheme:dark;
+}
+
+/* ---- base ---- */
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+/* 046: la columna no va centrada: del espacio que sobra, el 75 % va a la izquierda (donde vive el fondo vivo del sitio o la red del hub) y el 25 % a la derecha */
+.pagina{max-width:var(--page);margin-left:max(0px,calc((100% - var(--page))*var(--sesgo)));margin-right:auto;padding-inline:var(--gutter)}
+a{color:var(--accent-ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.skip{position:absolute;left:-999px;top:0;z-index:20;background:var(--bg);padding:.5rem 1rem;font-family:var(--display)}
+.skip:focus{left:var(--gutter)}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.015em}
+p,ul,ol,dl,dd,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+p+p{margin-top:1em}
+img{max-width:100%;height:auto}
+.kicker,.lugar{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}   /* sólo para lectores de pantalla */
+
+/* ---- cabecera (barra) ----
+   La misma en las dos páginas (057). A la izquierda, el par de sitios: «Benjamín Moreira-Grez» (el sitio) y «Herramientas de aula» (el hub), en ese
+   orden y en las dos; el que corresponde a la página lleva aria-current y va en negrita (en una herramienta del hub, «Herramientas de aula» lleva
+   aria-current="true" y es el enlace de vuelta). Después, opcional, el índice de la página (.indice) y los botones de pausa y tema. El fondo de la
+   barra sólo cubre la columna (043): los márgenes quedan libres para el fondo vivo. Sin líneas de división (054). */
+.barra{position:sticky;top:0;z-index:10}
+.barra-in{background:var(--bg);background-clip:content-box;display:flex;align-items:center;gap:1.25rem;min-height:var(--bar);font-family:var(--display);font-size:.95rem}
+.sitios{display:flex;align-items:baseline;gap:.55rem;margin-right:auto;min-width:0}
+.sitios a{color:var(--ink);text-decoration:none;padding-block:.6rem;white-space:nowrap}
+.sitios a+a::before{content:"/";content:"/" / "";display:inline-block;margin-right:.55rem;color:var(--muted)}   /* separador decorativo: no entra en el nombre del enlace */
+.sitios [aria-current]{font-weight:600}
+.sitios a:hover,.indice a:hover{text-decoration:underline;text-decoration-thickness:1px}
+.sitios a+a:hover::before{text-decoration:none}
+.indice{display:flex;gap:1.15rem}
+.indice a{color:var(--ink);text-decoration:none;padding-block:.75rem;white-space:nowrap}
+/* Botones de ícono, pegados al borde derecho: pausa (056, WCAG 2.2.2: dos barras mientras hay movimiento y un triángulo en pausa, con aria-pressed)
+   y tema (círculo mitad lleno). Los dos parten con hidden y los muestra el script; sin JS no se ven (no harían nada). El script del <head> pone .js
+   en <html> (y .sin-mov con movimiento reducido o ahorro de datos): con .js el lugar queda reservado desde la primera pintura y nada se corre (CLS). */
+.tema,.pausa{display:inline-grid;place-items:center;width:2.5rem;height:2.5rem;padding:0;border:0;background:none;color:inherit;cursor:pointer;flex-shrink:0}
+.tema{margin-right:-.6rem}
+.pausa{margin-right:-1.25rem}
+.tema i{width:1.05rem;height:1.05rem;border-radius:50%;border:1.5px solid var(--ink);background:linear-gradient(90deg,var(--ink) 50%,transparent 50%)}
+.pausa i{width:.8rem;height:.95rem;border-inline:.24rem solid var(--ink)}
+.pausa[aria-pressed="true"] i{width:0;height:0;border-block:.5rem solid transparent;border-inline:.85rem solid var(--ink);border-inline-end:0;margin-left:.2rem}
+.tema[hidden],.pausa[hidden]{display:none}
+.js .tema[hidden],.js:not(.sin-mov) .pausa[hidden]{display:inline-grid;visibility:hidden}
+/* En pantallas angostas (057): bajo 640 px «Herramientas de aula» se lee «Herramientas» (el resto queda para los lectores de pantalla); bajo 480 px
+   letra algo menor, menos espacio y botones de 34 px; bajo 375 px, un paso más. Así la barra es una sola línea y no desborda de 320 a 640 px. */
+@media (max-width:639px){.sitios .largo{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}}
+@media (max-width:479px){.barra-in{gap:.6rem;padding-inline:1rem;font-size:.84rem}.sitios{gap:.4rem}.sitios a+a::before{margin-right:.4rem}.pausa,.tema{width:2.125rem;height:2.125rem}.pausa{margin-right:-.6rem}.tema{margin-right:-.45rem}}
+@media (max-width:374px){.barra-in{gap:.4rem;padding-inline:.85rem;font-size:.75rem}.sitios{gap:.25rem}.sitios a+a::before{margin-right:.25rem}.pausa{margin-right:-.4rem}}
+
+/* ---- estados: cada cosa dice en qué está (055; un solo vocabulario para el sitio y el hub desde la 057) ----
+   Tres, siempre con su clase: e-uso (punto lleno verde: «publicado», «publicada», «en uso», «en uso en clases»), e-piloto (medio punto del acento:
+   «en piloto») y e-dev (anillo gris: «en desarrollo» o «… en desarrollo»). .estados es la leyenda. */
+.estado{font-family:var(--mono);font-size:.8rem;line-height:1.4;color:var(--ink);white-space:nowrap}
+.estado::before{content:"";display:inline-block;width:.66em;height:.66em;margin-right:.5em;border-radius:50%;border:1.5px solid var(--accent)}
+.e-uso::before{background:var(--e-uso);border-color:var(--e-uso)}
+.e-piloto::before{background:linear-gradient(90deg,var(--e-piloto) 50%,transparent 50%);border-color:var(--e-piloto)}
+.e-dev::before{border-color:var(--e-dev)}
+.estados{display:flex;flex-wrap:wrap;gap:.3rem 1.5rem}
+
+/* ---- ficha de herramienta (el patrón «Para / Entrena») ----
+   <article class="herr [herr-a]">: la imagen (o el recuadro .tipo con la fórmula) y el texto, arriba y abajo; con .herr-a, lado a lado (la columna de
+   la imagen mide --herr-media, 17 rem si no se dice otra cosa). Toda la ficha es el enlace del título (::after); el foco se ve en el borde de la ficha. */
+.herr{position:relative;display:grid;gap:1rem clamp(1.25rem,3vw,2rem);margin-top:1.25rem;padding-top:1.25rem}
+.herr-a{grid-template-columns:minmax(0,var(--herr-media,17rem)) minmax(0,1fr)}
+.herr-medio{align-self:start}
+.herr img,.tipo{display:block;width:100%;border:1px solid var(--rule)}
+.herr:hover img,.herr:hover .tipo{border-color:var(--accent)}
+.tipo{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.4rem;aspect-ratio:3/2;padding:.75rem;text-align:center;background:var(--surface)}
+.tipo b{font-family:var(--display);font-weight:600;font-size:clamp(1.5rem,1.2vw + 1.1rem,2rem);letter-spacing:-.02em;line-height:1.05;color:var(--ink)}
+.tipo span{font-family:var(--mono);font-size:.74rem;color:var(--muted);line-height:1.35}
+.herr :is(h3,h4){margin:0;font-family:var(--display);font-size:1.3rem;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+.herr :is(h3,h4) a{color:inherit;text-decoration-color:var(--accent)}
+.herr :is(h3,h4) a::after{content:"";position:absolute;inset:0}
+.herr :is(h3,h4) a:focus-visible{outline:0}
+.herr :is(h3,h4) a:focus-visible::after{outline:2px solid var(--accent);outline-offset:4px;border-radius:2px}
+.herr .sub{font-family:var(--display);color:var(--muted);margin-top:.15rem}
+.herr .estado{display:block;margin-top:.4rem;white-space:normal}   /* 051: un estado largo tiene que poder partirse en celular */
+.campos{display:grid;grid-template-columns:5.5rem 1fr;gap:.45rem 1rem;margin-top:.9rem;font-size:.98rem;line-height:1.45}
+.campos dt{font-family:var(--display);font-size:.9rem;color:var(--muted);padding-top:.08rem}
+@media (max-width:640px){.herr-a{grid-template-columns:1fr}.herr-medio{max-width:15rem}.campos{grid-template-columns:1fr;gap:.1rem}.campos dd+dt{margin-top:.5rem}}
+@media (max-width:639px){.herr{margin-top:2rem;padding-top:1.75rem;gap:1.25rem}.campos{gap:.7rem 1rem;line-height:1.6}}
+
+/* ---- pie ----
+   El texto propio de cada página y, en la última línea, el mismo par de sitios de la barra (.sitios-pie). */
+footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line-height:1.6;color:var(--muted)}
+.sitios-pie{display:flex;flex-wrap:wrap;gap:.2rem 1.5rem;margin-top:.6rem;font-family:var(--display);font-size:.9rem}
+.sitios-pie a{display:inline-block;padding-block:.35rem}
+.sitios-pie [aria-current]{color:var(--ink);text-decoration:none}
+
+@media (max-width:639px){:root{--gutter:1.3rem}}

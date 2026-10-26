@@ -19,89 +19,44 @@
 <meta name="theme-color" content="#131211" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23FFFFFF'/%3E%3Cpath d='M6 5V27H28' fill='none' stroke='%231A1A1A' stroke-width='1.6'/%3E%3Cpath d='M12 9v10M9.5 9h5M9.5 19h5M22 13v10M19.5 13h5M19.5 23h5' fill='none' stroke='%23900008' stroke-width='1.6' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='14' r='3' fill='%23F86848'/%3E%3Ccircle cx='22' cy='18' r='3' fill='%23900008'/%3E%3C/svg%3E">
 <script>(function(){var r=document.documentElement,mm=window.matchMedia,cx=navigator.connection;r.classList.add('js');if((mm&&mm('(prefers-reduced-motion: reduce)').matches)||(cx&&cx.saveData))r.classList.add('sin-mov');try{var t=localStorage.getItem('tema');if(t==='dark'||t==='light')r.setAttribute('data-theme',t);if(localStorage.getItem('pausa')==='1')r.setAttribute('data-pausa','')}catch(e){}})()</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="compartido/fuentes/bricolage-grotesque.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="compartido/fuentes/source-serif-4.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="compartido/base.css?v=9883158c7f">
 <style>
-/* Respaldos locales ajustados al ancho de las fuentes web (medido: Bricolage ocupa el 95 % de
-   Arial; Source Serif, el 100,7 % de Georgia): la página no salta al cargar la fuente real. */
-@font-face{font-family:"Bricolage Respaldo";src:local("Arial"),local("Liberation Sans"),local("Helvetica Neue"),local("Helvetica");size-adjust:95%}
-@font-face{font-family:"Source Serif Respaldo";src:local("Georgia"),local("Liberation Serif"),local("Times New Roman");size-adjust:100.7%}
-/* Paleta de la 013, tomada de las figuras del paper de biocrust (Frontiers in Microbiology 2019):
-   papel cálido con tinta casi negra, acento burdeos #900008 y marca coral #F86848; en oscuro, el
-   burdeos se aclara a coral para que lea. Las figuras se integran al fondo en los dos temas (--serie-a
-   coral, --serie-b burdeos, que en oscuro se aclara). La franja de agentes es tinta cálida en los dos temas. */
+/* 057: las fuentes, la paleta común (fondo, tinta, acento, estados), la tipografía de base, la barra, los estados, la ficha de herramienta y el pie
+   viven en compartido/base.css, que comparte con Herramientas de aula. Aquí queda sólo lo propio del sitio. */
+/* Variables propias del sitio sobre la paleta de la 013 (base.css): --alert, la franja de agentes (--panel, --p-…), las dos series de las figuras
+   (--serie-a coral, --serie-b burdeos, que en oscuro se aclara) y el velo del texto sobre el fondo vivo. */
 :root{
-  --bg:#FAF9F6; --surface:#F0EEE8; --ink:#1B1A17; --muted:#5B5955; --rule:#DAD7CF; --rule-strong:#B5B1A6;
-  --accent:#900008; --accent-ink:#7A0007; --alert:#D9481F;
+  --alert:#D9481F;
   --panel:rgba(230,222,208,.8); --panel-suave:rgba(230,222,208,.42); --panel-solido:#E9E4D9; --p-ink:#1B1A17; --p-muted:#35322D; --p-rule:rgba(27,26,23,.26); --p-accent:#650005;   /* 049: la franja de agentes es translúcida (se ve el fondo vivo a través) y sigue el tema: arena con tinta oscura en claro, marrón cálido con tinta clara en oscuro */
   --serie-a:#EF5536; --serie-b:#900008; --velo:rgba(250,249,246,.6);
-  --e-uso:#3F7A55; --e-dev:#77746D;   /* 055: color del símbolo de estado: verde apagado (publicado), terracota de la paleta (--accent, piloto) y gris (desarrollo) */
-  --display:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
-  --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
-  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
-  --page:72rem; --sesgo:.75; --lento:1.8; --gutter:clamp(1rem,4vw,2.5rem); --bar:3.25rem;
-  color-scheme:light;
+  --lento:1.8;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#131211; --surface:#1C1A18; --ink:#ECE9E2; --muted:#A39F97; --rule:#2C2926; --rule-strong:#45413C;
-    --accent:#FF8F74; --accent-ink:#FFA893; --alert:#F86848;
-    --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark; --e-uso:#7FB394; --e-dev:#8F8B83;
+    --alert:#F86848; --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6);
     --panel:rgba(46,33,30,.8); --panel-suave:rgba(46,33,30,.5); --panel-solido:#241C1A; --p-ink:#F2EFE8; --p-muted:#E2DCCF; --p-rule:rgba(236,233,226,.24); --p-accent:#FFB8A5;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#131211; --surface:#1C1A18; --ink:#ECE9E2; --muted:#A39F97; --rule:#2C2926; --rule-strong:#45413C;
-  --accent:#FF8F74; --accent-ink:#FFA893; --alert:#F86848;
-  --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark; --e-uso:#7FB394; --e-dev:#8F8B83;
+  --alert:#F86848; --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6);
   --panel:rgba(46,33,30,.8); --panel-suave:rgba(46,33,30,.5); --panel-solido:#241C1A; --p-ink:#F2EFE8; --p-muted:#E2DCCF; --p-rule:rgba(236,233,226,.24); --p-accent:#FFB8A5;
 }
-*,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar) + var(--fig-h,0px) + 1rem);overflow-anchor:none}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
-.pagina{max-width:var(--page);margin-left:max(0px,calc((100% - var(--page))*var(--sesgo)));margin-right:auto;padding-inline:var(--gutter)}   /* 046: la columna ya no está centrada: del espacio que sobra, el 75 % va a la izquierda (donde vive la simulación) y el 25 % a la derecha; el ancho del texto no cambia */
-a{color:var(--accent-ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
-a:hover{text-decoration-thickness:2px}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
-.skip{position:absolute;left:-999px;top:0;z-index:20;background:var(--bg);padding:.5rem 1rem;font-family:var(--display)}
-.skip:focus{left:var(--gutter)}
-h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.015em}
-p,ul,ol,dl,dd,figure{margin:0}
-ul,ol{padding:0;list-style:none}
-p+p{margin-top:1em}
-img{max-width:100%;height:auto}
 
-/* ---- barra ---- */
-.barra{position:sticky;top:0;z-index:10}   /* 043: el fondo de la barra sólo cubre la columna (.barra-in): los márgenes quedan libres para el fondo vivo */
-.barra-in{background:var(--bg);background-clip:content-box;display:flex;align-items:center;gap:1.25rem;min-height:var(--bar);font-family:var(--display);font-size:.95rem}
-.marca{font-weight:600;color:var(--ink);text-decoration:none;margin-right:auto;padding-block:.6rem}
-.indice{display:flex;gap:1.15rem}
-.indice a{color:var(--ink);text-decoration:none;padding-block:.75rem;white-space:nowrap}
-.indice a:hover,.marca:hover{text-decoration:underline;text-decoration-thickness:1px}
+/* ---- barra (base.css): aquí sólo qué entradas del índice caben ----
+   057: el enlace al hub pasó al par de sitios de la izquierda, a todo ancho. El índice completo cabe desde 1140 px; de 900 a 1139 px quedan
+   Data science, Ecología, Docencia y Contacto; bajo 900 px, Contacto; bajo 520 px, ninguna (la barra lleva el par de sitios y los botones). */
+@media (max-width:1139px){.indice a.ancho{display:none}}
 @media (max-width:899px){.indice a:not(.fijo){display:none}}
-@media (max-width:1139px){.indice a.ext{display:none}}   /* 051: el enlace al hub sólo cabe en la barra desde 1140 px; antes queda el de la sección Docencia */
-.tema{display:inline-grid;place-items:center;width:2.5rem;height:2.5rem;margin-right:-.6rem;padding:0;border:0;background:none;color:inherit;cursor:pointer}
-.tema i{width:1.05rem;height:1.05rem;border-radius:50%;border:1.5px solid var(--ink);background:linear-gradient(90deg,var(--ink) 50%,transparent 50%)}
-/* 056: pausa del movimiento (WCAG 2.2.2): detiene el fondo, el C. elegans que empuja el párrafo y la caja de Agentes. Va pegada al botón del tema (sin el espacio de la barra);
-   dos barras mientras hay movimiento y un triángulo cuando está pausado (aria-pressed). Sin JS, o con movimiento reducido o ahorro de datos, no se muestra: no hay nada que pausar. */
-.pausa{display:inline-grid;place-items:center;width:2.5rem;height:2.5rem;margin-right:-1.25rem;padding:0;border:0;background:none;color:inherit;cursor:pointer;flex-shrink:0}
-.pausa i{width:.8rem;height:.95rem;border-inline:.24rem solid var(--ink)}
-.pausa[aria-pressed="true"] i{width:0;height:0;border-block:.5rem solid transparent;border-inline:.85rem solid var(--ink);border-inline-end:0;margin-left:.2rem}
-.tema{flex-shrink:0}
-.tema[hidden],.pausa[hidden]{display:none}   /* 056: el display de arriba le ganaba al atributo hidden: sin JS (o, en la pausa, con movimiento reducido) el botón se veía y no hacía nada */
-.js .tema[hidden],.js:not(.sin-mov) .pausa[hidden]{display:inline-grid;visibility:hidden}   /* 056: con JS el lugar de los botones queda reservado desde el comienzo (el script del <head> pone .js y, sin movimiento, .sin-mov): al mostrarlos, «Contacto» no se corre (CLS) */
-/* 056: bajo 420 px el nombre no se parte en dos líneas (la barra crecía a 71 px y tapaba lo que va pegado debajo) y, con el botón de pausa, todo cabe sin
-   desborde horizontal hasta 320 px: letra algo menor, menos espacio, botones de 34 px y la barra con 1 rem de margen lateral (5 px menos que el texto). */
-@media (max-width:419px){.marca{white-space:nowrap;font-size:.84rem}.barra-in{gap:.6rem;padding-inline:1rem}.pausa,.tema{width:2.125rem;height:2.125rem}.pausa{margin-right:-.6rem}.tema{margin-right:-.45rem}}
-@media (max-width:359px){.marca{font-size:.8rem}.barra-in{gap:.5rem}.pausa{margin-right:-.5rem}}
+@media (max-width:519px){.indice{display:none}}
 
 /* ---- portada ---- */
 /* El título se encoge con el scroll: el script fija --k (0 arriba, 1 compacto) y el tamaño de letra, el
    interlineado, los márgenes y el relleno de la portada van de su valor grande al compacto. Sin JS, --k es 0. */
 .hero{--k:0;padding-block:calc(clamp(2.25rem,6vw,4.5rem)*(1 - var(--k)) + 1.25rem*var(--k)) calc(clamp(2rem,4.5vw,3.25rem)*(1 - var(--k)) + 1.25rem*var(--k))}
-.lugar{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
 h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75rem,1.4vw + 1.3rem,2.6rem)*var(--k));line-height:calc(.98 + .04*var(--k));letter-spacing:-.035em;max-width:calc(11.5em + 11em*var(--k));margin-top:calc(.9rem - .45rem*var(--k))}
 .lede{font-size:clamp(1.12rem,.5vw + 1rem,1.32rem);line-height:1.5;max-width:35em;margin-top:calc(clamp(1.25rem,3vw,2rem)*(1 - var(--k)) + .9rem*var(--k))}
 /* 053: empuje.js reacomoda las líneas de este párrafo alrededor del C. elegans que lo cruza: el texto real no se toca; mientras dura el empuje se pinta encima una copia por líneas (.emp, decorativa y sin selección) y el original se hace transparente. */
@@ -210,13 +165,6 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .serie.fijo>.pagina{padding-top:.2rem}
 @media (max-height:520px){.serie.fijo .hoja{margin-bottom:.4rem}}
 
-/* ---- estados: cada cosa de la página dice en qué está ---- */
-.estado{font-family:var(--mono);font-size:.8rem;line-height:1.4;color:var(--ink);white-space:nowrap}
-.estado::before{content:"";display:inline-block;width:.66em;height:.66em;margin-right:.5em;border-radius:50%;border:1.5px solid var(--accent)}
-.e-uso::before{background:var(--e-uso);border-color:var(--e-uso)}
-.e-piloto::before{background:linear-gradient(90deg,var(--accent) 50%,transparent 50%)}
-.e-dev::before{border-color:var(--e-dev)}
-
 /* ---- dos columnas, 50/50 (iteración 012; centradas desde la 016) ----
    Cada sección es un riel a la izquierda (título, fijo mientras dura la sección) y el contenido a la
    derecha, que avanza con el scroll. Desde 960 px el gráfico queda en la misma columna, sobre el título
@@ -227,7 +175,6 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .riel h2{font-size:clamp(1.5rem,1.2vw + 1.15rem,2rem);margin-block:.45rem .9rem}
 .riel .donde{font-family:var(--display);font-size:.92rem;color:var(--muted);margin-top:.6rem}
 .riel .estado{display:block}
-.kicker{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
 @media (min-width:960px){
   .dos{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(2rem,4vw,3.5rem)}
   .riel{position:sticky;top:calc(var(--bar) + var(--fig-h,0px) + 2rem);align-self:start}   /* 047: 2 rem bajo la figura (antes 1,5): el título que sale por arriba se desvanece en ese espacio y no cruza el gráfico */
@@ -287,7 +234,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .intro .kicker{display:block;margin-bottom:.4rem}
 /* 055: pie de figura de la portada (la figura 1, el gráfico de Data science), en lugar del título «Tres trabajos, el mismo método» */
 .pie-fig{font-family:var(--mono);font-size:.75rem;line-height:1.55;color:var(--muted);margin:0;max-width:34em}
-.estados{display:flex;flex-wrap:wrap;gap:.3rem 1.5rem;margin-top:.9rem}
+.estados{margin-top:.9rem}
 .lista{margin-top:clamp(1.25rem,3vw,2rem)}
 .lista a{display:grid;grid-template-columns:7.5rem 1fr auto;align-items:baseline;gap:.2rem 1.5rem;padding-block:1rem;color:inherit;text-decoration:none}
 .lista .tit{font-family:var(--display);font-weight:500;font-size:clamp(1.12rem,.8vw + 1rem,1.4rem);line-height:1.2;letter-spacing:-.01em}
@@ -382,26 +329,10 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .metricas .cuando dt{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}   /* 053: la fuente ya es un par dt/dd válido dentro de la lista (axe: definition-list); el rótulo «fuente» sólo lo leen los lectores de pantalla */
 .metricas .cuando dd{font-family:var(--mono);font-size:.78rem;font-weight:400;line-height:inherit;color:var(--muted)}
 
-/* ---- herramientas publicadas: dos piezas distintas, cada una con su captura ---- */
-.herr{position:relative;display:grid;gap:1rem clamp(1.25rem,3vw,2rem);margin-top:1.25rem;padding-top:1.25rem}
-.herr-a{grid-template-columns:minmax(0,17rem) minmax(0,1fr)}
-.herr img{display:block;width:100%;border:1px solid var(--rule)}
-.herr:hover img{border-color:var(--accent)}
-.herr h4{margin:0;font-family:var(--display);font-size:1.3rem;font-weight:600;letter-spacing:-.01em;line-height:1.2}
-.herr h4 a{color:inherit;text-decoration-color:var(--accent)}
-.herr h4 a::after{content:"";position:absolute;inset:0}
-.herr .sub{font-family:var(--display);color:var(--muted);margin-top:.15rem}
-.herr .estado{display:block;margin-top:.4rem;white-space:normal}   /* 051: un estado largo tiene que poder partirse en celular */
-.campos{display:grid;grid-template-columns:5.5rem 1fr;gap:.45rem 1rem;margin-top:.9rem;font-size:.98rem;line-height:1.45}
-.campos dt{font-family:var(--display);font-size:.9rem;color:var(--muted);padding-top:.08rem}
+/* ---- herramientas publicadas: la ficha está en base.css (la misma del hub); aquí, lo propio del sitio ---- */
 /* 051: las fichas sin captura llevan un recuadro tipográfico (su fórmula o su título), el mismo del hub; y el enlace a todas */
-.tipo{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.4rem;aspect-ratio:3/2;padding:.75rem;text-align:center;background:var(--surface);border:1px solid var(--rule)}
-.tipo b{font-family:var(--display);font-weight:600;font-size:clamp(1.5rem,1.2vw + 1.1rem,2rem);letter-spacing:-.02em;line-height:1.05;color:var(--ink)}
-.tipo span{font-family:var(--mono);font-size:.74rem;color:var(--muted);line-height:1.35}
-.herr:hover .tipo{border-color:var(--accent)}
 .mas-herr{margin-top:1.5rem;font-family:var(--display);font-size:1.05rem}
-@media (min-width:960px){.herr-a{grid-template-columns:1fr}.herr-a img,.herr-a .tipo{max-width:15rem}}
-@media (max-width:640px){.herr-a{grid-template-columns:1fr}.campos{grid-template-columns:1fr;gap:.1rem}.campos dd+dt{margin-top:.5rem}}
+@media (min-width:960px){.herr-a{grid-template-columns:1fr}.herr-a img,.herr-a .tipo{max-width:15rem}}   /* en media columna, la imagen va arriba */
 
 /* ---- agentes de IA: franja oscura ---- */
 .agentes{color:var(--p-ink);padding-block:0}   /* 043: la franja oscura sólo cubre la columna: los márgenes quedan libres para el fondo vivo */
@@ -476,7 +407,6 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
    los bordes, con más espacio arriba y abajo) y la descripción de cada gráfico plegada («Cómo leer el gráfico», el JS
    la mete en un <details>; sin JS se ve completa). No cambia ningún texto ni gráfico. */
 @media (max-width:639px){
-  :root{--gutter:1.3rem}
   body{line-height:1.7;letter-spacing:.004em;word-spacing:.05em}
   .serie>.pagina{padding-inline:.6rem}
   .hoja{margin-block:.55rem .65rem}
@@ -499,13 +429,10 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
   .evidencia{margin-top:2.5rem}
   .flujo{--fg:2rem}
   .mas{margin-top:2.25rem}
-  .herr{margin-top:2rem;padding-top:1.75rem;gap:1.25rem}
-  .campos{gap:.7rem 1rem;line-height:1.6}
   .practicas div{padding-block:1.1rem 1.4rem}
   .ruta>div{padding-bottom:1.75rem}
   .sip{gap:1.5rem}
 }
-footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line-height:1.6;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -513,14 +440,16 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 
 <header class="barra">
   <div class="pagina barra-in">
-    <a class="marca" href="#contenido">Benjamín Moreira-Grez</a>
+    <nav class="sitios" aria-label="Sitios">
+      <a href="#contenido" aria-current="page">Benjamín Moreira-Grez</a>
+      <a href="https://bengrez.github.io/aula-herramientas/">Herramientas<span class="largo"> de aula</span></a>
+    </nav>
     <nav class="indice" aria-label="Secciones de la página">
       <a href="#ingenieria">Data science</a>
       <a href="#investigacion">Ecología</a>
       <a href="#educacion">Docencia</a>
-      <a class="ext" href="https://bengrez.github.io/aula-herramientas/">Herramientas de aula</a>
-      <a href="#agentes">Agentes de IA</a>
-      <a href="#recorrido">Recorrido</a>
+      <a class="ancho" href="#agentes">Agentes de IA</a>
+      <a class="ancho" href="#recorrido">Recorrido</a>
       <a class="fijo" href="#contacto">Contacto</a>
     </nav>
     <button type="button" class="pausa" id="pausa" aria-label="Pausar animación" aria-pressed="false" hidden><i aria-hidden="true"></i></button>
@@ -1018,7 +947,12 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 </section>
 
 </main>
-<footer><div class="pagina">Santiago, Chile. Métricas de citación de Google Scholar al 26 de octubre de 2026. Los gráficos usan datos simulados; los esquemas, curvas ilustrativas.</div></footer>
+<footer>
+  <div class="pagina">
+    <p>Santiago, Chile. Métricas de citación de Google Scholar al 26 de octubre de 2026. Los gráficos usan datos simulados; los esquemas, curvas ilustrativas.</p>
+    <p class="sitios-pie"><a href="#contenido" aria-current="page">Benjamín Moreira-Grez</a><a href="https://bengrez.github.io/aula-herramientas/">Herramientas de aula</a></p>
+  </div>
+</footer>
 
 <script>
 /* El título de la portada se encoge con el scroll: --k va de 0 (grande) a 1 (compacto) en los primeros

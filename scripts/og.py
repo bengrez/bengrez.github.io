@@ -26,11 +26,10 @@ pagina = f"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <title>og.png</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../compartido/base.css">
 <style>
-/* Paleta clara de index.html (013) */
-:root{{--bg:#FAF9F6;--ink:#1B1A17;--muted:#5B5955;--accent:#900008;--accent-ink:#7A0007;--serie-a:#EF5536;--serie-b:#900008;
-  --display:"Bricolage Grotesque",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}}
+/* Las fuentes y la paleta clara vienen de la hoja común (057); aquí, las dos series de las figuras de index.html */
+:root{{--serie-a:#EF5536;--serie-b:#900008}}
 html,body{{margin:0;width:1200px;height:630px;overflow:hidden;background:var(--bg);color:var(--ink)}}
 .og{{box-sizing:border-box;width:1200px;height:630px;padding:56px 64px 40px;display:flex;flex-direction:column}}
 .nombre{{font:600 30px/1.1 var(--display);letter-spacing:-.01em}}

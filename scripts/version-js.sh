@@ -16,3 +16,7 @@ grep -q "quimiotaxis.min.js?v=$h" index.html && echo "index.html → quimiotaxis
 h2=$(sha256sum empuje.min.js | cut -c1-10)
 sed -i -E "s#e\.src='empuje(\.min)?\.js(\?v=[0-9a-f]+)?'#e.src='empuje.min.js?v=$h2'#" index.html
 grep -q "empuje.min.js?v=$h2" index.html && echo "index.html → empuje.min.js?v=$h2"
+# 057: lo mismo para la hoja común (compartido/base.css, sin minificar: es la fuente). El hub lleva su propio ?v= (ver compartido/LEEME.md).
+h3=$(sha256sum compartido/base.css | cut -c1-10)
+sed -i -E "s#href=\"compartido/base\.css(\?v=[0-9a-f]+)?\"#href=\"compartido/base.css?v=$h3\"#" index.html
+grep -q "compartido/base.css?v=$h3" index.html && echo "index.html → compartido/base.css?v=$h3"
