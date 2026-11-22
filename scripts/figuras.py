@@ -156,7 +156,7 @@ def figura_ds(var):
     assert r["alerta"], "con el umbral por defecto la deriva debe detectarse"
     p = Panel(var, 1, 30, 82, 96)
     p.ejes([1, 10, 20, 30], [84, 88, 92, 96], "Día", "Refrigerante (°C)",
-           "Datos simulados · n = 3 recorridos por día" if var == "w" else "Simulado · n = 3 recorridos/día")
+           "Datos simulados, n = 3 recorridos por día" if var == "w" else "Simulado, n = 3 recorridos/día")
     p.partes.append(f'<rect class="banda" x="{f(p.L)}" y="{f(p.Y(r["hi"]))}" width="{f(p.R - p.L)}" height="{f(p.Y(r["lo"]) - p.Y(r["hi"]))}"/>')
     p.partes.append(f'<path class="ref" d="M{f(p.L)} {f(p.Y(r["mu"]))}H{f(p.R)}"/>')
     p.partes.append(f'<text class="nota" x="{f(p.L + 6)}" y="{f(p.Y(r["lo"]) + 13)}">referencia ± {f(DS_K).replace(".", ",")}σ</text>')
@@ -176,7 +176,7 @@ def figura_ds(var):
     p.partes.append(f'<g class="leyenda"><circle class="a" cx="{f(lx)}" cy="{f(ly)}" r="4"/><text x="{f(lx + 9)}" y="{f(ly + 4)}">bus que deriva</text>'
                     f'<circle class="b" cx="{f(lx)}" cy="{f(ly + 18)}" r="4"/><text x="{f(lx + 9)}" y="{f(ly + 22)}">otro bus</text></g>')
     aria = ("Gráfico con datos simulados: temperatura del refrigerante de dos buses durante 30 días, con tres recorridos por día y su media diaria. Un bus, en burdeos, "
-            f"se mantiene dentro de la banda de referencia. El otro, en coral, deriva hacia arriba desde el día {DS_INICIO}, sale de la banda de {f(DS_K)} sigmas el día {r['alerta']}, donde está la alerta, "
+            f"se mantiene dentro de la banda de referencia. El otro, en coral, deriva hacia arriba desde el día {DS_INICIO}, con el umbral inicial de {f(DS_K)} sigmas sale de la banda el día {r['alerta']}, donde está la alerta, "
             f"y vuelve a lo normal tras la revisión del día {DS_REVISION}. El control «Umbral de alerta», más abajo, cambia la banda.")
     return p.svg("ds", aria, f' data-g="{f(p.L)} {f(p.R)} {f(p.T)} {f(p.B)}"')
 
@@ -191,8 +191,8 @@ def datos_ds_json():
 def figura_ec(var):
     p = Panel(var, 0.4, 5.6, 0, 45)
     ancho = var == "w"
-    p.ejes([1, 2, 3, 4, 5], [0, 10, 20, 30, 40], "Tratamiento, tras 12 semanas", "N mineral (mg/kg)",
-           "Datos publicados · media ± DE, n = 3" if ancho else "Publicado · media ± DE, n = 3", [e[0] if ancho else e[1] for e in EC])
+    p.ejes([1, 2, 3, 4, 5], [0, 10, 20, 30, 40], "Suelo inicial (Basal) y tratamientos a las 12 semanas" if ancho else "Basal y tratamientos (12 semanas)", "N mineral (mg/kg)",
+           "Datos publicados: media ± DE, n = 3" if ancho else "Publicado: media ± DE, n = 3", [e[0] if ancho else e[1] for e in EC])
     i = 0
     for cls, col, dx in (("a", 2, -0.13), ("b", 4, 0.13)):
         for k, e in enumerate(EC):
@@ -202,10 +202,11 @@ def figura_ec(var):
                             f'<circle cx="{f(cx)}" cy="{f(cy)}" r="4.5"/></g>')
             i += 1
     p.partes.append(f'<g class="leyenda"><circle class="a" cx="{f(p.L + 14)}" cy="{f(p.T + 12)}" r="4"/><text x="{f(p.L + 22)}" y="{f(p.T + 16)}">amonio (NH₄-N)</text>'
-                    f'<circle class="b" cx="{f(p.L + 14)}" cy="{f(p.T + 30)}" r="4"/><text x="{f(p.L + 22)}" y="{f(p.T + 34)}">nitrato (NOx-N)</text></g>')
-    aria = ("Gráfico con datos publicados (Moreira-Grez y otros, 2019): nitrógeno mineral de un suelo de acopio minero tras 12 semanas, por tratamiento, media y desviación estándar de tres réplicas, en miligramos por kilo. "
-            + " ".join(f"{e[0]}: amonio {f(e[2])}, nitrato {f(e[4])}." for e in EC).replace(".", ",").replace(",:", ":").replace(", ", "; ").rstrip(";") +
-            " El nitrato más alto es el del inóculo microbiano con nitrógeno.")
+                    f'<circle class="b" cx="{f(p.L + 14)}" cy="{f(p.T + 30)}" r="4"/><text x="{f(p.L + 22)}" y="{f(p.T + 34)}">nitrato + nitrito (NOx-N)</text></g>')
+    aria = ("Gráfico con datos publicados (Moreira-Grez y otros, 2019): nitrógeno mineral de un suelo de acopio minero, antes de incubar y tras 12 semanas, por tratamiento, media y desviación estándar de tres réplicas, en miligramos por kilo. "
+            "Basal es el suelo antes de incubar. "
+            + " ".join(f"{n}: amonio {f(e[2]).replace('.', ',')}; nitrato más nitrito {f(e[4]).replace('.', ',')}." for n, e in zip(("Basal", "Control", "Nitrógeno", "Microbios", "Microbios con nitrógeno"), EC)) +
+            " El valor más alto de nitrato más nitrito es el del inóculo microbiano con nitrógeno.")
     return p.svg("ec", aria)
 
 
@@ -232,7 +233,7 @@ def figura_sip():
         out.append(f'<text x="{L - 7}" y="{f(Y(t) + 4)}" text-anchor="end">{s}</text>')
     out.append(f'<text class="tit" x="{(L + R) / 2}" y="{H - 6}" text-anchor="middle">Densidad de flotación (g/ml)</text>')
     out.append(f'<text class="tit" transform="translate(12 {(T + B) / 2}) rotate(-90)" text-anchor="middle">ARNr 16S (prop. del máximo)</text>')
-    out.append(f'<text x="{R}" y="{T - 7}" text-anchor="end">Datos simulados · 12 fracciones</text>')
+    out.append(f'<text x="{R}" y="{T - 7}" text-anchor="end">Datos simulados, 12 fracciones</text>')
     for cls, ys in (("c12", c12), ("c13", c13)):
         d = "M" + " L".join(f"{f(X(a))} {f(Y(b))}" for a, b in zip(dens, ys))
         if cls == "c13":
@@ -264,7 +265,7 @@ def figura_citas():
         if co:
             out.append(f'<rect class="cc" x="{f(x)}" y="{f(Y(pr + co))}" width="{f(w)}" height="{f(Y(pr) - Y(pr + co))}"/>')
         out.append(f'<text x="{f(x + w / 2)}" y="{B + 14}" text-anchor="middle">{str(a)[2:]}</text>')
-    out.append(f'<text x="{R}" y="{H - 2}" text-anchor="end">año (20…) · 2026 incompleto</text>')
+    out.append(f'<text x="{R}" y="{H - 2}" text-anchor="end">año (20…); 2026 incompleto</text>')
     out.append("</svg>")
     return "\n".join(out)
 

@@ -160,7 +160,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 /* 059: Docencia ya no lleva un gráfico simulado: es una captura de una herramienta publicada, con su rótulo */
 .cap{position:relative;height:100%;margin:0}
 .cap img{display:block;width:100%;height:100%;object-fit:cover;object-position:left top;border:1px solid var(--rule-strong);border-radius:2px}
-.cap figcaption{position:absolute;left:.4rem;bottom:.4rem;padding:.15rem .45rem;background:var(--bg);color:var(--ink);font:.72rem/1.4 var(--mono);border-radius:2px}
+.cap figcaption{position:absolute;left:.4rem;bottom:.4rem;padding:.15rem .45rem;background:var(--bg);color:var(--ink);font:.72rem/1.4 var(--mono);border-radius:2px;white-space:nowrap}
 /* El trazo: las líneas se dibujan (pathLength="1"), la banda y la referencia aparecen antes, la alerta, los
    puntos y el acento después. Al volver a la sección se repite, porque el JS quita y vuelve a poner .traza. */
 @media (prefers-reduced-motion:no-preference){
@@ -537,7 +537,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <div class="pagina">
     <div class="hoja" id="fig-1"><div class="plot">
 <!-- fig:ds -->
-<svg class="fig w ds" viewBox="0 0 640 280" role="img" aria-label="Gráfico con datos simulados: temperatura del refrigerante de dos buses durante 30 días, con tres recorridos por día y su media diaria. Un bus, en burdeos, se mantiene dentro de la banda de referencia. El otro, en coral, deriva hacia arriba desde el día 13, sale de la banda de 2 sigmas el día 15, donde está la alerta, y vuelve a lo normal tras la revisión del día 21. El control «Umbral de alerta», más abajo, cambia la banda." data-g="58 626 24 234">
+<svg class="fig w ds" viewBox="0 0 640 280" role="img" aria-label="Gráfico con datos simulados: temperatura del refrigerante de dos buses durante 30 días, con tres recorridos por día y su media diaria. Un bus, en burdeos, se mantiene dentro de la banda de referencia. El otro, en coral, deriva hacia arriba desde el día 13, con el umbral inicial de 2 sigmas sale de la banda el día 15, donde está la alerta, y vuelve a lo normal tras la revisión del día 21. El control «Umbral de alerta», más abajo, cambia la banda." data-g="58 626 24 234">
   <path class="eje" d="M58 24V234H626"/>
   <path class="eje" d="M58 234v4"/>
   <text class="tick" x="58" y="250" text-anchor="middle">1</text>
@@ -557,7 +557,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <text class="tick" x="51" y="28" text-anchor="end">96</text>
   <text class="titulo" x="342" y="273" text-anchor="middle">Día</text>
   <text class="titulo" transform="translate(14 129) rotate(-90)" text-anchor="middle">Refrigerante (°C)</text>
-  <text class="sello" x="626" y="15" text-anchor="end">Datos simulados · n = 3 recorridos por día</text>
+  <text class="sello" x="626" y="15" text-anchor="end">Datos simulados, n = 3 recorridos por día</text>
   <rect class="banda" x="58" y="149.1" width="568" height="38.9"/>
   <path class="ref" d="M58 168.6H626"/>
   <text class="nota" x="64" y="201.1">referencia ± 2σ</text>
@@ -570,7 +570,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <g class="alerta"><path class="guia" d="M332.2 24V234"/><circle cx="332.2" cy="132" r="5"/><text x="340.2" y="37">alerta</text></g>
   <g class="leyenda"><circle class="a" cx="72" cy="38" r="4"/><text x="81" y="42">bus que deriva</text><circle class="b" cx="72" cy="56" r="4"/><text x="81" y="60">otro bus</text></g>
 </svg>
-<svg class="fig n ds" viewBox="0 0 400 220" role="img" aria-label="Gráfico con datos simulados: temperatura del refrigerante de dos buses durante 30 días, con tres recorridos por día y su media diaria. Un bus, en burdeos, se mantiene dentro de la banda de referencia. El otro, en coral, deriva hacia arriba desde el día 13, sale de la banda de 2 sigmas el día 15, donde está la alerta, y vuelve a lo normal tras la revisión del día 21. El control «Umbral de alerta», más abajo, cambia la banda." data-g="50 388 22 176">
+<svg class="fig n ds" viewBox="0 0 400 220" role="img" aria-label="Gráfico con datos simulados: temperatura del refrigerante de dos buses durante 30 días, con tres recorridos por día y su media diaria. Un bus, en burdeos, se mantiene dentro de la banda de referencia. El otro, en coral, deriva hacia arriba desde el día 13, con el umbral inicial de 2 sigmas sale de la banda el día 15, donde está la alerta, y vuelve a lo normal tras la revisión del día 21. El control «Umbral de alerta», más abajo, cambia la banda." data-g="50 388 22 176">
   <path class="eje" d="M50 22V176H388"/>
   <path class="eje" d="M50 176v4"/>
   <text class="tick" x="50" y="192" text-anchor="middle">1</text>
@@ -590,7 +590,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <text class="tick" x="43" y="26" text-anchor="end">96</text>
   <text class="titulo" x="219" y="213" text-anchor="middle">Día</text>
   <text class="titulo" transform="translate(13 99) rotate(-90)" text-anchor="middle">Refrigerante (°C)</text>
-  <text class="sello" x="388" y="13" text-anchor="end">Simulado · n = 3 recorridos/día</text>
+  <text class="sello" x="388" y="13" text-anchor="end">Simulado, n = 3 recorridos/día</text>
   <rect class="banda" x="50" y="113.8" width="338" height="28.6"/>
   <path class="ref" d="M50 128.1H388"/>
   <text class="nota" x="56" y="155.3">referencia ± 2σ</text>
@@ -611,7 +611,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
     </div></div>
     <div class="hoja" id="fig-2" hidden><div class="plot">
 <!-- fig:ec -->
-<svg class="fig w ec" viewBox="0 0 640 280" role="img" aria-label="Gráfico con datos publicados (Moreira-Grez y otros, 2019): nitrógeno mineral de un suelo de acopio minero tras 12 semanas, por tratamiento, media y desviación estándar de tres réplicas, en miligramos por kilo. Basal: amonio 7,3; nitrato 10,5; Control: amonio 4,2; nitrato 20; Nitrógeno: amonio 12; nitrato 16,6; Microbios: amonio 11; nitrato 23,2; Microb; + N: amonio 13,2; nitrato 39,1, El nitrato más alto es el del inóculo microbiano con nitrógeno.">
+<svg class="fig w ec" viewBox="0 0 640 280" role="img" aria-label="Gráfico con datos publicados (Moreira-Grez y otros, 2019): nitrógeno mineral de un suelo de acopio minero, antes de incubar y tras 12 semanas, por tratamiento, media y desviación estándar de tres réplicas, en miligramos por kilo. Basal es el suelo antes de incubar. Basal: amonio 7,3; nitrato más nitrito 10,5. Control: amonio 4,2; nitrato más nitrito 20. Nitrógeno: amonio 12; nitrato más nitrito 16,6. Microbios: amonio 11; nitrato más nitrito 23,2. Microbios con nitrógeno: amonio 13,2; nitrato más nitrito 39,1. El valor más alto de nitrato más nitrito es el del inóculo microbiano con nitrógeno.">
   <path class="eje" d="M58 24V234H626"/>
   <path class="eje" d="M123.5 234v4"/>
   <text class="tick" x="123.5" y="250" text-anchor="middle">Basal</text>
@@ -633,9 +633,9 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <text class="tick" x="51" y="98" text-anchor="end">30</text>
   <path class="eje" d="M58 47.3h-4"/>
   <text class="tick" x="51" y="51.3" text-anchor="end">40</text>
-  <text class="titulo" x="342" y="273" text-anchor="middle">Tratamiento, tras 12 semanas</text>
+  <text class="titulo" x="342" y="273" text-anchor="middle">Suelo inicial (Basal) y tratamientos a las 12 semanas</text>
   <text class="titulo" transform="translate(14 129) rotate(-90)" text-anchor="middle">N mineral (mg/kg)</text>
-  <text class="sello" x="626" y="15" text-anchor="end">Datos publicados · media ± DE, n = 3</text>
+  <text class="sello" x="626" y="15" text-anchor="end">Datos publicados: media ± DE, n = 3</text>
   <g class="pt a" style="--i:0"><path d="M109.3 207.9V192M105.3 207.9h8M105.3 192h8"/><circle cx="109.3" cy="199.9" r="4.5"/></g>
   <g class="pt a" style="--i:1"><path d="M218.6 229V199.8M214.6 229h8M214.6 199.8h8"/><circle cx="218.6" cy="214.4" r="4.5"/></g>
   <g class="pt a" style="--i:2"><path d="M327.8 191.8V164.2M323.8 191.8h8M323.8 164.2h8"/><circle cx="327.8" cy="178" r="4.5"/></g>
@@ -646,9 +646,9 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <g class="pt b" style="--i:7"><path d="M356.2 173.5V139.3M352.2 173.5h8M352.2 139.3h8"/><circle cx="356.2" cy="156.4" r="4.5"/></g>
   <g class="pt b" style="--i:8"><path d="M465.4 138.7V113M461.4 138.7h8M461.4 113h8"/><circle cx="465.4" cy="125.9" r="4.5"/></g>
   <g class="pt b" style="--i:9"><path d="M574.7 63.5V39.5M570.7 63.5h8M570.7 39.5h8"/><circle cx="574.7" cy="51.5" r="4.5"/></g>
-  <g class="leyenda"><circle class="a" cx="72" cy="36" r="4"/><text x="80" y="40">amonio (NH₄-N)</text><circle class="b" cx="72" cy="54" r="4"/><text x="80" y="58">nitrato (NOx-N)</text></g>
+  <g class="leyenda"><circle class="a" cx="72" cy="36" r="4"/><text x="80" y="40">amonio (NH₄-N)</text><circle class="b" cx="72" cy="54" r="4"/><text x="80" y="58">nitrato + nitrito (NOx-N)</text></g>
 </svg>
-<svg class="fig n ec" viewBox="0 0 400 220" role="img" aria-label="Gráfico con datos publicados (Moreira-Grez y otros, 2019): nitrógeno mineral de un suelo de acopio minero tras 12 semanas, por tratamiento, media y desviación estándar de tres réplicas, en miligramos por kilo. Basal: amonio 7,3; nitrato 10,5; Control: amonio 4,2; nitrato 20; Nitrógeno: amonio 12; nitrato 16,6; Microbios: amonio 11; nitrato 23,2; Microb; + N: amonio 13,2; nitrato 39,1, El nitrato más alto es el del inóculo microbiano con nitrógeno.">
+<svg class="fig n ec" viewBox="0 0 400 220" role="img" aria-label="Gráfico con datos publicados (Moreira-Grez y otros, 2019): nitrógeno mineral de un suelo de acopio minero, antes de incubar y tras 12 semanas, por tratamiento, media y desviación estándar de tres réplicas, en miligramos por kilo. Basal es el suelo antes de incubar. Basal: amonio 7,3; nitrato más nitrito 10,5. Control: amonio 4,2; nitrato más nitrito 20. Nitrógeno: amonio 12; nitrato más nitrito 16,6. Microbios: amonio 11; nitrato más nitrito 23,2. Microbios con nitrógeno: amonio 13,2; nitrato más nitrito 39,1. El valor más alto de nitrato más nitrito es el del inóculo microbiano con nitrógeno.">
   <path class="eje" d="M50 22V176H388"/>
   <path class="eje" d="M89 176v4"/>
   <text class="tick" x="89" y="192" text-anchor="middle">Basal</text>
@@ -670,9 +670,9 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <text class="tick" x="43" y="77.3" text-anchor="end">30</text>
   <path class="eje" d="M50 39.1h-4"/>
   <text class="tick" x="43" y="43.1" text-anchor="end">40</text>
-  <text class="titulo" x="219" y="213" text-anchor="middle">Tratamiento, tras 12 semanas</text>
+  <text class="titulo" x="219" y="213" text-anchor="middle">Basal y tratamientos (12 semanas)</text>
   <text class="titulo" transform="translate(13 99) rotate(-90)" text-anchor="middle">N mineral (mg/kg)</text>
-  <text class="sello" x="388" y="13" text-anchor="end">Publicado · media ± DE, n = 3</text>
+  <text class="sello" x="388" y="13" text-anchor="end">Publicado: media ± DE, n = 3</text>
   <g class="pt a" style="--i:0"><path d="M80.6 156.8V145.2M76.6 156.8h8M76.6 145.2h8"/><circle cx="80.6" cy="151" r="4.5"/></g>
   <g class="pt a" style="--i:1"><path d="M145.6 172.3V150.9M141.6 172.3h8M141.6 150.9h8"/><circle cx="145.6" cy="161.6" r="4.5"/></g>
   <g class="pt a" style="--i:2"><path d="M210.6 145.1V124.8M206.6 145.1h8M206.6 124.8h8"/><circle cx="210.6" cy="134.9" r="4.5"/></g>
@@ -683,13 +683,13 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <g class="pt b" style="--i:7"><path d="M227.5 131.6V106.5M223.5 131.6h8M223.5 106.5h8"/><circle cx="227.5" cy="119.1" r="4.5"/></g>
   <g class="pt b" style="--i:8"><path d="M292.5 106.1V87.3M288.5 106.1h8M288.5 87.3h8"/><circle cx="292.5" cy="96.7" r="4.5"/></g>
   <g class="pt b" style="--i:9"><path d="M357.4 51V33.4M353.4 51h8M353.4 33.4h8"/><circle cx="357.4" cy="42.2" r="4.5"/></g>
-  <g class="leyenda"><circle class="a" cx="64" cy="34" r="4"/><text x="72" y="38">amonio (NH₄-N)</text><circle class="b" cx="64" cy="52" r="4"/><text x="72" y="56">nitrato (NOx-N)</text></g>
+  <g class="leyenda"><circle class="a" cx="64" cy="34" r="4"/><text x="72" y="38">amonio (NH₄-N)</text><circle class="b" cx="64" cy="52" r="4"/><text x="72" y="56">nitrato + nitrito (NOx-N)</text></g>
 </svg>
 <!-- /fig:ec -->
     </div></div>
     <div class="hoja" id="fig-3" hidden><div class="plot">
 <!-- 059: evidencia pública en vez de gráfico simulado: captura de la herramienta publicada (2026-11-21), en dos recortes -->
-<figure class="cap"><picture><source media="(min-width:1200px)" srcset="tabla-periodica-fig.webp" width="1280" height="560"><img src="tabla-periodica-fig-n.webp" width="800" height="440" alt="Captura de la Tabla periódica reactiva, una herramienta publicada: la vista «Radio atómico» colorea los grupos principales del rojo (radio chico) al azul (radio grande), con el sodio seleccionado." loading="lazy" decoding="async"></picture><figcaption>captura · herramienta publicada</figcaption></figure>
+<figure class="cap"><picture><source media="(min-width:1200px)" srcset="tabla-periodica-fig.webp" width="1280" height="560"><img src="tabla-periodica-fig-n.webp" width="800" height="440" alt="Captura de la Tabla periódica reactiva, una herramienta publicada: la vista «Radio atómico» colorea los grupos principales del rojo (radio chico) al azul (radio grande), con el sodio seleccionado." loading="lazy" decoding="async"></picture><figcaption>captura de la herramienta</figcaption></figure>
     </div></div>
   </div>
 </div>
@@ -729,10 +729,10 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
         <div class="esc" aria-hidden="true"><span>1σ, más sensible</span><span>4σ, más estricto</span></div>
         <output id="demo-out" for="demo-k">Umbral 2σ: alerta el día 15, 2 días después de que empieza la deriva; 2 falsas alarmas en 31 días-bus normales.</output>
       </div>
-      <p class="grafico"><b>El gráfico de Data science es una simulación</b>, la única de la página: los datos de la flota son del cliente y no se publican. Refrigerante de dos buses, con tres recorridos por día (los puntos) y su media diaria (las líneas). La banda es la referencia de los primeros 10 días, ± 2σ. Un bus se queda dentro; el otro deriva desde el día 13, sale de la banda y genera la alerta, y tras la revisión del día 21 vuelve a lo normal. Las cruces son falsas alarmas. Al mover el umbral se ve lo que cuesta cada elección: avisar antes trae más falsas alarmas.</p>
+      <p class="grafico"><b>El gráfico de Data science es una simulación</b>: los datos de la flota son del cliente y no se publican. Refrigerante de dos buses, con tres recorridos por día (los puntos) y su media diaria (las líneas). La banda es la referencia de los primeros 10 días, ± el umbral elegido (2σ al empezar). Un bus se queda dentro; el otro deriva desde el día 13, sale de la banda y genera la alerta, y tras la revisión del día 21 vuelve a lo normal. Las cruces son falsas alarmas. Al mover el umbral se ve lo que cuesta cada elección: avisar antes trae más falsas alarmas.</p>
       <ol class="metodo">
         <li><h3>Medir</h3><p>Las señales del bus CAN llegaban sin procesar. Armé la telemetría: bus CAN y GNSS, base de series temporales con contrato de datos versionado, API y mapa en vivo que reconstruye tramos. FMS, tacógrafos y GNSS los aprendí sobre la marcha.</p></li>
-        <li><h3>Ver la desviación</h3><p>No había fallas registradas suficientes para entrenar un modelo. Construí un simulador de telemetría y un banco de evaluación a ciegas, y sobre eso un detector de anomalías, con reglas y modelos, que estima el riesgo de falla.</p></li>
+        <li><h3>Ver la desviación</h3><p>No había suficientes fallas registradas. Construí un simulador de telemetría y un banco de evaluación a ciegas, y sobre eso un detector de anomalías, con reglas y modelos, que estima el riesgo de falla.</p></li>
         <li><h3>Explicar y actuar</h3><p>Un modelo se despliega sólo si les gana a las reglas simples. Hoy el sistema funciona con datos en tiempo real, en piloto y con monitoreo propio. Los datos de conductores, que iban por correo, pasaron a una plataforma con resguardos, diseñada para la Ley 21.719, vigente desde diciembre de 2026.</p></li>
       </ol>
       <figure class="evidencia" data-nosnippet>
@@ -784,7 +784,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
     </header>
     <div>
       <p class="problema">Saber si un suelo minero degradado se recupera al devolverle microorganismos, o sólo lo parece.</p>
-      <p class="grafico"><b>El gráfico de Ecología son datos publicados</b>: amonio y nitrato de un suelo de acopio de una mina del Pilbara tras 12 semanas en invernadero, por tratamiento (media ± DE, n = 3). El inóculo microbiano comercial con nitrógeno dejó el nitrato más alto y duplicó la respiración del suelo, pero la emergencia de plántulas de <i>Acacia ancistrocarpa</i> bajó de 6,3 a cerca de 2 por maceta. Más actividad no fue recuperación. Fuente: tabla suplementaria 1 de <a href="https://doi.org/10.3389/fmicb.2019.01617">Moreira-Grez et al. 2019, <i>Frontiers in Microbiology</i> 10:1617</a> (CC BY 4.0).</p>
+      <p class="grafico"><b>El gráfico de Ecología son datos publicados</b>: amonio y nitrato más nitrito de un suelo de acopio de una mina del Pilbara, antes de incubar (Basal) y tras 12 semanas en invernadero, por tratamiento (media ± DE, n = 3). El inóculo microbiano comercial con nitrógeno dejó el valor más alto de nitrato más nitrito y duplicó la respiración del suelo, pero la emergencia de plántulas de <i>Acacia ancistrocarpa</i> bajó de 6,3 a cerca de 2 por maceta. Más actividad no fue recuperación. Fuente: tabla suplementaria 1 de <a href="https://doi.org/10.3389/fmicb.2019.01617">Moreira-Grez et al. 2019, <i>Frontiers in Microbiology</i> 10:1617</a> (CC BY 4.0).</p>
       <ol class="metodo">
         <li><h3>Medir</h3><p>Muestras escasas y caras, secuenciación ruidosa, ninguna referencia clara de suelo sano. Por eso importa el diseño: réplicas en cada muestreo, en terreno, en zonas áridas de Western Australia; marcaje isotópico (RNA-SIP) para saber qué organismo hace qué; metagenómica.</p></li>
         <li><h3>Ver la desviación</h3><p>Estadística multivariante para separar señal de ruido y la intervención de la variabilidad del sitio: si la comunidad vuelve a su referencia o se estabiliza por debajo.</p></li>
@@ -832,7 +832,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 <rect class="cp" x="289" y="59.3" width="22" height="44.7"/>
 <rect class="cc" x="289" y="37.3" width="22" height="22"/>
 <text x="300" y="118" text-anchor="middle">26</text>
-<text x="314" y="130" text-anchor="end">año (20…) · 2026 incompleto</text>
+<text x="314" y="130" text-anchor="end">año (20…); 2026 incompleto</text>
 </svg>
 <!-- /fig:citas -->
         </div>
@@ -862,7 +862,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 <text x="39" y="34.7" text-anchor="end">1</text>
 <text class="tit" x="178.0" y="204" text-anchor="middle">Densidad de flotación (g/ml)</text>
 <text class="tit" transform="translate(12 92.0) rotate(-90)" text-anchor="middle">ARNr 16S (prop. del máximo)</text>
-<text x="310" y="13" text-anchor="end">Datos simulados · 12 fracciones</text>
+<text x="310" y="13" text-anchor="end">Datos simulados, 12 fracciones</text>
 <path class="c12" d="M75.3 156.5 L94 154.4 L112.7 106.4 L131.3 49.9 L150 30.7 L168.7 75.2 L187.3 135 L206 157.2 L224.7 164 L243.3 155.8 L262 163.4 L280.7 164"/>
 <g class="p12"><circle cx="75.3" cy="156.5" r="2.6"/><circle cx="94" cy="154.4" r="2.6"/><circle cx="112.7" cy="106.4" r="2.6"/><circle cx="131.3" cy="49.9" r="2.6"/><circle cx="150" cy="30.7" r="2.6"/><circle cx="168.7" cy="75.2" r="2.6"/><circle cx="187.3" cy="135" r="2.6"/><circle cx="206" cy="157.2" r="2.6"/><circle cx="224.7" cy="164" r="2.6"/><circle cx="243.3" cy="155.8" r="2.6"/><circle cx="262" cy="163.4" r="2.6"/><circle cx="280.7" cy="164" r="2.6"/></g>
 <path class="a13" d="M75.3 163.8 L94 160.3 L112.7 147.3 L131.3 125.5 L150 115.1 L168.7 122.9 L187.3 109.8 L206 70.3 L224.7 30.7 L243.3 37.1 L262 89.9 L280.7 137.8 L280.7 164 L75.3 164 Z"/>
@@ -874,7 +874,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 <!-- /fig:sip -->
         </div>
         <div>
-          <figcaption>Perfil de RNA-SIP, con datos simulados: ARN por fracción de un gradiente de densidad. El que incorporó ¹³C queda en las fracciones pesadas, a la derecha: así se sabe qué organismos usaron el sustrato. El hombro a la izquierda es la parte de la comunidad que no lo usó. El método está en mi <a href="https://doi.org/10.1007/978-1-4939-9721-3_3">capítulo de 2019</a>.</figcaption>
+          <figcaption>Perfil de RNA-SIP, con datos simulados: ARN por fracción de un gradiente de densidad. El que incorporó ¹³C queda en las fracciones pesadas, a la derecha: así se sabe qué organismos usaron el sustrato. El hombro a la izquierda es la parte de la comunidad que no lo usó. El método está en el <a href="https://doi.org/10.1007/978-1-4939-9721-3_3">capítulo de 2019</a> del que soy coautor.</figcaption>
         </div>
       </figure>
       <details class="mas">
