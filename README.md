@@ -11,6 +11,32 @@ DOI verificados) en `~/LLM-context/Personal/sitio-personal/`.
 
 Publicado con GitHub Pages desde la rama `main`, raíz del repositorio: https://bengrez.github.io/
 
+## Versión realista (rama `feat/realista-fable`, 2026-11-21; sin publicar)
+
+Contraste con Codex pedido por Benjamin: misma estética (paleta, tipografía, estructura de dos columnas con la figura fija), contenido
+editado a fondo y visualizaciones más realistas. Lo que sigue manda sobre las secciones de abajo donde se contradigan. Detalle,
+fuentes y pesos en `INFORME-fable.md`.
+
+- **Portada**: «Ecólogo microbiano. Hoy trabajo con datos.» y un párrafo que parte del doctorado y llega a lo de hoy.
+- **Sin sección «Agentes de IA»** (ni su caja de pruebas ni el enlace de la barra): los agentes van dentro de Data science (párrafo
+  «Con agentes de IA» y fila de la ficha) y de Docencia (el asistente de gestión escolar).
+- **Un solo gráfico simulado, interactivo** (Data science): `scripts/figuras.py` genera la figura y el bloque
+  `<script id="ds-datos">`; el control «Umbral de alerta» (`#demo`, JS en línea) recalcula banda, alerta y falsas alarmas con la
+  misma regla que `regla_ds()`. Sin JS queda en 2σ.
+- **Ecología con datos publicados**: amonio y nitrato por tratamiento (media ± DE, n = 3), tabla suplementaria 1 de
+  doi:10.3389/fmicb.2019.01617 (CC BY 4.0); los valores están en `scripts/figuras.py` (`EC`). Además: citas por año desde OpenAlex
+  (`CITAS`, consulta por DOI del 2026-11-21), las fotos de costras de la figura 1 de doi:10.3389/fmicb.2019.02143 (CC BY;
+  `costras-biologicas.webp`) y el perfil de RNA-SIP, que sigue siendo simulado pero ahora con ejes, unidades y fracciones.
+- **Docencia con evidencia pública**: la figura es una captura de la Tabla periódica reactiva (`tabla-periodica-fig.webp` desde
+  1200 px, `tabla-periodica-fig-n.webp` antes), tomada del sitio publicado el 2026-11-21 (vista «Radio atómico», 900 px de ancho a 2x,
+  recortes 1800×787 → 1280×560 y 1800×990 → 800×440, WebP calidad 62). La ficha de la herramienta usa los mismos archivos;
+  `tabla-periodica.webp` se quitó.
+- **Fondo con aspecto de microscopía** (`quimiotaxis.js`, bloque `MIC`): la simulación es la misma (raíz, colonias, matriz, arena,
+  protistas y nematodo); cambia la terminación del cuadro dentro de la luz del cursor: campo con tono y grano en los márgenes,
+  relieve y halo, nadadoras fuera de foco y volumen en la raíz. `Quimiotaxis.microscopia({activa:false})` vuelve al dibujo plano;
+  si el costo por cuadro pasa de 7 ms, se apaga solo. Rótulo fijo «Fondo: simulación…» desde 1440 px.
+- `og.png` se rehízo con el titular nuevo (`?v=059`).
+
 ## Estructura (desde la 008; dos columnas desde la 012; figuras de paper desde la 013, un panel desde la 014; gráfico en la columna izquierda y sin botones desde la 016)
 
 La idea de la portada (desde la 053 el titular es «Trabajo con datos, ecología y docencia»; antes «Resuelvo problemas con lo que hay disponible») se prueba con la forma de la
@@ -329,7 +355,7 @@ pseudo-elemento recortado con `clip-path` (`fb`/`fb2` hacia abajo). El texto de 
   `#D9555A`); los gráficos no tienen fondo propio. La franja de
   agentes (`--panel`) es tinta cálida `#231B1A` en los dos temas, con acento `#FF9A82`. Contrastes de texto
   ≥ 6,0:1 en claro y ≥ 6,6:1 en oscuro; el color de marca sólo marca, no es texto.
-- `tabla-periodica.webp` y `autodiagnostico.webp` son recortes de las herramientas públicas de
+- `autodiagnostico.webp` es un recorte (y `tabla-periodica.webp` lo fue hasta la versión realista, que usa `tabla-periodica-fig*.webp`) de las herramientas públicas de
   `aula-herramientas`, capturadas a 2x y recortadas para no incluir cabeceras con nombres de
   instituciones. Regenerar: captura a 2560×1720, `convert … -crop 1200x1000+680+370` y
   `-crop 1960x540+300+810 -resize 1400x`, calidad WebP 80.

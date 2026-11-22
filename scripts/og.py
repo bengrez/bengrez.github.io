@@ -54,6 +54,12 @@ h1{{margin:18px 0 0;font:600 54px/1.05 var(--display);letter-spacing:-.025em}}
 .fig .alerta circle{{fill:none;stroke:var(--serie-b);stroke-width:2}}
 .fig .alerta text{{font-family:var(--display);font-size:15px;fill:var(--accent-ink)}}
 .fig .leyenda text{{font-size:14px;fill:var(--ink)}}
+.fig .crudo{{fill:none;stroke-width:3.2;stroke-linecap:round;opacity:.3}}
+.fig .crudo.a{{stroke:var(--serie-a)}}
+.fig .crudo.b{{stroke:var(--serie-b)}}
+.fig .rev path{{fill:none;stroke:var(--muted);stroke-width:1.1}}
+.fig .rev text{{font-size:13px}}
+.fig .falsas{{fill:none;stroke:var(--ink);stroke-width:1.5;stroke-linecap:round}}
 </style>
 </head>
 <body>
