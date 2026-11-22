@@ -160,3 +160,6 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
 10. **Cuánto más recortar el texto.** Quité los tres pasos y bajé el texto visible un 24 %. Opciones: (a) dejarlo así; (b) recortar
     más: sacar las filas «Con qué» y «Después» y dejar las fichas de herramientas en una línea cada una. Recomiendo (a) hasta que
     lo veas.
+11. **La corrección del cuerpo de la raíz en `main`.** El error (un tubo delgado y cortado en vez del cuerpo con su ancho) existe
+    en la versión publicada (056). Opciones: (a) llevarla a `main` aunque elijas la versión de Codex; (b) dejarla sólo en esta
+    rama. Recomiendo (a).
