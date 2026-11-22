@@ -131,3 +131,5 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
 8. **La captura de la Tabla periódica se ve dos veces en escritorio**: en la figura fija y en la ficha de «Herramientas
    publicadas». Lo hice para no sumar otra imagen. Opciones: (a) dejarlo; (b) que la ficha lleve un recuadro tipográfico como el
    de Vacunas; (c) que la figura fija muestre otra herramienta. Recomiendo (a) hasta que lo veas.
+9. **«del que soy coautor»** en el pie del perfil de RNA-SIP: el CV no dice el orden de autoría del capítulo de 2019. ¿Lo dejo así
+   o eres primer autor?
