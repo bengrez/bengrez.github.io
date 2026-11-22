@@ -67,11 +67,11 @@ Detalle de cada una:
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 34,8 KB | +1,3 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 96,8 KB | +14,2 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 186,1 KB | +21,2 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 34,9 KB | +1,4 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 96,9 KB | +14,3 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 186,2 KB | +21,3 KB |
 
-Por archivo: `index.html` +1,3 KB; `quimiotaxis.min.js` +1,5 KB (sólo escritorio); `costras-biologicas.webp` 27,2 KB (nueva);
+Por archivo: `index.html` +1,4 KB; `quimiotaxis.min.js` +1,5 KB (sólo escritorio); `costras-biologicas.webp` 27,2 KB (nueva);
 `tabla-periodica-fig-n.webp` 11,6 KB o `tabla-periodica-fig.webp` 17,0 KB (nuevas, una según el ancho); se quitó
 `tabla-periodica.webp` (25,9 KB), porque la ficha de la herramienta usa la captura nueva. El límite de 200 KB se cumple.
 
