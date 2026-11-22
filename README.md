@@ -45,6 +45,11 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
   (`dl.metricas.resultado`) y un remate (`.remate`). El texto visible de `<main>` bajó de 1719 a 1309 palabras.
 - **El campo del microscopio se difumina hacia el texto** (`componer`, `micFranja`): tono y grano caen juntos, con una curva suave
   que empieza dentro del margen (`MIC.fuera`) y termina `MIC.dentro` px dentro de la columna. Antes el grano se cortaba en seco.
+- **«Sobre mí» antes de los trabajos** (061, respuestas de Benjamin con alternativas): después de la portada va la sección
+  `#sobre-mi` (tesis «Resuelvo problemas con lo que hay disponible», una frase de presentación, tres cifras, «Cómo trabajo» y
+  «Qué busco hoy») y, pegado, el Recorrido (`#recorrido`, que estaba al final). Después vienen el gráfico con el índice y los tres
+  trabajos. En la barra, «Sobre mí» reemplaza a «Recorrido». Las cifras salieron de Ecología. El retrato tiene su lugar y su CSS
+  (`.retrato`, comentado en el HTML) y se activa cuando exista `retrato.webp`.
 - **Raíz**: el cuerpo de la primaria se dibujaba como un tubo de 5 px de radio cortado a 300 px de la punta (en `rzBuild`, la
   distancia a la punta se medía contra el punto anterior; venía de antes de la 056). Corregido: tiene su ancho real en todo el
   largo. Las laterales nacen dentro de la primaria y salen por un cuello ancho (`RZ_CUE`, `RZ_CUL`), la capa externa se abre en

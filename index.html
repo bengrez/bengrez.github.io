@@ -264,7 +264,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
    título que sube; el resto de la franja no recibe clics. El riel (título) se pega bajo la figura. */
 @media (min-width:960px){
   html{scroll-padding-top:calc(var(--bar) + 1rem)}
-  #recorrido,#contacto{scroll-margin-top:0}
+  #sobre-mi,#recorrido,#contacto{scroll-margin-top:0}
   .escena{display:grid;grid-template-columns:minmax(0,1fr)}
   .escena>.serie{grid-column:1;grid-row:1 / span 4;align-self:start;border:0;background:none;pointer-events:none}
   .serie.fijo{top:var(--bar);box-shadow:none}
@@ -327,6 +327,11 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 @media (max-width:560px){.hechos>div{grid-template-columns:1fr}}
 .resultado{margin-top:.2rem;padding-block:.4rem .2rem}
 .resultado dd{font-size:clamp(1.6rem,1.2vw + 1.2rem,2.1rem);color:var(--accent-ink)}
+/* 061: «Sobre mí» va antes de los trabajos; el retrato (cuando exista) queda bajo el título, en la columna izquierda */
+.retrato{margin:1.25rem 0 0;max-width:13rem}
+.retrato img{display:block;width:100%;height:auto;border:1px solid var(--rule)}
+#sobre-mi .nota{margin-top:.9rem}
+#sobre-mi + #recorrido{padding-top:0}
 .remate{font-family:var(--display);font-weight:600;font-size:1.15rem;line-height:1.3;margin-top:.5rem}
 .flota span{font-family:var(--mono);font-size:.74rem}
 .con-que{font-family:var(--mono);font-size:.82rem;line-height:1.6;color:var(--muted);margin-top:1.25rem}
@@ -452,7 +457,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 @media (prefers-reduced-motion:reduce){.rec-ind,.rec-js .rec-mas{transition:none}}
 
 /* Con la serie fija, el borde de salto ya lleva su alto (scroll-padding); lo que está fuera de .escena no. */
-@media (max-width:959px){#recorrido,#contacto{scroll-margin-top:calc(0px - var(--fig-h,0px))}}   /* 056: antes era global y, por ir después, anulaba la regla de escritorio (scroll-margin-top:0): «Agentes de IA» dejaba el título 98 px fuera de la vista */
+@media (max-width:959px){#sobre-mi,#recorrido,#contacto{scroll-margin-top:calc(0px - var(--fig-h,0px))}}   /* 056: antes era global y, por ir después, anulaba la regla de escritorio (scroll-margin-top:0): «Agentes de IA» dejaba el título 98 px fuera de la vista */
 
 /* ---- contacto ---- */
 .correo{display:inline-block;font-family:var(--display);font-weight:600;font-size:clamp(1.3rem,3.6vw,2.6rem);overflow-wrap:anywhere;letter-spacing:-.02em;line-height:1.15;color:var(--ink);text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:.16em}
@@ -515,11 +520,11 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <div class="pagina barra-in">
     <a class="marca" href="#contenido">Benjamín Moreira-Grez</a>
     <nav class="indice" aria-label="Secciones de la página">
+      <a href="#sobre-mi">Sobre mí</a>
       <a href="#ingenieria">Data science</a>
       <a href="#investigacion">Ecología</a>
       <a href="#educacion">Docencia</a>
       <a class="ext" href="https://bengrez.github.io/aula-herramientas/">Herramientas de aula</a>
-      <a href="#recorrido">Recorrido</a>
       <a class="fijo" href="#contacto">Contacto</a>
     </nav>
     <button type="button" class="pausa" id="pausa" aria-label="Pausar animación" aria-pressed="false" hidden><i aria-hidden="true"></i></button>
@@ -536,6 +541,43 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <p class="acciones"><a class="btn" href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a><a class="btn sec" href="#casos">Ver los tres trabajos</a></p>
 </div>
 
+<section class="seccion fuera" id="sobre-mi" aria-labelledby="h-sobre">
+  <div class="pagina dos">
+    <header class="riel">
+      <div class="riel-top"><p class="kicker">Quién soy</p><h2 id="h-sobre">Sobre mí</h2></div>
+      <!-- 061: espacio para el retrato (decisión de Benjamin del 2026-11-21; la foto la entrega él). Cuando exista retrato.webp (4:5, ≈ 480 × 600 px, bajo 25 KB), se quita este comentario:
+      <figure class="retrato"><img src="retrato.webp" width="480" height="600" alt="Retrato de Benjamín Moreira-Grez." loading="lazy" decoding="async"></figure>
+      -->
+    </header>
+    <div>
+      <p class="problema">Resuelvo problemas con lo que hay disponible.</p>
+      <p class="nota">Soy biólogo y me doctoré en ecología microbiana de suelos en Western Australia. Hoy vivo en Santiago: trabajo con los datos de una flota de buses y enseño ciencias en un colegio.</p>
+      <dl class="metricas">
+        <div><dt>publicaciones</dt><dd>15</dd></div>
+        <div><dt>citas</dt><dd>796</dd></div>
+        <div><dt>índice h</dt><dd>13</dd></div>
+        <div class="cuando"><dt>fuente</dt><dd>citas e índice h: Google Scholar, octubre de 2026</dd></div>
+      </dl>
+      <dl class="hechos">
+        <div><dt>Cómo trabajo</dt><dd>Aprendo lo que el problema pide: FMS, tacógrafos y GNSS los aprendí sobre la marcha. Uso agentes de IA a diario, en entornos controlados, y despliego un modelo sólo si supera a las reglas simples.</dd></div>
+        <div><dt>Qué busco hoy</dt><dd>Me interesa conversar sobre trabajo en datos, proyectos o consultorías, y colaboración en investigación. <a href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a>.</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+<section class="seccion fuera" id="recorrido" aria-labelledby="h-rec">
+  <div class="pagina dos">
+    <header class="riel">
+      <div class="riel-top"><p class="kicker">Hasta hoy</p><h2 id="h-rec">Recorrido</h2></div>
+    </header>
+    <dl class="ruta">
+      <div><dt>Pontificia Universidad Católica de Valparaíso</dt><dd>Licenciado en Biología y título profesional de Biólogo.</dd><dd class="rec-mas"><div><p>Formación de base en biología, antes del doctorado en ecología microbiana de suelos.</p></div></dd></div>
+      <div><dt>The University of Western Australia, Perth</dt><dd>Ph.D., tesis de 2020 (<a href="https://doi.org/10.26182/5e995c216ca93">doi:10.26182/5e995c216ca93</a>). Financiado con la beca de Doctorado Becas Chile, 2014–2018.<span class="sub">Enfoque: reacondicionamiento de suelos degradados, dinámica de comunidades microbianas y restauración ecológica post-minera.</span></dd><dd class="rec-mas"><div><p>La tesis preguntó si un suelo minero degradado se recupera al devolverle microorganismos, o sólo lo parece. Usé marcaje isotópico (RNA-SIP), metagenómica y estadística multivariante, con muestreos en terreno en zonas áridas de Western Australia.</p></div></dd></div>
+      <div><dt>The University of Western Australia</dt><dd>Research Associate, 2020–2022.</dd><dd class="rec-mas"><div><p>Apliqué el mismo enfoque en arroceras, trigo y residuos de bauxita. La tesis y las publicaciones suman 796 citas según Google Scholar (octubre de 2026).</p></div></dd></div>
+      <div><dt>Santiago, hoy</dt><dd>En Andes, desarrollo y análisis de datos para una empresa de transporte; docencia de ciencias en un colegio.</dd><dd class="rec-mas"><div><p>En Andes armé la telemetría y el detector de anomalías de una flota de buses, hoy en piloto. En el colegio enseño ciencias y hice herramientas web para practicar sin nota.</p></div></dd></div>
+    </dl>
+  </div>
+</section>
 <div class="escena" id="escena">
 <div class="serie" id="serie" data-figura="1">
   <div class="pagina">
@@ -799,12 +841,6 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
         <div><dt>Métodos</dt><dd>Marcaje isotópico (RNA-SIP) para saber qué organismo hace qué, metagenómica y estadística multivariante.</dd></div>
         <div><dt>Después</dt><dd>El mismo enfoque en arroceras, trigo y residuos de bauxita.</dd></div>
       </dl>
-      <dl class="metricas">
-        <div><dt>citas totales</dt><dd>796</dd></div>
-        <div><dt>índice h</dt><dd>13</dd></div>
-        <div><dt>índice i10</dt><dd>15</dd></div>
-        <div class="cuando"><dt>fuente</dt><dd>Google Scholar, octubre de 2026</dd></div>
-      </dl>
       <figure class="evidencia sip citas">
         <div class="arte">
 <!-- fig:citas -->
@@ -987,19 +1023,6 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 
 </div>
 
-<section class="seccion fuera" id="recorrido" aria-labelledby="h-rec">
-  <div class="pagina dos">
-    <header class="riel">
-      <div class="riel-top"><p class="kicker">Hasta hoy</p><h2 id="h-rec">Recorrido</h2></div>
-    </header>
-    <dl class="ruta">
-      <div><dt>Pontificia Universidad Católica de Valparaíso</dt><dd>Licenciado en Biología y título profesional de Biólogo.</dd><dd class="rec-mas"><div><p>Formación de base en biología, antes del doctorado en ecología microbiana de suelos.</p></div></dd></div>
-      <div><dt>The University of Western Australia, Perth</dt><dd>Ph.D., tesis de 2020 (<a href="https://doi.org/10.26182/5e995c216ca93">doi:10.26182/5e995c216ca93</a>). Financiado con la beca de Doctorado Becas Chile, 2014–2018.<span class="sub">Enfoque: reacondicionamiento de suelos degradados, dinámica de comunidades microbianas y restauración ecológica post-minera.</span></dd><dd class="rec-mas"><div><p>La tesis preguntó si un suelo minero degradado se recupera al devolverle microorganismos, o sólo lo parece. Usé marcaje isotópico (RNA-SIP), metagenómica y estadística multivariante, con muestreos en terreno en zonas áridas de Western Australia.</p></div></dd></div>
-      <div><dt>The University of Western Australia</dt><dd>Research Associate, 2020–2022.</dd><dd class="rec-mas"><div><p>Apliqué el mismo enfoque en arroceras, trigo y residuos de bauxita. La tesis y las publicaciones suman 796 citas según Google Scholar (octubre de 2026).</p></div></dd></div>
-      <div><dt>Santiago, hoy</dt><dd>En Andes, desarrollo y análisis de datos para una empresa de transporte; docencia de ciencias en un colegio.</dd><dd class="rec-mas"><div><p>En Andes armé la telemetría y el detector de anomalías de una flota de buses, hoy en piloto. En el colegio enseño ciencias y hice herramientas web para practicar sin nota.</p></div></dd></div>
-    </dl>
-  </div>
-</section>
 
 <section class="seccion fuera" id="contacto" aria-labelledby="h-con">
   <div class="pagina dos">

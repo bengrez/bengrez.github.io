@@ -87,15 +87,36 @@ Tres pedidos, los tres hechos:
 Verificado otra vez: sin errores de consola ni desborde en las siete configuraciones; sin JavaScript a 375 px; en vivo con GPU
 en tema claro y oscuro (0,22 ms por cuadro el aspecto de microscopía).
 
+## Tercera ronda: «Sobre mí» antes de los trabajos
+
+Pedido de Benjamin: hablar más de él antes de detallar los trabajos. Lo resolvió con preguntas de alternativas:
+
+| Pregunta | Respuesta |
+|---|---|
+| Forma | Sección «Sobre mí» nueva y, pegado a ella, el Recorrido |
+| Contenido | Formación y recorrido, cifras de investigación, cómo trabaja y qué busca hoy |
+| Foto | Con un retrato suyo, que entrega después |
+| Orden | El gráfico y el índice «Tres trabajos» van después de «Sobre mí» |
+| Qué busca | Trabajo en datos, proyectos o consultoría, y colaboración en investigación |
+| Tono | Abierto a conversar («Me interesa conversar sobre…») |
+
+Qué quedó: portada, «Sobre mí», Recorrido, gráfico con el índice, los tres trabajos y Contacto. «Sobre mí» abre con la tesis que
+Benjamin fijó el 2026-09-23 («Resuelvo problemas con lo que hay disponible»), una frase de presentación, tres cifras (15
+publicaciones, 796 citas, índice h 13), «Cómo trabajo» y «Qué busco hoy», con enlace al correo. Las cifras salieron de Ecología,
+donde sigue el gráfico de citas por año. En la barra, «Sobre mí» reemplaza a «Recorrido». El retrato tiene su lugar bajo el
+título (columna izquierda) y su estilo, pero está desactivado hasta que exista el archivo.
+
+Verificado: sin errores de consola ni desborde en las siete configuraciones y sin JavaScript a 375 px.
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 34,3 KB | +0,8 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 96,3 KB | +13,7 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 186,1 KB | +21,2 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 34,7 KB | +1,2 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 96,8 KB | +14,2 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 186,6 KB | +21,7 KB |
 
-Por archivo: `index.html` +0,8 KB; `quimiotaxis.min.js` +2,1 KB (sólo escritorio); `costras-biologicas.webp` 27,2 KB (nueva);
+Por archivo: `index.html` +1,2 KB; `quimiotaxis.min.js` +2,1 KB (sólo escritorio); `costras-biologicas.webp` 27,2 KB (nueva);
 `tabla-periodica-fig-n.webp` 11,6 KB o `tabla-periodica-fig.webp` 17,0 KB (nuevas, una según el ancho); se quitó
 `tabla-periodica.webp` (25,9 KB), porque la ficha de la herramienta usa la captura nueva. El límite de 200 KB se cumple.
 
@@ -163,3 +184,8 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
 11. **La corrección del cuerpo de la raíz en `main`.** El error (un tubo delgado y cortado en vez del cuerpo con su ancho) existe
     en la versión publicada (056). Opciones: (a) llevarla a `main` aunque elijas la versión de Codex; (b) dejarla sólo en esta
     rama. Recomiendo (a).
+12. **El retrato.** Falta el archivo. Sirve una foto vertical (4:5) de buena luz; la recorto a 480 × 600 px y la dejo bajo 25 KB.
+    ¿Me pasas la ruta?
+13. **La frase «Hoy vivo en Santiago»** de «Sobre mí» la deduje de «Santiago, Chile» en la portada. ¿Está bien dicha así?
+14. **«Recorrido» salió de la barra** (lo reemplaza «Sobre mí», que está justo encima). Opciones: (a) dejarlo así; (b) tener los
+    dos enlaces. Recomiendo (a): la barra ya tiene seis.
