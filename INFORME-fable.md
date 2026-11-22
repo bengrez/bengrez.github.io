@@ -31,7 +31,7 @@ Pedido de Benjamin durante la sesión («sembrar la raíz y todo lo que teníamo
 misma, con su raíz, sus colonias, la matriz, la arena, los protistas y el *C. elegans* que empuja el párrafo. Sólo cambió cómo se
 termina de dibujar cada cuadro.
 
-Texto visible: 1736 → 2079 palabras. El aumento son los pies con fuente de cada visualización y el control de la demostración.
+Texto visible: 1736 → 2079 palabras. El aumento son los pies con fuente de cada visualización y el control de la demostración. En la segunda ronda el texto se acortó (ver «Segunda ronda»).
 
 ## Las visualizaciones
 
@@ -63,15 +63,39 @@ Detalle de cada una:
 - **7, fondo.** Costo medido por cuadro: 0,17 ms con GPU (Radeon 860M, 2880 × 1800, 1780 cuadros); 2,8 ms sin GPU a 1×; 24 ms
   sin GPU a 2×. Por eso se apaga solo si el promedio pasa de 7 ms y queda el dibujo plano de la 056.
 
+## Segunda ronda (pedidos de Benjamin del 21 de noviembre, después de ver la versión)
+
+Tres pedidos, los tres hechos:
+
+1. **«Que se vaya difuminando» el cambio entre el fondo con textura y el liso del centro.** El grano se cortaba en seco en el
+   borde de la columna y el tono caía en 88 px. Ahora tono y grano se apagan juntos con una curva suave: a 1440 px la caída
+   ocupa unos 240 px a la izquierda (empieza dentro del margen y termina 40 px dentro de la columna) y unos 130 px a la derecha.
+   Medido en la captura: el fondo pasa de 241 a 249 (de 255) sin escalones, y donde empiezan los bloques de texto queda cerca
+   del 10 % del tono.
+2. **Uniones «más orgánicas» entre la raíz primaria y las laterales.** La causa principal era un error anterior a esta rama: el
+   cuerpo de la primaria se dibujaba como un tubo de 5 px de radio, cortado a 300 px de la punta, y las laterales quedaban
+   pegadas por fuera con dos rayas rectas. Ahora la primaria tiene su ancho real en todo el largo, cada lateral nace dentro de
+   ella y sale por un cuello que se ensancha, la capa externa se abre en la unión y el haz vascular entra curvo. No hay pelos en
+   la boca de la lateral. Con el cuerpo en su ancho real, las bacterias se adhieren a la superficie y ya no dentro de la raíz.
+3. **Sin «medir, ver la desviación, explicar y actuar»; texto más breve y más visual.** Salieron los tres pasos de las tres
+   secciones y la frase que los anunciaba. Cada trabajo queda así: el problema en una frase, su figura, y filas cortas de rótulo
+   y una línea. En Data science el esquema del sistema sube y cada caja lleva su anotación. En Ecología el resultado va en dos
+   cifras grandes («×2» y «de 6,3 a cerca de 2») y un remate. Los pies de figura y las fichas de herramientas se acortaron. El
+   texto visible bajó de 1719 a 1309 palabras (24 % menos), sin contar los desplegables. No se agregó ningún hecho: todo sale de
+   frases que ya estaban.
+
+Verificado otra vez: sin errores de consola ni desborde en las siete configuraciones; sin JavaScript a 375 px; en vivo con GPU
+en tema claro y oscuro (0,22 ms por cuadro el aspecto de microscopía).
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 34,9 KB | +1,4 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 96,9 KB | +14,3 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 186,2 KB | +21,3 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 34,3 KB | +0,8 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 96,3 KB | +13,7 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 186,1 KB | +21,2 KB |
 
-Por archivo: `index.html` +1,4 KB; `quimiotaxis.min.js` +1,5 KB (sólo escritorio); `costras-biologicas.webp` 27,2 KB (nueva);
+Por archivo: `index.html` +0,8 KB; `quimiotaxis.min.js` +2,1 KB (sólo escritorio); `costras-biologicas.webp` 27,2 KB (nueva);
 `tabla-periodica-fig-n.webp` 11,6 KB o `tabla-periodica-fig.webp` 17,0 KB (nuevas, una según el ancho); se quitó
 `tabla-periodica.webp` (25,9 KB), porque la ficha de la herramienta usa la captura nueva. El límite de 200 KB se cumple.
 
@@ -133,3 +157,6 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
    de Vacunas; (c) que la figura fija muestre otra herramienta. Recomiendo (a) hasta que lo veas.
 9. **«del que soy coautor»** en el pie del perfil de RNA-SIP: el CV no dice el orden de autoría del capítulo de 2019. ¿Lo dejo así
    o eres primer autor?
+10. **Cuánto más recortar el texto.** Quité los tres pasos y bajé el texto visible un 24 %. Opciones: (a) dejarlo así; (b) recortar
+    más: sacar las filas «Con qué» y «Después» y dejar las fichas de herramientas en una línea cada una. Recomiendo (a) hasta que
+    lo veas.

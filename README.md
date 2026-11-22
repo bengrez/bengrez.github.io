@@ -37,12 +37,25 @@ fuentes y pesos en `INFORME-fable.md`.
   si el costo por cuadro pasa de 7 ms, se apaga solo. Rótulo fijo «Fondo: simulación…» desde 1440 px.
 - `og.png` se rehízo con el titular nuevo (`?v=059`).
 
+Segunda ronda (060, pedidos de Benjamin del mismo día):
+
+- **Sin el método en tres pasos.** Salieron «Medir / Ver la desviación / Explicar y actuar» (`ol.metodo`) y la frase que lo
+  anunciaba. Cada trabajo se cuenta ahora con el problema, su figura, y filas cortas de rótulo y una línea (`dl.hechos`). En Data
+  science el esquema `.flujo.flota` sube y cada caja lleva su anotación; en Ecología el resultado va en dos cifras grandes
+  (`dl.metricas.resultado`) y un remate (`.remate`). El texto visible de `<main>` bajó de 1719 a 1309 palabras.
+- **El campo del microscopio se difumina hacia el texto** (`componer`, `micFranja`): tono y grano caen juntos, con una curva suave
+  que empieza dentro del margen (`MIC.fuera`) y termina `MIC.dentro` px dentro de la columna. Antes el grano se cortaba en seco.
+- **Raíz**: el cuerpo de la primaria se dibujaba como un tubo de 5 px de radio cortado a 300 px de la punta (en `rzBuild`, la
+  distancia a la punta se medía contra el punto anterior; venía de antes de la 056). Corregido: tiene su ancho real en todo el
+  largo. Las laterales nacen dentro de la primaria y salen por un cuello ancho (`RZ_CUE`, `RZ_CUL`), la capa externa se abre en
+  la boca de cada lateral y el haz vascular entra curvo, en lugar de dos rayas rectas.
+
 ## Estructura (desde la 008; dos columnas desde la 012; figuras de paper desde la 013, un panel desde la 014; gráfico en la columna izquierda y sin botones desde la 016)
 
 La idea de la portada (desde la 053 el titular es «Trabajo con datos, ecología y docencia»; antes «Resuelvo problemas con lo que hay disponible») se prueba con la forma de la
 página: cada caso lleva **su gráfico, con estilo de paper y el detalle que su evidencia permite**
-(dos series con banda y alerta; dos series con barras de error; una línea y un acento), se cuenta con los **tres pasos del método** (Medir · Ver la
-desviación · Explicar y actuar) y cada cosa lleva su **estado real** (`.estado`: `e-uso` publicado o en
+(dos series con banda y alerta; dos series con barras de error; una línea y un acento), se contaba con los **tres pasos del método** (Medir · Ver la
+desviación · Explicar y actuar; quitados en la 060, ver arriba) y cada cosa lleva su **estado real** (`.estado`: `e-uso` publicado o en
 uso, `e-piloto` en piloto, `e-dev` en desarrollo; el glifo siempre va con su texto).
 
 1. **Barra** fija: nombre, secciones (bajo 900 px sólo Contacto) y botón de tema.
@@ -69,7 +82,7 @@ uso, `e-piloto` en piloto, `e-dev` en desarrollo; el glifo siempre va con su tex
    **Docencia** (`#educacion`), **Agentes de IA** (`#agentes`, franja oscura, fuera de la escena de la
    figura fija), **Recorrido** (`.ruta`, vertical) y **Contacto**. Los id no cambiaron.
 6. Un caso es: el problema (`.problema`), una nota sobre su figura (`.grafico`, mono, con «datos
-   simulados»), el método en tres pasos (`ol.metodo`: Medir / Ver la desviación / Explicar y actuar, dos o
+   simulados»), el método en tres pasos (`ol.metodo`, hasta la 059; desde la 060, filas `dl.hechos`, dos o
    tres frases cada uno), la evidencia (esquemas `.flujo`, herramientas `.herr`, métricas, RNA-SIP), «con
    qué» y el detalle plegado (`details.mas`). El libro Había / Hice / Quedó de la 008 se quitó en la 012.
 
@@ -115,7 +128,7 @@ detalle por elementos**, de más a menos, en el orden de la página:
 
 ## Celular: más aire y menos información (iteración 022)
 
-Bajo 640 px: margen lateral de 1,3 rem (`--gutter`), interlineado de 1,7 (`body`, `.metodo p`), un hilo de `letter-spacing` y
+Bajo 640 px: margen lateral de 1,3 rem (`--gutter`), interlineado de 1,7 (`body`, `.hechos dd`), un hilo de `letter-spacing` y
 `word-spacing`, más espacio entre bloques (método, evidencia, herramientas, esquemas, secciones) y la franja del gráfico más
 ancha (casi a los bordes) y con más aire arriba y abajo. La descripción de cada gráfico (`.grafico`) queda plegada en un
 `<details class="mas grafico-d">` con el rótulo «Cómo leer el gráfico»: lo arma el JS al cargar, sólo en celular; sin JS, o en
