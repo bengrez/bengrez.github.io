@@ -236,6 +236,27 @@ Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 
 que antes (no queda nada detrás); al pulsar el botón de tema se baja recién entonces la otra foto; secuencia del nematodo
 completa, con el texto de vuelta en su lugar.
 
+## Octava ronda: textura pareja en toda la página
+
+Benjamin, al ver la séptima: el fondo todavía no lo convencía. Entre cuatro opciones eligió **textura pareja en toda la página**
+y marcó dos molestias: las manchas de textura y que se veía demasiado vacío.
+
+- **Sin manchas.** El tono y el grano ya no se pintan con los organismos ni se recortan alrededor del texto. Son una capa fija,
+  igual en toda la página (también sobre el texto y las fotos), muy tenue: 3 % de tono y un grano fino. No depende de la luz
+  del cursor. Sólo los organismos se desvanecen al acercarse al texto.
+- **Menos vacío.** Tres ajustes, todos reversibles con un número:
+
+| Medida | Séptima ronda | Ahora |
+|---|---|---|
+| Fondo quieto alrededor del texto, a 1440 / 1920 px | 40 / 53 px | 24 / 32 px |
+| Caída hasta los organismos a plena vista, a 1440 / 1920 px | 126 / 168 px | 90 / 120 px |
+| Tope de organismos (nivel de calidad más alto) | 160 | 220 |
+| Nadadoras que se mantienen | 64 | 96 |
+| Visibilidad del fondo lejos del cursor | 10 % | 18 % |
+
+Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; GPU a 1750 px en oscuro y en claro, a 60
+cuadros por segundo con 156 organismos; el nematodo sigue empujando el párrafo y el texto vuelve a su lugar.
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
@@ -322,7 +343,8 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
 15. ~~Estructura de los textos~~ Respondida el 2026-11-23: estructura A (persona primero). Hecha en la quinta ronda.
 16. ~~Desplegables~~ Respondida el 2026-11-23: se quedan como están.
 17. ~~Duración del entierro~~ Respondida el 2026-11-23: 9 segundos está bien.
-18. **Proporción del fondo quieto** (séptima ronda): 40 px quietos y 126 px de caída a 1440 px; 53 y 168 a 1920. ¿Así o todavía más?
+18. **Fondo** (octava ronda): textura pareja, 24 px quietos y 90 px de caída a 1440 px, más organismos y 18 % de visibilidad
+    lejos del cursor. ¿Convence así? Lo que más cambia la sensación de «vacío» es la visibilidad lejos del cursor.
 19. ~~Forma del retrato~~ Resuelta por Benjamin con una captura: apaisada, con las montañas desvaneciéndose hacia el texto.
 20. **Peso del escritorio.** Con el retrato queda en 195,7 KB en el tema claro, a 4,3 KB del límite de 200. Opciones: (a) dejarlo;
     (b) bajar la calidad del retrato, unos 10 KB menos; (c) pasar las fotos de terreno a un desplegable (27 KB menos al cargar).

@@ -541,6 +541,8 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 }
 footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line-height:1.6;color:var(--muted)}
 /* 059: el fondo ahora tiene aspecto de micrografía; este rótulo, en el margen izquierdo, dice que es una simulación. Sólo con el fondo activo y donde el margen lo deja caber. */
+.fondo-textura{display:none}.fondo-vivo .fondo-textura{display:block}   /* 067: la textura pareja del fondo (la crea quimiotaxis.js) sólo mientras el fondo está activo */
+@media print{.fondo-textura{display:none!important}}
 .fondo-nota{display:none;position:fixed;left:.9rem;bottom:.7rem;z-index:1;width:11.5rem;margin:0;font:.7rem/1.45 var(--mono);color:var(--muted);opacity:.45;transition:opacity .2s ease;cursor:default}
 .fondo-nota:hover,.fondo-nota:focus,.fondo-nota:focus-visible{opacity:1;color:var(--ink)}   /* 064: el rótulo queda tenue en reposo y se resalta con el mouse encima o con el foco del teclado */
 .fondo-nota:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
@@ -1255,7 +1257,7 @@ var portada=(function(){
   try{
     var mm=window.matchMedia; if(!mm||!mm('(pointer: fine)').matches||window.innerWidth<1024||mm('(prefers-reduced-motion: reduce)').matches) return;
     var cx=navigator.connection; if(cx&&cx.saveData) return;
-    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.min.js?v=bd5509d246'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.min.js?v=c29e06340b'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 056: se carga el .min.js que genera scripts/version-js.sh (la fuente legible es quimiotaxis.js). 063: empuje.js es nuevo y no usa Pretext: aparta palabras sueltas del cuerpo del nematodo, sin rehacer el párrafo */
+    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.min.js?v=89735ef946'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.min.js?v=c29e06340b'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 056: se carga el .min.js que genera scripts/version-js.sh (la fuente legible es quimiotaxis.js). 063: empuje.js es nuevo y no usa Pretext: aparta palabras sueltas del cuerpo del nematodo, sin rehacer el párrafo */
     if(document.readyState==='complete') cargar(); else window.addEventListener('load',function(){ setTimeout(cargar,300); });
   }catch(e){}
 })();

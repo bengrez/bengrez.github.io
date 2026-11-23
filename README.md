@@ -78,6 +78,11 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
   más chicos. Archivos `portada-*.webp`, generados por `scripts/retrato.py`; los originales no están en el repo. (3) **Empuje más unido** (`empuje.js`): las palabras
   se apartan del eje del nematodo sin su ondulación, todas las de un lado hacia ese lado, como mucho 20 px, y cada una se inclina
   según la diferencia entre sus extremos: la línea se curva como una cuerda en vez de romperse en palabras sueltas.
+- **Octava ronda** (067): **textura pareja**. El tono y el grano del microscopio ya no se pintan en el canvas (se veían como
+  manchas entre los bloques de texto): son una capa fija encima de toda la página (`textura()`, `TEX`, `.fondo-textura`), igual
+  en todas partes y sin depender de la luz del cursor. Para que no se vea vacío: el espacio quieto baja a 24 px y 90 px de caída
+  a 1440 (32 y 120 a 1920), suben los topes de población (130, 175 y 220 por nivel) y las nadadoras (96, y 32 más al partir), y
+  el fondo en reposo, fuera de la luz, se ve al 18 % (`LUZ_PISO`; era 10 %).
 - **Raíz**: el cuerpo de la primaria se dibujaba como un tubo de 5 px de radio cortado a 300 px de la punta (en `rzBuild`, la
   distancia a la punta se medía contra el punto anterior; venía de antes de la 056). Corregido: tiene su ancho real en todo el
   largo. Las laterales nacen dentro de la primaria y salen por un cuello ancho (`RZ_CUE`, `RZ_CUL`), la capa externa se abre en
