@@ -103,7 +103,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .lede{font-size:clamp(1.12rem,.5vw + 1rem,1.32rem);line-height:1.5;max-width:35em;margin-top:calc(clamp(1.25rem,3vw,2rem)*(1 - var(--k)) + .9rem*var(--k))}
 /* 053: empuje.js reacomoda las líneas de este párrafo alrededor del C. elegans que lo cruza: el texto real no se toca; mientras dura el empuje se pinta encima una copia por líneas (.emp, decorativa y sin selección) y el original se hace transparente. */
 .hero .lede{position:relative}
-.lede.emp-on{color:transparent}
+.lede.emp-on .pal{display:inline-block;will-change:transform}   /* 063: mientras el nematodo está dentro del párrafo, cada palabra es una caja que se puede desplazar; el texto no se rehace */
 .hero .acciones{transition:transform .6s ease}
 .acciones{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:calc(clamp(1.25rem,3vw,1.9rem)*(1 - var(--k)) + .9rem*var(--k));font-family:var(--display)}
 .btn{display:inline-block;padding:.7rem 1.15rem;border:1px solid var(--ink);border-radius:2px;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:500;line-height:1.2}
@@ -376,6 +376,8 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .mas[open] summary::before{content:"−"}
 .mas summary:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
 .mas>:last-child{margin-bottom:1.25rem}
+.mas + .mas{margin-top:0}   /* 063: los desplegables seguidos van pegados */
+.mas>.evidencia:first-of-type,.mas>.herr:first-of-type{margin-top:.5rem}
 .ficha{display:grid;grid-template-columns:11.5rem 1fr}
 @media (min-width:960px){.ficha{grid-template-columns:8.5rem 1fr}}
 .ficha dt{font-family:var(--display);font-size:.95rem;color:var(--muted);padding:.75rem 1rem .75rem 0}
@@ -538,7 +540,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 <div class="hero pagina">
   <p class="lugar">Santiago, Chile</p>
   <h1>Ecólogo microbiano. Hoy trabajo con datos.</h1>
-  <p class="lede">Soy Benjamín Moreira-Grez. En el doctorado medí si los suelos mineros de Western Australia se recuperan, con pocas muestras y mucho ruido. Hoy uso ese oficio en Andes, con la telemetría y la detección de fallas de una flota de buses, y en un colegio, donde enseño ciencias. Trabajo con agentes de IA, en entornos controlados.</p>
+  <p class="lede">Soy Benjamín Moreira-Grez. Estudié los microbios del suelo y hoy trabajo con los datos de una flota de buses, en Andes, y enseño ciencias en un colegio. Uso agentes de IA a diario, en entornos controlados. Me interesa conversar sobre trabajo en datos, proyectos y colaboración en investigación.</p>
   <p class="acciones"><a class="btn" href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a><a class="btn sec" href="#casos">Ver los tres trabajos</a></p>
 </div>
 
@@ -552,16 +554,16 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
     </header>
     <div>
       <p class="problema">Resuelvo problemas con lo que hay disponible.</p>
-      <p class="nota">Soy biólogo y me doctoré en ecología microbiana de suelos en Western Australia. Hoy vivo en Santiago: trabajo con los datos de una flota de buses y enseño ciencias en un colegio.</p>
+      <dl class="hechos historia">
+        <div><dt>De dónde vengo</dt><dd>Soy biólogo, de la Pontificia Universidad Católica de Valparaíso. Me doctoré en la University of Western Australia, con Becas Chile, estudiando si los suelos mineros degradados se recuperan al devolverles microorganismos. Ahí aprendí a medir con pocas muestras y mucho ruido. Después seguí dos años como investigador en la misma universidad.</dd></div>
+        <div><dt>Qué hago hoy</dt><dd>Estoy en Santiago y hago dos cosas. Para una empresa de transporte armé la telemetría y el detector de anomalías de su flota de buses, que hoy está en piloto. Y en un colegio enseño ciencias, con herramientas web que hice para practicar sin nota.</dd></div>
+        <div><dt>Cómo trabajo</dt><dd>Aprendo lo que el problema pide: FMS, tacógrafos y GNSS los aprendí sobre la marcha. Uso agentes de IA a diario, en entornos controlados. Y despliego un modelo sólo si supera a las reglas simples.</dd></div>
+      </dl>
       <dl class="metricas">
         <div><dt>publicaciones</dt><dd>15</dd></div>
         <div><dt>citas</dt><dd>796</dd></div>
         <div><dt>índice h</dt><dd>13</dd></div>
         <div class="cuando"><dt>fuente</dt><dd>citas e índice h: Google Scholar, octubre de 2026</dd></div>
-      </dl>
-      <dl class="hechos">
-        <div><dt>Cómo trabajo</dt><dd>Aprendo lo que el problema pide: FMS, tacógrafos y GNSS los aprendí sobre la marcha. Uso agentes de IA a diario, en entornos controlados, y despliego un modelo sólo si supera a las reglas simples.</dd></div>
-        <div><dt>Qué busco hoy</dt><dd>Me interesa conversar sobre trabajo en datos, proyectos o consultorías, y colaboración en investigación. <a href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a>.</dd></div>
       </dl>
     </div>
   </div>
@@ -747,7 +749,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
       <div class="riel-top"><p class="pie-fig">Fig. 1 — Demostración con datos simulados: refrigerante de dos buses, banda de referencia y alerta. El umbral se mueve en Data science.</p></div>
     </header>
     <div>
-      <p class="intro"><span class="kicker" id="k-casos">Tres trabajos</span>Lo que aprendí con suelos lo uso hoy con buses y en un colegio. Cada trabajo dice en qué estado está:</p>
+      <p class="intro"><span class="kicker" id="k-casos">Tres trabajos</span>Los cuento igual: el problema, lo que hice y en qué quedó. Cada uno dice su estado:</p>
       <ul class="estados" aria-label="Estados que usa esta página">
         <li class="estado e-uso">publicado o en uso</li>
         <li class="estado e-piloto">en piloto</li>
@@ -777,26 +779,25 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
         <output id="demo-out" for="demo-k">Umbral 2σ: alerta el día 15, 2 días después de que empieza la deriva; 2 falsas alarmas en 31 días-bus normales.</output>
       </div>
       <p class="grafico"><b>El gráfico es una simulación</b>: los datos de la flota son del cliente y no se publican. Un bus se queda en la banda de referencia; el otro deriva desde el día 13 y genera la alerta. Las cruces son falsas alarmas: avisar antes trae más.</p>
-      <figure class="evidencia" data-nosnippet>
-        <ol class="flujo flota" aria-label="Esquema del sistema: del bus CAN y GNSS a la ingesta, la base de series temporales, la API y el mapa en vivo; desde la base, una rama evalúa las señales con un detector de anomalías y produce alertas.">
-          <li class="can fd"><b>Bus CAN y GNSS</b><span>señales sin procesar, FMS y tacógrafos</span></li>
-          <li class="ing fd"><b>Ingesta</b><span>contrato de datos versionado</span></li>
-          <li class="db fd fb2"><b>PostgreSQL</b><span>series temporales, posiciones y embeddings</span></li>
-          <li class="api fd"><b>API</b><span>FastAPI</span></li>
-          <li class="map"><b>Mapa en vivo</b><span>reconstruye tramos</span></li>
-          <li class="det fd"><b>Detector de anomalías</b><span>reglas y modelos</span></li>
-          <li class="ale"><b>Alerta</b><span>sólo si supera a las reglas simples</span></li>
-        </ol>
-        <figcaption>El sistema, de la señal a la decisión. En piloto, con datos en tiempo real y monitoreo propio.</figcaption>
-      </figure>
       <dl class="hechos">
-        <div><dt>Sin fallas registradas</dt><dd>Construí un simulador de telemetría y un banco de evaluación a ciegas, y sobre eso el detector.</dd></div>
-        <div><dt>Datos de conductores</dt><dd>Del correo a una plataforma con resguardos, diseñada para la Ley 21.719.</dd></div>
-        <div id="agentes"><dt>Agentes de IA</dt><dd>A diario y en entornos controlados: contexto persistente y versionado, entregas entre agentes con trazabilidad y evaluación a ciegas antes de desplegar.</dd></div>
-        <div><dt>Con qué</dt><dd>Python, FastAPI, PostgreSQL con TimescaleDB, PostGIS y pgvector, Docker, Linux, MCP, HTMX y React.</dd></div>
+        <div><dt>Qué hice</dt><dd>Armé la telemetría, del bus CAN y el GNSS a un mapa en vivo, y un detector de anomalías con reglas y modelos. Como no había suficientes fallas registradas, construí un simulador y un banco de evaluación a ciegas.</dd></div>
+        <div><dt>En qué quedó</dt><dd>Funciona con datos en tiempo real, en piloto y con monitoreo propio. Los datos de conductores pasaron del correo a una plataforma con resguardos, diseñada para la Ley 21.719.</dd></div>
+        <div id="agentes"><dt>Con qué</dt><dd>Python, FastAPI, PostgreSQL con TimescaleDB, PostGIS y pgvector, Docker, Linux, MCP, HTMX y React. Y agentes de IA a diario, en entornos controlados: contexto versionado, entregas con trazabilidad y evaluación a ciegas antes de desplegar.</dd></div>
       </dl>
       <details class="mas">
         <summary>El sistema, pieza por pieza</summary>
+        <figure class="evidencia" data-nosnippet>
+          <ol class="flujo flota" aria-label="Esquema del sistema: del bus CAN y GNSS a la ingesta, la base de series temporales, la API y el mapa en vivo; desde la base, una rama evalúa las señales con un detector de anomalías y produce alertas.">
+            <li class="can fd"><b>Bus CAN y GNSS</b><span>señales sin procesar, FMS y tacógrafos</span></li>
+            <li class="ing fd"><b>Ingesta</b><span>contrato de datos versionado</span></li>
+            <li class="db fd fb2"><b>PostgreSQL</b><span>series temporales, posiciones y embeddings</span></li>
+            <li class="api fd"><b>API</b><span>FastAPI</span></li>
+            <li class="map"><b>Mapa en vivo</b><span>reconstruye tramos</span></li>
+            <li class="det fd"><b>Detector de anomalías</b><span>reglas y modelos</span></li>
+            <li class="ale"><b>Alerta</b><span>sólo si supera a las reglas simples</span></li>
+          </ol>
+          <figcaption>El sistema, de la señal a la decisión. En piloto, con datos en tiempo real y monitoreo propio.</figcaption>
+        </figure>
         <dl class="ficha">
           <dt>Bus CAN y GNSS</dt>
           <dd>FMS, protocolos de tacógrafos y telemetría GNSS, aprendidos sobre la marcha.</dd>
@@ -835,93 +836,95 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
         <div><dt>respiración del suelo</dt><dd>×2</dd></div>
         <div><dt>plántulas de <i>Acacia ancistrocarpa</i> por maceta</dt><dd>de 6,3 a cerca de 2</dd></div>
       </dl>
-      <p class="nota remate">Más actividad no fue recuperación.</p>
       <p class="grafico"><b>El gráfico son datos publicados</b>: amonio y nitrato más nitrito de un suelo de acopio de una mina del Pilbara, antes de incubar (Basal) y tras 12 semanas, por tratamiento (media ± DE, n = 3). Fuente: tabla suplementaria 1 de <a href="https://doi.org/10.3389/fmicb.2019.01617">Moreira-Grez et al. 2019, <i>Frontiers in Microbiology</i> 10:1617</a> (CC BY 4.0).</p>
       <dl class="hechos">
-        <div><dt>Diseño</dt><dd>Muestras escasas y caras: réplicas en cada muestreo, en terreno, en zonas áridas de Western Australia.</dd></div>
-        <div><dt>Métodos</dt><dd>Marcaje isotópico (RNA-SIP) para saber qué organismo hace qué, metagenómica y estadística multivariante.</dd></div>
-        <div><dt>Después</dt><dd>El mismo enfoque en arroceras, trigo y residuos de bauxita.</dd></div>
+        <div><dt>Qué hice</dt><dd>Lo medí en terreno y en invernadero, en zonas áridas de Western Australia, con réplicas en cada muestreo, porque las muestras eran escasas y caras.</dd></div>
+        <div><dt>En qué quedó</dt><dd>Más actividad no fue recuperación: con el inóculo y nitrógeno el suelo respiró el doble, pero emergieron menos plántulas. De ahí salieron la tesis y las publicaciones. Después usé el mismo enfoque en arroceras, trigo y residuos de bauxita.</dd></div>
+        <div><dt>Con qué</dt><dd>Marcaje isotópico (RNA-SIP) para saber qué organismo hace qué, metagenómica y estadística multivariante.</dd></div>
       </dl>
-      <figure class="evidencia sip citas">
-        <div class="arte">
-<!-- fig:citas -->
-<svg viewBox="0 0 320 132" role="img" aria-label="Gráfico con datos de OpenAlex: citas por año de 15 publicaciones, de 2017 a 2026. 2017: 2. 2018: 7. 2019: 25. 2020: 62. 2021: 112. 2022: 116. 2023: 115. 2024: 95. 2025: 83. 2026: 91. El año 2026 está incompleto.">
-<path class="ax" d="M34 16V104H314M34 104h-4M34 67.3h-4M34 30.7h-4"/>
-<text x="27" y="108" text-anchor="end">0</text>
-<text x="27" y="71.3" text-anchor="end">50</text>
-<text x="27" y="34.7" text-anchor="end">100</text>
-<rect class="cp" x="37" y="102.5" width="22" height="1.5"/>
-<text x="48" y="118" text-anchor="middle">17</text>
-<rect class="cp" x="65" y="98.9" width="22" height="5.1"/>
-<text x="76" y="118" text-anchor="middle">18</text>
-<rect class="cp" x="93" y="93.7" width="22" height="10.3"/>
-<rect class="cc" x="93" y="85.7" width="22" height="8.1"/>
-<text x="104" y="118" text-anchor="middle">19</text>
-<rect class="cp" x="121" y="82.7" width="22" height="21.3"/>
-<rect class="cc" x="121" y="58.5" width="22" height="24.2"/>
-<text x="132" y="118" text-anchor="middle">20</text>
-<rect class="cp" x="149" y="65.1" width="22" height="38.9"/>
-<rect class="cc" x="149" y="21.9" width="22" height="43.3"/>
-<text x="160" y="118" text-anchor="middle">21</text>
-<rect class="cp" x="177" y="48.3" width="22" height="55.7"/>
-<rect class="cc" x="177" y="18.9" width="22" height="29.3"/>
-<text x="188" y="118" text-anchor="middle">22</text>
-<rect class="cp" x="205" y="52.7" width="22" height="51.3"/>
-<rect class="cc" x="205" y="19.7" width="22" height="33"/>
-<text x="216" y="118" text-anchor="middle">23</text>
-<rect class="cp" x="233" y="54.1" width="22" height="49.9"/>
-<rect class="cc" x="233" y="34.3" width="22" height="19.8"/>
-<text x="244" y="118" text-anchor="middle">24</text>
-<rect class="cp" x="261" y="60" width="22" height="44"/>
-<rect class="cc" x="261" y="43.1" width="22" height="16.9"/>
-<text x="272" y="118" text-anchor="middle">25</text>
-<rect class="cp" x="289" y="59.3" width="22" height="44.7"/>
-<rect class="cc" x="289" y="37.3" width="22" height="22"/>
-<text x="300" y="118" text-anchor="middle">26</text>
-<text x="314" y="130" text-anchor="end">año (20…); 2026 incompleto</text>
-</svg>
-<!-- /fig:citas -->
-        </div>
-        <div>
-          <figcaption>Citas por año de 15 publicaciones, según <a href="https://openalex.org/">OpenAlex</a> (consulta por DOI del 21 de noviembre de 2026; 2026 está incompleto). En gris, el artículo de consorcio sobre crAssphage (<a href="https://doi.org/10.1038/s41564-019-0494-6"><i>Nature Microbiology</i>, 2019</a>), donde soy uno de 117 autores. OpenAlex cuenta menos citas que Google Scholar.</figcaption>
-        </div>
-      </figure>
       <figure class="evidencia sip fotos">
         <div class="arte"><img src="costras-biologicas.webp" width="520" height="391" alt="Cuatro fotos de terreno con una tarjeta de escala en centímetros sobre suelo rojo: costra de cianobacterias, liquen crustoso gris, liquen folioso verde claro y suelo desnudo." loading="lazy" decoding="async"></div>
         <div>
           <figcaption>Lo muestreado en un sitio sin alterar de Western Australia: costra de cianobacterias, liquen crustoso, liquen folioso y suelo desnudo (control). Fotos de la figura 1 de <a href="https://doi.org/10.3389/fmicb.2019.02143">Moreira-Grez et al. 2019, <i>Frontiers in Microbiology</i> 10:2143</a> (CC BY), recortadas.</figcaption>
         </div>
       </figure>
-      <figure class="evidencia sip">
-        <div class="arte">
-<!-- fig:sip -->
-<svg viewBox="0 0 320 210" role="img" aria-label="Gráfico con datos simulados: ARN ribosomal por fracción de un gradiente de densidad, como proporción del máximo. El control con carbono 12 tiene su máximo cerca de 1,79 gramos por mililitro; el tratamiento con carbono 13, cerca de 1,82, con un hombro en la posición liviana.">
-<path class="ax" d="M46 20V164H310M60.7 164v4M119.3 164v4M178 164v4M236.7 164v4M295.3 164v4M46 164h-4M46 97.3h-4M46 30.7h-4"/>
-<text x="60.7" y="180" text-anchor="middle">1,76</text>
-<text x="119.3" y="180" text-anchor="middle">1,78</text>
-<text x="178" y="180" text-anchor="middle">1,80</text>
-<text x="236.7" y="180" text-anchor="middle">1,82</text>
-<text x="295.3" y="180" text-anchor="middle">1,84</text>
-<text x="39" y="168" text-anchor="end">0</text>
-<text x="39" y="101.3" text-anchor="end">0,5</text>
-<text x="39" y="34.7" text-anchor="end">1</text>
-<text class="tit" x="178.0" y="204" text-anchor="middle">Densidad de flotación (g/ml)</text>
-<text class="tit" transform="translate(12 92.0) rotate(-90)" text-anchor="middle">ARNr 16S (prop. del máximo)</text>
-<text x="310" y="13" text-anchor="end">Datos simulados, 12 fracciones</text>
-<path class="c12" d="M75.3 156.5 L94 154.4 L112.7 106.4 L131.3 49.9 L150 30.7 L168.7 75.2 L187.3 135 L206 157.2 L224.7 164 L243.3 155.8 L262 163.4 L280.7 164"/>
-<g class="p12"><circle cx="75.3" cy="156.5" r="2.6"/><circle cx="94" cy="154.4" r="2.6"/><circle cx="112.7" cy="106.4" r="2.6"/><circle cx="131.3" cy="49.9" r="2.6"/><circle cx="150" cy="30.7" r="2.6"/><circle cx="168.7" cy="75.2" r="2.6"/><circle cx="187.3" cy="135" r="2.6"/><circle cx="206" cy="157.2" r="2.6"/><circle cx="224.7" cy="164" r="2.6"/><circle cx="243.3" cy="155.8" r="2.6"/><circle cx="262" cy="163.4" r="2.6"/><circle cx="280.7" cy="164" r="2.6"/></g>
-<path class="a13" d="M75.3 163.8 L94 160.3 L112.7 147.3 L131.3 125.5 L150 115.1 L168.7 122.9 L187.3 109.8 L206 70.3 L224.7 30.7 L243.3 37.1 L262 89.9 L280.7 137.8 L280.7 164 L75.3 164 Z"/>
-<path class="c13" d="M75.3 163.8 L94 160.3 L112.7 147.3 L131.3 125.5 L150 115.1 L168.7 122.9 L187.3 109.8 L206 70.3 L224.7 30.7 L243.3 37.1 L262 89.9 L280.7 137.8"/>
-<g class="p13"><circle cx="75.3" cy="163.8" r="2.6"/><circle cx="94" cy="160.3" r="2.6"/><circle cx="112.7" cy="147.3" r="2.6"/><circle cx="131.3" cy="125.5" r="2.6"/><circle cx="150" cy="115.1" r="2.6"/><circle cx="168.7" cy="122.9" r="2.6"/><circle cx="187.3" cy="109.8" r="2.6"/><circle cx="206" cy="70.3" r="2.6"/><circle cx="224.7" cy="30.7" r="2.6"/><circle cx="243.3" cy="37.1" r="2.6"/><circle cx="262" cy="89.9" r="2.6"/><circle cx="280.7" cy="137.8" r="2.6"/></g>
-<text class="tit" x="129.7" y="40" text-anchor="end">¹²C</text>
-<text class="tit t13" x="252.8" y="40">¹³C</text>
-</svg>
-<!-- /fig:sip -->
-        </div>
-        <div>
-          <figcaption>Perfil de RNA-SIP, con datos simulados. El ARN que incorporó ¹³C queda en las fracciones pesadas, a la derecha: así se sabe qué organismos usaron el sustrato. El método está en el <a href="https://doi.org/10.1007/978-1-4939-9721-3_3">capítulo de 2019</a> del que soy coautor.</figcaption>
-        </div>
-      </figure>
+      <details class="mas">
+        <summary>Citas por año y un perfil de RNA-SIP</summary>
+        <figure class="evidencia sip citas">
+          <div class="arte">
+  <!-- fig:citas -->
+  <svg viewBox="0 0 320 132" role="img" aria-label="Gráfico con datos de OpenAlex: citas por año de 15 publicaciones, de 2017 a 2026. 2017: 2. 2018: 7. 2019: 25. 2020: 62. 2021: 112. 2022: 116. 2023: 115. 2024: 95. 2025: 83. 2026: 91. El año 2026 está incompleto.">
+  <path class="ax" d="M34 16V104H314M34 104h-4M34 67.3h-4M34 30.7h-4"/>
+  <text x="27" y="108" text-anchor="end">0</text>
+  <text x="27" y="71.3" text-anchor="end">50</text>
+  <text x="27" y="34.7" text-anchor="end">100</text>
+  <rect class="cp" x="37" y="102.5" width="22" height="1.5"/>
+  <text x="48" y="118" text-anchor="middle">17</text>
+  <rect class="cp" x="65" y="98.9" width="22" height="5.1"/>
+  <text x="76" y="118" text-anchor="middle">18</text>
+  <rect class="cp" x="93" y="93.7" width="22" height="10.3"/>
+  <rect class="cc" x="93" y="85.7" width="22" height="8.1"/>
+  <text x="104" y="118" text-anchor="middle">19</text>
+  <rect class="cp" x="121" y="82.7" width="22" height="21.3"/>
+  <rect class="cc" x="121" y="58.5" width="22" height="24.2"/>
+  <text x="132" y="118" text-anchor="middle">20</text>
+  <rect class="cp" x="149" y="65.1" width="22" height="38.9"/>
+  <rect class="cc" x="149" y="21.9" width="22" height="43.3"/>
+  <text x="160" y="118" text-anchor="middle">21</text>
+  <rect class="cp" x="177" y="48.3" width="22" height="55.7"/>
+  <rect class="cc" x="177" y="18.9" width="22" height="29.3"/>
+  <text x="188" y="118" text-anchor="middle">22</text>
+  <rect class="cp" x="205" y="52.7" width="22" height="51.3"/>
+  <rect class="cc" x="205" y="19.7" width="22" height="33"/>
+  <text x="216" y="118" text-anchor="middle">23</text>
+  <rect class="cp" x="233" y="54.1" width="22" height="49.9"/>
+  <rect class="cc" x="233" y="34.3" width="22" height="19.8"/>
+  <text x="244" y="118" text-anchor="middle">24</text>
+  <rect class="cp" x="261" y="60" width="22" height="44"/>
+  <rect class="cc" x="261" y="43.1" width="22" height="16.9"/>
+  <text x="272" y="118" text-anchor="middle">25</text>
+  <rect class="cp" x="289" y="59.3" width="22" height="44.7"/>
+  <rect class="cc" x="289" y="37.3" width="22" height="22"/>
+  <text x="300" y="118" text-anchor="middle">26</text>
+  <text x="314" y="130" text-anchor="end">año (20…); 2026 incompleto</text>
+  </svg>
+  <!-- /fig:citas -->
+          </div>
+          <div>
+            <figcaption>Citas por año de 15 publicaciones, según <a href="https://openalex.org/">OpenAlex</a> (consulta por DOI del 21 de noviembre de 2026; 2026 está incompleto). En gris, el artículo de consorcio sobre crAssphage (<a href="https://doi.org/10.1038/s41564-019-0494-6"><i>Nature Microbiology</i>, 2019</a>), donde soy uno de 117 autores. OpenAlex cuenta menos citas que Google Scholar.</figcaption>
+          </div>
+        </figure>
+        <figure class="evidencia sip">
+          <div class="arte">
+  <!-- fig:sip -->
+  <svg viewBox="0 0 320 210" role="img" aria-label="Gráfico con datos simulados: ARN ribosomal por fracción de un gradiente de densidad, como proporción del máximo. El control con carbono 12 tiene su máximo cerca de 1,79 gramos por mililitro; el tratamiento con carbono 13, cerca de 1,82, con un hombro en la posición liviana.">
+  <path class="ax" d="M46 20V164H310M60.7 164v4M119.3 164v4M178 164v4M236.7 164v4M295.3 164v4M46 164h-4M46 97.3h-4M46 30.7h-4"/>
+  <text x="60.7" y="180" text-anchor="middle">1,76</text>
+  <text x="119.3" y="180" text-anchor="middle">1,78</text>
+  <text x="178" y="180" text-anchor="middle">1,80</text>
+  <text x="236.7" y="180" text-anchor="middle">1,82</text>
+  <text x="295.3" y="180" text-anchor="middle">1,84</text>
+  <text x="39" y="168" text-anchor="end">0</text>
+  <text x="39" y="101.3" text-anchor="end">0,5</text>
+  <text x="39" y="34.7" text-anchor="end">1</text>
+  <text class="tit" x="178.0" y="204" text-anchor="middle">Densidad de flotación (g/ml)</text>
+  <text class="tit" transform="translate(12 92.0) rotate(-90)" text-anchor="middle">ARNr 16S (prop. del máximo)</text>
+  <text x="310" y="13" text-anchor="end">Datos simulados, 12 fracciones</text>
+  <path class="c12" d="M75.3 156.5 L94 154.4 L112.7 106.4 L131.3 49.9 L150 30.7 L168.7 75.2 L187.3 135 L206 157.2 L224.7 164 L243.3 155.8 L262 163.4 L280.7 164"/>
+  <g class="p12"><circle cx="75.3" cy="156.5" r="2.6"/><circle cx="94" cy="154.4" r="2.6"/><circle cx="112.7" cy="106.4" r="2.6"/><circle cx="131.3" cy="49.9" r="2.6"/><circle cx="150" cy="30.7" r="2.6"/><circle cx="168.7" cy="75.2" r="2.6"/><circle cx="187.3" cy="135" r="2.6"/><circle cx="206" cy="157.2" r="2.6"/><circle cx="224.7" cy="164" r="2.6"/><circle cx="243.3" cy="155.8" r="2.6"/><circle cx="262" cy="163.4" r="2.6"/><circle cx="280.7" cy="164" r="2.6"/></g>
+  <path class="a13" d="M75.3 163.8 L94 160.3 L112.7 147.3 L131.3 125.5 L150 115.1 L168.7 122.9 L187.3 109.8 L206 70.3 L224.7 30.7 L243.3 37.1 L262 89.9 L280.7 137.8 L280.7 164 L75.3 164 Z"/>
+  <path class="c13" d="M75.3 163.8 L94 160.3 L112.7 147.3 L131.3 125.5 L150 115.1 L168.7 122.9 L187.3 109.8 L206 70.3 L224.7 30.7 L243.3 37.1 L262 89.9 L280.7 137.8"/>
+  <g class="p13"><circle cx="75.3" cy="163.8" r="2.6"/><circle cx="94" cy="160.3" r="2.6"/><circle cx="112.7" cy="147.3" r="2.6"/><circle cx="131.3" cy="125.5" r="2.6"/><circle cx="150" cy="115.1" r="2.6"/><circle cx="168.7" cy="122.9" r="2.6"/><circle cx="187.3" cy="109.8" r="2.6"/><circle cx="206" cy="70.3" r="2.6"/><circle cx="224.7" cy="30.7" r="2.6"/><circle cx="243.3" cy="37.1" r="2.6"/><circle cx="262" cy="89.9" r="2.6"/><circle cx="280.7" cy="137.8" r="2.6"/></g>
+  <text class="tit" x="129.7" y="40" text-anchor="end">¹²C</text>
+  <text class="tit t13" x="252.8" y="40">¹³C</text>
+  </svg>
+  <!-- /fig:sip -->
+          </div>
+          <div>
+            <figcaption>Perfil de RNA-SIP, con datos simulados. El ARN que incorporó ¹³C queda en las fracciones pesadas, a la derecha: así se sabe qué organismos usaron el sustrato. El método está en el <a href="https://doi.org/10.1007/978-1-4939-9721-3_3">capítulo de 2019</a> del que soy coautor.</figcaption>
+          </div>
+        </figure>
+      </details>
       <details class="mas">
         <summary>Seis publicaciones seleccionadas</summary>
         <ol class="pubs">
@@ -948,76 +951,79 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
       <p class="problema">Química, Biología y Ciencias para la Ciudadanía en cursos heterogéneos, con poco tiempo de sala.</p>
       <p class="grafico" data-resumen="Qué muestra la imagen"><b>La imagen es una captura</b> de la <a href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/">Tabla periódica reactiva</a>, que se abre y se usa desde el enlace. No hay gráfico de resultados: no publico datos de estudiantes.</p>
       <dl class="hechos">
-        <div><dt>En sala</dt><dd>Planifico por objetivo de aprendizaje: diagnóstico al inicio y evaluación formativa antes de la sumativa.</dd></div>
-        <div><dt>Herramientas propias</dt><dd>Para practicar sin nota. Sin cuenta ni instalación, y no guardan ni envían respuestas. Están en <a href="https://bengrez.github.io/aula-herramientas/">Herramientas de aula</a>.</dd></div>
-        <div><dt>Para el colegio</dt><dd>Un asistente de gestión escolar con IA, <a href="#colegio">en desarrollo</a>.</dd></div>
+        <div><dt>Qué hice</dt><dd>Planifico por objetivo de aprendizaje, con diagnóstico al inicio y evaluación formativa antes de la sumativa. Para practicar sin nota hice herramientas web propias.</dd></div>
+        <div><dt>En qué quedó</dt><dd>Varias herramientas están publicadas y se usan en clases. Se abren sin cuenta ni instalación, y no guardan ni envían respuestas. Están en <a href="https://bengrez.github.io/aula-herramientas/">Herramientas de aula</a>.</dd></div>
+        <div><dt>Con qué</dt><dd>Herramientas web propias y, en desarrollo, un asistente de gestión escolar con IA (embeddings y búsqueda vectorial).</dd></div>
       </dl>
 
-      <h3 class="titulo">Herramientas publicadas</h3>
-      <p class="pie">Las imágenes son fragmentos de cada interfaz.</p>
-      <article class="herr herr-a">
-        <picture><source media="(min-width:1200px)" srcset="tabla-periodica-fig.webp" width="1280" height="560"><img src="tabla-periodica-fig-n.webp" width="800" height="440" alt="" loading="lazy" decoding="async"></picture>
-        <div>
-          <h4><a href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/">Tabla periódica reactiva</a></h4>
-          <p class="sub">Imán y Escudo</p>
-          <p class="estado e-uso">en uso en clases</p>
-          <dl class="campos">
-            <dt>Para</dt>
-            <dd>Química, 8.º básico (CN08 OA14).</dd>
-            <dt>Entrena</dt>
-            <dd>Tendencias periódicas por posición, sin memorizar valores.</dd>
-            <dt>Modos</dt>
-            <dd>Comparación guiada, práctica con pistas y modo docente para proyectar.</dd>
-          </dl>
-        </div>
-      </article>
-      <article class="herr">
-        <img src="autodiagnostico.webp" width="1400" height="386" alt="" loading="lazy" decoding="async">
-        <div>
-          <h4><a href="https://bengrez.github.io/aula-herramientas/autodiagnostico-bienestar-salud/">Autodiagnóstico de Bienestar y Salud</a></h4>
-          <p class="estado e-uso">en uso en clases</p>
-          <dl class="campos">
-            <dt>Para</dt>
-            <dd>Ciencias para la Ciudadanía, tercero medio.</dd>
-            <dt>Entrena</dt>
-            <dd>Factores biológicos, ambientales y sociales de la salud; elegir uno para investigar en grupo.</dd>
-            <dt>Resultado</dt>
-            <dd>Veinticuatro preguntas en seis bloques, con semáforo. Guía para reflexionar, no diagnóstico.</dd>
-            <dt>Datos</dt>
-            <dd>Se calcula en el dispositivo; no guarda ni envía respuestas.</dd>
-          </dl>
-        </div>
-      </article>
-      <article class="herr herr-a">
-        <div class="tipo" aria-hidden="true"><b>1 − 1/R₀</b><span>umbral de inmunidad de rebaño</span></div>
-        <div>
-          <h4><a href="https://bengrez.github.io/aula-herramientas/vacunas-rebano/">Vacunas e inmunidad de rebaño</a></h4>
-          <p class="estado e-uso">publicada</p>
-          <dl class="campos">
-            <dt>Para</dt>
-            <dd>Ciencias para la Ciudadanía, cuarto medio.</dd>
-            <dt>Entrena</dt>
-            <dd>Por qué la protección de un grupo cuida también a quien no se vacunó: el umbral, un simulador de dos casos y datos reales de COVID-19 entre 2020 y 2022.</dd>
-            <dt>Formato</dt>
-            <dd>Lectura vertical, pensada para el celular. No guarda ni envía nada.</dd>
-          </dl>
-        </div>
-      </article>
-      <p class="mas-herr"><a href="https://bengrez.github.io/aula-herramientas/">Ver todas en Herramientas de aula →</a></p>
-
-      <h3 class="titulo" id="colegio">Medir un colegio</h3>
-      <p class="estado e-dev">en desarrollo</p>
-      <p class="nota">Un asistente con IA que cruza las fuentes que el colegio ya tiene y responde indicando la fuente. Local-first, con datos seudonimizados. Hoy es una demo con datos sintéticos; el piloto, con datos reales, desde 2027.</p>
-      <figure class="evidencia" data-nosnippet style="margin-top:1.25rem">
-        <ol class="flujo colegio" aria-label="Esquema del asistente de gestión escolar: las fuentes que el colegio ya tiene alimentan un asistente con IA que busca patrones entre asignaturas y responde con evidencia; dos reglas acotan la respuesta. Lo usan el equipo directivo, UTP, convivencia y profesores jefe.">
-          <li class="fd"><b>Fuentes que el colegio ya tiene</b><span>notas, asistencia, convivencia, observaciones</span></li>
-          <li class="db fd"><b>Asistente con IA</b><span>embeddings y búsqueda vectorial, pgvector</span></li>
-          <li class="fb"><b>Respuestas con evidencia</b><span>cada indicador dice su fuente y qué le falta</span></li>
-          <li class="reg"><b>Reglas de la respuesta</b><span>se suprimen los agregados con pocos estudiantes; el riesgo de reprobación es una categoría explicada, no una probabilidad</span></li>
-          <li class="aparte"><b>Para quién</b><span>equipo directivo, UTP, convivencia y profesores jefe</span></li>
-        </ol>
-        <figcaption>Esquema de «medir un colegio»: asistente de gestión escolar en un equipo del propio colegio, diseñado para la Ley 21.719.</figcaption>
-      </figure>
+      <details class="mas">
+        <summary>Tres herramientas publicadas</summary>
+        <p class="pie">Las imágenes son fragmentos de cada interfaz.</p>
+        <article class="herr herr-a">
+          <picture><source media="(min-width:1200px)" srcset="tabla-periodica-fig.webp" width="1280" height="560"><img src="tabla-periodica-fig-n.webp" width="800" height="440" alt="" loading="lazy" decoding="async"></picture>
+          <div>
+            <h4><a href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/">Tabla periódica reactiva</a></h4>
+            <p class="sub">Imán y Escudo</p>
+            <p class="estado e-uso">en uso en clases</p>
+            <dl class="campos">
+              <dt>Para</dt>
+              <dd>Química, 8.º básico (CN08 OA14).</dd>
+              <dt>Entrena</dt>
+              <dd>Tendencias periódicas por posición, sin memorizar valores.</dd>
+              <dt>Modos</dt>
+              <dd>Comparación guiada, práctica con pistas y modo docente para proyectar.</dd>
+            </dl>
+          </div>
+        </article>
+        <article class="herr">
+          <img src="autodiagnostico.webp" width="1400" height="386" alt="" loading="lazy" decoding="async">
+          <div>
+            <h4><a href="https://bengrez.github.io/aula-herramientas/autodiagnostico-bienestar-salud/">Autodiagnóstico de Bienestar y Salud</a></h4>
+            <p class="estado e-uso">en uso en clases</p>
+            <dl class="campos">
+              <dt>Para</dt>
+              <dd>Ciencias para la Ciudadanía, tercero medio.</dd>
+              <dt>Entrena</dt>
+              <dd>Factores biológicos, ambientales y sociales de la salud; elegir uno para investigar en grupo.</dd>
+              <dt>Resultado</dt>
+              <dd>Veinticuatro preguntas en seis bloques, con semáforo. Guía para reflexionar, no diagnóstico.</dd>
+              <dt>Datos</dt>
+              <dd>Se calcula en el dispositivo; no guarda ni envía respuestas.</dd>
+            </dl>
+          </div>
+        </article>
+        <article class="herr herr-a">
+          <div class="tipo" aria-hidden="true"><b>1 − 1/R₀</b><span>umbral de inmunidad de rebaño</span></div>
+          <div>
+            <h4><a href="https://bengrez.github.io/aula-herramientas/vacunas-rebano/">Vacunas e inmunidad de rebaño</a></h4>
+            <p class="estado e-uso">publicada</p>
+            <dl class="campos">
+              <dt>Para</dt>
+              <dd>Ciencias para la Ciudadanía, cuarto medio.</dd>
+              <dt>Entrena</dt>
+              <dd>Por qué la protección de un grupo cuida también a quien no se vacunó: el umbral, un simulador de dos casos y datos reales de COVID-19 entre 2020 y 2022.</dd>
+              <dt>Formato</dt>
+              <dd>Lectura vertical, pensada para el celular. No guarda ni envía nada.</dd>
+            </dl>
+          </div>
+        </article>
+        <p class="mas-herr"><a href="https://bengrez.github.io/aula-herramientas/">Ver todas en Herramientas de aula →</a></p>
+      </details>
+      <details class="mas" id="colegio">
+        <summary>El asistente de gestión escolar, en desarrollo</summary>
+        <p class="estado e-dev">en desarrollo</p>
+        <p class="nota">Un asistente con IA que cruza las fuentes que el colegio ya tiene y responde indicando la fuente. Local-first, con datos seudonimizados. Hoy es una demo con datos sintéticos; el piloto, con datos reales, desde 2027.</p>
+        <figure class="evidencia" data-nosnippet style="margin-top:1.25rem">
+          <ol class="flujo colegio" aria-label="Esquema del asistente de gestión escolar: las fuentes que el colegio ya tiene alimentan un asistente con IA que busca patrones entre asignaturas y responde con evidencia; dos reglas acotan la respuesta. Lo usan el equipo directivo, UTP, convivencia y profesores jefe.">
+            <li class="fd"><b>Fuentes que el colegio ya tiene</b><span>notas, asistencia, convivencia, observaciones</span></li>
+            <li class="db fd"><b>Asistente con IA</b><span>embeddings y búsqueda vectorial, pgvector</span></li>
+            <li class="fb"><b>Respuestas con evidencia</b><span>cada indicador dice su fuente y qué le falta</span></li>
+            <li class="reg"><b>Reglas de la respuesta</b><span>se suprimen los agregados con pocos estudiantes; el riesgo de reprobación es una categoría explicada, no una probabilidad</span></li>
+            <li class="aparte"><b>Para quién</b><span>equipo directivo, UTP, convivencia y profesores jefe</span></li>
+          </ol>
+          <figcaption>Esquema de «medir un colegio»: asistente de gestión escolar en un equipo del propio colegio, diseñado para la Ley 21.719.</figcaption>
+        </figure>
+      </details>
     </div>
   </div>
 </section>
@@ -1213,7 +1219,7 @@ var portada=(function(){
   try{
     var mm=window.matchMedia; if(!mm||!mm('(pointer: fine)').matches||window.innerWidth<1024||mm('(prefers-reduced-motion: reduce)').matches) return;
     var cx=navigator.connection; if(cx&&cx.saveData) return;
-    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.min.js?v=cf5159644c'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.min.js?v=e91042a4c0'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 053: empuje.js (texto que se aparta del nematodo, con Pretext) se pide después del fondo; la librería se baja sólo cuando el nematodo cruza el párrafo. 056: se cargan los .min.js que genera scripts/version-js.sh (la fuente legible son quimiotaxis.js y empuje.js) */
+    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.min.js?v=841854e8bf'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.min.js?v=c390652b19'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 056: se carga el .min.js que genera scripts/version-js.sh (la fuente legible es quimiotaxis.js). 063: empuje.js es nuevo y no usa Pretext: aparta palabras sueltas del cuerpo del nematodo, sin rehacer el párrafo */
     if(document.readyState==='complete') cargar(); else window.addEventListener('load',function(){ setTimeout(cargar,300); });
   }catch(e){}
 })();

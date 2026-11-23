@@ -55,6 +55,15 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
   baja resolución de los bloques de texto (dilatado y desenfocado) le quita opacidad al canvas de las células: el fondo queda al
   16 % detrás del texto y vuelve a 100 % con una caída de unos 80 px. Las células ya no se alejan del texto ni dejan de adherirse
   bajo él, y hay tres fuentes de nutriente dentro de la columna. `Quimiotaxis.velo({f, dil, r, emp})` lo ajusta.
+- **Quinta ronda** (063). (1) **Un espacio quieto por bloque**: el campo del microscopio (tono y grano) cubre toda la zona
+  iluminada, también la columna central, y el velo (`VELO`, ahora `f` = 0) recorta detrás de cada bloque de texto un espacio sin
+  animación ceñido a su contenido (`veloHojas` baja hasta los elementos con contenido en línea y los mide con un `Range`); la
+  caída termina a unos 48 px del texto. Los gráficos, los esquemas y el rótulo del fondo también son bloques. (2) **Empuje nuevo**
+  (`empuje.js`, sin Pretext; se quitó `vendor/pretext/`): el nematodo entra al párrafo de la portada, se entierra unos segundos y
+  sale por donde entró; cada palabra es un `<span class="pal">` que se aparta de su cuerpo con `transform` y vuelve sola, sin
+  rehacer el párrafo. (3) **Textos con la estructura A** (persona primero): portada con quién es y qué busca; «Sobre mí» en tres
+  párrafos (de dónde vengo, qué hago hoy, cómo trabajo); Recorrido; tres fichas iguales (problema, «Qué hice», «En qué quedó»,
+  «Con qué») y el detalle en desplegables (`details.mas`).
 - **Raíz**: el cuerpo de la primaria se dibujaba como un tubo de 5 px de radio cortado a 300 px de la punta (en `rzBuild`, la
   distancia a la punta se medía contra el punto anterior; venía de antes de la 056). Corregido: tiene su ancho real en todo el
   largo. Las laterales nacen dentro de la primaria y salen por un cuello ancho (`RZ_CUE`, `RZ_CUL`), la capa externa se abre en

@@ -341,7 +341,7 @@
   // 029: agitación del scroll (px/s de la onda, de la deriva, velocidad de scroll que la satura, decaimiento en s), calma (espera en s, factor, constante en s),
   // repulsión del texto (px/s por unidad de gradiente), tiempo de reconstrucción de la máscara (ms)
   var AGIT_O=16, AGIT_D=12, AGIT_V=2500, AGIT_T=1.6, CALMA_ESPERA=4, CALMA_F=.6, CALMA_T=1.5, REP_T=0, TEXTO_ADH=0, MASC_MS=250;   // 062: REP_T = 0 y TEXTO_ADH = 0: las células ya no se alejan de los bloques de texto ni dejan de adherirse bajo ellos (la densidad es la misma en toda la ventana; eran 36 y 1)
-  var SEL_TEXTO='.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.demo,.grafico,.hechos,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina';
+  var SEL_TEXTO='.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.demo,.grafico,.hechos,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina,.serie .plot,.flujo,.sip .arte,.retrato,.fondo-nota';   // 063: también los gráficos, los esquemas y el rótulo del fondo tienen su espacio quieto
   var CUR_R=75, CUR_V=40;   // 046: el cursor repele levemente a las bacterias nadadoras (no a los eucariotas): radio (px) y velocidad de empuje en el centro (px/s); el empuje cae con el cuadrado de la distancia
   var RESERVA=14, REFRACTARIA=20, NMAX=240, TMAX=40, GN=GX*GY;
   // 039: la luz (radio = LUZ_FRAC del ancho; plena hasta LUZ_R0 del radio; piso de alfa fuera; τ del seguimiento, del viaje y del fundido; margen del recorte)
@@ -362,16 +362,16 @@
   var raiz=document.documentElement;
   // 059 (versión realista): ASPECTO DE MICROSCOPÍA. La simulación no cambia (las mismas células, colonias, matriz, arena, protistas, nematodo y raíz, con las mismas opacidades de la tabla OPAC);
   // cambia cómo se termina el cuadro, para que se lea como una preparación vista al microscopio y no como un diagrama plano. Todo ocurre sólo dentro de la luz del cursor (fuera de ella el fondo está al 10 % y no se notaría):
-  //   · campo: en los márgenes, bajo la luz, el fondo toma un tono leve de la tinta y un grano fino (la luz pasa a ser el campo visual). 060: hacia la columna de texto se difumina (pedido de Benjamin: sin cambio visible entre el fondo con textura y el liso del centro):
-  //     la caída empieza dentro del margen (MIC.fuera de su ancho, entre fueraMin y fueraMax px) y termina MIC.dentro px dentro de la columna. Donde empiezan los velos de los bloques de texto (21 px antes de la columna) queda ≈ 10 % del campo (0,6 % de tinta), así que el velo no dibuja un rectángulo;
+  //   · campo: bajo la luz el fondo toma un tono leve de la tinta y un grano fino (la luz pasa a ser el campo visual). En la 059 era sólo de los márgenes y en la 060 se difuminaba hacia la columna; desde la 063 cubre toda la
+  //     zona iluminada y el velo del texto (VELO) recorta el espacio quieto de cada bloque;
   //   · relieve y halo (contraste diferencial, tipo Nomarski, y el halo del contraste de fases): todo lo dibujado lleva un borde claro arriba a la izquierda, una sombra abajo a la derecha y un halo del color opuesto a la tinta.
   //     Es una pasada sobre la zona iluminada del cuadro ya dibujado (se copia a escV, se pasa a un solo color en relV y las copias se pintan DETRÁS de lo dibujado, con destination-over), así que vale igual para bacterias,
   //     matriz, arena, protistas y nematodo; la raíz, que tiene su canvas, recibe lo mismo y además volumen de tejido al publicarse (rzPub);
   //   · profundidad de foco: una de cada MIC.cada nadadoras bajo la luz está fuera del plano focal: se dibuja en un canvas a un tercio de la resolución (dfV) y se amplía, de modo que queda borrosa y sin flagelo; las adheridas están en el plano.
   // Costo: proporcional al área iluminada. MIC.ms lleva el promedio por cuadro; si pasa de MIC.tope (un equipo sin aceleración gráfica), el aspecto se apaga solo y queda el dibujo plano de la 056 (MIC.cedio).
   // Quimiotaxis.microscopia({activa:false}) vuelve al dibujo plano (para comparar); sin argumentos informa.
-  var MIC={on:true,rel:1.2,luzA:.95,somA:.6,campo:.06,grano:.03,foco:true,esc:.34,cada:5,alfaF:.8,halo:1.5,haloA:.7,tejido:.09,fuera:.78,fueraMin:48,fueraMax:320,dentro:40,tope:7,ms:0,n:0,cedio:false};
-  var escV=document.createElement('canvas'), escX=escV.getContext('2d'), relV=document.createElement('canvas'), relX=relV.getContext('2d'), dfV=document.createElement('canvas'), dfX=dfV.getContext('2d'), granoP=null, granoC=null, franjaP=[null,null], micClaro=true, dfHay=false;
+  var MIC={on:true,rel:1.2,luzA:.95,somA:.6,campo:.06,grano:.03,foco:true,esc:.34,cada:5,alfaF:.8,halo:1.5,haloA:.7,tejido:.09,tope:7,ms:0,n:0,cedio:false};
+  var escV=document.createElement('canvas'), escX=escV.getContext('2d'), relV=document.createElement('canvas'), relX=relV.getContext('2d'), dfV=document.createElement('canvas'), dfX=dfV.getContext('2d'), granoP=null, micClaro=true, dfHay=false;
 
   var W=0,H=0,dpr=1,hx=1,hy=1;
   var X=new Float32Array(NMAX), Y=new Float32Array(NMAX), TH=new Float32Array(NMAX), M=new Float32Array(NMAX), PH=new Float32Array(NMAX),
@@ -719,8 +719,12 @@
   // encima del fondo (como las tapas de la luz): al componer color de página semitransparente sobre color de página el redondeo a 8 bits deja contornos de 1 nivel alrededor de cada bloque; quitando alfa, donde no hay
   // nada dibujado no queda nada. El mapa se rehace al desplazar la página (en su propio requestAnimationFrame; con la animación en pausa además se redibuja el cuadro detenido), al cambiar el tamaño o el tema y cada
   // MASC_MS ms mientras corre el fondo. Mientras existe, <html> lleva .velo-js y el CSS no pone los rectángulos de antes (que siguen como respaldo). El párrafo de la portada, mientras el nematodo lo empuja (.emp-on),
-  // lleva el velo a VELO.emp, para que el nematodo se siga viendo. Quimiotaxis.velo({f, dil, r, emp}) lo ajusta; sin argumentos informa.
-  var VELO={f:.16,esc:10,r:2,dil:30,emp:.5}, velo={cv:null,cx:null,im:null,A:null,B:null,gw:0,gh:0,raf:0,t:-1e9,n:0,ms:0,hay:0,msA:0,nA:0};
+  // llevaba medio velo (hasta la 062). Quimiotaxis.velo({f, dil, r}) lo ajusta; sin argumentos informa.
+  // 063 (Benjamin, tras ver la 062 a ≈ 1900 px y en oscuro: no quiere una franja al medio; cada bloque de texto tiene su propio espacio de fondo sin animación, ajustado al bloque, y fuera de los bloques la animación sigue,
+  // también en la columna central): (1) el campo del microscopio (tono y grano) ya no es sólo de los márgenes: cubre toda la zona iluminada; (2) el velo pasa a f = 0 y se ciñe al bloque: los bloques se dilatan 18 px y la
+  // caída termina a ≈ 48 px del texto; (3) los gráficos, los esquemas y el rótulo del fondo también son bloques; (4) el nematodo ya no cruza el párrafo de la portada partiéndolo en dos (Pretext): entra, empuja palabras sueltas y sale (empuje.js nuevo, sin librería).
+  var VELO={f:0,esc:6,r:2,dil:18};   // 063: f = 0 (detrás de cada bloque no se ve nada del fondo), mapa más fino y ajustado al bloque (era f .16, esc 10, dil 30)
+  var velo={cv:null,cx:null,im:null,A:null,B:null,gw:0,gh:0,raf:0,t:-1e9,n:0,ms:0,hay:0,msA:0,nA:0,ins:new Float32Array(0),tIns:-1e9,rg:null,hojas:null};
   function veloCrear(){ velo.cv=document.createElement('canvas'); velo.cx=velo.cv.getContext('2d'); veloTam(); raiz.classList.add('velo-js'); veloHacer(); }
   function veloTam(){ // tamaño del mapa
     var e=VELO.esc, gw=Math.ceil(W/e)+1, gh=Math.ceil(H/e)+1;
@@ -732,18 +736,35 @@
     vx.drawImage(velo.cv,0,0,velo.gw,velo.gh,0,0,velo.gw*e,velo.gh*e); vx.restore();
     velo.msA+=(performance.now()-t0-velo.msA)*(velo.nA<20?1/(velo.nA+1):.05); velo.nA++;
   }
+  function veloHojas(){ // 063: los bloques del velo son las «hojas» de cada bloque de texto: se baja por los hijos que son cajas (bloque, flex, rejilla, ítem de lista) hasta los elementos que sólo tienen contenido en línea,
+    var L=[], vistos=[];                                                                // así el Range de cada uno mide su texto y no el ancho de la columna (un título, una cifra, cada línea de una ficha)
+    function caja(e){ var d=getComputedStyle(e).display; return d!=='none'&&d.indexOf('inline')!==0; }
+    function baja(e,n){ var ch=e.children, k, hay=false; if(vistos.indexOf(e)>=0) return; vistos.push(e);
+      if(n<6&&!(e instanceof SVGElement)&&e.tagName!=='PICTURE') for(k=0;k<ch.length;k++) if(caja(ch[k])){ hay=true; break; }
+      if(!hay){ L.push(e); return; }
+      for(k=0;k<ch.length;k++){ if(caja(ch[k])) baja(ch[k],n+1); else if(getComputedStyle(ch[k]).display!=='none') L.push(ch[k]); } }
+    [].slice.call(document.querySelectorAll(SEL_TEXTO)).forEach(function(e){ baja(e,0); });
+    velo.hojas=L; velo.tIns=-1e9;
+  }
   function veloPedir(){ if(velo.cv&&!velo.raf) velo.raf=requestAnimationFrame(function(){ veloHacer(); if(!raf&&vivo&&cv.style.display!=='none') dibujar(); }); }   // con la animación en pausa (sin bucle) el cuadro detenido se redibuja con el velo nuevo
   function veloHacer(){
-    var t0=performance.now(), e=VELO.esc, D=VELO.dil, R=VELO.r, A, B, gw, gh, k, r, x0, x1, y0, y1, i, j, i0, i1, j0, j1, ox, oy, w, p, s, n, d, v, row, K=(1-VELO.f)*255;
+    var t0=performance.now(), e=VELO.esc, D=VELO.dil, R=VELO.r, A, B, gw, gh, k, r, x0, x1, y0, y1, i, j, i0, i1, j0, j1, ox, oy, w, p, s, n, d, v, row, q, c, K=(1-VELO.f)*255;
     velo.raf=0; if(!velo.cv) return;
     if(cv.style.display==='none') return;
     if(velo.gw!==Math.ceil(W/e)+1||velo.gh!==Math.ceil(H/e)+1) veloTam();
     A=velo.A; B=velo.B; gw=velo.gw; gh=velo.gh;
-    if(!textoEls.length) textoEls=[].slice.call(document.querySelectorAll(SEL_TEXTO)).filter(function(x){ return !x.closest('.agentes'); });
+    if(!velo.hojas) veloHojas();
     A.fill(0);
-    for(k=0;k<textoEls.length;k++){ r=textoEls[k].getBoundingClientRect(); if(r.width<2||r.height<2) continue;
-      x0=r.left-D; x1=r.right+D; y0=r.top-D; y1=r.bottom+D; if(y1<=0||y0>=H||x1<=0||x0>=W) continue;
-      w=textoEls[k].classList.contains('emp-on')?VELO.emp:1;
+    // 063: el espacio quieto se ciñe al contenido de cada bloque, no a su caja (un título ocupa todo el ancho de su columna aunque el texto sea corto): la caja del contenido se mide con un Range y se guarda como
+    // márgenes respecto de la caja del elemento (velo.ins), que se vuelven a medir cada 150 ms mientras se desplaza la página (la portada cambia de tamaño) y cada 1,2 s en reposo
+    q=t0-velo.tIns>(t0-tScroll<400?150:1200); if(q||velo.ins.length!==4*velo.hojas.length){ q=true; velo.tIns=t0; if(velo.ins.length!==4*velo.hojas.length) velo.ins=new Float32Array(4*velo.hojas.length); if(!velo.rg) velo.rg=document.createRange(); }
+    for(k=0;k<velo.hojas.length;k++){ r=velo.hojas[k].getBoundingClientRect(); if(r.width<2||r.height<2) continue;
+      if(r.bottom+D<=0||r.top-D>=H) continue;
+      if(q){ velo.rg.selectNodeContents(velo.hojas[k]); c=velo.rg.getBoundingClientRect(); p=4*k;
+        if(c.width>2&&c.height>2){ velo.ins[p]=Math.max(0,c.left-r.left); velo.ins[p+1]=Math.max(0,c.top-r.top); velo.ins[p+2]=Math.max(0,r.right-c.right); velo.ins[p+3]=Math.max(0,r.bottom-c.bottom); } else velo.ins[p]=velo.ins[p+1]=velo.ins[p+2]=velo.ins[p+3]=0; }
+      p=4*k; x0=r.left+velo.ins[p]-D; y0=r.top+velo.ins[p+1]-D; x1=r.right-velo.ins[p+2]+D; y1=r.bottom-velo.ins[p+3]+D; if(x1-x0<2*D+2||y1-y0<2*D+2){ x0=r.left-D; x1=r.right+D; y0=r.top-D; y1=r.bottom+D; }
+      if(y1<=0||y0>=H||x1<=0||x0>=W) continue;
+      w=1;
       i0=Math.max(0,Math.floor(x0/e)); i1=Math.min(gw-1,Math.floor(x1/e)); j0=Math.max(0,Math.floor(y0/e)); j1=Math.min(gh-1,Math.floor(y1/e));
       for(j=j0;j<=j1;j++){ oy=Math.min(y1,(j+1)*e)-Math.max(y0,j*e); if(oy<=0) continue; row=j*gw;
         for(i=i0;i<=i1;i++){ ox=Math.min(x1,(i+1)*e)-Math.max(x0,i*e); if(ox<=0) continue; v=w*ox*oy/(e*e); if(v>A[row+i]) A[row+i]=v; } } }
@@ -1230,8 +1251,8 @@
     if(ptr.ok){ luzSigue(ptr.x,ptr.y);                                                                  // 040: con el cursor quieto, el scroll lo deja sobre otro punto del documento: cuenta como movimiento
       if(Math.abs(y-anc.sy)>TOL){ anc.sy=y; anc.x=ptr.x; anc.y=ptr.y; anc.t=relojC; suelta(); } }          // se rompe la quietud, la arena deja de crecer donde estaba y vuelve a empezar (si el cursor está en un margen)
   },{passive:true});
-  window.addEventListener('resize',function(){ tMasc=-1e9; veloPedir(); });
-  document.addEventListener('toggle',function(){ veloPedir(); setTimeout(veloPedir,350); },true); document.addEventListener('click',function(){ setTimeout(veloPedir,60); setTimeout(veloPedir,400); },true);   // 062: desplegables y botones cambian el alto del texto (también en pausa)
+  window.addEventListener('resize',function(){ tMasc=-1e9; velo.hojas=null; veloPedir(); });
+  document.addEventListener('toggle',function(){ velo.tIns=-1e9; veloPedir(); setTimeout(function(){ velo.tIns=-1e9; veloPedir(); },350); },true); document.addEventListener('click',function(){ setTimeout(veloPedir,60); setTimeout(veloPedir,400); },true);   // 062: desplegables y botones cambian el alto del texto (también en pausa)
 
   // Máscara de los bloques de texto (la misma lista que lleva velo): fracción de cada celda de la grilla cubierta por texto, y una versión
   // suavizada cuyo gradiente aleja a las células de los bloques
@@ -1590,21 +1611,13 @@
     ctx.globalAlpha=1;
     if(mic) componer(vx,lz);
     veloAplicar(vx);   // 062: el velo del texto, lo último del cuadro
+    if(nem&&nem.cr&&euOn){ ctx.setTransform(dpr,0,0,dpr,0,0); ctx.globalCompositeOperation='source-over'; ctx.lineCap='round'; ctx.lineJoin='round'; nemDibujar(rec,lz,nv); ctx.globalAlpha=1; }   // 063: salvo el nematodo que se entierra en el párrafo de la portada
   }
   function micGrano(vx){ // 059: tesela de grano (ruido fino con la tinta del tema), en píxeles del dispositivo
     var c=document.createElement('canvas'), x=c.getContext('2d'), N=128, d=x.createImageData(N,N), q=rgb.split(','), k, v;
     c.width=c.height=N;
     for(k=0;k<N*N;k++){ v=Math.random(); d.data[k*4]=+q[0]; d.data[k*4+1]=+q[1]; d.data[k*4+2]=+q[2]; d.data[k*4+3]=(v*v*v*255*MIC.grano*3)|0; }
-    x.putImageData(d,0,0); granoP=vx.createPattern(c,'repeat'); granoC=c; franjaP=[null,null];
-  }
-  function micFranja(vx,k,w){ // 060: la franja de transición del campo (w px de ancho por dos teselas de alto): el tono y el grano, con el alfa que cae de 1 a 0 de izquierda a derecha (smootherstep: sin quiebre al empezar ni al terminar)
-    var c=document.createElement('canvas'), x=c.getContext('2d'), g, j, t;
-    c.width=Math.max(2,w); c.height=256;
-    if(MIC.campo>0){ x.fillStyle='rgba('+rgb+','+MIC.campo+')'; x.fillRect(0,0,c.width,256); }
-    if(MIC.grano>0&&granoC){ x.fillStyle=x.createPattern(granoC,'repeat'); x.fillRect(0,0,c.width,256); }
-    g=x.createLinearGradient(0,0,c.width,0); for(j=0;j<=16;j++){ t=j/16; g.addColorStop(t,'rgba(0,0,0,'+(1-t*t*t*(t*(6*t-15)+10)).toFixed(4)+')'); }
-    x.globalCompositeOperation='destination-in'; x.fillStyle=g; x.fillRect(0,0,c.width,256);
-    franjaP[k]={w:w,p:vx.createPattern(c,'repeat')};
+    x.putImageData(d,0,0); granoP=vx.createPattern(c,'repeat');
   }
   function componer(vx,lz){ // 059: termina el cuadro dentro de la zona iluminada: relieve, halo, nadadoras fuera de foco y campo, pintados detrás de lo ya dibujado
     var t0=performance.now(), o=MIC.rel*dpr, g=MIC.halo*dpr, w=cv.width, h=cv.height, x0=0, y0=0, x1=W, y1=H, k, R, e, m, a, b, gr;
@@ -1623,16 +1636,10 @@
     else{ vx.globalAlpha=MIC.luzA*.6; vx.drawImage(escV,x0,y0,w,h,x0-o,y0-o,w,h); vx.globalAlpha=Math.min(1,MIC.somA+.35); vx.drawImage(relV,x0,y0,w,h,x0+o,y0+o,w,h); }
     if(g>0){ vx.globalAlpha=MIC.haloA; vx.drawImage(relV,x0,y0,w,h,x0-g,y0+g,w,h); vx.drawImage(relV,x0,y0,w,h,x0+g,y0-g,w,h); }       // halo: la otra diagonal
     if(dfHay){ e=MIC.esc; vx.imageSmoothingEnabled=true; vx.globalAlpha=MIC.alfaF; vx.drawImage(dfV,x0*e,y0*e,w*e,h*e,x0,y0,w,h); }
-    if(MIC.campo>0||MIC.grano>0){ // el campo: pleno en los márgenes y difuminado hacia la columna de texto (060: grano y tono se apagan juntos, con una caída suave que empieza dentro del margen y termina dentro de la columna; antes el grano se cortaba en seco en el borde de la columna)
+    if(MIC.campo>0||MIC.grano>0){ // el campo, en toda la zona iluminada (063: también en la columna central, entre los bloques de texto; el espacio quieto de cada bloque lo recorta después el velo, veloAplicar)
       vx.globalAlpha=1; if(!granoP) micGrano(vx);
-      if(colDer<=colIzq+80){ if(MIC.grano>0){ vx.fillStyle=granoP; vx.fillRect(x0,y0,w,h); } if(MIC.campo>0){ vx.fillStyle='rgba('+rgb+','+MIC.campo+')'; vx.fillRect(x0,y0,w,h); } }   // sin columna medida: el campo entero
-      else for(k=0;k<2;k++){ m=k?W-colDer:colIzq; a=Math.round(Math.max(MIC.fueraMin,Math.min(MIC.fueraMax,MIC.fuera*m))*dpr); b=Math.round(MIC.dentro*dpr);   // a: px de la caída dentro del margen; b: dentro de la columna
-        e=Math.round((k?colDer:colIzq)*dpr); gr=k?e+a:e-a;                                                                                                                 // e: el borde de la columna; gr: donde empieza la caída (hacia afuera el campo es pleno)
-        if(k?gr<cv.width:gr>0){ if(MIC.grano>0){ vx.fillStyle=granoP; vx.fillRect(k?gr:0,y0,k?cv.width-gr:gr,h); } if(MIC.campo>0){ vx.fillStyle='rgba('+rgb+','+MIC.campo+')'; vx.fillRect(k?gr:0,y0,k?cv.width-gr:gr,h); } }
-        if(k?(e-b>x1||gr<x0):(gr>x1||e+b<x0)) continue;
-        if(!franjaP[k]||franjaP[k].w!==a+b) micFranja(vx,k,a+b);
-        vx.save(); vx.setTransform(k?-1:1,0,0,1,gr,0); vx.fillStyle=franjaP[k].p; vx.fillRect(0,y0,a+b,h); vx.restore();                                                   // la franja ya trae el tono y el grano con su caída; la del margen derecho, en espejo
-      }
+      if(MIC.grano>0){ vx.fillStyle=granoP; vx.fillRect(x0,y0,w,h); }
+      if(MIC.campo>0){ vx.fillStyle='rgba('+rgb+','+MIC.campo+')'; vx.fillRect(x0,y0,w,h); }
     }
     vx.restore(); vx.imageSmoothingEnabled=true;
     MIC.ms+=(performance.now()-t0-MIC.ms)*(MIC.n<20?1/(MIC.n+1):.05); MIC.n++;
@@ -1735,7 +1742,7 @@
   // 053: el cruce del párrafo de presentación. Si el párrafo de la portada (EU_NCSEL) está a la vista cuando toca un nematodo, éste entra por el borde izquierdo o el derecho a la altura del párrafo, lo cruza
   // de lado a lado a EU_NCV veces su velocidad (con una ondulación suave de rumbo para que serpentee dentro de la franja) y sale por el otro borde. Es el único momento en que un eucariota pasa por la columna de
   // texto: empuje.js (Pretext) lee su silueta con Quimiotaxis.silueta() y reacomoda las líneas del párrafo. Sin el párrafo a la vista (o con euca({cruce:false})) sigue la visita de siempre a la punta de la raíz.
-  var EU_CRUCE=true, EU_NCOP=1, EU_NCV=2, EU_NCSEL='.hero .lede', nemLede=null, nemLedeR={t:-1e9,ok:false,x:0,y:0,w:0,h:0};
+  var EU_CRUCE=true, EU_NENT=9,   /* 063: el nematodo ya no cruza el párrafo de lado a lado: entra en él, se entierra EU_NENT s hurgando entre las palabras (empuje.js las aparta de su cuerpo, una por una, sin rehacer el párrafo) y sale por donde entró */ EU_NCOP=1, EU_NCV=2, EU_NCSEL='.hero .lede', nemLede=null, nemLedeR={t:-1e9,ok:false,x:0,y:0,w:0,h:0};
   function nemLedeRect(){ // la caja del párrafo en la ventana (se relee cada 0,25 s); null si no está a la vista
     var e, r, ahora=performance.now();
     if(ahora-nemLedeR.t<250) return nemLedeR.ok?nemLedeR:null;
@@ -1748,7 +1755,7 @@
     if(!r) return false;
     L=Math.min(EU_NLEN,EU_NFRAC*H); if(L<70) return false;
     lado=Math.random()<.5?0:1; dir=lado?-1:1; seg=L/(EU_NS-1); x0=lado?W+4:-4; y0=Math.max(40,Math.min(H-40,r.y+r.h*.5));
-    nem={tx:lado?-L-20:W+L+20,ty:y0,L:L,hw:L/EU_NANCHO/2,ext:(EU_NA+.045+.03)*L,lado:lado,seg:seg,S:L/96,cx:0,cy:0,sg:1,tg:0,mod:0,modT:0,nEv:1e12,om:1,inv:false,vent:Math.random()<.5?1:-1,capa:Math.random()<EU_NCAPA?0:1,capaT:0,quieto:false,cr:dir,cph:Math.random()*6.28};
+    nem={tx:lado?-L-20:W+L+20,ty:y0,L:L,hw:L/EU_NANCHO/2,ext:(EU_NA+.045+.03)*L,lado:lado,seg:seg,S:L/96,cx:0,cy:0,sg:1,tg:0,mod:0,modT:0,nEv:1e12,om:1,inv:false,vent:Math.random()<.5?1:-1,capa:Math.random()<EU_NCAPA?0:1,capaT:0,quieto:false,cr:dir,cph:Math.random()*6.28,fase:0,prof:.26+.2*Math.random(),fy:.3+.4*Math.random(),bx:0,by:y0,tb:0};
     nem.p=new Float32Array(2*EU_NS); nem.ph=Math.random()*6.28; nem.st=3; nem.t0=tiempo; nem.tf=0; nem.vac=[]; nem.h=0; nem.E=5; nem.salio=0; nem.dir=1; nem.th=lado?Math.PI:0; nem.x=x0; nem.y=y0;
     for(k=0;k<EU_NS;k++){ nem.p[2*k]=x0-dir*k*seg; nem.p[2*k+1]=y0; }
     euEv.nem++; return true;
@@ -1782,14 +1789,18 @@
     x=nem.x; y=nem.y; nem.h-=dt;
     if(nem.st<2&&md===0&&y>20&&y<H-20&&tiempo>nem.nEv){ if(Math.random()<.62){ nem.mod=md=1; nem.modT=tiempo+2.2+1.6*Math.random(); nemFlip(); x=nem.x; y=nem.y; } else { nem.mod=md=2; nem.modT=tiempo+2.6; nem.om=Math.random()<.5?1:-1; } nem.nEv=tiempo+9+12*Math.random(); }   // de vez en cuando retrocede o hace un giro omega
     else if(md===1&&tiempo>nem.modT){ nemFlip(); x=nem.x; y=nem.y; nem.mod=md=0; } else if(md===2&&tiempo>nem.modT) nem.mod=md=0;
-    if(nem.st===3){ lr=nemLedeRect(); yy=(lr?lr.y+lr.h*.5:nem.ty)+(lr?lr.h:60)*.3*Math.sin(tiempo*.45+nem.cph); nem.ty=yy; phi=Math.atan2(yy-y,260*nem.cr); }   // 053: cruza el párrafo, serpenteando dentro de su franja
+    if(nem.st===3){ lr=nemLedeRect();                                                                    // 053: va al párrafo de la portada. 063: ya no lo cruza: entra (fase 0), se entierra (fase 1) y sale por donde entró (fase 2)
+      if(nem.fase===0){ if(lr){ nem.bx=lr.x+(nem.cr>0?nem.prof:1-nem.prof)*lr.w; nem.by=lr.y+lr.h*nem.fy; } else nem.fase=2;
+        dx=nem.bx-x; dy=nem.by-y; phi=Math.atan2(dy,dx)+.22*Math.sin(tiempo*.9+nem.cph); if(dx*dx+dy*dy<26*26){ nem.fase=1; nem.tb=tiempo+EU_NENT; } }
+      if(nem.fase===1){ phi=(nem.cr>0?0:Math.PI)+.95*Math.sin(tiempo*1.15+nem.cph); if(tiempo>nem.tb||!lr){ nem.fase=2; nemFlip(); x=nem.x; y=nem.y; nem.cr=-nem.cr; } }   // hurga: avanza apenas, moviendo la cabeza a los lados
+      if(nem.fase===2){ yy=lr?lr.y+lr.h*nem.fy:nem.ty; nem.ty=yy; phi=Math.atan2(yy-y,260*nem.cr); } }
     else if(nem.st===0){ if(tiempo-nem.t0>90){ nem.st=2; nem.tf=tiempo; } nem.tx=Math.max(xl,Math.min(xr,nem.tx)); dx=nem.tx-x; dy=nem.ty-y; if(dx*dx+dy*dy<(.45*L)*(.45*L)){ nem.st=1; nem.tf=tiempo+40+22*Math.random(); nem.tg=tiempo+8+6*Math.random(); } phi=Math.atan2(dy,dx); }
     else if(nem.st===1){ dx=nem.cx-x; dy=nem.cy-y; if(dx*dx+dy*dy<(.2*L)*(.2*L)||tiempo>nem.tg){ nem.sg=-nem.sg; nem.cx=Math.max(xl,Math.min(xr,nem.tx+nem.sg*(.45+.25*Math.random())*L)); nem.cy=Math.max(30,Math.min(H-30,nem.ty+(Math.random()-.5)*.5*L)); nem.tg=tiempo+8+6*Math.random(); dx=nem.cx-x; dy=nem.cy-y; }   // explora la punta: va y viene cruzando la raíz
       phi=Math.atan2(dy,dx); if(tiempo>nem.tf) nem.st=2; }
     else { phi=(y<H*.5?-1.5708:1.5708)+.2*Math.sin(tiempo*.4); }                                          // se va por el borde de arriba o de abajo, el más cercano
     if(md===1) phi=nem.th+.5*Math.sin(tiempo*1.3); else if(md===2) phi=nem.th+nem.om*2.2;
     w=(md===2?3.1:1.5)*dt; d=angd(phi,nem.th); nem.th+=d>w?w:d<-w?-w:d;
-    v=EU_NVL*L*(md===1?.8:md===2?.6:1)*(nem.st===1?.85:nem.st===3?EU_NCV:1)*(nem.h>0?.5:1); nem.ph+=6.283*EU_NF*(.6+.4*v/(EU_NVL*L))*dt;
+    v=EU_NVL*L*(md===1?.8:md===2?.6:1)*(nem.st===1?.85:nem.st===3?(nem.fase===1?.22:EU_NCV):1)*(nem.h>0?.5:1); nem.ph+=6.283*EU_NF*(.6+.4*v/(EU_NVL*L))*dt;
     x+=Math.cos(nem.th)*v*dt; y+=Math.sin(nem.th)*v*dt;
     if(x<xl){ x=xl; if(Math.cos(nem.th)<0) nem.th=Math.PI-nem.th; } else if(x>xr){ x=xr; if(Math.cos(nem.th)>0) nem.th=Math.PI-nem.th; }   // limitado al margen: rebota suavemente en sus bordes
     p[0]=x; p[1]=y;
@@ -1869,7 +1880,7 @@
       }
       ctx.setTransform(dpr,0,0,dpr,0,0);
     }
-    if(nem) nemDibujar(rec,lz,nv);
+    if(nem&&!nem.cr) nemDibujar(rec,lz,nv);   // 063: el que va al párrafo de la portada se dibuja después del velo del texto (dibujar), para que se vea dentro del bloque
     ctx.globalAlpha=1;
   }
   // 050: el dibujo de C. elegans: un esquema translúcido (contorno con perfil de ancho que se afina en la cabeza y en la cola, y los órganos tenues por dentro): faringe con sus dos bulbos
@@ -2041,9 +2052,9 @@
         nematodo:nem?{x:+nem.x.toFixed(1),y:+nem.y.toFixed(1),estado:['llega','explora la punta','se va','cruza el párrafo'][nem.st],modo:['avanza','retrocede','giro omega'][nem.mod],capa:nem.capa?'delante de la raíz':'detrás de la raíz',edad:+(tiempo-nem.t0).toFixed(1),objetivo:[+nem.tx.toFixed(1),+nem.ty.toFixed(1)],comio:euEv.nemComio.slice(),largo:+nem.L.toFixed(1),ancho:+(nem.L/EU_NANCHO).toFixed(1),aumento:+nem.S.toFixed(2),lado:nem.lado?'derecho':'izquierdo',ventral:nem.vent,invertido:nem.inv,fase:+nem.ph.toFixed(2),onda:(function(){ if(!nem.wv) nemEsq(); return Array.prototype.slice.call(nem.wv).map(function(v){ return +v.toFixed(2); }); })(),puntos:Array.prototype.slice.call(nem.p).map(function(v){ return +v.toFixed(1); })}:null,
         proximoNematodoEn:+Math.max(0,euTn-tiempo).toFixed(1),eventos:{comioBacterias:euEv.comio[0],comioFlagelados:euEv.comio[1],comioDinoflagelados:euEv.comio[2],comioAmebas:euEv.comio[3],comioParamecios:euEv.comio[4],comioEuglenas:euEv.comio[5],divisiones:euEv.div,muertes:euEv.muere,entradas:euEv.ent,huidas:euEv.huida,nematodos:euEv.nem,excrecion:euEv.exc}};
     },
-    velo:function(o){ var k; if(o){ for(k in o) if(k in VELO) VELO[k]=o[k]; veloHacer(); } k=JSON.parse(JSON.stringify(VELO)); k.ms=+velo.ms.toFixed(3); k.msAplicar=+velo.msA.toFixed(3); k.n=velo.n; k.mapa=[velo.gw,velo.gh]; return k; },   // 062: el velo del texto (f: cuánto del fondo se ve bajo el texto; dil, r: la caída; emp: el párrafo empujado)
+    velo:function(o){ var k; if(o){ for(k in o) if(k in VELO) VELO[k]=o[k]; veloHacer(); } k=JSON.parse(JSON.stringify(VELO)); k.ms=+velo.ms.toFixed(3); k.msAplicar=+velo.msA.toFixed(3); k.n=velo.n; k.hojas=velo.hojas?velo.hojas.length:0; k.mapa=[velo.gw,velo.gh]; return k; },   // 062: el velo del texto (f: cuánto del fondo se ve bajo el texto; dil, r: la caída; emp: el párrafo empujado)
     microscopia:function(o){ var k; if(o){ if(o.activa!=null){ MIC.on=!!o.activa; MIC.cedio=false; MIC.n=0; MIC.ms=0; } for(k in o) if(k!=='activa'&&k in MIC) MIC[k]=o[k]; granoP=null; if(rz.cvR&&rz.nb) rzPintar(); dibujar(); } return JSON.parse(JSON.stringify(MIC)); },   // 059: el aspecto de microscopía (campo, grano, relieve y profundidad de foco); microscopia({activa:false}) vuelve al dibujo plano
-    silueta:function(){ if(!nem) return null; nemEsq(); return {n:NM,x:nmX,y:nmY,w:nmW,cruza:!!nem.cr,largo:nem.L,ancho:nem.L/EU_NANCHO}; },   // 053: la silueta del nematodo (NM puntos del eje con su semiancho, en píxeles de la ventana); los arreglos son los de la simulación y valen hasta la siguiente llamada
+    silueta:function(){ if(!nem) return null; nemEsq(); return {n:NM,x:nmX,y:nmY,w:nmW,cruza:!!nem.cr,fase:nem.cr?nem.fase:-1,largo:nem.L,ancho:nem.L/EU_NANCHO}; },   // 053: la silueta del nematodo (NM puntos del eje con su semiancho, en píxeles de la ventana); los arreglos son los de la simulación y valen hasta la siguiente llamada
     nivel:function(k){ if(k==null) return nivel; st.fijo=true; fijarNivel(k); st.t0=performance.now(); st.trab=0; st.cuadros=0; return nivel; },
     relaciones:function(o){ var k;
       if(o&&o.subproducto!=null){ subp=!!o.subproducto; if(!subp) CP.fill(0); }

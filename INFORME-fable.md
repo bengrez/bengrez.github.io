@@ -147,15 +147,43 @@ Qué quedó:
 Sin tocar: la luz del cursor sigue usando una capa del color de la página, que deja escalones de 1 nivel de 255 (se ven sólo
 realzando el contraste de una captura). Si molestan en tu pantalla, se puede pasar al mismo método del velo.
 
+## Quinta ronda: un espacio quieto por bloque, empuje nuevo y textos con la estructura A
+
+Encargo del 2026-11-23, después de que Benjamin viera la cuarta ronda a unos 1900 px y en oscuro.
+
+1. **Fondo sin franja al medio.** El tono y el grano del microscopio cubren ahora toda la zona iluminada, también la columna
+   central. Detrás de cada bloque de texto hay un espacio sin animación, ceñido al texto (no a la caja de la columna), con una
+   caída suave que termina a unos 48 px. Entre bloques la animación sigue; por ejemplo, bajo el título «Sobre mí» ya no queda un
+   espacio vacío. Los gráficos, los esquemas y el rótulo del fondo tienen su propio espacio. Como detrás del texto ya no se ve
+   nada del fondo, el contraste del texto es el del texto sobre la página (16,5:1 y 6,6:1 en claro; 15,4:1 y 7,1:1 en oscuro).
+2. **El nematodo empuja palabras, sin partir el párrafo.** El error era del empuje anterior, que rehacía el párrafo entero
+   alrededor del nematodo. Ahora el nematodo entra al párrafo de la portada, se entierra unos 9 segundos y sale por donde entró.
+   Cada palabra se aparta de su cuerpo, casi sólo hacia arriba o hacia abajo, y vuelve sola a su lugar. Las palabras no cambian de
+   orden ni se montan, y ninguna queda bajo el cuerpo. Con movimiento reducido no pasa nada: ni el fondo ni el empuje se cargan.
+   Ya no se usa la librería Pretext (40 KB menos en escritorio cuando pasaba el nematodo).
+3. **Textos con la estructura A (persona primero).**
+   - Portada: quién es y qué busca, en cuatro frases cortas.
+   - «Sobre mí»: tres párrafos con rótulo (de dónde vengo, qué hago hoy, cómo trabajo) y las tres cifras.
+   - Recorrido: sin cambios.
+   - Tres fichas iguales: el problema, «Qué hice», «En qué quedó» y «Con qué». Cada una con su figura.
+   - El detalle va en desplegables: el esquema del sistema (Data science); citas por año, perfil de RNA-SIP y publicaciones
+     (Ecología); las tres herramientas y el asistente de gestión escolar (Docencia). Las fotos de terreno siguen a la vista.
+   - Texto visible sin desplegables: 1411 → 1106 palabras. Sin hechos nuevos.
+
+Verificado: sin errores de consola ni desborde en las siete configuraciones; sin JavaScript a 375 px; con los desplegables
+abiertos cargan todas las imágenes; en vivo con GPU a 1920 px en oscuro (nivel 3, 60 cuadros por segundo; rehacer el mapa de
+bloques cuesta 1,7 ms); la secuencia del nematodo completa, con el texto de vuelta en su lugar al final.
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 34,8 KB | +1,3 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 96,9 KB | +14,3 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 187,8 KB | +22,9 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 35,2 KB | +1,7 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 74,0 KB | −8,6 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 123,5 KB | −41,4 KB |
 
-Por archivo: `index.html` +1,3 KB; `quimiotaxis.min.js` +3,2 KB (sólo escritorio); `costras-biologicas.webp` 27,2 KB (nueva);
+Desde la quinta ronda ya no se baja Pretext (39,9 KB) y la imagen del autodiagnóstico (23,2 KB) se carga sólo al abrir su
+desplegable. Por archivo: `index.html` +1,7 KB; `quimiotaxis.min.js` +3,5 KB (sólo escritorio); `empuje.min.js` 3,4 → 1,6 KB; `costras-biologicas.webp` 27,2 KB (nueva);
 `tabla-periodica-fig-n.webp` 11,6 KB o `tabla-periodica-fig.webp` 17,0 KB (nuevas, una según el ancho); se quitó
 `tabla-periodica.webp` (25,9 KB), porque la ficha de la herramienta usa la captura nueva. El límite de 200 KB se cumple.
 
@@ -226,19 +254,10 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
 12. **El retrato.** Respondiste que está en Downloads, pero no lo pude identificar: hay 342 imágenes, ninguna con nombre de
     retrato ni posterior al pedido, y no abrí fotos al azar (hay fotos de terceros y un archivo de fotos de curso). ¿Cuál es el
     nombre del archivo?
-13. **La frase «Hoy vivo en Santiago»** de «Sobre mí» la deduje de «Santiago, Chile» en la portada. ¿Está bien dicha así?
+13. ~~«Hoy vivo en Santiago»~~ Ya no aplica: el texto nuevo dice «Estoy en Santiago».
 14. ~~«Recorrido» fuera de la barra~~ Respondida: se queda fuera.
-15. **Estructura de los textos** (antes de reescribir; elige una o mezcla):
-    - **A. Persona primero.** Portada (quién eres y qué buscas, en dos frases); «Sobre mí» como historia en tres párrafos cortos
-      (de dónde vienes, qué haces hoy, cómo trabajas); Recorrido; los tres trabajos como fichas iguales y breves (problema, qué
-      hiciste, resultado, estado), con su figura y el detalle en desplegables; Contacto. Tono: primera persona, conversacional,
-      frases cortas. Es la más cercana a lo que hay hoy.
-    - **B. Lo que sabes hacer.** Portada (qué resuelves); «Sobre mí» breve; tres capacidades en vez de tres sectores (medir y
-      monitorear sistemas; detectar lo raro con pocos datos; construir herramientas que otros usan), cada una con evidencia
-      cruzada de buses, suelos y colegio; los tres trabajos quedan como casos de respaldo, muy cortos; Recorrido; Contacto. Tono:
-      directo, orientado a quien contrata, sin jerga.
-    - **C. Una sola historia.** La página entera es el Recorrido: Valparaíso, Perth (el doctorado, con el gráfico publicado y las
-      fotos de terreno), los años de investigador y Santiago hoy (los buses, con el gráfico interactivo; el colegio, con las
-      herramientas). Cada etapa dice qué aprendiste, qué construiste y muestra una evidencia. Cierra con «Qué busco hoy» y
-      Contacto. Tono: narrativo y personal, en primera persona.
-    Recomiendo B si la prioridad sigue siendo quien podría contratarte, y C si quieres que la página se lea como tu historia.
+15. ~~Estructura de los textos~~ Respondida el 2026-11-23: estructura A (persona primero). Hecha en la quinta ronda.
+16. **Lo que quedó dentro de desplegables.** Para que las fichas sean breves, pasaron a desplegables el esquema del sistema de
+    buses, el gráfico de citas, el perfil de RNA-SIP, las tres fichas de herramientas y el esquema del asistente escolar.
+    Opciones: (a) dejarlo así; (b) dejar a la vista las tres herramientas, que son lo que se puede abrir. Recomiendo (a) y verlo.
+17. **Duración del entierro del nematodo.** Se queda unos 9 segundos dentro del párrafo. ¿Más corto, más largo o así?
