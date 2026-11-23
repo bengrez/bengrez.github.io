@@ -1751,7 +1751,7 @@
   // 053: el cruce del párrafo de presentación. Si el párrafo de la portada (EU_NCSEL) está a la vista cuando toca un nematodo, éste entra por el borde izquierdo o el derecho a la altura del párrafo, lo cruza
   // de lado a lado a EU_NCV veces su velocidad (con una ondulación suave de rumbo para que serpentee dentro de la franja) y sale por el otro borde. Es el único momento en que un eucariota pasa por la columna de
   // texto: empuje.js (Pretext) lee su silueta con Quimiotaxis.silueta() y reacomoda las líneas del párrafo. Sin el párrafo a la vista (o con euca({cruce:false})) sigue la visita de siempre a la punta de la raíz.
-  var EU_CRUCE=true, EU_NENT=9,   /* 063: el nematodo ya no cruza el párrafo de lado a lado: entra en él, se entierra EU_NENT s hurgando entre las palabras (empuje.js las aparta de su cuerpo, una por una, sin rehacer el párrafo) y sale por donde entró */ EU_NCOP=1, EU_NCV=2, EU_NCSEL='.hero .lede', nemLede=null, nemLedeR={t:-1e9,ok:false,x:0,y:0,w:0,h:0};
+  var EU_CRUCE=true, EU_NENT=9,   /* 063: el nematodo ya no cruza el párrafo de lado a lado. 074: tampoco entra: empuja EU_NENT s contra su borde izquierdo y se va (empuje.js mueve las palabras frente a su cabeza) */ EU_NCOP=1, EU_NCV=2, EU_NCSEL='.hero .lede', nemLede=null, nemLedeR={t:-1e9,ok:false,x:0,y:0,w:0,h:0};
   function nemLedeRect(){ // la caja del párrafo en la ventana (se relee cada 0,25 s); null si no está a la vista
     var e, r, ahora=performance.now();
     if(ahora-nemLedeR.t<250) return nemLedeR.ok?nemLedeR:null;
@@ -1763,7 +1763,7 @@
     var r=nemLedeRect(), L, lado, dir, seg, k, x0, y0;
     if(!r) return false;
     L=Math.min(EU_NLEN,EU_NFRAC*H); if(L<70) return false;
-    lado=Math.random()<.5?0:1; dir=lado?-1:1; seg=L/(EU_NS-1); x0=lado?W+4:-4; y0=Math.max(40,Math.min(H-40,r.y+r.h*.5));
+    lado=0; dir=1; seg=L/(EU_NS-1); x0=-4;   /* 074: siempre llega por la izquierda, desde el margen donde vive (a la derecha del párrafo está la foto) */ y0=Math.max(40,Math.min(H-40,r.y+r.h*.5));
     nem={tx:lado?-L-20:W+L+20,ty:y0,L:L,hw:L/EU_NANCHO/2,ext:(EU_NA+.045+.03)*L,lado:lado,seg:seg,S:L/96,cx:0,cy:0,sg:1,tg:0,mod:0,modT:0,nEv:1e12,om:1,inv:false,vent:Math.random()<.5?1:-1,capa:Math.random()<EU_NCAPA?0:1,capaT:0,quieto:false,cr:dir,cph:Math.random()*6.28,fase:0,prof:.26+.2*Math.random(),fy:.3+.4*Math.random(),bx:0,by:y0,tb:0};
     nem.p=new Float32Array(2*EU_NS); nem.ph=Math.random()*6.28; nem.st=3; nem.t0=tiempo; nem.tf=0; nem.vac=[]; nem.h=0; nem.E=5; nem.salio=0; nem.dir=1; nem.th=lado?Math.PI:0; nem.x=x0; nem.y=y0;
     for(k=0;k<EU_NS;k++){ nem.p[2*k]=x0-dir*k*seg; nem.p[2*k+1]=y0; }
@@ -1798,10 +1798,11 @@
     x=nem.x; y=nem.y; nem.h-=dt;
     if(nem.st<2&&md===0&&y>20&&y<H-20&&tiempo>nem.nEv){ if(Math.random()<.62){ nem.mod=md=1; nem.modT=tiempo+2.2+1.6*Math.random(); nemFlip(); x=nem.x; y=nem.y; } else { nem.mod=md=2; nem.modT=tiempo+2.6; nem.om=Math.random()<.5?1:-1; } nem.nEv=tiempo+9+12*Math.random(); }   // de vez en cuando retrocede o hace un giro omega
     else if(md===1&&tiempo>nem.modT){ nemFlip(); x=nem.x; y=nem.y; nem.mod=md=0; } else if(md===2&&tiempo>nem.modT) nem.mod=md=0;
-    if(nem.st===3){ lr=nemLedeRect();                                                                    // 053: va al párrafo de la portada. 063: ya no lo cruza: entra (fase 0), se entierra (fase 1) y sale por donde entró (fase 2)
-      if(nem.fase===0){ if(lr){ nem.bx=lr.x+(nem.cr>0?nem.prof:1-nem.prof)*lr.w; nem.by=lr.y+lr.h*nem.fy; } else nem.fase=2;
+    if(nem.st===3){ lr=nemLedeRect();                                                                    // 053: va al párrafo de la portada. 063: ya no lo cruza. 074 (Benjamin: que intente entrar al bloque de texto pero no pueda): llega al borde
+      // izquierdo del párrafo (fase 0), empuja contra él EU_NENT s recorriendo el borde, sin pasar (fase 1; el tope se aplica más abajo), y se va por donde vino (fase 2). empuje.js mueve las palabras que quedan frente a la cabeza.
+      if(nem.fase===0){ if(lr){ nem.bx=lr.x-nem.hw-8; nem.by=lr.y+lr.h*nem.fy; } else nem.fase=2;
         dx=nem.bx-x; dy=nem.by-y; phi=Math.atan2(dy,dx)+.22*Math.sin(tiempo*.9+nem.cph); if(dx*dx+dy*dy<26*26){ nem.fase=1; nem.tb=tiempo+EU_NENT; } }
-      if(nem.fase===1){ phi=(nem.cr>0?0:Math.PI)+.95*Math.sin(tiempo*1.15+nem.cph); if(tiempo>nem.tb||!lr){ nem.fase=2; nemFlip(); x=nem.x; y=nem.y; nem.cr=-nem.cr; } }   // hurga: avanza apenas, moviendo la cabeza a los lados
+      if(nem.fase===1){ yy=lr?lr.y+lr.h*(.5+.42*Math.sin(tiempo*.5+nem.cph)):y; phi=Math.atan2(yy-y,30)+.45*Math.sin(tiempo*1.7+nem.cph); if(tiempo>nem.tb||!lr){ nem.fase=2; nemFlip(); x=nem.x; y=nem.y; nem.cr=-nem.cr; } }   // empuja hacia adentro y busca por dónde entrar, subiendo y bajando por el borde
       if(nem.fase===2){ yy=lr?lr.y+lr.h*nem.fy:nem.ty; nem.ty=yy; phi=Math.atan2(yy-y,260*nem.cr); } }
     else if(nem.st===0){ if(tiempo-nem.t0>90){ nem.st=2; nem.tf=tiempo; } nem.tx=Math.max(xl,Math.min(xr,nem.tx)); dx=nem.tx-x; dy=nem.ty-y; if(dx*dx+dy*dy<(.45*L)*(.45*L)){ nem.st=1; nem.tf=tiempo+40+22*Math.random(); nem.tg=tiempo+8+6*Math.random(); } phi=Math.atan2(dy,dx); }
     else if(nem.st===1){ dx=nem.cx-x; dy=nem.cy-y; if(dx*dx+dy*dy<(.2*L)*(.2*L)||tiempo>nem.tg){ nem.sg=-nem.sg; nem.cx=Math.max(xl,Math.min(xr,nem.tx+nem.sg*(.45+.25*Math.random())*L)); nem.cy=Math.max(30,Math.min(H-30,nem.ty+(Math.random()-.5)*.5*L)); nem.tg=tiempo+8+6*Math.random(); dx=nem.cx-x; dy=nem.cy-y; }   // explora la punta: va y viene cruzando la raíz
@@ -1809,9 +1810,10 @@
     else { phi=(y<H*.5?-1.5708:1.5708)+.2*Math.sin(tiempo*.4); }                                          // se va por el borde de arriba o de abajo, el más cercano
     if(md===1) phi=nem.th+.5*Math.sin(tiempo*1.3); else if(md===2) phi=nem.th+nem.om*2.2;
     w=(md===2?3.1:1.5)*dt; d=angd(phi,nem.th); nem.th+=d>w?w:d<-w?-w:d;
-    v=EU_NVL*L*(md===1?.8:md===2?.6:1)*(nem.st===1?.85:nem.st===3?(nem.fase===1?.22:EU_NCV):1)*(nem.h>0?.5:1); nem.ph+=6.283*EU_NF*(.6+.4*v/(EU_NVL*L))*dt;
+    v=EU_NVL*L*(md===1?.8:md===2?.6:1)*(nem.st===1?.85:nem.st===3?(nem.fase===1?.45:EU_NCV):1)*(nem.h>0?.5:1); nem.ph+=6.283*EU_NF*(.6+.4*v/(EU_NVL*L))*dt;
     x+=Math.cos(nem.th)*v*dt; y+=Math.sin(nem.th)*v*dt;
     if(x<xl){ x=xl; if(Math.cos(nem.th)<0) nem.th=Math.PI-nem.th; } else if(x>xr){ x=xr; if(Math.cos(nem.th)>0) nem.th=Math.PI-nem.th; }   // limitado al margen: rebota suavemente en sus bordes
+    if(nem.st===3&&nem.fase<2){ lr=nemLedeRect(); if(lr&&x>lr.x-nem.hw-2) x=lr.x-nem.hw-2; }   // 074: el tope: la cabeza no entra al bloque de texto (queda con su borde a 2 px del párrafo)
     p[0]=x; p[1]=y;
     for(k=1;k<EU_NS;k++){ dx=p[2*k]-p[2*k-2]; dy=p[2*k+1]-p[2*k-1]; d=Math.sqrt(dx*dx+dy*dy)||1; p[2*k]=p[2*k-2]+dx/d*seg; p[2*k+1]=p[2*k-1]+dy/d*seg; }
     for(k=0;k<EU_NS;k++){ if(p[2*k]<xl-ext) p[2*k]=xl-ext; else if(p[2*k]>xr+ext) p[2*k]=xr+ext; }       // ningún punto del cuerpo sale del margen

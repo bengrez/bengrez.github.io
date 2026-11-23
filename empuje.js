@@ -13,6 +13,8 @@
      en los dos extremos de cada palabra: la media la traslada y la diferencia la inclina, de modo que las palabras vecinas siguen unidas
      por sus extremos y la línea se curva alrededor del nematodo como una cuerda, sin romperse. Sin giros al azar. Respuesta de TAU s.
      Cuando el nematodo se va, todas vuelven a cero y se quitan las transformaciones.
+   - 074: el nematodo ya no entra al párrafo: empuja contra su borde izquierdo. Frente a la punta de la cabeza las palabras se corren hasta
+     10 px, alejándose de ella, con un alcance largo para que las vecinas se muevan casi lo mismo.
    - El texto no cambia: mismas palabras, mismos espacios, mismo orden; se puede seleccionar y lo leen igual los lectores de pantalla.
    - Con prefers-reduced-motion no hace nada (y quimiotaxis.js tampoco se carga): el texto queda quieto. */
 (function(){
@@ -21,7 +23,7 @@
   if(!Q||!Q.silueta||!p) return;
   if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var HOLG=2, UMAX=20, LAM=62, TAU=.28, GMAX=.13, HIST=10, CERCA=70;   // holgura (px), desplazamiento máximo (px), alcance del campo (px), respuesta (s), inclinación máxima (rad), histéresis de lado (px), margen para activarse (px)
-  var ex=null, ey=null, qd=0, qs=0, qnx=0, qny=1;
+  var ex=null, ey=null, qd=0, qs=0, qnx=0, qny=1, qcab=false, UCAB=10, LCAB=110;   // 074: frente a la cabeza, las palabras se corren hasta UCAB px en la dirección en que empuja, con un alcance largo (LCAB) para que las vecinas las acompañen y no se monten
   var pal=[], N=0, cx, cy, hw, hh, ox, oy, og, sg, listo=false, activo=false, raf=0, ult=0;
 
   function partir(){ // cada palabra en un <span class="pal">; el texto y los espacios quedan igual
@@ -58,7 +60,7 @@
   function cerca(px,py,n){ // punto más cercano del eje suavizado: deja la distancia en qd, la distancia con signo (lado) en qs y la normal en qnx, qny
     var j, ax, ay, bx, by, l2, t, cx_, cy_, d, m=1e18, dx, dy;
     for(j=0;j<n-1;j++){ ax=ex[j]; ay=ey[j]; bx=ex[j+1]-ax; by=ey[j+1]-ay; l2=bx*bx+by*by||1; t=((px-ax)*bx+(py-ay)*by)/l2; t=t<0?0:t>1?1:t;
-      cx_=ax+t*bx; cy_=ay+t*by; dx=px-cx_; dy=py-cy_; d=dx*dx+dy*dy; if(d<m){ m=d; l2=Math.sqrt(l2); qnx=-by/l2; qny=bx/l2; qs=dx*qnx+dy*qny; } }
+      cx_=ax+t*bx; cy_=ay+t*by; dx=px-cx_; dy=py-cy_; d=dx*dx+dy*dy; if(d<m){ m=d; l2=Math.sqrt(l2); qnx=-by/l2; qny=bx/l2; qs=dx*qnx+dy*qny; qcab=j===0&&t===0; } }   // qcab: lo más cercano es la punta de la cabeza
     qd=Math.sqrt(m);
   }
   function cuadro(t){
@@ -73,7 +75,11 @@
       for(k=0;k<N;k++){ tx=0; ty=0; tg=0;
         if(dentro){ px=r.left+cx[k]; py=r.top+cy[k];
           cerca(px,py,n);
-          if(qd<3*LAM){
+          if(qcab){ // 074: el nematodo empuja desde fuera del bloque: las palabras frente a su cabeza se apartan de ella (hacia adentro del párrafo y hacia arriba o abajo), poco y juntas
+            nx=px-ex[0]; nx=nx>hw[k]?nx-hw[k]:nx<-hw[k]?nx+hw[k]:0; ny=py-ey[0]; u0=Math.sqrt(nx*nx+ny*ny);
+            if(u0<2.2*LCAB){ u1=UCAB*Math.exp(-(u0/LCAB)*(u0/LCAB)); if(u0<.5){ nx=1; ny=0; u0=1; } tx=nx/u0*u1; ty=.6*ny/u0*u1; }
+            sg[k]=0;
+          } else if(qd<3*LAM){
             if(!sg[k]||qs*sg[k]<-HIST) sg[k]=qs<0?-1:qs>0?1:(k%2?1:-1);           // el lado por el que la palabra deja pasar al cuerpo; no cambia mientras el eje no la cruce por más de HIST px
             lado=sg[k]; nx=qnx; ny=qny;
             U=hwm+.5*A+.3*hh[k]+HOLG; if(U>UMAX) U=UMAX;                       // lo justo para que pase: el semiancho, media ondulación y un margen

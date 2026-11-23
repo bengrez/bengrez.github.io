@@ -589,7 +589,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <p class="lugar">Santiago, Chile</p>
   <h1>Ecólogo microbiano. Hoy trabajo con datos.</h1>
   <p class="lede">Mido lo que nadie está midiendo y lo convierto en datos, avisos y decisiones. Lo aprendí con suelos mineros, en el doctorado. Hoy lo hago con una flota de buses, en Andes, y en un colegio.</p>
-  <p class="acciones"><a class="btn" href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a><a class="btn sec" href="#ingenieria">Ver las tres pruebas</a></p>
+  <p class="acciones"><a class="btn" href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a></p>
 </div>
 </div>
 
@@ -1087,7 +1087,7 @@ var portada=(function(){
   try{
     var mm=window.matchMedia; if(!mm||!mm('(pointer: fine)').matches||window.innerWidth<1024||mm('(prefers-reduced-motion: reduce)').matches) return;
     var cx=navigator.connection; if(cx&&cx.saveData) return;
-    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.min.js?v=89735ef946'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.min.js?v=c29e06340b'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 056: se carga el .min.js que genera scripts/version-js.sh (la fuente legible es quimiotaxis.js). 063: empuje.js es nuevo y no usa Pretext: aparta palabras sueltas del cuerpo del nematodo, sin rehacer el párrafo */
+    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.min.js?v=5c5daa5ef0'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.min.js?v=a83003fa8d'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 056: se carga el .min.js que genera scripts/version-js.sh (la fuente legible es quimiotaxis.js). 063: empuje.js es nuevo y no usa Pretext: aparta palabras sueltas del cuerpo del nematodo, sin rehacer el párrafo */
     if(document.readyState==='complete') cargar(); else window.addEventListener('load',function(){ setTimeout(cargar,300); });
   }catch(e){}
 })();
