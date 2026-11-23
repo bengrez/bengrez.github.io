@@ -404,60 +404,22 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
 
 ## Preguntas para Benjamin
 
-1. **Titular de la portada.** Puse «Ecólogo microbiano. Hoy trabajo con datos.» porque responde a tu respuesta 1 en dos frases.
-   Opciones: (a) dejarlo; (b) «Ecólogo microbiano. Hoy mido buses y aprendizaje.», más concreto y menos claro para quien contrata;
-   (c) volver a «Trabajo con datos, ecología y docencia.». Recomiendo (a).
-2. **La caja de pruebas de Agentes** (la célula en el recuadro punteado, iteración 049) salió junto con la sección. Opciones:
-   (a) dejarla fuera; (b) reponerla dentro de Data science, junto al párrafo «Con agentes de IA». Recomiendo (a): es un esquema
-   plano y esta versión apunta a lo contrario. Reponerla son unos 5 KB.
-3. **El artículo de crAssphage aparece por primera vez en el sitio**, en el gráfico de citas («donde soy uno de 117 autores»).
-   Es casi la mitad de las citas de varios años, así que ocultarlo distorsionaría el gráfico. Opciones: (a) dejarlo como está,
-   en gris y explicado; (b) graficar sólo las otras 14 publicaciones; (c) quitar el gráfico de citas. Recomiendo (a).
-4. **Densidades del perfil de RNA-SIP.** Usé máximos en 1,79 g/ml (¹²C) y 1,82 g/ml (¹³C). ¿Son los que usarías tú? Si tienes un
-   gradiente publicado con sus fracciones, lo reemplazo y pasa de simulado a dato real.
-5. **Umbral por defecto de la demostración.** Con 2σ salen 2 falsas alarmas; con 2,5σ, ninguna y la alerta es el mismo día.
-   Opciones: (a) partir en 2σ, que muestra el costo de la regla simple; (b) partir en 2,5σ, que se ve más limpio. Recomiendo (a).
-6. **Sobre qué base se publica, si eliges esta versión.** `main` está en la 056 y la 057 sigue sin fusionar. Opciones:
-   (a) publicar esta rama sobre la 056 y rehacer después la 057 encima; (b) fusionar antes la 057 y llevar esta rama encima
-   (hay que resolver conflictos en el `<head>` y en el CSS de la barra). Recomiendo (b) si la 057 sigue en pie.
-7. **Intensidad del campo del microscopio.** Bajo la luz del cursor los márgenes toman un 6 % de tinta y un grano fino. Si lo
-   prefieres más o menos marcado es un número (`MIC.campo` y `MIC.grano` en `quimiotaxis.js`).
-8. **La captura de la Tabla periódica se ve dos veces en escritorio**: en la figura fija y en la ficha de «Herramientas
-   publicadas». Lo hice para no sumar otra imagen. Opciones: (a) dejarlo; (b) que la ficha lleve un recuadro tipográfico como el
-   de Vacunas; (c) que la figura fija muestre otra herramienta. Recomiendo (a) hasta que lo veas.
-9. **«del que soy coautor»** en el pie del perfil de RNA-SIP: el CV no dice el orden de autoría del capítulo de 2019. ¿Lo dejo así
-   o eres primer autor?
-10. **Cuánto más recortar el texto.** Quité los tres pasos y bajé el texto visible un 24 %. Opciones: (a) dejarlo así; (b) recortar
-    más: sacar las filas «Con qué» y «Después» y dejar las fichas de herramientas en una línea cada una. Recomiendo (a) hasta que
-    lo veas.
-11. **La corrección del cuerpo de la raíz en `main`.** El error (un tubo delgado y cortado en vez del cuerpo con su ancho) existe
-    en la versión publicada (056). Opciones: (a) llevarla a `main` aunque elijas la versión de Codex; (b) dejarla sólo en esta
-    rama. Recomiendo (a).
-12. ~~El retrato~~ Hecho en la séptima ronda, en la portada. Antes: respondiste que está en Downloads, pero no lo pude identificar: hay 342 imágenes, ninguna con nombre de
-    retrato ni posterior al pedido, y no abrí fotos al azar (hay fotos de terceros y un archivo de fotos de curso). ¿Cuál es el
-    nombre del archivo?
-13. ~~«Hoy vivo en Santiago»~~ Ya no aplica: el texto nuevo dice «Estoy en Santiago».
-14. ~~«Recorrido» fuera de la barra~~ Respondida: se queda fuera.
-15. ~~Estructura de los textos~~ Respondida el 2026-11-23: estructura A (persona primero). Hecha en la quinta ronda.
-16. ~~Desplegables~~ Respondida el 2026-11-23: se quedan como están.
-17. ~~Duración del entierro~~ Respondida el 2026-11-23: 9 segundos está bien.
-18. **Fondo** (octava ronda): textura pareja, 24 px quietos y 90 px de caída a 1440 px, más organismos y 18 % de visibilidad
-    lejos del cursor. ¿Convence así? Lo que más cambia la sensación de «vacío» es la visibilidad lejos del cursor.
-19. ~~Forma del retrato~~ Resuelta por Benjamin con una captura: apaisada, con las montañas desvaneciéndose hacia el texto.
-20. ~~Peso del escritorio~~ Resuelto en la novena ronda: sin las fotos de terreno queda en 164,0 KB.
-21. **Empuje del nematodo.** Las palabras se mueven como mucho 20 px y las crestas del nematodo rozan alguna. ¿Así, o prefieres
-    que lo despejen del todo aunque se muevan más?
-22. **Respaldo del resultado de Ecología.** «Las especies de bacterias que importan para la estabilidad del ecosistema» quedó
-    enlazado al artículo de reacondicionamiento de 2019, como indicaste. No lo contrasté con el artículo: ¿la frase lo describe bien?
-23. **Lo que salió del sitio** en la novena ronda: citas por año, perfil de RNA-SIP, fotos de terreno, esquema del sistema de
-    buses y el asistente escolar. Todo sigue en el historial de la rama por si quieres reponer algo.
-24. ~~Permiso para usar los logos~~ Respondida el 2026-11-23: quedan como están.
-25. ~~El colegio con nombre~~ Respondida el 2026-11-23: queda con nombre y escudo en el recorrido.
-26. ~~«Agentic engineer» en el CV~~ Respondida el 2026-11-23: sí; actualizado en `Personal/_owner/cv.md`.
-27. **Peso del gráfico de la flota.** Las 39 líneas grises suman 3,7 KB a la primera carga (66,7 KB en el celular). Si quieres
-    recuperarlos, bajo a 25 buses o simplifico las líneas; visualmente casi no cambia.
-28. **Ordenación: ¿esta figura u otra?** Usé la figura 6 del artículo de reacondicionamiento (un CCA). Tu otra ordenación con
-    vectores es la figura 1b del artículo de 2017 en *Scientific Reports* (un PCO con vectores de taxones). Si prefieres esa, o
-    tienes las coordenadas originales de alguna, la rehago con los valores exactos.
-29. **Rótulos de los grupos.** Traduje «Inoculum», «Microbes» y «Nitrogen» a «Inóculo», «Microbios» y «Nitrógeno». ¿Así, o
-    prefieres los nombres del artículo en inglés?
+Lista depurada el 2026-11-23, al cierre de la duodécima ronda.
+
+1. **Ecología, texto y figura.** El texto dice «las especies de bacterias que importan para la estabilidad del ecosistema» (frase
+   tuya, enlazada al artículo de 2019, sin contrastar) y el gráfico muestra órdenes. ¿La frase describe bien el resultado?
+2. **Ordenación.** ¿Rótulos de los grupos en español o como en el artículo? Si tienes las coordenadas originales del análisis,
+   la rehago con los valores exactos.
+3. **Base de publicación.** (a) Publicar sobre la 056 y rehacer después la 057 encima; (b) fusionar antes la 057 y llevar esta
+   rama encima. Recomiendo (b) si la 057 sigue en pie.
+4. **Corrección del cuerpo de la raíz en `main`.** El error existe en la versión publicada. ¿Se lleva aunque elijas la versión
+   de Codex? Recomiendo que sí.
+5. **Escalones de la luz del cursor.** Sin tocar, a la espera de tu decisión.
+6. **Gráfico de la flota.** ¿40 buses, o 25 para recuperar 3,7 KB? Recomiendo dejarlo.
+7. **Revisión antes de publicar.** El texto actual no tiene revisión independiente de hechos, y faltan Lighthouse y axe.
+   Recomiendo hacerlas.
+
+Cerradas o sin efecto: titular, caja de agentes, crAssphage, densidades de RNA-SIP, umbral de la demostración, intensidad del
+campo, captura repetida, autoría del capítulo, cuánto recortar el texto, retrato y su forma, «Recorrido» en la barra, estructura
+de los textos, desplegables, duración del nematodo, proporción del fondo, peso del escritorio, empuje dentro del párrafo, logos
+y su permiso, colegio con nombre y título en el CV. El detalle de cada una está en el historial de este archivo.
