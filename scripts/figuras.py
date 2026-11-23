@@ -5,7 +5,8 @@
     Hasta la 073: refrigerante de dos buses, con los recorridos de cada día (n = 3), la media diaria, la banda
     de referencia ± kσ y la alerta. Es la demostración interactiva del sitio: index.html trae un control que cambia k y recalcula
     la alerta y las falsas alarmas con estos mismos datos (bloque <script id="ds-datos">, que también sale de aquí).
-  - Ecología (fig:ec), DATOS PUBLICADOS: amonio y nitrato del suelo por tratamiento, media ± DE, n = 3. Tabla suplementaria 1 de
+  - Ecología (fig:ec), DATOS PUBLICADOS. Desde la 075: la ordenación (CCA) de la figura 6 del mismo artículo, redibujada (ver ORD_*).
+    Hasta la 074: amonio y nitrato del suelo por tratamiento, media ± DE, n = 3. Tabla suplementaria 1 de
     Moreira-Grez et al. 2019, Front. Microbiol. 10:1617, doi:10.3389/fmicb.2019.01617 (CC BY 4.0). Los valores están copiados abajo.
   - RNA-SIP (fig:sip), SIMULADA: ARN por fracción de un gradiente de densidad, control ¹²C y tratamiento ¹³C.
   - Citas (fig:citas), DATOS PÚBLICOS: citas por año de 15 publicaciones, de OpenAlex (consulta por DOI del 2026-11-21).
@@ -20,6 +21,7 @@ salen en dos variantes, `w` (escritorio, viewBox 640 × 280) y `n` (celular, 400
     python3 scripts/figuras.py --pegar    # los pega en index.html entre <!-- fig:ID --> y <!-- /fig:ID -->
 """
 import json
+import math
 import os
 import re
 import sys
@@ -206,26 +208,101 @@ def datos_ds_json():
     return f'<script type="application/json" id="ds-datos">{js}</script>\n<!-- texto por defecto del control: {texto_ds(r, DS_K)} -->'
 
 
+# ---- 075: ordenación (Benjamin: un gráfico de ordenación con vectores, el mismo de un artículo, redibujado con la estética del sitio).
+# Figura 6 de Moreira-Grez et al. 2019, Frontiers in Microbiology 10:1617 (doi:10.3389/fmicb.2019.01617, CC BY 4.0): análisis de correspondencia
+# canónica (CCA) con las muestras (18: seis grupos por tres réplicas), los taxones (órdenes) y los vectores de la química del suelo.
+# Las posiciones NO vienen de recalcular el análisis: se leyeron de la figura publicada (imagen de 3793 × 3416 px, ejes calibrados con su rejilla,
+# 638,6 px por unidad): las muestras, por sus discos; los vectores, por la punta de cada flecha; los taxones, por correlación con una plantilla
+# triangular (214 detectados; en la nube densa del centro hay triángulos superpuestos que no se separan). Error típico: ± 0,01 unidades.
+# Dos de las tres réplicas de Control aparecen superpuestas en la figura original; aquí van separadas 0,04 unidades.
+ORD_SITIOS = {  # grupo: (clase del marcador, [(CCA1, CCA2) × 3])
+    "Inóculo":       ("m rom", [(-2.772, 0.815), (-2.151, 0.41), (-1.53, -0.475)]),
+    "Microbios + N": ("m tri", [(0.961, 3.205), (0.62, 1.443), (0.4, 0.54)]),
+    "Microbios":     ("m cir", [(0.351, 0.432), (0.438, 0.461), (0.479, 0.1)]),
+    "Nitrógeno":     ("s tri", [(0.509, -0.318), (0.42, -0.416), (0.551, -0.489)]),
+    "Basal":         ("s cir", [(0.326, -0.804), (0.412, -0.836), (0.499, -0.555)]),
+    "Control":       ("s cua", [(0.095, -1.208), (0.17, -1.19), (0.21, -1.19)]),
+}
+ORD_CORTO = {"Microbios + N": "Mic. + N", "Microbios": "Microb.", "Nitrógeno": "Nitróg."}
+ORD_VEC = [  # (rótulo, CCA1, CCA2, se rotula en la variante ancha, en la angosta)
+    ("pH", 2.109, -0.063, 1, 1), ("Ca", 1.495, 0.058, 1, 0), ("NH₄", 0.896, 0.775, 1, 1), ("NOx", 0.813, -0.302, 1, 1), ("Cu", -0.015, 0.373, 0, 0),
+    ("Al", -0.873, 0.597, 1, 0), ("Na", -1.665, 0.94, 1, 1), ("C org.", -2.085, 0.346, 1, 0), ("K", -1.961, 0.149, 0, 0), ("Mn", -1.919, -0.023, 1, 0),
+    ("Fe", -0.86, 0.16, 0, 0), ("Zn", -0.906, -0.318, 0, 0), ("CE", -0.939, -0.467, 1, 0), ("Mg", -0.58, -1.18, 1, 1), ("S", 0.004, -1.15, 1, 0),
+]
+ORD_TAX = [(-0.11, -0.36), (-1.21, -0.17), (-2.56, 0.72), (-0.62, -0.65), (-0.28, 0.1), (0.56, 1.07), (0.19, -0.52), (0.36, 0.21), (0.1, -0.45), (-0.12, -0.48), (0.14, 0.19), (-0.95, -0.1), (-1.0, -0.16), (-1.51, 0.43), (0.58, 1.55), (-1.15, -0.08), (0.32, -0.31), (-0.98, 0.33), (-0.25, -0.31), (-0.96, -0.23), (0.23, 0.34), (-0.42, -0.31), (-0.04, 0.85), (0.18, 0.08), (-0.35, -0.75), (-0.5, -0.12), (0.7, 1.36), (-1.99, 0.24), (-0.32, -0.43), (0.41, -0.63), (-1.56, -0.57), (-0.05, -0.43), (0.48, 0.59), (0.23, -0.63), (-1.8, 0.24), (-1.66, 0.34), (-0.74, -0.96), (0.11, -0.1), (-2.29, 0.52), (-0.67, 0.51), (0.4, 0.29), (-0.11, -0.08), (-0.28, -0.37), (0.59, 0.8), (-2.39, 0.53), (-2.45, 0.67), (0.67, 1.78), (0.25, -0.86), (-2.25, 0.6), (-2.21, 0.5), (-2.14, 0.51), (0.33, -0.85), (0.08, -1.35), (0.52, 0.53), (0.21, -0.98), (0.47, 0.31), (-0.21, -0.47), (-0.03, -0.16), (0.03, -0.49), (0.26, -1.03), (0.55, 1.02), (0.42, 0.21), (0.19, 0.29), (0.11, 0.32), (0.21, -0.23), (0.41, 0.15), (-2.3, 0.59), (-0.06, -0.52), (0.61, 0.75), (0.12, -0.22), (-0.64, 0.08), (0.04, -0.03), (-1.26, -0.2), (-0.27, -0.48), (0.31, 0.12), (0.24, 0.17), (0.26, 0.12), (0.02, -0.8), (0.3, -0.18), (0.21, -0.11), (0.35, -0.05), (0.1, -0.28), (0.08, 0.1), (0.33, 0.7), (0.45, -0.26), (0.55, 0.16), (0.15, -0.23), (-0.86, 0.1), (0.38, 0.61), (0.33, -0.56), (-2.22, 0.38), (0.14, -0.02), (-0.34, -0.13), (0.24, -0.91), (0.25, -0.02), (0.39, -0.17), (0.25, -0.37), (0.48, 0.44), (0.39, -0.32), (0.48, 0.39), (0.54, 0.26), (0.24, -0.26), (0.28, -0.02), (-0.79, 0.3), (0.57, 0.7), (0.36, 0.16), (0.13, -0.32), (0.17, 0.43), (0.4, -0.03), (0.35, -0.5), (0.45, -0.07), (0.27, 0.05), (0.47, -0.1), (0.09, -0.49), (0.14, -0.15), (-0.07, 0.47), (0.37, -0.92), (0.34, -0.63), (-2.47, 0.63), (0.1, -0.15), (0.49, -0.14), (0.18, -0.31), (0.3, -0.57), (0.39, -0.26), (-0.38, 0.27), (0.37, -0.44), (0.18, -0.16), (0.33, -0.2), (0.22, -0.08), (0.44, 0.37), (0.09, 0.29), (0.31, -0.37), (-0.01, -0.25), (0.13, 0.3), (0.19, -0.38), (0.35, -0.42), (0.5, 0.29), (0.59, 0.69), (0.47, 0.07), (0.45, -0.03), (0.41, -0.45), (0.25, -0.13), (0.48, 0.17), (0.47, 0.21), (0.22, -0.29), (0.45, -0.2), (0.44, 0.08), (0.3, -0.04), (0.44, -0.01), (0.33, -0.34), (0.2, 0.18), (0.35, -0.89), (0.45, 0.29), (0.37, -0.23), (0.3, -0.07), (0.02, -0.2), (0.3, -0.62), (-0.51, -0.17), (0.12, -0.12), (0.09, -1.33), (0.51, -0.19), (-0.65, 0.54), (0.01, -0.47), (0.41, -0.5), (-1.67, 0.36), (-1.98, 0.26), (-0.06, -0.49), (-0.24, -0.29), (-2.4, 0.56), (-0.01, -0.14), (-0.97, 0.35), (-1.14, -0.06), (-2.47, 0.69), (-2.13, 0.53), (0.25, -0.28), (0.18, -0.54), (-1.52, 0.46), (0.31, -0.29), (0.22, -0.6), (-0.75, -0.93), (-0.06, 0.49), (0.44, -0.17), (-2.19, 0.52), (-1.79, 0.26), (0.53, 0.28), (0.18, -0.49), (-0.13, -0.45), (0.59, 1.57), (-0.1, -0.06), (0.61, 0.82), (-1.27, -0.17), (0.12, -0.07), (0.5, 0.62), (0.27, -0.84), (0.4, -0.61), (0.68, 1.38), (0.37, -0.03), (-0.04, -0.14), (-0.34, -0.73), (0.56, 1.1), (-1.57, -0.54), (-1.82, 0.26), (-0.04, -0.41), (-2.24, 0.63), (0.69, 1.8), (-0.26, -0.46), (0.22, 0.37), (-0.43, -0.29), (0.09, 0.12), (-1.95, 0.15), (-0.49, -0.1), (0.25, 0.19), (0.39, -0.08), (0.11, -0.43)]
+ORD_X, ORD_Y = (-3.0, 2.45), (-1.5, 1.8)          # la réplica 1 de «Microbios + N» (CCA2 = 3,2) queda fuera de escala y se marca en el borde superior
+
+
+def _marca(cls, x, y, r, extra=""):
+    forma = cls.split()[1]
+    if forma == "cir":
+        return f'<circle class="pt {cls}" cx="{f(x)}" cy="{f(y)}" r="{f(r)}"{extra}/>'
+    if forma == "cua":
+        return f'<rect class="pt {cls}" x="{f(x - r * .9)}" y="{f(y - r * .9)}" width="{f(1.8 * r)}" height="{f(1.8 * r)}"{extra}/>'
+    if forma == "tri":
+        return f'<path class="pt {cls}" d="M{f(x)} {f(y - 1.2 * r)}L{f(x + 1.1 * r)} {f(y + .85 * r)}H{f(x - 1.1 * r)}Z"{extra}/>'
+    return f'<path class="pt {cls}" d="M{f(x)} {f(y - 1.3 * r)}L{f(x + 1.1 * r)} {f(y)}L{f(x)} {f(y + 1.3 * r)}L{f(x - 1.1 * r)} {f(y)}Z"{extra}/>'
+
+
 def figura_ec(var):
-    p = Panel(var, 0.4, 5.6, 0, 45)
+    v = VARIANTES[var]
     ancho = var == "w"
-    p.ejes([1, 2, 3, 4, 5], [0, 10, 20, 30, 40], "Suelo inicial (Basal) y tratamientos a las 12 semanas" if ancho else "Basal y tratamientos (12 semanas)", "N mineral (mg/kg)",
-           "Datos publicados: media ± DE, n = 3" if ancho else "Publicado: media ± DE, n = 3", [e[0] if ancho else e[1] for e in EC])
+    L, T, B = v["ml"], v["mt"], v["H"] - v["mb"]
+    k = (B - T) / (ORD_Y[1] - ORD_Y[0])                         # misma escala en los dos ejes (px por unidad)
+    R = L + k * (ORD_X[1] - ORD_X[0])
+    X = lambda x: L + (x - ORD_X[0]) * k
+    Y = lambda y: B - (y - ORD_Y[0]) * k
+    r = 4.2 if ancho else 3.4
+    p = [f'<path class="eje" d="M{f(L)} {f(T)}V{f(B)}H{f(R)}"/>']
+    for t in (-3, -2, -1, 0, 1, 2):
+        p.append(f'<path class="eje" d="M{f(X(t))} {f(B)}v4"/><text class="tick" x="{f(X(t))}" y="{f(B + 16)}" text-anchor="middle">{str(t).replace("-", "−")}</text>')
+    for t in (-1, 0, 1):
+        p.append(f'<path class="eje" d="M{f(L)} {f(Y(t))}h-4"/><text class="tick" x="{f(L - 7)}" y="{f(Y(t) + 4)}" text-anchor="end">{str(t).replace("-", "−")}</text>')
+    p.append(f'<text class="titulo" x="{f((L + R) / 2)}" y="{f(v["H"] - 7)}" text-anchor="middle">CCA1</text>')
+    ROT = {"S": (9, 6, "start"), "C org.": (-4, -5, "end"), "Mn": (-4, 13, "end"), "Ca": (2, -6, "end"), "pH": (4, 13, "end") if not ancho else (6, 4, "start")}   # rótulos que se corren para no chocar
+    p.append(f'<text class="titulo" transform="translate({f(v["tt"])} {f((T + B) / 2)}) rotate(-90)" text-anchor="middle">CCA2</text>')
+    p.append(f'<text class="sello" x="{f(v["W"] - v["mr"])}" y="{f(v["H"] - 7)}" text-anchor="end">{"Datos publicados, fig. 6 redibujada" if ancho else "Publicado"}</text>')
+    p.append(f'<path class="cero" d="M{f(X(0))} {f(T)}V{f(B)}M{f(L)} {f(Y(0))}H{f(R)}"/>')
+    p.append('<path class="tax" d="' + "".join(f"M{f(X(x))} {f(Y(y))}h0" for x, y in ORD_TAX if ORD_Y[0] < y < ORD_Y[1]) + '"/>')
+    vec, rot = [], []
+    for nombre, x, y, rw, rn in ORD_VEC:
+        x1, y1 = X(x), Y(y)
+        dx, dy = x1 - X(0), y1 - Y(0)
+        n = math.hypot(dx, dy)
+        ux, uy = dx / n, dy / n
+        a = 4.5 if ancho else 3.6                                # punta de flecha
+        vec.append(f"M{f(X(0))} {f(Y(0))}L{f(x1)} {f(y1)}M{f(x1 - a * (ux + .55 * uy))} {f(y1 - a * (uy - .55 * ux))}L{f(x1)} {f(y1)}L{f(x1 - a * (ux - .55 * uy))} {f(y1 - a * (uy + .55 * ux))}")
+        if rw if ancho else rn:
+            tx, ty, anc = x1 + 6 * ux, y1 + 6 * uy + 4, ("start" if ux > .3 else "end" if ux < -.3 else "middle")
+            if nombre in ROT:
+                tx, ty, anc = x1 + ROT[nombre][0], y1 + ROT[nombre][1], ROT[nombre][2]
+            rot.append(f'<text x="{f(tx)}" y="{f(ty)}" text-anchor="{anc}">{nombre}</text>')
+    p.append(f'<path class="vec" d="{"".join(vec)}"/>')
+    p.append(f'<g class="vecr">{"".join(rot)}</g>')
     i = 0
-    for cls, col, dx in (("a", 2, -0.13), ("b", 4, 0.13)):
-        for k, e in enumerate(EC):
-            m, s = e[col], e[col + 1]
-            cx, cy, c0, c1 = p.X(k + 1 + dx), p.Y(m), p.Y(max(0, m - s)), p.Y(m + s)
-            p.partes.append(f'<g class="pt {cls}" style="--i:{i}"><path d="M{f(cx)} {f(c0)}V{f(c1)}M{f(cx - 4)} {f(c0)}h8M{f(cx - 4)} {f(c1)}h8"/>'
-                            f'<circle cx="{f(cx)}" cy="{f(cy)}" r="4.5"/></g>')
+    for grupo, (cls, pts) in ORD_SITIOS.items():
+        for x, y in pts:
+            if y > ORD_Y[1]:                                    # fuera de escala: en el borde superior, con una flecha
+                p.append(_marca(cls, X(x), T + r + 1, r, f' style="--i:{i}"') + f'<path class="fuera" d="M{f(X(x))} {f(T - 7)}v-5m-3 3l3 -3l3 3"/>')
+            else:
+                p.append(_marca(cls, X(x), Y(y), r, f' style="--i:{i}"'))
             i += 1
-    p.partes.append(f'<g class="leyenda"><circle class="a" cx="{f(p.L + 14)}" cy="{f(p.T + 12)}" r="4"/><text x="{f(p.L + 22)}" y="{f(p.T + 16)}">amonio (NH₄-N)</text>'
-                    f'<circle class="b" cx="{f(p.L + 14)}" cy="{f(p.T + 30)}" r="4"/><text x="{f(p.L + 22)}" y="{f(p.T + 34)}">nitrato + nitrito (NOx-N)</text></g>')
-    aria = ("Gráfico con datos publicados (Moreira-Grez y otros, 2019): nitrógeno mineral de un suelo de acopio minero, antes de incubar y tras 12 semanas, por tratamiento, media y desviación estándar de tres réplicas, en miligramos por kilo. "
-            "Basal es el suelo antes de incubar. "
-            + " ".join(f"{n}: amonio {f(e[2]).replace('.', ',')}; nitrato más nitrito {f(e[4]).replace('.', ',')}." for n, e in zip(("Basal", "Control", "Nitrógeno", "Microbios", "Microbios con nitrógeno"), EC)) +
-            " El valor más alto de nitrato más nitrito es el del inóculo microbiano con nitrógeno.")
-    return p.svg("ec", aria)
+    lx, ly, paso = R + (26 if ancho else 12), T + (10 if ancho else 6), (19 if ancho else 16)
+    ley = []
+    for j, (grupo, (cls, _)) in enumerate(ORD_SITIOS.items()):
+        ley.append(_marca(cls, lx, ly + j * paso, r).replace('class="pt ', 'class="') + f'<text x="{f(lx + 10)}" y="{f(ly + j * paso + 4)}">{grupo if ancho else ORD_CORTO.get(grupo, grupo)}</text>')
+    yb = ly + 6 * paso + 4
+    ley.append(f'<path class="tax" d="M{f(lx)} {f(yb)}h0"/><text class="men" x="{f(lx + 10)}" y="{f(yb + 4)}">{"taxones (órdenes)" if ancho else "taxones"}</text>')
+    ley.append(f'<path class="vec" d="M{f(lx - 5)} {f(yb + paso)}h10m-3 -2.5l3 2.5l-3 2.5"/><text class="men" x="{f(lx + 10)}" y="{f(yb + paso + 4)}">{"química del suelo" if ancho else "química"}</text>')
+    if ancho:
+        ley.append(f'<text class="men" x="{f(lx - 6)}" y="{f(B - 16)}">↑ una réplica queda</text><text class="men" x="{f(lx + 6)}" y="{f(B - 1)}">fuera de escala</text>')
+    p.append(f'<g class="leyenda">{"".join(ley)}</g>')
+    aria = ("Gráfico de ordenación redibujado de la figura 6 de Moreira-Grez y otros, 2019: análisis de correspondencia canónica de las comunidades bacterianas de un suelo de acopio minero. "
+            "Cada marcador es una muestra, en seis grupos de tres réplicas: Inóculo, Microbios más nitrógeno, Microbios, Nitrógeno, Basal y Control. Las tres muestras del inóculo quedan lejos, a la izquierda; "
+            "las demás se agrupan a la derecha, ordenadas de arriba abajo desde Microbios más nitrógeno hasta Control. Los puntos tenues son los taxones y las flechas, la química del suelo: "
+            "pH y calcio apuntan hacia las muestras de suelo; sodio, carbono orgánico, potasio y manganeso, hacia el inóculo.")
+    cuerpo = "\n  ".join(p)
+    return f'<svg class="fig {var} ec ord" viewBox="0 0 {v["W"]} {v["H"]}" role="img" aria-label="{aria}">\n  {cuerpo}\n</svg>'
 
 
 def figura_sip():

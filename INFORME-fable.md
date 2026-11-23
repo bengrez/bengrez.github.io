@@ -333,15 +333,37 @@ Tres pedidos de Benjamin.
 Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px (cuatro figuras presentes); secuencia del
 nematodo en vivo con GPU.
 
+## Duodécima ronda: ordenación en Ecología
+
+Pedido de Benjamin: un gráfico de ordenación con vectores para mostrar su experiencia en análisis de datos, el mismo de un
+artículo pero rehecho con la estética del sitio.
+
+- **Cuál**: la figura 6 de Moreira-Grez et al. 2019 (doi:10.3389/fmicb.2019.01617, CC BY 4.0), el artículo que ya respalda la
+  sección. Es un análisis de correspondencia canónica (CCA), no un NMDS: muestras, taxones y vectores de la química del suelo.
+- **Qué muestra**: 18 muestras en seis grupos de tres réplicas, 214 taxones como puntos tenues y 15 flechas de química. Las tres
+  muestras del inóculo quedan lejos, a la izquierda; las del suelo se ordenan de arriba abajo, de «Microbios + N» a «Control».
+- **Cómo se hizo**: no recalculé el análisis. Leí las posiciones de la imagen publicada (3793 × 3416 px), con los ejes
+  calibrados por su rejilla. Las muestras y las puntas de las flechas tienen un error de unas 0,01 unidades.
+- **Tres diferencias con el original**, declaradas:
+  1. Taxones: detecté 214; en la nube densa del centro el original tiene más, superpuestos, que no se pueden separar.
+  2. Una réplica de «Microbios + N» está en CCA2 = 3,2. Para no aplastar el resto, el eje llega a 1,8 y esa réplica va marcada
+     en el borde superior con una flecha.
+  3. Dos réplicas de Control están superpuestas en el original; aquí van separadas 0,04 unidades para que se vean las tres.
+- **Rótulos**: los vectores van con el símbolo del elemento (pH, Ca, NH₄, NOx, Na, Mg…); algunos sin rótulo para que no se
+  monten. Los grupos se distinguen por color (con microbios agregados, relleno coral; sin ellos, contorno burdeos) y por forma.
+- Salió el gráfico anterior de amonio y nitrato.
+
+Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro, oscuro y celular.
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 66,7 KB | +33,2 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 78,3 KB | −4,3 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 167,8 KB | +2,9 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 70,3 KB | +36,8 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 81,9 KB | −0,7 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 171,4 KB | +6,5 KB |
 
-Los valores son del tema claro; en el oscuro, 60,2, 71,8 y 150,4 KB. Desde la séptima ronda la primera carga incluye el retrato
+Los valores son del tema claro; en el oscuro, 63,8, 75,4 y 154,0 KB. Desde la séptima ronda la primera carga incluye el retrato
 (31,1 KB en el celular, 70,4 KB en escritorio). Desde la quinta ronda ya no se baja Pretext (39,9 KB) y la imagen del autodiagnóstico (23,2 KB) se carga sólo al abrir su
 desplegable. Por archivo: `index.html` +1,7 KB; `quimiotaxis.min.js` +3,5 KB (sólo escritorio); `empuje.min.js` 3,4 → 1,6 KB; `costras-biologicas.webp` 27,2 KB (nueva);
 `tabla-periodica-fig-n.webp` 11,6 KB o `tabla-periodica-fig.webp` 17,0 KB (nuevas, una según el ancho); se quitó
@@ -434,3 +456,8 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
 26. ~~«Agentic engineer» en el CV~~ Respondida el 2026-11-23: sí; actualizado en `Personal/_owner/cv.md`.
 27. **Peso del gráfico de la flota.** Las 39 líneas grises suman 3,7 KB a la primera carga (66,7 KB en el celular). Si quieres
     recuperarlos, bajo a 25 buses o simplifico las líneas; visualmente casi no cambia.
+28. **Ordenación: ¿esta figura u otra?** Usé la figura 6 del artículo de reacondicionamiento (un CCA). Tu otra ordenación con
+    vectores es la figura 1b del artículo de 2017 en *Scientific Reports* (un PCO con vectores de taxones). Si prefieres esa, o
+    tienes las coordenadas originales de alguna, la rehago con los valores exactos.
+29. **Rótulos de los grupos.** Traduje «Inoculum», «Microbes» y «Nitrogen» a «Inóculo», «Microbios» y «Nitrógeno». ¿Así, o
+    prefieres los nombres del artículo en inglés?

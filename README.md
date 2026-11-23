@@ -103,6 +103,11 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
   flota completa**: 40 buses simulados en 30 días, 39 en gris y uno que se desvía, con el aviso (día 16) y la revisión; fijo, sin
   el control del umbral (salieron `.demo`, `#ds-datos` y su script) y con rótulos llanos («Temperatura del motor»).
   `scripts/figuras.py`: `datos_flota()` y `figura_ds()`.
+- **Ordenación en Ecología** (075). El gráfico de la sección pasa a ser la figura 6 de doi:10.3389/fmicb.2019.01617 (CC BY 4.0)
+  redibujada: un análisis de correspondencia canónica con 18 muestras (seis grupos por tres réplicas), 214 taxones y 15 vectores
+  de química del suelo. Las posiciones se leyeron de la imagen publicada (no se recalculó el análisis) y están en
+  `scripts/figuras.py` (`ORD_SITIOS`, `ORD_VEC`, `ORD_TAX`, `figura_ec`). Una réplica queda fuera de escala y se marca en el
+  borde. Estilos en `.fig.ord`.
 - **Raíz**: el cuerpo de la primaria se dibujaba como un tubo de 5 px de radio cortado a 300 px de la punta (en `rzBuild`, la
   distancia a la punta se medía contra el punto anterior; venía de antes de la 056). Corregido: tiene su ancho real en todo el
   largo. Las laterales nacen dentro de la primaria y salen por un cuello ancho (`RZ_CUE`, `RZ_CUL`), la capa externa se abre en
