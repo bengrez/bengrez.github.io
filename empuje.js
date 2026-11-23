@@ -6,12 +6,13 @@
 
    - quimiotaxis.js lleva al nematodo hasta el párrafo: entra por un costado, se entierra unos segundos hurgando y sale por donde entró.
      Su silueta (puntos del eje con su semiancho, en píxeles de la ventana) se lee con Quimiotaxis.silueta().
-   - Campo de desplazamiento: cada palabra se aleja del cuerpo, casi sólo en vertical (así las de una misma línea no se montan entre sí),
-     una distancia u = U · e^(−d/LAM), con d la distancia
-     de la caja de la palabra al eje. U cubre el semiancho del cuerpo más una holgura, de modo que ninguna palabra queda debajo; como
-     U/LAM < 1 el orden de las líneas se conserva (se aprietan, no se cruzan): junto al cuerpo el interlineado baja a ≈ 70 %.
-   - Cada palabra gira además unos grados (fijos por palabra, proporcionales a su desplazamiento) y sigue a su destino con una respuesta de
-     TAU s, así que entra y sale suave. Cuando el nematodo se va, todas vuelven a cero y se quitan las transformaciones.
+   - Campo de desplazamiento (065, Benjamin: más conectividad entre las letras y que se muevan menos mientras dejan pasar al nematodo):
+     las palabras ya no se apartan una por una del cuerpo que ondula, sino del eje del cuerpo sin la ondulación (una media móvil), todas
+     las de un mismo lado hacia ese lado, con u = U · e^(−(d/LAM)²). U es lo justo para que pase (semiancho, media ondulación y un margen:
+     ≈ 18 px, antes 26–31) y el campo muere a ≈ 2 · LAM, así que se mueven las líneas vecinas y no el párrafo. El desplazamiento se evalúa
+     en los dos extremos de cada palabra: la media la traslada y la diferencia la inclina, de modo que las palabras vecinas siguen unidas
+     por sus extremos y la línea se curva alrededor del nematodo como una cuerda, sin romperse. Sin giros al azar. Respuesta de TAU s.
+     Cuando el nematodo se va, todas vuelven a cero y se quitan las transformaciones.
    - El texto no cambia: mismas palabras, mismos espacios, mismo orden; se puede seleccionar y lo leen igual los lectores de pantalla.
    - Con prefers-reduced-motion no hace nada (y quimiotaxis.js tampoco se carga): el texto queda quieto. */
 (function(){
@@ -19,8 +20,9 @@
   var Q=window.Quimiotaxis, p=document.querySelector('.hero .lede');
   if(!Q||!Q.silueta||!p) return;
   if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var HOLG=9, LAM=88, TAU=.16, GIRO=.002, CERCA=70;   // holgura sobre el semiancho (px), alcance del campo (px), respuesta (s), giro (rad por px), margen para activarse (px)
-  var pal=[], N=0, cx, cy, hw, hh, ox, oy, og, az, sg, listo=false, activo=false, raf=0, ult=0;
+  var HOLG=2, UMAX=20, LAM=62, TAU=.28, GMAX=.13, HIST=10, CERCA=70;   // holgura (px), desplazamiento máximo (px), alcance del campo (px), respuesta (s), inclinación máxima (rad), histéresis de lado (px), margen para activarse (px)
+  var ex=null, ey=null, qd=0, qs=0, qnx=0, qny=1;
+  var pal=[], N=0, cx, cy, hw, hh, ox, oy, og, sg, listo=false, activo=false, raf=0, ult=0;
 
   function partir(){ // cada palabra en un <span class="pal">; el texto y los espacios quedan igual
     var w=document.createTreeWalker(p,NodeFilter.SHOW_TEXT,null), nodos=[], n, k;
@@ -35,8 +37,7 @@
       nodo.parentNode.replaceChild(f,nodo);
     });
     N=pal.length; cx=new Float32Array(N); cy=new Float32Array(N); hw=new Float32Array(N); hh=new Float32Array(N);
-    ox=new Float32Array(N); oy=new Float32Array(N); og=new Float32Array(N); az=new Float32Array(N); sg=new Int8Array(N);
-    for(k=0;k<N;k++) az[k]=((k*7919)%13)/6-1;   // un giro propio por palabra, entre −1 y 1, siempre el mismo
+    ox=new Float32Array(N); oy=new Float32Array(N); og=new Float32Array(N); sg=new Int8Array(N);
     listo=true;
   }
   function medir(){ // el lugar de cada palabra en reposo, relativo al párrafo
@@ -47,26 +48,40 @@
   }
   function soltar(){ var k; for(k=0;k<N;k++){ pal[k].style.transform=''; ox[k]=oy[k]=og[k]=0; } p.classList.remove('emp-on'); activo=false; }
 
+  function eje(n,X,Y){ // el eje del cuerpo sin la ondulación (media móvil de ≈ 60 % del largo) y la amplitud de esa ondulación
+    var w=Math.max(2,Math.round(n*.3)), j, k, a, c, sx, sy, m=0, d;
+    if(!ex||ex.length<n){ ex=new Float32Array(n); ey=new Float32Array(n); }
+    for(j=0;j<n;j++){ sx=0; sy=0; c=0; k=Math.min(w,j,n-1-j); a=j-k; k=j+k; for(;a<=k;a++){ sx+=X[a]; sy+=Y[a]; c++; } ex[j]=sx/c; ey[j]=sy/c; }   // ventana simétrica que se achica hacia las puntas: la cabeza y la cola quedan en su lugar
+    for(j=0;j<n;j++){ d=Math.sqrt((X[j]-ex[j])*(X[j]-ex[j])+(Y[j]-ey[j])*(Y[j]-ey[j])); if(d>m) m=d; }
+    return m;
+  }
+  function cerca(px,py,n){ // punto más cercano del eje suavizado: deja la distancia en qd, la distancia con signo (lado) en qs y la normal en qnx, qny
+    var j, ax, ay, bx, by, l2, t, cx_, cy_, d, m=1e18, dx, dy;
+    for(j=0;j<n-1;j++){ ax=ex[j]; ay=ey[j]; bx=ex[j+1]-ax; by=ey[j+1]-ay; l2=bx*bx+by*by||1; t=((px-ax)*bx+(py-ay)*by)/l2; t=t<0?0:t>1?1:t;
+      cx_=ax+t*bx; cy_=ay+t*by; dx=px-cx_; dy=py-cy_; d=dx*dx+dy*dy; if(d<m){ m=d; l2=Math.sqrt(l2); qnx=-by/l2; qny=bx/l2; qs=dx*qnx+dy*qny; } }
+    qd=Math.sqrt(m);
+  }
   function cuadro(t){
     var s=Q.silueta(), r=p.getBoundingClientRect(), dt=Math.min(.05,Math.max(.001,(t-ult)/1000)), a=1-Math.exp(-dt/TAU);
-    var dentro=false, n=0, X, Y, Wd, j, k, px, py, dx, dy, d, m, bx, by, u, U, tx, ty, tg, mov=0;
+    var dentro=false, n=0, X, Y, Wd, j, k, px, py, U, A, u0, u1, lado, tx, ty, tg, mov=0, nx, ny, hwm=0;
     raf=0; ult=t;
     if(s&&s.cruza){ n=s.n; X=s.x; Y=s.y; Wd=s.w;
       for(j=0;j<n;j+=2) if(X[j]>r.left-CERCA&&X[j]<r.right+CERCA&&Y[j]>r.top-CERCA&&Y[j]<r.bottom+CERCA){ dentro=true; break; } }
     if(dentro&&!activo){ if(!listo) partir(); p.classList.add('emp-on'); medir(); r=p.getBoundingClientRect(); activo=true; }
     if(activo){
+      if(dentro){ A=eje(n,X,Y); for(j=0;j<n;j++) if(Wd[j]>hwm) hwm=Wd[j]; }
       for(k=0;k<N;k++){ tx=0; ty=0; tg=0;
-        if(dentro){ px=r.left+cx[k]; py=r.top+cy[k]; m=1e9; bx=0; by=1; U=0;
-          for(j=0;j<n;j++){ dx=px-X[j]; dx=dx>hw[k]?dx-hw[k]:dx<-hw[k]?dx+hw[k]:0;      // del eje al punto más cercano de la caja de la palabra (a lo ancho)
-            dy=py-Y[j]; d=dx*dx+dy*dy; if(d<m){ m=d; bx=dx; by=dy; U=Wd[j]; } }
-          d=Math.sqrt(m);
-          if(d<4*LAM){ U+=HOLG+.45*hh[k]; if(U>.72*LAM) U=.72*LAM; u=U*Math.exp(-d/LAM);
-            if(!sg[k]||by*sg[k]<-7) sg[k]=by<0?-1:by>0?1:(k%2?1:-1);                        // hacia arriba o hacia abajo del cuerpo; no cambia de lado mientras el eje no la pase por más de 7 px (sin saltos)
-            tx=d>.5?.22*bx/d*u:0; ty=sg[k]*u;                                               // casi todo en vertical: las palabras de una misma línea no se montan entre sí
-            px+=tx; py+=ty; m=1e9;                                                          // segunda pasada: si en su destino todavía toca el cuerpo, se corre lo que falta
-            for(j=0;j<n;j++){ dx=px-X[j]; dx=dx>hw[k]?dx-hw[k]:dx<-hw[k]?dx+hw[k]:0; dy=py-Y[j]; dy=dy>hh[k]*.6?dy-hh[k]*.6:dy<-hh[k]*.6?dy+hh[k]*.6:0; d=Math.sqrt(dx*dx+dy*dy)-Wd[j]; if(d<m) m=d; }
-            if(m<3) ty+=sg[k]*(3-m);
-            tg=az[k]*GIRO*u; }
+        if(dentro){ px=r.left+cx[k]; py=r.top+cy[k];
+          cerca(px,py,n);
+          if(qd<3*LAM){
+            if(!sg[k]||qs*sg[k]<-HIST) sg[k]=qs<0?-1:qs>0?1:(k%2?1:-1);           // el lado por el que la palabra deja pasar al cuerpo; no cambia mientras el eje no la cruce por más de HIST px
+            lado=sg[k]; nx=qnx; ny=qny;
+            U=hwm+.5*A+.3*hh[k]+HOLG; if(U>UMAX) U=UMAX;                       // lo justo para que pase: el semiancho, media ondulación y un margen
+            cerca(px-hw[k],py,n); u0=U*Math.exp(-(qd/LAM)*(qd/LAM));              // el desplazamiento se evalúa en los dos extremos de la palabra:
+            cerca(px+hw[k],py,n); u1=U*Math.exp(-(qd/LAM)*(qd/LAM));              // la media la traslada y la diferencia la inclina, así los extremos de palabras vecinas siguen juntos (la línea se curva, no se rompe)
+            tx=.3*lado*nx*(u0+u1)/2; ty=lado*ny*(u0+u1)/2;                            // casi todo en vertical: a lo largo de la línea las palabras no se acercan entre sí
+            tg=Math.atan2(lado*ny*(u1-u0),2*hw[k]||1); if(tg>GMAX) tg=GMAX; else if(tg<-GMAX) tg=-GMAX;
+          } else sg[k]=0;
         } else sg[k]=0;
         ox[k]+=(tx-ox[k])*a; oy[k]+=(ty-oy[k])*a; og[k]+=(tg-og[k])*a;
         if(Math.abs(ox[k])+Math.abs(oy[k])>.08){ mov=1; pal[k].style.transform='translate('+ox[k].toFixed(2)+'px,'+oy[k].toFixed(2)+'px) rotate('+og[k].toFixed(4)+'rad)'; }
