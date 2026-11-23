@@ -300,7 +300,7 @@ en un solo tono (el color del texto), que los bajara yo, y de Andes sólo el sí
 | Andes («AE») | Tu equipo, `Andes/dashboard/frontend/public/AE-logo-BW.svg` | Logo de tu empleador; le quité las palabras «Andes» y «Electrónica» |
 
 Miden 28 px, van en un solo tono y se ven igual en claro y en oscuro. En el celular la línea de tiempo se corre para dejarles
-lugar. Pesan 7,8, 7,8 y 3,4 KB y se bajan recién al abrir el desplegable.
+lugar. Pesan 7,8, 7,8 y 2,9 KB y se bajan recién al abrir el desplegable.
 
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
