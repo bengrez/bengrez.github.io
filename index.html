@@ -39,6 +39,7 @@
   --display:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
   --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
+  --foto:url(retrato-claro.webp); --foto-m:url(retrato-claro-m.webp); --cumbre:url(cumbre-claro.webp); --cumbre-op:.7;
   --page:72rem; --sesgo:.75; --lento:1.8; --gutter:clamp(1rem,4vw,2.5rem); --bar:3.25rem;
   color-scheme:light;
 }
@@ -46,13 +47,13 @@
   :root:not([data-theme="light"]){
     --bg:#131211; --surface:#1C1A18; --ink:#ECE9E2; --muted:#A39F97; --rule:#2C2926; --rule-strong:#45413C;
     --accent:#FF8F74; --accent-ink:#FFA893; --alert:#F86848;
-    --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark; --e-uso:#7FB394; --e-dev:#8F8B83;
+    --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark; --e-uso:#7FB394; --e-dev:#8F8B83; --foto:url(retrato-oscuro.webp); --foto-m:url(retrato-oscuro-m.webp); --cumbre:url(cumbre-oscuro.webp); --cumbre-op:.62;
   }
 }
 :root[data-theme="dark"]{
   --bg:#131211; --surface:#1C1A18; --ink:#ECE9E2; --muted:#A39F97; --rule:#2C2926; --rule-strong:#45413C;
   --accent:#FF8F74; --accent-ink:#FFA893; --alert:#F86848;
-  --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark; --e-uso:#7FB394; --e-dev:#8F8B83;
+  --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark; --e-uso:#7FB394; --e-dev:#8F8B83; --foto:url(retrato-oscuro.webp); --foto-m:url(retrato-oscuro-m.webp); --cumbre:url(cumbre-oscuro.webp); --cumbre-op:.62;
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar) + var(--fig-h,0px) + 1rem);overflow-anchor:none}
@@ -99,10 +100,25 @@ img{max-width:100%;height:auto}
    interlineado, los márgenes y el relleno de la portada van de su valor grande al compacto. Sin JS, --k es 0. */
 .hero{--k:0;padding-block:calc(clamp(2.25rem,6vw,4.5rem)*(1 - var(--k)) + 1.25rem*var(--k)) calc(clamp(2rem,4.5vw,3.25rem)*(1 - var(--k)) + 1.25rem*var(--k))}
 .lugar{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
-h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75rem,1.4vw + 1.3rem,2.6rem)*var(--k));line-height:calc(.98 + .04*var(--k));letter-spacing:-.035em;max-width:calc(11.5em + 11em*var(--k));margin-top:calc(.9rem - .45rem*var(--k))}
+h1{font-size:calc(clamp(2.3rem,3.2vw + 1rem,4.2rem)*(1 - var(--k)) + clamp(1.75rem,1.4vw + 1.3rem,2.6rem)*var(--k));line-height:calc(.98 + .04*var(--k));letter-spacing:-.035em;max-width:calc(11.5em + 11em*var(--k));margin-top:calc(.9rem - .45rem*var(--k))}
 .lede{font-size:clamp(1.12rem,.5vw + 1rem,1.32rem);line-height:1.5;max-width:35em;margin-top:calc(clamp(1.25rem,3vw,2rem)*(1 - var(--k)) + .9rem*var(--k))}
 /* 053: empuje.js reacomoda las líneas de este párrafo alrededor del C. elegans que lo cruza: el texto real no se toca; mientras dura el empuje se pinta encima una copia por líneas (.emp, decorativa y sin selección) y el original se hace transparente. */
 .hero .lede{position:relative}
+/* 065: retrato en la portada (idea de Benjamin). Una sola foto por tema (--foto: en color para el claro, en blanco y negro para el oscuro), puesta como fondo CSS: el navegador baja sólo la del tema activo,
+   también al cambiar de tema con el botón. En celular va arriba, apaisada (--foto-m), y el título debajo. Desde 900 px va arriba a la derecha, en vertical, y el resto de la panorámica (--cumbre, una versión
+   chica y ya difuminada) se extiende detrás del título, anclada al retrato (el punto 58 % / 54 % de la panorámica queda en su centro), a baja opacidad y con una máscara que la funde con el fondo.
+   Los originales no están en el repo; scripts/retrato.py genera los seis WebP. */
+.portada{overflow-x:clip}
+.cumbre{position:relative;aspect-ratio:3/2;width:100%;margin:0 0 1.1rem}
+.cumbre::after{content:"";position:absolute;inset:0;background:var(--foto-m) center/cover no-repeat;border-radius:2px}
+@media (min-width:900px){
+  .hero{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:clamp(1.5rem,4vw,3.5rem);align-items:start}
+  .hero>*{grid-column:1;position:relative;z-index:1}
+  .hero>.cumbre{grid-column:2;grid-row:1 / span 4;z-index:0;width:clamp(13rem,21vw,19rem);aspect-ratio:4/5;margin:.4rem 0 0}
+  .cumbre::after{background-image:var(--foto)}
+  .cumbre::before{content:"";position:absolute;z-index:-1;left:50%;top:50%;width:560%;aspect-ratio:4000/1844;transform:translate(-58%,-54%);background:var(--cumbre) center/100% 100% no-repeat;opacity:var(--cumbre-op);pointer-events:none;
+    -webkit-mask-image:radial-gradient(ellipse 42% 46% at 58% 54%,#000 0,rgba(0,0,0,.8) 30%,rgba(0,0,0,.35) 62%,transparent 100%);mask-image:radial-gradient(ellipse 42% 46% at 58% 54%,#000 0,rgba(0,0,0,.8) 30%,rgba(0,0,0,.35) 62%,transparent 100%)}
+}
 .lede.emp-on .pal{display:inline-block;will-change:transform}   /* 063: mientras el nematodo está dentro del párrafo, cada palabra es una caja que se puede desplazar; el texto no se rehace */
 .hero .acciones{transition:transform .6s ease}
 .acciones{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:calc(clamp(1.25rem,3vw,1.9rem)*(1 - var(--k)) + .9rem*var(--k));font-family:var(--display)}
@@ -381,7 +397,7 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
    Cada bloque de texto lleva alrededor un espacio quieto (14 px y 60 px de caída a 1440; 19 y 80 a 1920). Para que entre los grupos de una sección quede una banda de fondo animado, la separación entre
    grupos (--grupo) es dos veces ese borde más un tramo libre: 112 px a 1440 y 150 px a 1920. Entre secciones, el doble de --aire (202 px a 1440; 269 px a 1920). */
 @media (min-width:1024px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
-  :root{--grupo:clamp(6rem,7.8vw,9.5rem);--aire:clamp(5rem,7vw,8.5rem)}
+  :root{--grupo:clamp(6rem,7.8vw,9.5rem);--aire:clamp(6rem,9vw,11rem)}
   .seccion{padding-block:var(--aire)}
   .dos>div:not(.riel)>:is(.hechos,.metricas:not(.resultado),.lista,.evidencia,.mas){margin-top:var(--grupo)}
   .dos>div:not(.riel)>.mas + .mas{margin-top:0}
@@ -555,20 +571,20 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 
 <main id="contenido">
 
+<div class="portada">
 <div class="hero pagina">
+  <div class="cumbre" role="img" aria-label="Benjamín Moreira-Grez de pie en la cumbre rocosa de un cerro, con nieve y cordillera al fondo."></div>
   <p class="lugar">Santiago, Chile</p>
   <h1>Ecólogo microbiano. Hoy trabajo con datos.</h1>
   <p class="lede">Soy Benjamín Moreira-Grez. Estudié los microbios del suelo y hoy trabajo con los datos de una flota de buses, en Andes, y enseño ciencias en un colegio. Uso agentes de IA a diario, en entornos controlados. Me interesa conversar sobre trabajo en datos, proyectos y colaboración en investigación.</p>
   <p class="acciones"><a class="btn" href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a><a class="btn sec" href="#casos">Ver los tres trabajos</a></p>
+</div>
 </div>
 
 <section class="seccion fuera" id="sobre-mi" aria-labelledby="h-sobre">
   <div class="pagina dos">
     <header class="riel">
       <div class="riel-top"><p class="kicker">Quién soy</p><h2 id="h-sobre">Sobre mí</h2></div>
-      <!-- 061: espacio para el retrato (decisión de Benjamin del 2026-11-21; la foto la entrega él). Cuando exista retrato.webp (4:5, ≈ 480 × 600 px, bajo 25 KB), se quita este comentario:
-      <figure class="retrato"><img src="retrato.webp" width="480" height="600" alt="Retrato de Benjamín Moreira-Grez." loading="lazy" decoding="async"></figure>
-      -->
     </header>
     <div>
       <p class="problema">Resuelvo problemas con lo que hay disponible.</p>
@@ -1237,7 +1253,7 @@ var portada=(function(){
   try{
     var mm=window.matchMedia; if(!mm||!mm('(pointer: fine)').matches||window.innerWidth<1024||mm('(prefers-reduced-motion: reduce)').matches) return;
     var cx=navigator.connection; if(cx&&cx.saveData) return;
-    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.min.js?v=004ae8bec1'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.min.js?v=c390652b19'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 056: se carga el .min.js que genera scripts/version-js.sh (la fuente legible es quimiotaxis.js). 063: empuje.js es nuevo y no usa Pretext: aparta palabras sueltas del cuerpo del nematodo, sin rehacer el párrafo */
+    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.min.js?v=bd5509d246'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.min.js?v=c390652b19'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 056: se carga el .min.js que genera scripts/version-js.sh (la fuente legible es quimiotaxis.js). 063: empuje.js es nuevo y no usa Pretext: aparta palabras sueltas del cuerpo del nematodo, sin rehacer el párrafo */
     if(document.readyState==='complete') cargar(); else window.addEventListener('load',function(){ setTimeout(cargar,300); });
   }catch(e){}
 })();
