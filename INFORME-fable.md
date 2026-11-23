@@ -315,15 +315,33 @@ en el recorrido: la portada y Docencia siguen diciendo «un colegio».
 **Ajuste posterior (pedido de Benjamin).** Los logos bajaron de 56 a 42 px y el cargo en Andes pasó a «Agentic engineer,
 2025–hoy», dictado por él (el CV del vault dice «Ingeniero de desarrollo · análisis de datos»).
 
+## Undécima ronda: portada, nematodo fuera del texto y gráfico de la flota
+
+Tres pedidos de Benjamin.
+
+1. **Sin el botón «Ver las tres pruebas».** En la portada queda sólo «Escríbeme».
+2. **El nematodo no entra a los bloques de texto.** Llega por la izquierda al párrafo de la portada, empuja contra su borde
+   durante 9 segundos subiendo y bajando, como buscando por dónde entrar, y se va por donde vino. En toda la secuencia medida su
+   cuerpo quedó fuera del párrafo (a 9 px o más del borde). Las palabras que quedan frente a su cabeza se corren hasta 10 px y
+   vuelven a su lugar. En el resto de la página el nematodo ya vivía sólo en los márgenes.
+3. **Gráfico de Data science: la flota completa.** Entre cuatro direcciones Benjamin eligió esta, fija y con rótulos llanos.
+   Ahora muestra 40 buses simulados durante 30 días: 39 en gris, juntos, y uno que empieza a subir el día 13. El aviso llega el
+   día 16 y, tras la revisión del día 21, vuelve a lo normal. El eje dice «Temperatura del motor», sin unidades ni σ. Salió el
+   control del umbral. Sigue rotulado como simulación en el gráfico y en su pie. La regla del aviso: el bus queda a más de 3,5
+   desviaciones robustas sobre la mediana de la flota de ese día.
+
+Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px (cuatro figuras presentes); secuencia del
+nematodo en vivo con GPU.
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 63,1 KB | +29,6 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 74,7 KB | −7,9 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 164,0 KB | −0,9 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 66,7 KB | +33,2 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 78,3 KB | −4,3 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 167,8 KB | +2,9 KB |
 
-Los valores son del tema claro; en el oscuro, 56,5, 68,1 y 146,7 KB. Desde la séptima ronda la primera carga incluye el retrato
+Los valores son del tema claro; en el oscuro, 60,2, 71,8 y 150,4 KB. Desde la séptima ronda la primera carga incluye el retrato
 (31,1 KB en el celular, 70,4 KB en escritorio). Desde la quinta ronda ya no se baja Pretext (39,9 KB) y la imagen del autodiagnóstico (23,2 KB) se carga sólo al abrir su
 desplegable. Por archivo: `index.html` +1,7 KB; `quimiotaxis.min.js` +3,5 KB (sólo escritorio); `empuje.min.js` 3,4 → 1,6 KB; `costras-biologicas.webp` 27,2 KB (nueva);
 `tabla-periodica-fig-n.webp` 11,6 KB o `tabla-periodica-fig.webp` 17,0 KB (nuevas, una según el ancho); se quitó
@@ -414,3 +432,5 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
 24. ~~Permiso para usar los logos~~ Respondida el 2026-11-23: quedan como están.
 25. ~~El colegio con nombre~~ Respondida el 2026-11-23: queda con nombre y escudo en el recorrido.
 26. ~~«Agentic engineer» en el CV~~ Respondida el 2026-11-23: sí; actualizado en `Personal/_owner/cv.md`.
+27. **Peso del gráfico de la flota.** Las 39 líneas grises suman 3,7 KB a la primera carga (66,7 KB en el celular). Si quieres
+    recuperarlos, bajo a 25 buses o simplifico las líneas; visualmente casi no cambia.

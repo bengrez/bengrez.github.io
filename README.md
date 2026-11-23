@@ -97,6 +97,12 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
   el desplegable. Desde la 071 hay cinco hitos: se separó el de Andes («Agentic engineer, 2025–hoy», título dictado por Benjamin en la 072; los logos
   bajaron a 2,6 rem) y se agregó la docencia («Instituto Domingo Eyzaguirre: Docente de ciencias, 2023–hoy», con `logo-ide.png`, el
   escudo del colegio tomado de `aula-herramientas`). Es el único lugar del sitio donde se nombra el colegio.
+- **Portada y gráfico de la flota** (074). (1) Sale el botón «Ver las tres pruebas». (2) El nematodo ya no entra al párrafo de
+  la portada: llega por la izquierda, empuja 9 s contra su borde recorriéndolo (un tope en `nemPaso` impide que la cabeza pase) y
+  se va; `empuje.js` corre hasta 10 px las palabras que quedan frente a su cabeza. (3) El gráfico de Data science pasa a ser **la
+  flota completa**: 40 buses simulados en 30 días, 39 en gris y uno que se desvía, con el aviso (día 16) y la revisión; fijo, sin
+  el control del umbral (salieron `.demo`, `#ds-datos` y su script) y con rótulos llanos («Temperatura del motor»).
+  `scripts/figuras.py`: `datos_flota()` y `figura_ds()`.
 - **Raíz**: el cuerpo de la primaria se dibujaba como un tubo de 5 px de radio cortado a 300 px de la punta (en `rzBuild`, la
   distancia a la punta se medía contra el punto anterior; venía de antes de la 056). Corregido: tiene su ancho real en todo el
   largo. Las laterales nacen dentro de la primaria y salen por un cuello ancho (`RZ_CUE`, `RZ_CUL`), la capa externa se abre en

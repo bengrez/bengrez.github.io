@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Genera las figuras del sitio. Desde la versión realista (059) cada una declara su tipo y su fuente:
 
-  - Data science (fig:ds), SIMULADA: refrigerante de dos buses, con los recorridos de cada día (n = 3), la media diaria, la banda
+  - Data science (fig:ds), SIMULADA. Desde la 074: la flota completa (40 buses, 30 días; uno se desvía y llega el aviso), fija y con rótulos llanos.
+    Hasta la 073: refrigerante de dos buses, con los recorridos de cada día (n = 3), la media diaria, la banda
     de referencia ± kσ y la alerta. Es la demostración interactiva del sitio: index.html trae un control que cambia k y recalcula
     la alerta y las falsas alarmas con estos mismos datos (bloque <script id="ds-datos">, que también sale de aquí).
   - Ecología (fig:ec), DATOS PUBLICADOS: amonio y nitrato del suelo por tratamiento, media ± DE, n = 3. Tabla suplementaria 1 de
@@ -150,35 +151,52 @@ class Panel:
         return (f'<svg class="fig {self.var} {cls}" viewBox="0 0 {v["W"]} {v["H"]}" role="img" aria-label="{aria}"{extra}>\n  {cuerpo}\n</svg>')
 
 
+# ---- 074: la flota completa (Benjamin: un gráfico más global al tema «mido lo que nadie está midiendo»; fijo, sin control, con rótulos llanos).
+# FLOTA_N buses durante 30 días (media diaria de la temperatura del motor). Cada bus tiene su nivel propio y su ruido de día a día; uno se desvía
+# desde el día DS_INICIO hasta la revisión del día DS_REVISION. El aviso es el primer día en que ese bus queda a más de FLOTA_Z desviaciones
+# robustas (mediana y MAD de la flota de ese día) sobre la mediana de la flota. Semilla fija. No son datos de ningún cliente.
+FLOTA_N, FLOTA_Z = 40, 3.5
+
+
+def datos_flota():
+    rng = np.random.default_rng(74)
+    dias = np.arange(1, 31)
+    nivel = DS_BASE + rng.normal(0, 0.75, FLOTA_N)                                                   # cada bus anda un poco más frío o más caliente
+    t = nivel[:, None] + rng.normal(0, 0.45, (FLOTA_N, 30))
+    deriva = np.where((dias >= DS_INICIO) & (dias < DS_REVISION), 0.9 * (dias - DS_INICIO + 1), 0.0)
+    k = int(np.argsort(nivel)[FLOTA_N // 2])                                                         # el que se desvía es un bus del medio, no uno ya caliente
+    t[k] += deriva
+    med = np.median(t, axis=0)
+    mad = 1.4826 * np.median(np.abs(t - med), axis=0)
+    z = (t[k] - med) / mad
+    sobre = np.where(z > FLOTA_Z)[0]
+    aviso = int(dias[sobre[0]]) if len(sobre) else None
+    return dict(dias=dias, t=np.round(t, 2), k=k, aviso=aviso)
+
+
 def figura_ds(var):
-    d = datos_ds()
-    r = regla_ds(d["a"], d["b"], DS_K)
-    assert r["alerta"], "con el umbral por defecto la deriva debe detectarse"
-    p = Panel(var, 1, 30, 82, 96)
-    p.ejes([1, 10, 20, 30], [84, 88, 92, 96], "Día", "Refrigerante (°C)",
-           "Datos simulados, n = 3 recorridos por día" if var == "w" else "Simulado, n = 3 recorridos/día")
-    p.partes.append(f'<rect class="banda" x="{f(p.L)}" y="{f(p.Y(r["hi"]))}" width="{f(p.R - p.L)}" height="{f(p.Y(r["lo"]) - p.Y(r["hi"]))}"/>')
-    p.partes.append(f'<path class="ref" d="M{f(p.L)} {f(p.Y(r["mu"]))}H{f(p.R)}"/>')
-    p.partes.append(f'<text class="nota" x="{f(p.L + 6)}" y="{f(p.Y(r["lo"]) + 13)}">referencia ± {f(DS_K).replace(".", ",")}σ</text>')
-    for cls, rec in (("b", d["rec_b"]), ("a", d["rec_a"])):                                    # los recorridos de cada día: puntos tenues bajo la media
-        pts = "".join(f"M{f(p.X(dia + dx))} {f(p.Y(min(96, max(82, v))))}h0" for dia, fila in zip(d["dias"], rec) for dx, v in zip((-.22, 0, .22), fila))
-        p.partes.append(f'<path class="crudo {cls}" d="{pts}"/>')
-    p.linea(d["dias"], d["b"], "b")
-    p.linea(d["dias"], d["a"], "a")
+    d = datos_flota()
+    assert d["aviso"] and DS_INICIO <= d["aviso"] < DS_REVISION, "la regla debe avisar durante la deriva"
+    y0, y1 = 82, 96
+    p = Panel(var, 1, 30, y0, y1)
+    p.ejes([1, 10, 20, 30], [], "Día", "Temperatura del motor",
+           f"Simulación: {FLOTA_N} buses, 30 días" if var == "w" else f"Simulación: {FLOTA_N} buses")
+    g = (lambda v: f(v)) if var == "w" else (lambda v: str(int(round(v))))                          # la variante angosta, en píxeles enteros (pesa menos)
+    otros = "".join("M" + " ".join(f"{g(p.X(x))} {g(p.Y(min(y1, max(y0, y))))}" for x, y in zip(d["dias"], fila))
+                    for i, fila in enumerate(d["t"]) if i != d["k"])
+    p.partes.append(f'<path class="flota" d="{otros}"/>')
+    p.linea(d["dias"], [min(y1, v) for v in d["t"][d["k"]]], "a")
     xr = p.X(DS_REVISION)
     p.partes.append(f'<g class="rev"><path d="M{f(xr)} {f(p.B)}v-9"/><text x="{f(xr)}" y="{f(p.B - 13)}" text-anchor="middle">revisión</text></g>')
-    cruces = "".join(f"M{f(p.X(dd) - 3.5)} {f(p.Y(v) - 3.5)}l7 7m0 -7l-7 7" for dd, v in r["falsas"])
-    p.partes.append(f'<path class="falsas" d="{cruces}"/>')
-    xa, ya = p.X(r["alerta"]), p.Y(d["a"][r["alerta"] - 1])
+    xa, ya = p.X(d["aviso"]), p.Y(d["t"][d["k"]][d["aviso"] - 1])
     p.partes.append(f'<g class="alerta"><path class="guia" d="M{f(xa)} {f(p.T)}V{f(p.B)}"/><circle cx="{f(xa)}" cy="{f(ya)}" r="5"/>'
-                    f'<text x="{f(xa + 8)}" y="{f(p.T + 13)}">alerta</text></g>')
+                    f'<text x="{f(xa + 8)}" y="{f(p.T + 13)}">aviso</text></g>')
     lx, ly = p.L + 14, p.T + 14
-    p.partes.append(f'<g class="leyenda"><circle class="a" cx="{f(lx)}" cy="{f(ly)}" r="4"/><text x="{f(lx + 9)}" y="{f(ly + 4)}">bus que deriva</text>'
-                    f'<circle class="b" cx="{f(lx)}" cy="{f(ly + 18)}" r="4"/><text x="{f(lx + 9)}" y="{f(ly + 22)}">otro bus</text></g>')
-    aria = ("Gráfico con datos simulados: temperatura del refrigerante de dos buses durante 30 días, con tres recorridos por día y su media diaria. Un bus, en burdeos, "
-            f"se mantiene dentro de la banda de referencia. El otro, en coral, deriva hacia arriba desde el día {DS_INICIO}, con el umbral inicial de {f(DS_K)} sigmas sale de la banda el día {r['alerta']}, donde está la alerta, "
-            f"y vuelve a lo normal tras la revisión del día {DS_REVISION}. El control «Umbral de alerta», más abajo, cambia la banda.")
-    return p.svg("ds", aria, f' data-g="{f(p.L)} {f(p.R)} {f(p.T)} {f(p.B)}"')
+    p.partes.append(f'<g class="leyenda"><circle class="a" cx="{f(lx)}" cy="{f(ly)}" r="4"/><text x="{f(lx + 9)}" y="{f(ly + 4)}">un bus se desvía</text>'
+                    f'<path class="flota-l" d="M{f(lx - 5)} {f(ly + 18)}h10"/><text x="{f(lx + 9)}" y="{f(ly + 22)}">los otros {FLOTA_N - 1}</text></g>')
+    aria = (f"Gráfico con datos simulados: temperatura del motor de una flota de {FLOTA_N} buses durante 30 días. {FLOTA_N - 1} buses, en gris, se mantienen juntos "
+            f"dentro de lo normal. Uno, en coral, empieza a subir el día {DS_INICIO}; el aviso llega el día {d['aviso']} y, tras la revisión del día {DS_REVISION}, vuelve a lo normal.")
+    return p.svg("ds", aria)
 
 
 def datos_ds_json():
@@ -274,7 +292,6 @@ def todas():
     out = {}
     for nombre, fn in (("ds", figura_ds), ("ec", figura_ec)):
         out[nombre] = "\n".join(fn(v) for v in ("w", "n"))
-    out["ds-datos"] = datos_ds_json()
     out["sip"] = figura_sip()
     out["citas"] = figura_citas()
     return out
@@ -292,10 +309,8 @@ def main():
     else:
         for k, v in svgs.items():
             print(f"<!-- fig:{k} -->\n{v}\n<!-- /fig:{k} -->")
-    d = datos_ds()
-    for k in (1, 1.5, 2, 2.5, 3, 3.5, 4):
-        print(texto_ds(regla_ds(d["a"], d["b"], k), k), file=sys.stderr)
-
+    d = datos_flota()
+    print(f"flota: {FLOTA_N} buses; se desvía el bus {d['k']}; aviso el día {d['aviso']} (la deriva empieza el {DS_INICIO}; revisión el {DS_REVISION})", file=sys.stderr)
 
 if __name__ == "__main__":
     main()
