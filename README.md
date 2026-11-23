@@ -50,6 +50,11 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
   «Qué busco hoy») y, pegado, el Recorrido (`#recorrido`, que estaba al final). Después vienen el gráfico con el índice y los tres
   trabajos. En la barra, «Sobre mí» reemplaza a «Recorrido». Las cifras salieron de Ecología. El retrato tiene su lugar y su CSS
   (`.retrato`, comentado en el HTML) y se activa cuando exista `retrato.webp`.
+- **Velo continuo del texto** (062, `quimiotaxis.js`, bloque `VELO`): salen los rectángulos del color de la página que el CSS
+  ponía bajo cada bloque de texto (quedan sólo como respaldo, `.fondo-vivo:not(.velo-js)`). Al final de cada cuadro, un mapa de
+  baja resolución de los bloques de texto (dilatado y desenfocado) le quita opacidad al canvas de las células: el fondo queda al
+  16 % detrás del texto y vuelve a 100 % con una caída de unos 80 px. Las células ya no se alejan del texto ni dejan de adherirse
+  bajo él, y hay tres fuentes de nutriente dentro de la columna. `Quimiotaxis.velo({f, dil, r, emp})` lo ajusta.
 - **Raíz**: el cuerpo de la primaria se dibujaba como un tubo de 5 px de radio cortado a 300 px de la punta (en `rzBuild`, la
   distancia a la punta se medía contra el punto anterior; venía de antes de la 056). Corregido: tiene su ancho real en todo el
   largo. Las laterales nacen dentro de la primaria y salen por un cuello ancho (`RZ_CUE`, `RZ_CUL`), la capa externa se abre en

@@ -108,15 +108,54 @@ título (columna izquierda) y su estilo, pero está desactivado hasta que exista
 
 Verificado: sin errores de consola ni desborde en las siete configuraciones y sin JavaScript a 375 px.
 
+## Cuarta ronda: el fondo detrás del texto
+
+Pedido de Benjamin (por el agente de contacto): una transición más sutil entre el fondo detrás del texto y el fondo animado, con
+el mismo nivel de partículas a ambos lados y la animación más transparente detrás del texto, cuidando el contraste y el peso.
+
+Qué había: cada bloque de texto llevaba un rectángulo del color de la página al 60 %, con 12 px de borde difuso; las células se
+dibujaban al 55 % bajo el texto, se alejaban de los bloques y no se adherían ahí. El borde de cada bloque era un salto de
+opacidad y de densidad.
+
+Qué quedó:
+
+- **Un solo velo continuo.** Ya no hay rectángulos por bloque. Detrás del texto el fondo queda al 16 % (antes, 22 % las células
+  y 40 % la matriz) y vuelve al 100 % con una caída suave de unos 80 px hacia afuera de cada bloque. Se hace quitando opacidad a
+  las células, no tapándolas con color de página, así que no deja contornos.
+- **Misma densidad dentro y fuera del texto.** Quité la repulsión y el veto de adhesión bajo el texto, y puse tres fuentes de
+  nutriente dentro de la columna (las cinco de los márgenes bajan al 80 %, con el mismo total). Medido a los 6 minutos, dos
+  semillas, células que nadan por 100 × 100 px: bajo el texto 0,36 y en la columna sin texto 0,36 (antes, 0,17 y 0,41). Los
+  márgenes siguen más poblados (0,9; antes 1,1) por la raíz y las colonias de partida.
+- **Contraste del texto**, con una célula exactamente debajo (cálculo WCAG):
+
+| Caso | Antes | Ahora |
+|---|---|---|
+| Claro, texto principal sobre la bacteria más oscura | 13,1:1 | 14,0:1 |
+| Claro, texto secundario sobre la bacteria más oscura | 5,3:1 | 5,6:1 |
+| Claro, texto secundario sobre un protista o el nematodo | 4,3:1 | 4,9:1 |
+| Oscuro, texto principal sobre la bacteria más oscura | 12,2:1 | 13,1:1 |
+| Oscuro, texto secundario sobre la bacteria más oscura | 5,6:1 | 6,0:1 |
+| Oscuro, texto secundario sobre un protista o el nematodo | 4,3:1 | 5,1:1 |
+
+- **Peso**: el celular no carga el fondo; su página sube 0,1 KB. En escritorio el script sube 1,1 KB.
+- **Costo**: con GPU no se nota (el aspecto de microscopía sigue en 0,2 ms por cuadro; rehacer el mapa cuesta 0,5 ms, cuatro
+  veces por segundo y al desplazar). Sin GPU cuesta algo: a 1× el fondo quedó entre el nivel 2 y el 3 de calidad (antes, 3) y a
+  2× bajó del nivel 1 al 0.
+- Con la animación en pausa el velo sigue al texto al desplazar la página. El párrafo de la portada lleva medio velo mientras el
+  nematodo lo empuja, para que se siga viendo.
+
+Sin tocar: la luz del cursor sigue usando una capa del color de la página, que deja escalones de 1 nivel de 255 (se ven sólo
+realzando el contraste de una captura). Si molestan en tu pantalla, se puede pasar al mismo método del velo.
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 34,7 KB | +1,2 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 96,8 KB | +14,2 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 186,6 KB | +21,7 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 34,8 KB | +1,3 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 96,9 KB | +14,3 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 187,8 KB | +22,9 KB |
 
-Por archivo: `index.html` +1,2 KB; `quimiotaxis.min.js` +2,1 KB (sólo escritorio); `costras-biologicas.webp` 27,2 KB (nueva);
+Por archivo: `index.html` +1,3 KB; `quimiotaxis.min.js` +3,2 KB (sólo escritorio); `costras-biologicas.webp` 27,2 KB (nueva);
 `tabla-periodica-fig-n.webp` 11,6 KB o `tabla-periodica-fig.webp` 17,0 KB (nuevas, una según el ancho); se quitó
 `tabla-periodica.webp` (25,9 KB), porque la ficha de la herramienta usa la captura nueva. El límite de 200 KB se cumple.
 
@@ -184,8 +223,22 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
 11. **La corrección del cuerpo de la raíz en `main`.** El error (un tubo delgado y cortado en vez del cuerpo con su ancho) existe
     en la versión publicada (056). Opciones: (a) llevarla a `main` aunque elijas la versión de Codex; (b) dejarla sólo en esta
     rama. Recomiendo (a).
-12. **El retrato.** Falta el archivo. Sirve una foto vertical (4:5) de buena luz; la recorto a 480 × 600 px y la dejo bajo 25 KB.
-    ¿Me pasas la ruta?
+12. **El retrato.** Respondiste que está en Downloads, pero no lo pude identificar: hay 342 imágenes, ninguna con nombre de
+    retrato ni posterior al pedido, y no abrí fotos al azar (hay fotos de terceros y un archivo de fotos de curso). ¿Cuál es el
+    nombre del archivo?
 13. **La frase «Hoy vivo en Santiago»** de «Sobre mí» la deduje de «Santiago, Chile» en la portada. ¿Está bien dicha así?
-14. **«Recorrido» salió de la barra** (lo reemplaza «Sobre mí», que está justo encima). Opciones: (a) dejarlo así; (b) tener los
-    dos enlaces. Recomiendo (a): la barra ya tiene seis.
+14. ~~«Recorrido» fuera de la barra~~ Respondida: se queda fuera.
+15. **Estructura de los textos** (antes de reescribir; elige una o mezcla):
+    - **A. Persona primero.** Portada (quién eres y qué buscas, en dos frases); «Sobre mí» como historia en tres párrafos cortos
+      (de dónde vienes, qué haces hoy, cómo trabajas); Recorrido; los tres trabajos como fichas iguales y breves (problema, qué
+      hiciste, resultado, estado), con su figura y el detalle en desplegables; Contacto. Tono: primera persona, conversacional,
+      frases cortas. Es la más cercana a lo que hay hoy.
+    - **B. Lo que sabes hacer.** Portada (qué resuelves); «Sobre mí» breve; tres capacidades en vez de tres sectores (medir y
+      monitorear sistemas; detectar lo raro con pocos datos; construir herramientas que otros usan), cada una con evidencia
+      cruzada de buses, suelos y colegio; los tres trabajos quedan como casos de respaldo, muy cortos; Recorrido; Contacto. Tono:
+      directo, orientado a quien contrata, sin jerga.
+    - **C. Una sola historia.** La página entera es el Recorrido: Valparaíso, Perth (el doctorado, con el gráfico publicado y las
+      fotos de terreno), los años de investigador y Santiago hoy (los buses, con el gráfico interactivo; el colegio, con las
+      herramientas). Cada etapa dice qué aprendiste, qué construiste y muestra una evidencia. Cierra con «Qué busco hoy» y
+      Contacto. Tono: narrativo y personal, en primera persona.
+    Recomiendo B si la prioridad sigue siendo quien podría contratarte, y C si quieres que la página se lea como tu historia.

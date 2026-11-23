@@ -470,9 +470,10 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
    visible sólo dentro de la luz del cursor, el velo puede ser más leve y dejar ver lo que pasa bajo el texto; el texto secundario conserva ≥ 5:1 con una célula debajo) y sin
    borde, y su sombra del mismo color, con desenfoque, lo difumina hacia afuera sin tocar el diseño: las células pasan «por
    detrás» y se atenúan bajo el texto sin desaparecer. Los gráficos tienen su propia franja. */
-.fondo-vivo :is(.mas-herr,.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.demo,.grafico,.hechos,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina){
+.fondo-vivo:not(.velo-js) :is(.mas-herr,.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.demo,.grafico,.hechos,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina){
   background:var(--velo);box-shadow:0 0 12px 9px var(--velo);border-radius:3px}
-.fondo-vivo .hero h1{box-shadow:0 0 16px 12px var(--velo)}
+.fondo-vivo:not(.velo-js) .hero h1{box-shadow:0 0 16px 12px var(--velo)}
+/* 062: desde esta iteración el velo lo pone quimiotaxis.js en una sola capa continua (clase .velo-js en <html>): sin rectángulos por bloque. Las dos reglas de arriba quedan como respaldo si esa capa no existe. */
 
 /* ---- celular: más aire y menos información a la vista (iteración 022) ----
    Más margen lateral y más espacio entre bloques y entre líneas, el gráfico un poco más ancho (la franja fija casi a
@@ -1212,7 +1213,7 @@ var portada=(function(){
   try{
     var mm=window.matchMedia; if(!mm||!mm('(pointer: fine)').matches||window.innerWidth<1024||mm('(prefers-reduced-motion: reduce)').matches) return;
     var cx=navigator.connection; if(cx&&cx.saveData) return;
-    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.min.js?v=02ea28a90e'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.min.js?v=e91042a4c0'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 053: empuje.js (texto que se aparta del nematodo, con Pretext) se pide después del fondo; la librería se baja sólo cuando el nematodo cruza el párrafo. 056: se cargan los .min.js que genera scripts/version-js.sh (la fuente legible son quimiotaxis.js y empuje.js) */
+    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.min.js?v=cf5159644c'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.min.js?v=e91042a4c0'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 053: empuje.js (texto que se aparta del nematodo, con Pretext) se pide después del fondo; la librería se baja sólo cuando el nematodo cruza el párrafo. 056: se cargan los .min.js que genera scripts/version-js.sh (la fuente legible son quimiotaxis.js y empuje.js) */
     if(document.readyState==='complete') cargar(); else window.addEventListener('load',function(){ setTimeout(cargar,300); });
   }catch(e){}
 })();
