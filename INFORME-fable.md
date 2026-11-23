@@ -288,6 +288,20 @@ el texto del artículo.
 Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; desplegables con sus imágenes; página en
 vivo con GPU a 60 cuadros por segundo. La página mide 3254 px de alto a 1440 px (antes, más de 7000).
 
+## Décima ronda: logos en el recorrido
+
+Pedido de Benjamin: al expandir «Mi recorrido», un logo chico a la izquierda de cada punto. Decidió por alternativas: los tres
+en un solo tono (el color del texto), que los bajara yo, y de Andes sólo el símbolo «AE», sin las palabras.
+
+| Logo | Origen | Condición |
+|---|---|---|
+| PUCV (escudo) | Wikimedia Commons, «PUCV Escudo2016.svg» | Figura como dominio público; es una marca de la universidad |
+| UWA (escudo) | Wikipedia en inglés, «UWA crest.svg» | Figura como no libre (uso justificado sólo en Wikipedia); es una marca de la universidad |
+| Andes («AE») | Tu equipo, `Andes/dashboard/frontend/public/AE-logo-BW.svg` | Logo de tu empleador; le quité las palabras «Andes» y «Electrónica» |
+
+Miden 28 px, van en un solo tono y se ven igual en claro y en oscuro. En el celular la línea de tiempo se corre para dejarles
+lugar. Pesan 7,8, 7,8 y 3,4 KB y se bajan recién al abrir el desplegable.
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
@@ -384,3 +398,7 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
     enlazado al artículo de reacondicionamiento de 2019, como indicaste. No lo contrasté con el artículo: ¿la frase lo describe bien?
 23. **Lo que salió del sitio** en la novena ronda: citas por año, perfil de RNA-SIP, fotos de terreno, esquema del sistema de
     buses y el asistente escolar. Todo sigue en el historial de la rama por si quieres reponer algo.
+24. **Permiso para usar los logos.** Los escudos de la PUCV y de la UWA son marcas de cada universidad, y el de la UWA figura
+    como no libre. Usarlos para indicar dónde estudiaste es habitual, pero las normas de marca de cada casa pueden pedir
+    autorización, sobre todo al mostrarlos en un solo tono. Lo mismo con el símbolo de Andes sin sus palabras. ¿Los dejas
+    así, o prefieres consultar antes de publicar?
