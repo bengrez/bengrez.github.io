@@ -306,6 +306,12 @@ ya va escrito al lado) y de la UWA, el escudo sin el nombre. Miden 56 px, van en
 oscuro. En el celular la línea de tiempo se corre para dejarles lugar. Pesan 18,1, 13,8 y 5,9 KB y se bajan recién al abrir
 el desplegable.
 
+**Docencia y logo del IDE (pedido de Benjamin, mismo día).** El recorrido tiene ahora cinco hitos. El último se separó en dos:
+«Instituto Domingo Eyzaguirre: Docente de ciencias, 2023–hoy», con el escudo del colegio en un solo tono, y «Andes: Ingeniero de
+desarrollo y análisis de datos, 2025–hoy». Cargo y fechas salen del CV del vault. El escudo estaba en tu equipo (proyecto
+`aula-herramientas`); pesa 17,9 KB y se baja al abrir el desplegable. Con esto el sitio nombra el colegio por primera vez, sólo
+en el recorrido: la portada y Docencia siguen diciendo «un colegio».
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
@@ -405,3 +411,6 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
 24. **Permiso para usar los logos.** El sello de la PUCV y el escudo de la UWA son marcas de cada universidad. Usarlos para indicar dónde estudiaste es habitual, pero las normas de marca de cada casa pueden pedir
     autorización, sobre todo al mostrarlos en un solo tono. Lo mismo con el símbolo de Andes sin sus palabras. ¿Los dejas
     así, o prefieres consultar antes de publicar?
+25. **El colegio con nombre.** Hasta hoy la regla del sitio era no nombrarlo. Al pedir su logo quedó con nombre y escudo en el
+    recorrido. Opciones: (a) así; (b) sólo el escudo y «Docente de ciencias en un colegio»; (c) nombrarlo también en la portada y
+    en Docencia. Lo dejé en (a).

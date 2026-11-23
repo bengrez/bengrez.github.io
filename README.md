@@ -94,7 +94,9 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
   una máscara PNG de sólo alfa sobre `--ink`, así se ve en claro y en oscuro). Desde la 070 son los oficiales y miden 3,5 rem:
   `logo-pucv.png` (el sello del logo vigente, versión de un color, tomado de pucv.cl), `logo-uwa.png` (el escudo vigente, de
   `uwacrest-white.svg` en el sitio de la UWA) y `logo-andes.png` (el símbolo «AE» de Andes, sin las palabras). Se bajan al abrir
-  el desplegable.
+  el desplegable. Desde la 071 hay cinco hitos: se separó el de Andes («Ingeniero de desarrollo y análisis de datos,
+  2025–hoy») y se agregó la docencia («Instituto Domingo Eyzaguirre: Docente de ciencias, 2023–hoy», con `logo-ide.png`, el
+  escudo del colegio tomado de `aula-herramientas`). Es el único lugar del sitio donde se nombra el colegio.
 - **Raíz**: el cuerpo de la primaria se dibujaba como un tubo de 5 px de radio cortado a 300 px de la punta (en `rzBuild`, la
   distancia a la punta se medía contra el punto anterior; venía de antes de la 056). Corregido: tiene su ancho real en todo el
   largo. Las laterales nacen dentro de la primaria y salen por un cuello ancho (`RZ_CUE`, `RZ_CUL`), la capa externa se abre en
