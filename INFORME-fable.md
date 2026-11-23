@@ -218,12 +218,15 @@ Encargo del 2026-11-23 y dos pedidos directos de Benjamin durante la ronda.
    La caída es más difuminada: tres pasadas de desenfoque en vez de dos (una campana en lugar de un triángulo). La mitad de la
    animación se ve a 103 px del texto (137 px a 1920). Con este margen, los grupos de una misma sección quedan dentro de un solo
    espacio quieto; la animación corre en los márgenes, en la columna vacía junto a los títulos y entre secciones.
-2. **Retrato en la portada.** Título más chico y, arriba a la derecha, un recorte rectangular vertical con Benjamin centrado. En
-   el celular, la foto apaisada va arriba y el título debajo. En el tema claro, la foto en color con el cielo un 22 % menos
+2. **Retrato en la portada.** Título más chico y la foto a la derecha. En el celular, la foto apaisada va arriba y el título
+   debajo. En el tema claro, la foto en color con el cielo un 22 % menos
    saturado; en el oscuro, la versión en blanco y negro. Cada tema baja sólo su foto, también al usar el botón de tema.
-   La primera versión extendía el resto de la panorámica, difuminada, detrás del título; Benjamin pidió quitarla y dejar el
-   recorte rectangular limpio, y así quedó. Archivos: `retrato-claro.webp` 66,7 KB, `retrato-oscuro.webp` 53,2 KB y las
-   versiones de celular, 31,3 y 24,6 KB. Sin metadatos. Los originales no están en el repo.
+   Pasó por tres versiones el mismo día, a pedido de Benjamin: panorámica difuminada detrás del título; recorte vertical
+   limpio; y la que quedó, según una captura suya: **foto apaisada con él a la derecha y las montañas desvaneciéndose hacia
+   el texto, a la izquierda**. El título y el párrafo van un poco más chicos junto a la foto. Probado en ocho anchos, de 900 a
+   2560 px: la figura queda completa y la foto no se deforma ni se amplía. Contraste del párrafo sobre la foto: 10,6:1 o más.
+   Archivos: `portada-claro.webp` 70,4 KB, `portada-oscuro.webp` 53,1 KB y las de celular, 31,1 y 24,6 KB. Sin metadatos.
+   Los originales no están en el repo.
 3. **Empuje del nematodo, más unido.** Pedido de Benjamin: más conexión entre las letras y menos movimiento mientras dejan pasar
    al nematodo. Las palabras ya no se apartan una por una del cuerpo que ondula: siguen el eje del cuerpo, todas las de un lado
    hacia ese lado, y cada una se inclina para seguir unida a sus vecinas, así que la línea se curva como una cuerda. El
@@ -237,12 +240,12 @@ completa, con el texto de vuelta en su lugar.
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 67,5 KB | +34,0 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 106,2 KB | +23,6 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 191,5 KB | +26,6 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 67,7 KB | +34,2 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 106,4 KB | +23,8 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 195,7 KB | +30,8 KB |
 
-Los valores son del tema claro; en el oscuro, 60,8, 99,6 y 178,1 KB. Desde la séptima ronda la primera carga incluye el retrato
-(31,3 KB en el celular, 66,7 KB en escritorio). Desde la quinta ronda ya no se baja Pretext (39,9 KB) y la imagen del autodiagnóstico (23,2 KB) se carga sólo al abrir su
+Los valores son del tema claro; en el oscuro, 61,1, 99,9 y 178,4 KB. Desde la séptima ronda la primera carga incluye el retrato
+(31,1 KB en el celular, 70,4 KB en escritorio). Desde la quinta ronda ya no se baja Pretext (39,9 KB) y la imagen del autodiagnóstico (23,2 KB) se carga sólo al abrir su
 desplegable. Por archivo: `index.html` +1,7 KB; `quimiotaxis.min.js` +3,5 KB (sólo escritorio); `empuje.min.js` 3,4 → 1,6 KB; `costras-biologicas.webp` 27,2 KB (nueva);
 `tabla-periodica-fig-n.webp` 11,6 KB o `tabla-periodica-fig.webp` 17,0 KB (nuevas, una según el ancho); se quitó
 `tabla-periodica.webp` (25,9 KB), porque la ficha de la herramienta usa la captura nueva. El límite de 200 KB se cumple.
@@ -320,9 +323,9 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
 16. ~~Desplegables~~ Respondida el 2026-11-23: se quedan como están.
 17. ~~Duración del entierro~~ Respondida el 2026-11-23: 9 segundos está bien.
 18. **Proporción del fondo quieto** (séptima ronda): 40 px quietos y 126 px de caída a 1440 px; 53 y 168 a 1920. ¿Así o todavía más?
-19. **Forma del retrato.** Quedó como rectángulo vertical (4:5), de bordes limpios. Si con «crop rectangular» querías un
-    rectángulo apaisado, es un cambio corto: dímelo.
-20. **Peso del escritorio.** Con el retrato queda en 191,5 KB en el tema claro, cerca del límite de 200. Si quieres holgura,
-    bajo la calidad del retrato (unos 10 KB menos) o dejo las fotos de terreno dentro de un desplegable.
+19. ~~Forma del retrato~~ Resuelta por Benjamin con una captura: apaisada, con las montañas desvaneciéndose hacia el texto.
+20. **Peso del escritorio.** Con el retrato queda en 195,7 KB en el tema claro, a 4,3 KB del límite de 200. Opciones: (a) dejarlo;
+    (b) bajar la calidad del retrato, unos 10 KB menos; (c) pasar las fotos de terreno a un desplegable (27 KB menos al cargar).
+    Recomiendo (b) o (c) antes de publicar, para tener holgura.
 21. **Empuje del nematodo.** Las palabras se mueven como mucho 20 px y las crestas del nematodo rozan alguna. ¿Así, o prefieres
     que lo despejen del todo aunque se muevan más?

@@ -39,7 +39,7 @@
   --display:"Bricolage Grotesque","Bricolage Respaldo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
   --body:"Source Serif 4","Source Serif Respaldo",Georgia,"Times New Roman",serif;
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
-  --foto:url(retrato-claro.webp); --foto-m:url(retrato-claro-m.webp);
+  --foto:url(portada-claro.webp); --foto-m:url(portada-claro-m.webp);
   --page:72rem; --sesgo:.75; --lento:1.8; --gutter:clamp(1rem,4vw,2.5rem); --bar:3.25rem;
   color-scheme:light;
 }
@@ -47,13 +47,13 @@
   :root:not([data-theme="light"]){
     --bg:#131211; --surface:#1C1A18; --ink:#ECE9E2; --muted:#A39F97; --rule:#2C2926; --rule-strong:#45413C;
     --accent:#FF8F74; --accent-ink:#FFA893; --alert:#F86848;
-    --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark; --e-uso:#7FB394; --e-dev:#8F8B83; --foto:url(retrato-oscuro.webp); --foto-m:url(retrato-oscuro-m.webp);
+    --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark; --e-uso:#7FB394; --e-dev:#8F8B83; --foto:url(portada-oscuro.webp); --foto-m:url(portada-oscuro-m.webp);
   }
 }
 :root[data-theme="dark"]{
   --bg:#131211; --surface:#1C1A18; --ink:#ECE9E2; --muted:#A39F97; --rule:#2C2926; --rule-strong:#45413C;
   --accent:#FF8F74; --accent-ink:#FFA893; --alert:#F86848;
-  --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark; --e-uso:#7FB394; --e-dev:#8F8B83; --foto:url(retrato-oscuro.webp); --foto-m:url(retrato-oscuro-m.webp);
+  --serie-a:#F86848; --serie-b:#D9555A; --velo:rgba(19,18,17,.6); color-scheme:dark; --e-uso:#7FB394; --e-dev:#8F8B83; --foto:url(portada-oscuro.webp); --foto-m:url(portada-oscuro-m.webp);
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar) + var(--fig-h,0px) + 1rem);overflow-anchor:none}
@@ -100,21 +100,27 @@ img{max-width:100%;height:auto}
    interlineado, los márgenes y el relleno de la portada van de su valor grande al compacto. Sin JS, --k es 0. */
 .hero{--k:0;padding-block:calc(clamp(2.25rem,6vw,4.5rem)*(1 - var(--k)) + 1.25rem*var(--k)) calc(clamp(2rem,4.5vw,3.25rem)*(1 - var(--k)) + 1.25rem*var(--k))}
 .lugar{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
-h1{font-size:calc(clamp(2.3rem,3.2vw + 1rem,4.2rem)*(1 - var(--k)) + clamp(1.75rem,1.4vw + 1.3rem,2.6rem)*var(--k));line-height:calc(.98 + .04*var(--k));letter-spacing:-.035em;max-width:calc(11.5em + 11em*var(--k));margin-top:calc(.9rem - .45rem*var(--k))}
+h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75rem,1.4vw + 1.3rem,2.6rem)*var(--k));line-height:calc(.98 + .04*var(--k));letter-spacing:-.035em;max-width:calc(11.5em + 11em*var(--k));margin-top:calc(.9rem - .45rem*var(--k))}
 .lede{font-size:clamp(1.12rem,.5vw + 1rem,1.32rem);line-height:1.5;max-width:35em;margin-top:calc(clamp(1.25rem,3vw,2rem)*(1 - var(--k)) + .9rem*var(--k))}
 /* 053: empuje.js reacomoda las líneas de este párrafo alrededor del C. elegans que lo cruza: el texto real no se toca; mientras dura el empuje se pinta encima una copia por líneas (.emp, decorativa y sin selección) y el original se hace transparente. */
 .hero .lede{position:relative}
-/* 065: retrato en la portada (idea de Benjamin). Una sola foto por tema (--foto: en color para el claro, en blanco y negro para el oscuro), puesta como fondo CSS: el navegador baja sólo la del tema activo,
-   también al cambiar de tema con el botón. En celular va arriba, apaisada (--foto-m), y el título debajo. Desde 900 px va arriba a la derecha, en un recorte rectangular vertical de bordes limpios.
-   La primera versión extendía el resto de la panorámica, difuminada, detrás del título; Benjamin pidió quitarla el mismo día. Los originales no están en el repo; scripts/retrato.py genera los cuatro WebP. */
+/* 065: retrato en la portada. Una sola foto por tema (--foto: en color para el claro, en blanco y negro para el oscuro), puesta como fondo CSS: el navegador baja sólo la del tema activo, también al cambiar
+   de tema con el botón. En celular va arriba (--foto-m, 3:2) y el título debajo. Desde 900 px es una foto apaisada del alto de la portada, alineada a la derecha de la columna, con Benjamin a la derecha;
+   hacia la izquierda una máscara la desvanece, de modo que las montañas se funden con el texto (render pedido por Benjamin con una captura, 2026-11-23; antes fue un recorte vertical y, antes, una
+   panorámica difuminada detrás del título). El párrafo se acorta a 30em para que termine donde la foto todavía es tenue. Los originales no están en el repo; scripts/retrato.py genera los cuatro WebP. */
 .cumbre{position:relative;aspect-ratio:3/2;width:100%;margin:0 0 1.1rem}
 .cumbre::after{content:"";position:absolute;inset:0;background:var(--foto-m) center/cover no-repeat;border-radius:2px}
 @media (min-width:900px){
-  .hero{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:clamp(1.5rem,4vw,3.5rem);align-items:start}
-  .hero>*{grid-column:1;position:relative;z-index:1}
-  .hero>.cumbre{grid-column:2;grid-row:1 / span 4;z-index:0;width:clamp(13rem,21vw,19rem);aspect-ratio:4/5;margin:.4rem 0 0}
-  .cumbre::after{background-image:var(--foto)}
+  .hero{position:relative}
+  .hero>*{position:relative;z-index:1}
+  .hero>.lede{max-width:31em;font-size:1.14rem}   /* junto a la foto, el párrafo va un poco más chico (pedido de Benjamin) */
+  .hero>.cumbre{position:absolute;z-index:0;margin:0;width:auto;max-width:calc(100% - 2*var(--gutter));aspect-ratio:2794/1383;right:var(--gutter);
+    top:calc(clamp(2.25rem,6vw,4.5rem)*(1 - var(--k)) + 1.25rem*var(--k));bottom:calc(clamp(2rem,4.5vw,3.25rem)*(1 - var(--k)) + 1.25rem*var(--k))}
+  .cumbre::after{background-image:var(--foto);background-size:auto 100%;background-position:right center;border-radius:0;   /* la foto siempre a su alto y pegada a la derecha: si el recuadro queda más angosto (columna estrecha) se pierde el borde izquierdo, que ya es tenue, y nunca se amplía ni se deforma */
+   
+    -webkit-mask-image:linear-gradient(to right,transparent 0,rgba(0,0,0,.1) 18%,rgba(0,0,0,.22) 38%,rgba(0,0,0,.42) 53%,rgba(0,0,0,.82) 64%,#000 71%);mask-image:linear-gradient(to right,transparent 0,rgba(0,0,0,.1) 18%,rgba(0,0,0,.22) 38%,rgba(0,0,0,.42) 53%,rgba(0,0,0,.82) 64%,#000 71%)}
 }
+@media (min-width:900px) and (max-width:1199px){.hero>.cumbre{bottom:auto;width:58%}.hero>.lede{max-width:26em}}   /* columna angosta: la foto ocupa el 58 % derecho, para que el texto termine donde todavía es tenue */
 .lede.emp-on .pal{display:inline-block;will-change:transform}   /* 063: mientras el nematodo está dentro del párrafo, cada palabra es una caja que se puede desplazar; el texto no se rehace */
 .hero .acciones{transition:transform .6s ease}
 .acciones{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:calc(clamp(1.25rem,3vw,1.9rem)*(1 - var(--k)) + .9rem*var(--k));font-family:var(--display)}

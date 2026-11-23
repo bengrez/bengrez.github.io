@@ -73,8 +73,9 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
 - **Séptima ronda** (065). (1) **Más fondo quieto**: `VELO.dil` 44 → 103 y tres pasadas de desenfoque de radio 3 (`VELO.pas`):
   40 px del todo quietos y 126 px de caída a 1440 px; 53 y 168 a 1920 px. `--aire` sube (259 y 346 px entre secciones).
   (2) **Retrato en la portada**: `.cumbre` (fondo CSS `--foto` / `--foto-m`, una foto por tema, de modo que sólo se baja la del
-  tema activo); recorte rectangular vertical arriba a la derecha desde 900 px, apaisado y arriba en el celular; título más chico.
-  Los WebP salen de `scripts/retrato.py`; los originales no están en el repo. (3) **Empuje más unido** (`empuje.js`): las palabras
+  tema activo). Desde 900 px es una foto apaisada del alto de la portada, pegada a la derecha de la columna, con Benjamin a la
+  derecha y una máscara que la desvanece hacia la izquierda, detrás del texto; en el celular va arriba (3:2). Título y párrafo
+  más chicos. Archivos `portada-*.webp`, generados por `scripts/retrato.py`; los originales no están en el repo. (3) **Empuje más unido** (`empuje.js`): las palabras
   se apartan del eje del nematodo sin su ondulación, todas las de un lado hacia ese lado, como mucho 20 px, y cada una se inclina
   según la diferencia entre sus extremos: la línea se curva como una cuerda en vez de romperse en palabras sueltas.
 - **Raíz**: el cuerpo de la primaria se dibujaba como un tubo de 5 px de radio cortado a 300 px de la punta (en `rzBuild`, la
