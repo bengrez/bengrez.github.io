@@ -312,6 +312,9 @@ desarrollo y análisis de datos, 2025–hoy». Cargo y fechas salen del CV del v
 `aula-herramientas`); pesa 17,9 KB y se baja al abrir el desplegable. Con esto el sitio nombra el colegio por primera vez, sólo
 en el recorrido: la portada y Docencia siguen diciendo «un colegio».
 
+**Ajuste posterior (pedido de Benjamin).** Los logos bajaron de 56 a 42 px y el cargo en Andes pasó a «Agentic engineer,
+2025–hoy», dictado por él (el CV del vault dice «Ingeniero de desarrollo · análisis de datos»).
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |

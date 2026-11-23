@@ -477,11 +477,11 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 /* 055: cada hito se abre con 1–2 frases (botón en el nombre, aria-expanded). Sin JS el texto queda visible; con JS, cerrado no ocupa alto (0fr) ni se lee (visibility). */
 .ruta dd{margin:0}
 /* 069: logos a la izquierda de cada hito del recorrido (PUCV, UWA y Andes), en un solo tono: cada logo es una máscara (PNG con sólo alfa) sobre el color del texto, así se ve igual de bien en claro y en oscuro.
-   070: son los oficiales (el sello de la PUCV y el escudo de la UWA, tomados de los sitios de cada universidad) y miden el doble (3,5 rem). En pantallas angostas la línea de tiempo se corre para dejarles lugar;
+   070: son los oficiales (el sello de la PUCV y el escudo de la UWA, tomados de los sitios de cada universidad) y miden 2,6 rem (072: Benjamin los pidió más chicos; en la 070 medían 3,5). En pantallas angostas la línea de tiempo se corre para dejarles lugar;
    desde 960 px cuelgan a la izquierda de la línea, sobre el espacio entre las dos columnas. Se bajan recién al abrir «Mi recorrido». */
-.ruta.con-logos{margin-left:4.3rem}
-.ruta.con-logos>div{min-height:4.6rem}
-.ruta .logo{position:absolute;left:-4.5rem;top:-.35rem;width:3.5rem;height:3.5rem;background:var(--ink);opacity:.85;-webkit-mask:var(--logo) center/contain no-repeat;mask:var(--logo) center/contain no-repeat}
+.ruta.con-logos{margin-left:3.4rem}
+.ruta.con-logos>div{min-height:3.7rem}
+.ruta .logo{position:absolute;left:-3.6rem;top:-.2rem;width:2.6rem;height:2.6rem;background:var(--ink);opacity:.85;-webkit-mask:var(--logo) center/contain no-repeat;mask:var(--logo) center/contain no-repeat}
 .logo-pucv{--logo:url(logo-pucv.png)}.logo-uwa{--logo:url(logo-uwa.png)}.logo-andes{--logo:url(logo-andes.png)}.logo-ide{--logo:url(logo-ide.png)}
 @media (min-width:960px){.ruta.con-logos{margin-left:0}}
 .rec-btn{position:relative;display:block;width:100%;margin:0;padding:0;border:0;background:none;color:inherit;font:inherit;line-height:inherit;text-align:left;cursor:pointer}
@@ -893,7 +893,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
           <div><dt><span class="logo logo-uwa" aria-hidden="true"></span>The University of Western Australia, Perth</dt><dd>Ph.D., tesis de 2020 (<a href="https://doi.org/10.26182/5e995c216ca93">doi:10.26182/5e995c216ca93</a>), con la beca de Doctorado Becas Chile.</dd></div>
           <div><dt><span class="logo logo-uwa" aria-hidden="true"></span>The University of Western Australia</dt><dd>Research Associate, 2020–2022.</dd></div>
           <div><dt><span class="logo logo-ide" aria-hidden="true"></span>Instituto Domingo Eyzaguirre</dt><dd>Docente de ciencias, 2023–hoy.</dd></div>
-          <div><dt><span class="logo logo-andes" aria-hidden="true"></span>Andes</dt><dd>Ingeniero de desarrollo y análisis de datos, 2025–hoy.</dd></div>
+          <div><dt><span class="logo logo-andes" aria-hidden="true"></span>Andes</dt><dd>Agentic engineer, 2025–hoy.</dd></div>
         </dl>
       </details>
     </div>
