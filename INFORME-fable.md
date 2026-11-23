@@ -411,9 +411,6 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
     enlazado al artículo de reacondicionamiento de 2019, como indicaste. No lo contrasté con el artículo: ¿la frase lo describe bien?
 23. **Lo que salió del sitio** en la novena ronda: citas por año, perfil de RNA-SIP, fotos de terreno, esquema del sistema de
     buses y el asistente escolar. Todo sigue en el historial de la rama por si quieres reponer algo.
-24. **Permiso para usar los logos.** El sello de la PUCV y el escudo de la UWA son marcas de cada universidad. Usarlos para indicar dónde estudiaste es habitual, pero las normas de marca de cada casa pueden pedir
-    autorización, sobre todo al mostrarlos en un solo tono. Lo mismo con el símbolo de Andes sin sus palabras. ¿Los dejas
-    así, o prefieres consultar antes de publicar?
-25. **El colegio con nombre.** Hasta hoy la regla del sitio era no nombrarlo. Al pedir su logo quedó con nombre y escudo en el
-    recorrido. Opciones: (a) así; (b) sólo el escudo y «Docente de ciencias en un colegio»; (c) nombrarlo también en la portada y
-    en Docencia. Lo dejé en (a).
+24. ~~Permiso para usar los logos~~ Respondida el 2026-11-23: quedan como están.
+25. ~~El colegio con nombre~~ Respondida el 2026-11-23: queda con nombre y escudo en el recorrido.
+26. ~~«Agentic engineer» en el CV~~ Respondida el 2026-11-23: sí; actualizado en `Personal/_owner/cv.md`.
