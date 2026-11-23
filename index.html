@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Benjamín Moreira-Grez</title>
-<meta name="description" content="Ecólogo microbiano (Ph.D.). Hoy aplico ese oficio a los datos: telemetría y detección de fallas para una flota de buses, docencia de ciencias y agentes de IA en entornos controlados.">
+<meta name="description" content="Ecólogo microbiano (Ph.D.). Mido lo que nadie está midiendo y lo convierto en datos, avisos y decisiones: una flota de buses, suelos mineros y un colegio.">
 <meta property="og:title" content="Benjamín Moreira-Grez">
-<meta property="og:description" content="Ecólogo microbiano (Ph.D.). Hoy aplico ese oficio a los datos: telemetría y detección de fallas para una flota de buses, docencia de ciencias y agentes de IA en entornos controlados.">
+<meta property="og:description" content="Ecólogo microbiano (Ph.D.). Mido lo que nadie está midiendo y lo convierto en datos, avisos y decisiones: una flota de buses, suelos mineros y un colegio.">
 <meta property="og:type" content="profile">
 <meta property="og:locale" content="es_CL">
 <meta property="og:url" content="https://bengrez.github.io/">
@@ -269,7 +269,6 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
   .riel-meta{margin-top:.5rem}
   .fuera .riel-top{top:var(--bar)}
   .riel-top .kicker{display:none}
-  #casos .riel-top{position:static}   /* 055: el pie de figura de la portada no se pega bajo el gráfico */
   .riel h2{font-size:1.05rem;line-height:1.25;margin:0;letter-spacing:-.01em}
   .riel-meta{display:flex;flex-wrap:wrap;gap:.2rem 1.25rem;align-items:baseline}
   .riel .donde{margin-top:0}
@@ -284,16 +283,15 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
   html{scroll-padding-top:calc(var(--bar) + 1rem)}
   #sobre-mi,#recorrido,#contacto{scroll-margin-top:0}
   .escena{display:grid;grid-template-columns:minmax(0,1fr)}
-  .escena>.serie{grid-column:1;grid-row:1 / span 4;align-self:start;border:0;background:none;pointer-events:none}
+  .escena>.serie{grid-column:1;grid-row:1 / span 3;align-self:start;border:0;background:none;pointer-events:none}
   .serie.fijo{top:var(--bar);box-shadow:none}
   .serie>.pagina,.serie.fijo>.pagina{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:clamp(2rem,4vw,3.5rem);padding-top:0}
   /* 042: sin fondo opaco detrás de la figura (antes un panel de 100vw a la izquierda y hasta la columna derecha escondía el fondo de células;
      en la 042 p3 tampoco queda el de la columna de la figura): la legibilidad la da el velo del texto. */
   .serie .hoja{position:relative;grid-column:1;margin:0 calc(-1 * clamp(2rem,4vw,3.5rem)) 0 0;padding:1.5rem clamp(2rem,4vw,3.5rem) .75rem 0;pointer-events:auto}
-  #casos{grid-column:1;grid-row:1}#ingenieria{grid-column:1;grid-row:2}
-  #investigacion{grid-column:1;grid-row:3}#educacion{grid-column:1;grid-row:4}
+  #ingenieria{grid-column:1;grid-row:1}#investigacion{grid-column:1;grid-row:2}#educacion{grid-column:1;grid-row:3}   /* 068: sin el índice de casos, la escena tiene tres filas */
   /* en la primera fila el título parte bajo la figura, a la altura donde se pega */
-  #casos .riel{margin-top:calc(var(--fig-h,15rem) - clamp(2.25rem,5.5vw,4rem) + 2rem)}
+  #ingenieria .riel{margin-top:calc(var(--fig-h,15rem) - clamp(2.25rem,5.5vw,4rem) + 2rem)}
   /* 047: el título (riel) de una sección que se va hacia arriba pasaba por detrás del gráfico, que no tiene fondo, y se montaba sobre él. Ahora el JS (cortar(), más abajo) mide
      cuánto de su borde superior queda por encima del borde inferior de la figura (--corte) y el título se desvanece hacia ese borde con una máscara de 30 px: nunca cruza el gráfico y el fondo vivo
      de la columna sigue a la vista (la máscara es más ancha que el título para no recortar el velo y su sombra). */
@@ -337,6 +335,8 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 .demo input{display:block;width:100%;height:2.25rem;margin:.15rem 0 0;accent-color:var(--accent);cursor:pointer}
 .demo .esc{display:flex;justify-content:space-between}
 .demo output{display:block;margin-top:.45rem;color:var(--ink)}
+.solo-lector{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}   /* 068: la frase de resultado de la demostración queda sólo para lectores de pantalla (Benjamin: sin texto, sólo el control y el gráfico) */
+.dos>div:not(.riel)>.problema + .nota{margin-top:.9rem}
 /* 060: los hechos de cada trabajo en filas cortas (rótulo y una línea), en lugar del método en tres pasos (Medir, Ver la desviación, Explicar y actuar), que salió por pedido de Benjamin */
 .hechos{margin-top:clamp(1.5rem,3vw,2.25rem)}
 .hechos>div{display:grid;grid-template-columns:9.5rem minmax(0,1fr);gap:.15rem 1.25rem;padding-block:.55rem}
@@ -399,7 +399,7 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
    Cada bloque de texto lleva alrededor un espacio quieto (desde la 065: 40 px y 126 px de caída a 1440; 53 y 168 a 1920), así que los grupos de una misma sección (--grupo: 112 px a 1440, 150 a 1920) quedan
    dentro de un mismo espacio quieto y la animación corre en los márgenes, en la columna vacía junto a los títulos y entre secciones (el doble de --aire: 259 px a 1440; 346 px a 1920). */
 @media (min-width:1024px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
-  :root{--grupo:clamp(6rem,7.8vw,9.5rem);--aire:clamp(6rem,9vw,11rem)}
+  :root{--grupo:clamp(3.5rem,4.5vw,5.5rem);--aire:clamp(6rem,9vw,11rem)}   /* 068: con el texto en un párrafo por prueba, los grupos van más juntos (65 px a 1440; eran 112) */
   .seccion{padding-block:var(--aire)}
   .dos>div:not(.riel)>:is(.hechos,.metricas:not(.resultado),.lista,.evidencia,.mas){margin-top:var(--grupo)}
   .dos>div:not(.riel)>.mas + .mas{margin-top:0}
@@ -561,11 +561,11 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <div class="pagina barra-in">
     <a class="marca" href="#contenido">Benjamín Moreira-Grez</a>
     <nav class="indice" aria-label="Secciones de la página">
-      <a href="#sobre-mi">Sobre mí</a>
       <a href="#ingenieria">Data science</a>
       <a href="#investigacion">Ecología</a>
       <a href="#educacion">Docencia</a>
       <a class="ext" href="https://bengrez.github.io/aula-herramientas/">Herramientas de aula</a>
+      <a href="#sobre-mi">Sobre mí</a>
       <a class="fijo" href="#contacto">Contacto</a>
     </nav>
     <button type="button" class="pausa" id="pausa" aria-label="Pausar animación" aria-pressed="false" hidden><i aria-hidden="true"></i></button>
@@ -580,45 +580,11 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <div class="cumbre" role="img" aria-label="Benjamín Moreira-Grez de pie en la cumbre rocosa de un cerro, con nieve y cordillera al fondo."></div>
   <p class="lugar">Santiago, Chile</p>
   <h1>Ecólogo microbiano. Hoy trabajo con datos.</h1>
-  <p class="lede">Soy Benjamín Moreira-Grez. Estudié los microbios del suelo y hoy trabajo con los datos de una flota de buses, en Andes, y enseño ciencias en un colegio. Uso agentes de IA a diario, en entornos controlados. Me interesa conversar sobre trabajo en datos, proyectos y colaboración en investigación.</p>
-  <p class="acciones"><a class="btn" href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a><a class="btn sec" href="#casos">Ver los tres trabajos</a></p>
+  <p class="lede">Mido lo que nadie está midiendo y lo convierto en datos, avisos y decisiones. Lo aprendí con suelos mineros, en el doctorado. Hoy lo hago con una flota de buses, en Andes, y en un colegio.</p>
+  <p class="acciones"><a class="btn" href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a><a class="btn sec" href="#ingenieria">Ver las tres pruebas</a></p>
 </div>
 </div>
 
-<section class="seccion fuera" id="sobre-mi" aria-labelledby="h-sobre">
-  <div class="pagina dos">
-    <header class="riel">
-      <div class="riel-top"><p class="kicker">Quién soy</p><h2 id="h-sobre">Sobre mí</h2></div>
-    </header>
-    <div>
-      <p class="problema">Resuelvo problemas con lo que hay disponible.</p>
-      <dl class="hechos historia">
-        <div><dt>De dónde vengo</dt><dd>Soy biólogo, de la Pontificia Universidad Católica de Valparaíso. Me doctoré en la University of Western Australia, con Becas Chile, estudiando si los suelos mineros degradados se recuperan al devolverles microorganismos. Ahí aprendí a medir con pocas muestras y mucho ruido. Después seguí dos años como investigador en la misma universidad.</dd></div>
-        <div><dt>Qué hago hoy</dt><dd>Estoy en Santiago y hago dos cosas. Para una empresa de transporte armé la telemetría y el detector de anomalías de su flota de buses, que hoy está en piloto. Y en un colegio enseño ciencias, con herramientas web que hice para practicar sin nota.</dd></div>
-        <div><dt>Cómo trabajo</dt><dd>Aprendo lo que el problema pide: FMS, tacógrafos y GNSS los aprendí sobre la marcha. Uso agentes de IA a diario, en entornos controlados. Y despliego un modelo sólo si supera a las reglas simples.</dd></div>
-      </dl>
-      <dl class="metricas">
-        <div><dt>publicaciones</dt><dd>15</dd></div>
-        <div><dt>citas</dt><dd>796</dd></div>
-        <div><dt>índice h</dt><dd>13</dd></div>
-        <div class="cuando"><dt>fuente</dt><dd>citas e índice h: Google Scholar, octubre de 2026</dd></div>
-      </dl>
-    </div>
-  </div>
-</section>
-<section class="seccion fuera" id="recorrido" aria-labelledby="h-rec">
-  <div class="pagina dos">
-    <header class="riel">
-      <div class="riel-top"><p class="kicker">Hasta hoy</p><h2 id="h-rec">Recorrido</h2></div>
-    </header>
-    <dl class="ruta">
-      <div><dt>Pontificia Universidad Católica de Valparaíso</dt><dd>Licenciado en Biología y título profesional de Biólogo.</dd><dd class="rec-mas"><div><p>Formación de base en biología, antes del doctorado en ecología microbiana de suelos.</p></div></dd></div>
-      <div><dt>The University of Western Australia, Perth</dt><dd>Ph.D., tesis de 2020 (<a href="https://doi.org/10.26182/5e995c216ca93">doi:10.26182/5e995c216ca93</a>). Financiado con la beca de Doctorado Becas Chile, 2014–2018.<span class="sub">Enfoque: reacondicionamiento de suelos degradados, dinámica de comunidades microbianas y restauración ecológica post-minera.</span></dd><dd class="rec-mas"><div><p>La tesis preguntó si un suelo minero degradado se recupera al devolverle microorganismos, o sólo lo parece. Usé marcaje isotópico (RNA-SIP), metagenómica y estadística multivariante, con muestreos en terreno en zonas áridas de Western Australia.</p></div></dd></div>
-      <div><dt>The University of Western Australia</dt><dd>Research Associate, 2020–2022.</dd><dd class="rec-mas"><div><p>Apliqué el mismo enfoque en arroceras, trigo y residuos de bauxita. La tesis y las publicaciones suman 796 citas según Google Scholar (octubre de 2026).</p></div></dd></div>
-      <div><dt>Santiago, hoy</dt><dd>En Andes, desarrollo y análisis de datos para una empresa de transporte; docencia de ciencias en un colegio.</dd><dd class="rec-mas"><div><p>En Andes armé la telemetría y el detector de anomalías de una flota de buses, hoy en piloto. En el colegio enseño ciencias y hice herramientas web para practicar sin nota.</p></div></dd></div>
-    </dl>
-  </div>
-</section>
 <div class="escena" id="escena">
 <div class="serie" id="serie" data-figura="1">
   <div class="pagina">
@@ -781,82 +747,23 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   </div>
 </div>
 
-<section class="seccion" id="casos" aria-labelledby="k-casos">
-  <div class="pagina dos">
-    <header class="riel">
-      <div class="riel-top"><p class="pie-fig">Fig. 1 — Demostración con datos simulados: refrigerante de dos buses, banda de referencia y alerta. El umbral se mueve en Data science.</p></div>
-    </header>
-    <div>
-      <p class="intro"><span class="kicker" id="k-casos">Tres trabajos</span>Los cuento igual: el problema, lo que hice y en qué quedó. Cada uno dice su estado:</p>
-      <ul class="estados" aria-label="Estados que usa esta página">
-        <li class="estado e-uso">publicado o en uso</li>
-        <li class="estado e-piloto">en piloto</li>
-        <li class="estado e-dev">en desarrollo</li>
-      </ul>
-      <ol class="lista">
-        <li><a href="#ingenieria"><span class="kicker">Data science</span><span class="tit">Telemetría y detección de fallas en una flota de buses</span><span class="est"><span class="estado e-piloto">en piloto</span></span></a></li>
-        <li><a href="#investigacion"><span class="kicker">Ecología</span><span class="tit">Suelos mineros: medir si se recuperan</span><span class="est"><span class="estado e-uso">publicado</span></span></a></li>
-        <li><a href="#educacion"><span class="kicker">Docencia</span><span class="tit">Enseñar ciencias y medir el aprendizaje escolar</span><span class="est"><span class="estado e-uso">en uso en clases</span><span class="estado e-dev">asistente en desarrollo</span></span></a></li>
-      </ol>
-    </div>
-  </div>
-</section>
 
 <section class="seccion" id="ingenieria" aria-labelledby="h-ing">
   <div class="pagina dos">
     <header class="riel">
-      <div class="riel-top"><p class="kicker">Data science</p><h2 id="h-ing">Telemetría y detección de fallas en una flota de buses</h2></div>
-      <div class="riel-meta"><p class="estado e-piloto">en piloto</p><p class="donde">Para una empresa de transporte.</p></div>
+      <div class="riel-top"><p class="kicker">Data science</p><h2 id="h-ing">Fallas en una flota de buses</h2></div>
+      <div class="riel-meta"><p class="estado e-piloto">en piloto</p></div>
     </header>
     <div>
-      <p class="problema">Una flota de buses sin datos sobre el estado de sus vehículos y sin aviso de las fallas que venían.</p>
+      <p class="problema">Una empresa de transporte no tenía datos del estado de sus buses ni aviso de las fallas que venían.</p>
+      <p class="nota">Armé el sistema que lee cada bus en tiempo real y un detector que estima el riesgo de falla. Hoy funciona en piloto, con datos reales.</p>
       <div class="demo" id="demo" hidden>
         <label for="demo-k">Umbral de alerta</label>
         <input type="range" id="demo-k" min="1" max="4" step="0.5" value="2" aria-describedby="demo-out">
-        <div class="esc" aria-hidden="true"><span>1σ, más sensible</span><span>4σ, más estricto</span></div>
-        <output id="demo-out" for="demo-k">Umbral 2σ: alerta el día 15, 2 días después de que empieza la deriva; 2 falsas alarmas en 31 días-bus normales.</output>
+        <div class="esc" aria-hidden="true"><span>más sensible</span><span>más estricto</span></div>
+        <output id="demo-out" class="solo-lector" for="demo-k">Umbral 2σ: alerta el día 15, 2 días después de que empieza la deriva; 2 falsas alarmas en 31 días-bus normales.</output>
       </div>
-      <p class="grafico"><b>El gráfico es una simulación</b>: los datos de la flota son del cliente y no se publican. Un bus se queda en la banda de referencia; el otro deriva desde el día 13 y genera la alerta. Las cruces son falsas alarmas: avisar antes trae más.</p>
-      <dl class="hechos">
-        <div><dt>Qué hice</dt><dd>Armé la telemetría, del bus CAN y el GNSS a un mapa en vivo, y un detector de anomalías con reglas y modelos. Como no había suficientes fallas registradas, construí un simulador y un banco de evaluación a ciegas.</dd></div>
-        <div><dt>En qué quedó</dt><dd>Funciona con datos en tiempo real, en piloto y con monitoreo propio. Los datos de conductores pasaron del correo a una plataforma con resguardos, diseñada para la Ley 21.719.</dd></div>
-        <div id="agentes"><dt>Con qué</dt><dd>Python, FastAPI, PostgreSQL con TimescaleDB, PostGIS y pgvector, Docker, Linux, MCP, HTMX y React. Y agentes de IA a diario, en entornos controlados: contexto versionado, entregas con trazabilidad y evaluación a ciegas antes de desplegar.</dd></div>
-      </dl>
-      <details class="mas">
-        <summary>El sistema, pieza por pieza</summary>
-        <figure class="evidencia" data-nosnippet>
-          <ol class="flujo flota" aria-label="Esquema del sistema: del bus CAN y GNSS a la ingesta, la base de series temporales, la API y el mapa en vivo; desde la base, una rama evalúa las señales con un detector de anomalías y produce alertas.">
-            <li class="can fd"><b>Bus CAN y GNSS</b><span>señales sin procesar, FMS y tacógrafos</span></li>
-            <li class="ing fd"><b>Ingesta</b><span>contrato de datos versionado</span></li>
-            <li class="db fd fb2"><b>PostgreSQL</b><span>series temporales, posiciones y embeddings</span></li>
-            <li class="api fd"><b>API</b><span>FastAPI</span></li>
-            <li class="map"><b>Mapa en vivo</b><span>reconstruye tramos</span></li>
-            <li class="det fd"><b>Detector de anomalías</b><span>reglas y modelos</span></li>
-            <li class="ale"><b>Alerta</b><span>sólo si supera a las reglas simples</span></li>
-          </ol>
-          <figcaption>El sistema, de la señal a la decisión. En piloto, con datos en tiempo real y monitoreo propio.</figcaption>
-        </figure>
-        <dl class="ficha">
-          <dt>Bus CAN y GNSS</dt>
-          <dd>FMS, protocolos de tacógrafos y telemetría GNSS, aprendidos sobre la marcha.</dd>
-          <dt>Ingesta</dt>
-          <dd>Contrato versionado con el equipo que mantiene la base.</dd>
-          <dt>PostgreSQL</dt>
-          <dd>TimescaleDB para series temporales, PostGIS para posiciones, pgvector para embeddings.</dd>
-          <dt>API y mapa en vivo</dt>
-          <dd>FastAPI sirve el dashboard de flota con reconstrucción de tramos. En piloto, con monitoreo propio.</dd>
-          <dt>Detector de anomalías</dt>
-          <dd>Riesgo de falla desde las señales del bus. Sin fallas registradas suficientes: simulador de telemetría y banco de evaluación a ciegas.</dd>
-          <dt>Alerta</dt>
-          <dd>Despliego un modelo sólo si supera a las reglas simples.</dd>
-          <dt>Datos personales</dt>
-          <dd>Plataforma multiempresa para datos y fotos de conductores, en vez del correo: calidad en origen, lo sensible separado de la traza durable, diseñada para la Ley 21.719.</dd>
-          <dt>Agentes de IA</dt>
-          <dd>Trabajan dentro de límites explícitos, sobre un contexto que persiste y se versiona. La detección de fallas se evalúa contra reglas explícitas.</dd>
-          <dt>Sobre la marcha</dt>
-          <dd>Despliegues sin internet y la ley de datos personales.</dd>
-        </dl>
-      </details>
+      <p class="pie"><b>Simulación.</b> Los datos de la flota son del cliente y no se publican.</p>
     </div>
   </div>
 </section>
@@ -864,105 +771,13 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 <section class="seccion" id="investigacion" aria-labelledby="h-inv">
   <div class="pagina dos">
     <header class="riel">
-      <div class="riel-top"><p class="kicker">Ecología</p><h2 id="h-inv">Suelos mineros: medir si se recuperan</h2></div>
-      <div class="riel-meta"><p class="estado e-uso">publicado</p><p class="donde">Doctorado en la University of Western Australia.</p></div>
+      <div class="riel-top"><p class="kicker">Ecología</p><h2 id="h-inv">Suelos mineros</h2></div>
+      <div class="riel-meta"><p class="estado e-uso">publicado</p></div>
     </header>
     <div>
-      <p class="problema">Saber si un suelo minero degradado se recupera al devolverle microorganismos, o sólo lo parece.</p>
-      <p class="pie">Con inóculo microbiano comercial y nitrógeno, tras 12 semanas en invernadero</p>
-      <dl class="metricas resultado">
-        <div><dt>respiración del suelo</dt><dd>×2</dd></div>
-        <div><dt>plántulas de <i>Acacia ancistrocarpa</i> por maceta</dt><dd>de 6,3 a cerca de 2</dd></div>
-      </dl>
-      <p class="grafico"><b>El gráfico son datos publicados</b>: amonio y nitrato más nitrito de un suelo de acopio de una mina del Pilbara, antes de incubar (Basal) y tras 12 semanas, por tratamiento (media ± DE, n = 3). Fuente: tabla suplementaria 1 de <a href="https://doi.org/10.3389/fmicb.2019.01617">Moreira-Grez et al. 2019, <i>Frontiers in Microbiology</i> 10:1617</a> (CC BY 4.0).</p>
-      <dl class="hechos">
-        <div><dt>Qué hice</dt><dd>Lo medí en terreno y en invernadero, en zonas áridas de Western Australia, con réplicas en cada muestreo, porque las muestras eran escasas y caras.</dd></div>
-        <div><dt>En qué quedó</dt><dd>Más actividad no fue recuperación: con el inóculo y nitrógeno el suelo respiró el doble, pero emergieron menos plántulas. De ahí salieron la tesis y las publicaciones. Después usé el mismo enfoque en arroceras, trigo y residuos de bauxita.</dd></div>
-        <div><dt>Con qué</dt><dd>Marcaje isotópico (RNA-SIP) para saber qué organismo hace qué, metagenómica y estadística multivariante.</dd></div>
-      </dl>
-      <figure class="evidencia sip fotos">
-        <div class="arte"><img src="costras-biologicas.webp" width="520" height="391" alt="Cuatro fotos de terreno con una tarjeta de escala en centímetros sobre suelo rojo: costra de cianobacterias, liquen crustoso gris, liquen folioso verde claro y suelo desnudo." loading="lazy" decoding="async"></div>
-        <div>
-          <figcaption>Lo muestreado en un sitio sin alterar de Western Australia: costra de cianobacterias, liquen crustoso, liquen folioso y suelo desnudo (control). Fotos de la figura 1 de <a href="https://doi.org/10.3389/fmicb.2019.02143">Moreira-Grez et al. 2019, <i>Frontiers in Microbiology</i> 10:2143</a> (CC BY), recortadas.</figcaption>
-        </div>
-      </figure>
-      <details class="mas">
-        <summary>Citas por año y un perfil de RNA-SIP</summary>
-        <figure class="evidencia sip citas">
-          <div class="arte">
-  <!-- fig:citas -->
-  <svg viewBox="0 0 320 132" role="img" aria-label="Gráfico con datos de OpenAlex: citas por año de 15 publicaciones, de 2017 a 2026. 2017: 2. 2018: 7. 2019: 25. 2020: 62. 2021: 112. 2022: 116. 2023: 115. 2024: 95. 2025: 83. 2026: 91. El año 2026 está incompleto.">
-  <path class="ax" d="M34 16V104H314M34 104h-4M34 67.3h-4M34 30.7h-4"/>
-  <text x="27" y="108" text-anchor="end">0</text>
-  <text x="27" y="71.3" text-anchor="end">50</text>
-  <text x="27" y="34.7" text-anchor="end">100</text>
-  <rect class="cp" x="37" y="102.5" width="22" height="1.5"/>
-  <text x="48" y="118" text-anchor="middle">17</text>
-  <rect class="cp" x="65" y="98.9" width="22" height="5.1"/>
-  <text x="76" y="118" text-anchor="middle">18</text>
-  <rect class="cp" x="93" y="93.7" width="22" height="10.3"/>
-  <rect class="cc" x="93" y="85.7" width="22" height="8.1"/>
-  <text x="104" y="118" text-anchor="middle">19</text>
-  <rect class="cp" x="121" y="82.7" width="22" height="21.3"/>
-  <rect class="cc" x="121" y="58.5" width="22" height="24.2"/>
-  <text x="132" y="118" text-anchor="middle">20</text>
-  <rect class="cp" x="149" y="65.1" width="22" height="38.9"/>
-  <rect class="cc" x="149" y="21.9" width="22" height="43.3"/>
-  <text x="160" y="118" text-anchor="middle">21</text>
-  <rect class="cp" x="177" y="48.3" width="22" height="55.7"/>
-  <rect class="cc" x="177" y="18.9" width="22" height="29.3"/>
-  <text x="188" y="118" text-anchor="middle">22</text>
-  <rect class="cp" x="205" y="52.7" width="22" height="51.3"/>
-  <rect class="cc" x="205" y="19.7" width="22" height="33"/>
-  <text x="216" y="118" text-anchor="middle">23</text>
-  <rect class="cp" x="233" y="54.1" width="22" height="49.9"/>
-  <rect class="cc" x="233" y="34.3" width="22" height="19.8"/>
-  <text x="244" y="118" text-anchor="middle">24</text>
-  <rect class="cp" x="261" y="60" width="22" height="44"/>
-  <rect class="cc" x="261" y="43.1" width="22" height="16.9"/>
-  <text x="272" y="118" text-anchor="middle">25</text>
-  <rect class="cp" x="289" y="59.3" width="22" height="44.7"/>
-  <rect class="cc" x="289" y="37.3" width="22" height="22"/>
-  <text x="300" y="118" text-anchor="middle">26</text>
-  <text x="314" y="130" text-anchor="end">año (20…); 2026 incompleto</text>
-  </svg>
-  <!-- /fig:citas -->
-          </div>
-          <div>
-            <figcaption>Citas por año de 15 publicaciones, según <a href="https://openalex.org/">OpenAlex</a> (consulta por DOI del 21 de noviembre de 2026; 2026 está incompleto). En gris, el artículo de consorcio sobre crAssphage (<a href="https://doi.org/10.1038/s41564-019-0494-6"><i>Nature Microbiology</i>, 2019</a>), donde soy uno de 117 autores. OpenAlex cuenta menos citas que Google Scholar.</figcaption>
-          </div>
-        </figure>
-        <figure class="evidencia sip">
-          <div class="arte">
-  <!-- fig:sip -->
-  <svg viewBox="0 0 320 210" role="img" aria-label="Gráfico con datos simulados: ARN ribosomal por fracción de un gradiente de densidad, como proporción del máximo. El control con carbono 12 tiene su máximo cerca de 1,79 gramos por mililitro; el tratamiento con carbono 13, cerca de 1,82, con un hombro en la posición liviana.">
-  <path class="ax" d="M46 20V164H310M60.7 164v4M119.3 164v4M178 164v4M236.7 164v4M295.3 164v4M46 164h-4M46 97.3h-4M46 30.7h-4"/>
-  <text x="60.7" y="180" text-anchor="middle">1,76</text>
-  <text x="119.3" y="180" text-anchor="middle">1,78</text>
-  <text x="178" y="180" text-anchor="middle">1,80</text>
-  <text x="236.7" y="180" text-anchor="middle">1,82</text>
-  <text x="295.3" y="180" text-anchor="middle">1,84</text>
-  <text x="39" y="168" text-anchor="end">0</text>
-  <text x="39" y="101.3" text-anchor="end">0,5</text>
-  <text x="39" y="34.7" text-anchor="end">1</text>
-  <text class="tit" x="178.0" y="204" text-anchor="middle">Densidad de flotación (g/ml)</text>
-  <text class="tit" transform="translate(12 92.0) rotate(-90)" text-anchor="middle">ARNr 16S (prop. del máximo)</text>
-  <text x="310" y="13" text-anchor="end">Datos simulados, 12 fracciones</text>
-  <path class="c12" d="M75.3 156.5 L94 154.4 L112.7 106.4 L131.3 49.9 L150 30.7 L168.7 75.2 L187.3 135 L206 157.2 L224.7 164 L243.3 155.8 L262 163.4 L280.7 164"/>
-  <g class="p12"><circle cx="75.3" cy="156.5" r="2.6"/><circle cx="94" cy="154.4" r="2.6"/><circle cx="112.7" cy="106.4" r="2.6"/><circle cx="131.3" cy="49.9" r="2.6"/><circle cx="150" cy="30.7" r="2.6"/><circle cx="168.7" cy="75.2" r="2.6"/><circle cx="187.3" cy="135" r="2.6"/><circle cx="206" cy="157.2" r="2.6"/><circle cx="224.7" cy="164" r="2.6"/><circle cx="243.3" cy="155.8" r="2.6"/><circle cx="262" cy="163.4" r="2.6"/><circle cx="280.7" cy="164" r="2.6"/></g>
-  <path class="a13" d="M75.3 163.8 L94 160.3 L112.7 147.3 L131.3 125.5 L150 115.1 L168.7 122.9 L187.3 109.8 L206 70.3 L224.7 30.7 L243.3 37.1 L262 89.9 L280.7 137.8 L280.7 164 L75.3 164 Z"/>
-  <path class="c13" d="M75.3 163.8 L94 160.3 L112.7 147.3 L131.3 125.5 L150 115.1 L168.7 122.9 L187.3 109.8 L206 70.3 L224.7 30.7 L243.3 37.1 L262 89.9 L280.7 137.8"/>
-  <g class="p13"><circle cx="75.3" cy="163.8" r="2.6"/><circle cx="94" cy="160.3" r="2.6"/><circle cx="112.7" cy="147.3" r="2.6"/><circle cx="131.3" cy="125.5" r="2.6"/><circle cx="150" cy="115.1" r="2.6"/><circle cx="168.7" cy="122.9" r="2.6"/><circle cx="187.3" cy="109.8" r="2.6"/><circle cx="206" cy="70.3" r="2.6"/><circle cx="224.7" cy="30.7" r="2.6"/><circle cx="243.3" cy="37.1" r="2.6"/><circle cx="262" cy="89.9" r="2.6"/><circle cx="280.7" cy="137.8" r="2.6"/></g>
-  <text class="tit" x="129.7" y="40" text-anchor="end">¹²C</text>
-  <text class="tit t13" x="252.8" y="40">¹³C</text>
-  </svg>
-  <!-- /fig:sip -->
-          </div>
-          <div>
-            <figcaption>Perfil de RNA-SIP, con datos simulados. El ARN que incorporó ¹³C queda en las fracciones pesadas, a la derecha: así se sabe qué organismos usaron el sustrato. El método está en el <a href="https://doi.org/10.1007/978-1-4939-9721-3_3">capítulo de 2019</a> del que soy coautor.</figcaption>
-          </div>
-        </figure>
-      </details>
+      <p class="problema">¿Un suelo minero degradado se recupera al devolverle microorganismos, o sólo lo parece?</p>
+      <p class="nota">Lo medí en terreno y en invernadero, en Western Australia. Más actividad no fue recuperación. Lo que sí encontré fueron las <a href="https://doi.org/10.3389/fmicb.2019.01617">especies de bacterias que importan para la estabilidad del ecosistema</a>.</p>
+      <p class="pie"><b>Datos publicados</b> (<a href="https://doi.org/10.3389/fmicb.2019.01617">Moreira-Grez et al. 2019</a>, CC BY 4.0).</p>
       <details class="mas">
         <summary>Seis publicaciones seleccionadas</summary>
         <ol class="pubs">
@@ -982,18 +797,13 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 <section class="seccion" id="educacion" aria-labelledby="h-edu">
   <div class="pagina dos">
     <header class="riel">
-      <div class="riel-top"><p class="kicker">Docencia</p><h2 id="h-edu">Enseñar ciencias y medir el aprendizaje escolar</h2></div>
-      <div class="riel-meta"><p class="estado e-uso">en uso en clases</p><p class="estado e-dev">asistente en desarrollo</p><p class="donde">En un colegio.</p></div>
+      <div class="riel-top"><p class="kicker">Docencia</p><h2 id="h-edu">Ciencias en un colegio</h2></div>
+      <div class="riel-meta"><p class="estado e-uso">en uso en clases</p></div>
     </header>
     <div>
-      <p class="problema">Química, Biología y Ciencias para la Ciudadanía en cursos heterogéneos, con poco tiempo de sala.</p>
-      <p class="grafico" data-resumen="Qué muestra la imagen"><b>La imagen es una captura</b> de la <a href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/">Tabla periódica reactiva</a>, que se abre y se usa desde el enlace. No hay gráfico de resultados: no publico datos de estudiantes.</p>
-      <dl class="hechos">
-        <div><dt>Qué hice</dt><dd>Planifico por objetivo de aprendizaje, con diagnóstico al inicio y evaluación formativa antes de la sumativa. Para practicar sin nota hice herramientas web propias.</dd></div>
-        <div><dt>En qué quedó</dt><dd>Varias herramientas están publicadas y se usan en clases. Se abren sin cuenta ni instalación, y no guardan ni envían respuestas. Están en <a href="https://bengrez.github.io/aula-herramientas/">Herramientas de aula</a>.</dd></div>
-        <div><dt>Con qué</dt><dd>Herramientas web propias y, en desarrollo, un asistente de gestión escolar con IA (embeddings y búsqueda vectorial).</dd></div>
-      </dl>
-
+      <p class="problema">Hice herramientas web para que un curso practique sin nota y se vea qué falta reforzar.</p>
+      <p class="nota">Hoy se usan en clases y están publicadas.</p>
+      <p class="pie"><b>Captura</b> de una de ellas, la <a href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/">Tabla periódica reactiva</a>.</p>
       <details class="mas">
         <summary>Tres herramientas publicadas</summary>
         <p class="pie">Las imágenes son fragmentos de cada interfaz.</p>
@@ -1047,21 +857,6 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
         </article>
         <p class="mas-herr"><a href="https://bengrez.github.io/aula-herramientas/">Ver todas en Herramientas de aula →</a></p>
       </details>
-      <details class="mas" id="colegio">
-        <summary>El asistente de gestión escolar, en desarrollo</summary>
-        <p class="estado e-dev">en desarrollo</p>
-        <p class="nota">Un asistente con IA que cruza las fuentes que el colegio ya tiene y responde indicando la fuente. Local-first, con datos seudonimizados. Hoy es una demo con datos sintéticos; el piloto, con datos reales, desde 2027.</p>
-        <figure class="evidencia" data-nosnippet style="margin-top:1.25rem">
-          <ol class="flujo colegio" aria-label="Esquema del asistente de gestión escolar: las fuentes que el colegio ya tiene alimentan un asistente con IA que busca patrones entre asignaturas y responde con evidencia; dos reglas acotan la respuesta. Lo usan el equipo directivo, UTP, convivencia y profesores jefe.">
-            <li class="fd"><b>Fuentes que el colegio ya tiene</b><span>notas, asistencia, convivencia, observaciones</span></li>
-            <li class="db fd"><b>Asistente con IA</b><span>embeddings y búsqueda vectorial, pgvector</span></li>
-            <li class="fb"><b>Respuestas con evidencia</b><span>cada indicador dice su fuente y qué le falta</span></li>
-            <li class="reg"><b>Reglas de la respuesta</b><span>se suprimen los agregados con pocos estudiantes; el riesgo de reprobación es una categoría explicada, no una probabilidad</span></li>
-            <li class="aparte"><b>Para quién</b><span>equipo directivo, UTP, convivencia y profesores jefe</span></li>
-          </ol>
-          <figcaption>Esquema de «medir un colegio»: asistente de gestión escolar en un equipo del propio colegio, diseñado para la Ley 21.719.</figcaption>
-        </figure>
-      </details>
     </div>
   </div>
 </section>
@@ -1069,6 +864,32 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 </div>
 
 
+<section class="seccion fuera" id="sobre-mi" aria-labelledby="h-sobre">
+  <div class="pagina dos">
+    <header class="riel">
+      <div class="riel-top"><p class="kicker">Quién soy</p><h2 id="h-sobre">Sobre mí</h2></div>
+    </header>
+    <div>
+      <p class="problema">Resuelvo problemas con lo que hay disponible.</p>
+      <p class="nota" id="agentes">Soy biólogo, y doctor en ecología microbiana por la University of Western Australia. Trabajo a diario con agentes de IA, con límites claros y revisando lo que hacen antes de usarlo.</p>
+      <dl class="metricas">
+        <div><dt>publicaciones</dt><dd>15</dd></div>
+        <div><dt>citas</dt><dd>796</dd></div>
+        <div><dt>índice h</dt><dd>13</dd></div>
+        <div class="cuando"><dt>fuente</dt><dd>citas e índice h: Google Scholar, octubre de 2026</dd></div>
+      </dl>
+      <details class="mas" id="recorrido">
+        <summary>Mi recorrido</summary>
+        <dl class="ruta">
+          <div><dt>Pontificia Universidad Católica de Valparaíso</dt><dd>Licenciado en Biología y título profesional de Biólogo.</dd></div>
+          <div><dt>The University of Western Australia, Perth</dt><dd>Ph.D., tesis de 2020 (<a href="https://doi.org/10.26182/5e995c216ca93">doi:10.26182/5e995c216ca93</a>), con la beca de Doctorado Becas Chile.</dd></div>
+          <div><dt>The University of Western Australia</dt><dd>Research Associate, 2020–2022.</dd></div>
+          <div><dt>Santiago, hoy</dt><dd>En Andes, desarrollo y análisis de datos para una empresa de transporte; docencia de ciencias en un colegio.</dd></div>
+        </dl>
+      </details>
+    </div>
+  </div>
+</section>
 <section class="seccion fuera" id="contacto" aria-labelledby="h-con">
   <div class="pagina dos">
     <header class="riel">
@@ -1087,7 +908,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 </section>
 
 </main>
-<footer><div class="pagina">Santiago, Chile. Métricas de citación de Google Scholar al 26 de octubre de 2026; citas por año, de OpenAlex al 21 de noviembre de 2026. El gráfico de Data science, el perfil de RNA-SIP y el fondo son simulaciones. El gráfico de Ecología y las fotos de costras vienen de mis artículos, con licencia CC BY.</div></footer>
+<footer><div class="pagina">Santiago, Chile. Métricas de citación de Google Scholar al 26 de octubre de 2026. El gráfico de Data science y el fondo son simulaciones. El gráfico de Ecología viene de mi artículo de 2019, con licencia CC BY.</div></footer>
 <p class="fondo-nota" tabindex="0">Fondo: simulación de microorganismos del suelo junto a una raíz. No es una micrografía.</p>
 
 <script>

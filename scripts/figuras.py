@@ -286,7 +286,7 @@ def main():
         s = open(INDEX, encoding="utf-8").read()
         for k, v in svgs.items():
             s, n = re.subn(rf"(<!-- fig:{k} -->)\n.*?\n(\s*<!-- /fig:{k} -->)", lambda m: f"{m.group(1)}\n{v}\n{m.group(2)}", s, flags=re.S)
-            assert n == 1, k
+            assert n in (0, 1), k   # 068: las figuras que ya no están en la página (sip, citas) se saltan
         open(INDEX, "w", encoding="utf-8").write(s)
         print("pegado:", {k: len(v) for k, v in svgs.items()})
     else:

@@ -83,6 +83,13 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
   en todas partes y sin depender de la luz del cursor. Para que no se vea vacío: el espacio quieto baja a 24 px y 90 px de caída
   a 1440 (32 y 120 a 1920), suben los topes de población (130, 175 y 220 por nivel) y las nadadoras (96, y 32 más al partir), y
   el fondo en reposo, fuera de la luz, se ve al 18 % (`LUZ_PISO`; era 10 %).
+- **Novena ronda** (068): **texto rediseñado** con Benjamin, por preguntas con alternativas. Orden: portada con la oferta
+  («Mido lo que nadie está midiendo…»), tres pruebas (Data science, Ecología, Docencia; título corto, estado, un párrafo de
+  «faltaba, lo medí, cambió», su figura y una línea de fuente), «Sobre mí» (lema, formación, agentes de IA, tres cifras y el
+  recorrido plegado en cuatro líneas) y Contacto. Sin jerga técnica. Salieron el índice «Tres trabajos», las fichas `dl.hechos`,
+  el esquema del sistema, el gráfico de citas, el perfil de RNA-SIP, las fotos de terreno, las cifras de Ecología y el asistente
+  escolar. Quedan dos desplegables: publicaciones y herramientas. La frase de resultado de la demostración queda sólo para
+  lectores de pantalla (`.solo-lector`). La escena tiene tres filas. `--grupo` baja a 65 px a 1440.
 - **Raíz**: el cuerpo de la primaria se dibujaba como un tubo de 5 px de radio cortado a 300 px de la punta (en `rzBuild`, la
   distancia a la punta se medía contra el punto anterior; venía de antes de la 056). Corregido: tiene su ancho real en todo el
   largo. Las laterales nacen dentro de la primaria y salen por un cuello ancho (`RZ_CUE`, `RZ_CUL`), la capa externa se abre en

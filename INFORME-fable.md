@@ -257,15 +257,46 @@ y marcó dos molestias: las manchas de textura y que se veía demasiado vacío.
 Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; GPU a 1750 px en oscuro y en claro, a 60
 cuadros por segundo con 156 organismos; el nematodo sigue empujando el párrafo y el texto vuelve a su lugar.
 
+## Novena ronda: texto rediseñado
+
+Benjamin pidió rediseñar el texto completo antes de ejecutar, guiando con preguntas de alternativas. Sus decisiones:
+
+| Tema | Decisión |
+|---|---|
+| Qué fallaba | Sonaba a ficha o CV, se repetía, mucha jerga y no se veía qué ofrece |
+| Voz | Directa y sobria |
+| Largo | La mitad o menos (quedó en unas 300 palabras visibles; eran 1100) |
+| Objetivo | Que le escriban |
+| Oferta | «Medir lo que nadie mide» |
+| Estructura | Oferta, tres pruebas, «Sobre mí», contacto |
+| Jerga | Fuera del todo |
+| Titular | El actual: «Ecólogo microbiano. Hoy trabajo con datos.» |
+| Pruebas | Un párrafo: qué faltaba, cómo lo midió, qué cambió |
+| Títulos | Cortos: «Fallas en una flota de buses», «Suelos mineros», «Ciencias en un colegio» |
+| Estados | Sólo la etiqueta junto al título; sin leyenda ni índice |
+| Desplegables | Sólo publicaciones y herramientas |
+| Ecología | Sin cifras grandes ni fotos de terreno |
+| Docencia | Párrafo mínimo; el asistente escolar sale del sitio |
+| Demostración | Sólo el control y el gráfico, sin frase de resultado |
+| «Sobre mí» | Lema arriba, formación en una frase, agentes de IA, tres cifras; recorrido plegado en cuatro líneas |
+| Contacto | Sólo correo y perfiles |
+
+Un hecho nuevo, dictado por Benjamin: en Ecología, el resultado fue identificar «las especies de bacterias que importan para la
+estabilidad del ecosistema». Lo enlacé al artículo de 2019 que él indicó (doi:10.3389/fmicb.2019.01617); no lo contrasté con
+el texto del artículo.
+
+Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; desplegables con sus imágenes; página en
+vivo con GPU a 60 cuadros por segundo. La página mide 3254 px de alto a 1440 px (antes, más de 7000).
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 67,7 KB | +34,2 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 106,4 KB | +23,8 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 195,7 KB | +30,8 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 63,1 KB | +29,6 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 74,7 KB | −7,9 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 164,0 KB | −0,9 KB |
 
-Los valores son del tema claro; en el oscuro, 61,1, 99,9 y 178,4 KB. Desde la séptima ronda la primera carga incluye el retrato
+Los valores son del tema claro; en el oscuro, 56,5, 68,1 y 146,7 KB. Desde la séptima ronda la primera carga incluye el retrato
 (31,1 KB en el celular, 70,4 KB en escritorio). Desde la quinta ronda ya no se baja Pretext (39,9 KB) y la imagen del autodiagnóstico (23,2 KB) se carga sólo al abrir su
 desplegable. Por archivo: `index.html` +1,7 KB; `quimiotaxis.min.js` +3,5 KB (sólo escritorio); `empuje.min.js` 3,4 → 1,6 KB; `costras-biologicas.webp` 27,2 KB (nueva);
 `tabla-periodica-fig-n.webp` 11,6 KB o `tabla-periodica-fig.webp` 17,0 KB (nuevas, una según el ancho); se quitó
@@ -346,8 +377,10 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
 18. **Fondo** (octava ronda): textura pareja, 24 px quietos y 90 px de caída a 1440 px, más organismos y 18 % de visibilidad
     lejos del cursor. ¿Convence así? Lo que más cambia la sensación de «vacío» es la visibilidad lejos del cursor.
 19. ~~Forma del retrato~~ Resuelta por Benjamin con una captura: apaisada, con las montañas desvaneciéndose hacia el texto.
-20. **Peso del escritorio.** Con el retrato queda en 195,7 KB en el tema claro, a 4,3 KB del límite de 200. Opciones: (a) dejarlo;
-    (b) bajar la calidad del retrato, unos 10 KB menos; (c) pasar las fotos de terreno a un desplegable (27 KB menos al cargar).
-    Recomiendo (b) o (c) antes de publicar, para tener holgura.
+20. ~~Peso del escritorio~~ Resuelto en la novena ronda: sin las fotos de terreno queda en 164,0 KB.
 21. **Empuje del nematodo.** Las palabras se mueven como mucho 20 px y las crestas del nematodo rozan alguna. ¿Así, o prefieres
     que lo despejen del todo aunque se muevan más?
+22. **Respaldo del resultado de Ecología.** «Las especies de bacterias que importan para la estabilidad del ecosistema» quedó
+    enlazado al artículo de reacondicionamiento de 2019, como indicaste. No lo contrasté con el artículo: ¿la frase lo describe bien?
+23. **Lo que salió del sitio** en la novena ronda: citas por año, perfil de RNA-SIP, fotos de terreno, esquema del sistema de
+    buses y el asistente escolar. Todo sigue en el historial de la rama por si quieres reponer algo.
