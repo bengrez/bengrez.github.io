@@ -206,9 +206,9 @@ cuadros por segundo); la secuencia del nematodo sigue completa.
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 35,7 KB | +2,2 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 74,5 KB | −8,1 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 124,2 KB | −40,7 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 35,8 KB | +2,3 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 74,6 KB | −8,0 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 124,3 KB | −40,6 KB |
 
 Desde la quinta ronda ya no se baja Pretext (39,9 KB) y la imagen del autodiagnóstico (23,2 KB) se carga sólo al abrir su
 desplegable. Por archivo: `index.html` +1,7 KB; `quimiotaxis.min.js` +3,5 KB (sólo escritorio); `empuje.min.js` 3,4 → 1,6 KB; `costras-biologicas.webp` 27,2 KB (nueva);
