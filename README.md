@@ -91,9 +91,10 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
   escolar. Quedan dos desplegables: publicaciones y herramientas. La frase de resultado de la demostración queda sólo para
   lectores de pantalla (`.solo-lector`). La escena tiene tres filas. `--grupo` baja a 65 px a 1440.
 - **Logos en el recorrido** (069): a la izquierda de cada hito de «Mi recorrido», un logo chico en un solo tono (`.ruta .logo`:
-  una máscara PNG de sólo alfa sobre `--ink`, así se ve en claro y en oscuro): `logo-pucv.png` (escudo de la PUCV, de Wikimedia
-  Commons, dominio público), `logo-uwa.png` (escudo de la UWA, de Wikipedia en inglés, donde figura como no libre) y
-  `logo-andes.png` (el símbolo «AE» de Andes, sin las palabras). Se bajan al abrir el desplegable.
+  una máscara PNG de sólo alfa sobre `--ink`, así se ve en claro y en oscuro). Desde la 070 son los oficiales y miden 3,5 rem:
+  `logo-pucv.png` (el sello del logo vigente, versión de un color, tomado de pucv.cl), `logo-uwa.png` (el escudo vigente, de
+  `uwacrest-white.svg` en el sitio de la UWA) y `logo-andes.png` (el símbolo «AE» de Andes, sin las palabras). Se bajan al abrir
+  el desplegable.
 - **Raíz**: el cuerpo de la primaria se dibujaba como un tubo de 5 px de radio cortado a 300 px de la punta (en `rzBuild`, la
   distancia a la punta se medía contra el punto anterior; venía de antes de la 056). Corregido: tiene su ancho real en todo el
   largo. Las laterales nacen dentro de la primaria y salen por un cuello ancho (`RZ_CUE`, `RZ_CUL`), la capa externa se abre en

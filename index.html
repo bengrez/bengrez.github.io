@@ -476,10 +476,12 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 .ruta .sub{display:block;font-family:var(--display);font-size:.86rem;color:var(--muted);margin-top:.4rem}
 /* 055: cada hito se abre con 1–2 frases (botón en el nombre, aria-expanded). Sin JS el texto queda visible; con JS, cerrado no ocupa alto (0fr) ni se lee (visibility). */
 .ruta dd{margin:0}
-/* 069: logos chicos a la izquierda de cada hito del recorrido (PUCV, UWA y Andes), en un solo tono: cada logo es una máscara (PNG con sólo alfa) sobre el color del texto, así se ve igual de bien en claro y en oscuro.
-   En pantallas angostas la línea de tiempo se corre para dejarles lugar; desde 960 px cuelgan en el espacio entre las dos columnas. Se bajan recién al abrir «Mi recorrido». */
-.ruta.con-logos{margin-left:2.6rem}
-.ruta .logo{position:absolute;left:-2.75rem;top:-.1rem;width:1.75rem;height:1.75rem;background:var(--ink);opacity:.82;-webkit-mask:var(--logo) center/contain no-repeat;mask:var(--logo) center/contain no-repeat}
+/* 069: logos a la izquierda de cada hito del recorrido (PUCV, UWA y Andes), en un solo tono: cada logo es una máscara (PNG con sólo alfa) sobre el color del texto, así se ve igual de bien en claro y en oscuro.
+   070: son los oficiales (el sello de la PUCV y el escudo de la UWA, tomados de los sitios de cada universidad) y miden el doble (3,5 rem). En pantallas angostas la línea de tiempo se corre para dejarles lugar;
+   desde 960 px cuelgan a la izquierda de la línea, sobre el espacio entre las dos columnas. Se bajan recién al abrir «Mi recorrido». */
+.ruta.con-logos{margin-left:4.3rem}
+.ruta.con-logos>div{min-height:4.6rem}
+.ruta .logo{position:absolute;left:-4.5rem;top:-.35rem;width:3.5rem;height:3.5rem;background:var(--ink);opacity:.85;-webkit-mask:var(--logo) center/contain no-repeat;mask:var(--logo) center/contain no-repeat}
 .logo-pucv{--logo:url(logo-pucv.png)}.logo-uwa{--logo:url(logo-uwa.png)}.logo-andes{--logo:url(logo-andes.png)}
 @media (min-width:960px){.ruta.con-logos{margin-left:0}}
 .rec-btn{position:relative;display:block;width:100%;margin:0;padding:0;border:0;background:none;color:inherit;font:inherit;line-height:inherit;text-align:left;cursor:pointer}
