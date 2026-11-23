@@ -64,6 +64,12 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
   rehacer el párrafo. (3) **Textos con la estructura A** (persona primero): portada con quién es y qué busca; «Sobre mí» en tres
   párrafos (de dónde vengo, qué hago hoy, cómo trabajo); Recorrido; tres fichas iguales (problema, «Qué hice», «En qué quedó»,
   «Con qué») y el detalle en desplegables (`details.mas`).
+- **Sexta ronda** (064). (1) **Más fondo quieto alrededor de cada bloque**: `VELO.dil` 18 → 44 y las medidas escalan con el ancho
+  (`veloK` = ancho / 1440, entre 1 y 1,34): a 1440 px, 14 px del todo quietos y 60 px de caída; a 1920 px, 19 y 80. (2) **Más
+  aire** donde corre el fondo vivo (media query con las mismas condiciones con que se carga `quimiotaxis.js`): `--grupo` (112 px
+  a 1440, 150 a 1920) separa los grupos de una sección y `--aire` (101 y 134 px) va arriba y abajo de cada sección. (3) **La barra
+  superior** es un bloque más del velo (`.barra-in`, como caja completa) y lleva una franja que se desvanece por debajo. (4) **El
+  rótulo del fondo** (`.fondo-nota`) queda al 45 % y pasa a 100 % con el mouse encima o con el foco (`tabindex="0"`).
 - **Raíz**: el cuerpo de la primaria se dibujaba como un tubo de 5 px de radio cortado a 300 px de la punta (en `rzBuild`, la
   distancia a la punta se medía contra el punto anterior; venía de antes de la 056). Corregido: tiene su ancho real en todo el
   largo. Las laterales nacen dentro de la primaria y salen por un cuello ancho (`RZ_CUE`, `RZ_CUL`), la capa externa se abre en

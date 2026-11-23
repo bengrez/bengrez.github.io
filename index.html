@@ -377,6 +377,17 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 .mas summary:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
 .mas>:last-child{margin-bottom:1.25rem}
 .mas + .mas{margin-top:0}   /* 063: los desplegables seguidos van pegados */
+/* 064: más aire donde corre el fondo vivo (las mismas condiciones con que se carga quimiotaxis.js: ≥ 1024 px, puntero fino y sin movimiento reducido; así el espacio no cambia al arrancar el fondo).
+   Cada bloque de texto lleva alrededor un espacio quieto (14 px y 60 px de caída a 1440; 19 y 80 a 1920). Para que entre los grupos de una sección quede una banda de fondo animado, la separación entre
+   grupos (--grupo) es dos veces ese borde más un tramo libre: 112 px a 1440 y 150 px a 1920. Entre secciones, el doble de --aire (202 px a 1440; 269 px a 1920). */
+@media (min-width:1024px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  :root{--grupo:clamp(6rem,7.8vw,9.5rem);--aire:clamp(5rem,7vw,8.5rem)}
+  .seccion{padding-block:var(--aire)}
+  .dos>div:not(.riel)>:is(.hechos,.metricas:not(.resultado),.lista,.evidencia,.mas){margin-top:var(--grupo)}
+  .dos>div:not(.riel)>.mas + .mas{margin-top:0}
+  .hechos>div{padding-block:.8rem}
+  #sobre-mi + #recorrido{padding-top:0}
+}
 .mas>.evidencia:first-of-type,.mas>.herr:first-of-type{margin-top:.5rem}
 .ficha{display:grid;grid-template-columns:11.5rem 1fr}
 @media (min-width:960px){.ficha{grid-template-columns:8.5rem 1fr}}
@@ -512,7 +523,14 @@ h1{font-size:calc(clamp(2.5rem,5.4vw + 1rem,5.9rem)*(1 - var(--k)) + clamp(1.75r
 }
 footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line-height:1.6;color:var(--muted)}
 /* 059: el fondo ahora tiene aspecto de micrografía; este rótulo, en el margen izquierdo, dice que es una simulación. Sólo con el fondo activo y donde el margen lo deja caber. */
-.fondo-nota{display:none;position:fixed;left:.9rem;bottom:.7rem;z-index:1;width:11.5rem;margin:0;font:.7rem/1.45 var(--mono);color:var(--muted);pointer-events:none}
+.fondo-nota{display:none;position:fixed;left:.9rem;bottom:.7rem;z-index:1;width:11.5rem;margin:0;font:.7rem/1.45 var(--mono);color:var(--muted);opacity:.45;transition:opacity .2s ease;cursor:default}
+.fondo-nota:hover,.fondo-nota:focus,.fondo-nota:focus-visible{opacity:1;color:var(--ink)}   /* 064: el rótulo queda tenue en reposo y se resalta con el mouse encima o con el foco del teclado */
+.fondo-nota:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+@media (prefers-reduced-motion:reduce){.fondo-nota{transition:none}}
+/* 064: la barra superior se funde con el fondo vivo. Su fondo sigue siendo opaco (el texto de la página pasa por debajo al desplazar), pero quimiotaxis.js la trata como un bloque más: alrededor queda el mismo
+   espacio quieto con caída suave, así que su rectángulo ya no se ve contra la animación. Abajo, una franja que se desvanece para que el texto que sube no se corte en seco. */
+.velo-js .barra-in{position:relative}
+.velo-js .barra-in::after{content:"";position:absolute;left:var(--gutter);right:var(--gutter);top:100%;height:1rem;background:linear-gradient(to bottom,var(--bg),transparent);pointer-events:none}
 @media (min-width:1440px){.fondo-vivo .fondo-nota{display:block}}
 </style>
 </head>
@@ -1050,7 +1068,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 
 </main>
 <footer><div class="pagina">Santiago, Chile. Métricas de citación de Google Scholar al 26 de octubre de 2026; citas por año, de OpenAlex al 21 de noviembre de 2026. El gráfico de Data science, el perfil de RNA-SIP y el fondo son simulaciones. El gráfico de Ecología y las fotos de costras vienen de mis artículos, con licencia CC BY.</div></footer>
-<p class="fondo-nota" aria-hidden="true">Fondo: simulación de microorganismos del suelo junto a una raíz. No es una micrografía.</p>
+<p class="fondo-nota" tabindex="0">Fondo: simulación de microorganismos del suelo junto a una raíz. No es una micrografía.</p>
 
 <script>
 /* El título de la portada se encoge con el scroll: --k va de 0 (grande) a 1 (compacto) en los primeros
@@ -1219,7 +1237,7 @@ var portada=(function(){
   try{
     var mm=window.matchMedia; if(!mm||!mm('(pointer: fine)').matches||window.innerWidth<1024||mm('(prefers-reduced-motion: reduce)').matches) return;
     var cx=navigator.connection; if(cx&&cx.saveData) return;
-    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.min.js?v=841854e8bf'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.min.js?v=c390652b19'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 056: se carga el .min.js que genera scripts/version-js.sh (la fuente legible es quimiotaxis.js). 063: empuje.js es nuevo y no usa Pretext: aparta palabras sueltas del cuerpo del nematodo, sin rehacer el párrafo */
+    function cargar(){ var s=document.createElement('script'); s.src='quimiotaxis.min.js?v=004ae8bec1'; s.async=true; s.onload=function(){ var e=document.createElement('script'); e.src='empuje.min.js?v=c390652b19'; e.async=true; document.head.appendChild(e); }; document.head.appendChild(s); }   /* 056: se carga el .min.js que genera scripts/version-js.sh (la fuente legible es quimiotaxis.js). 063: empuje.js es nuevo y no usa Pretext: aparta palabras sueltas del cuerpo del nematodo, sin rehacer el párrafo */
     if(document.readyState==='complete') cargar(); else window.addEventListener('load',function(){ setTimeout(cargar,300); });
   }catch(e){}
 })();

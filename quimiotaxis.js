@@ -341,7 +341,7 @@
   // 029: agitación del scroll (px/s de la onda, de la deriva, velocidad de scroll que la satura, decaimiento en s), calma (espera en s, factor, constante en s),
   // repulsión del texto (px/s por unidad de gradiente), tiempo de reconstrucción de la máscara (ms)
   var AGIT_O=16, AGIT_D=12, AGIT_V=2500, AGIT_T=1.6, CALMA_ESPERA=4, CALMA_F=.6, CALMA_T=1.5, REP_T=0, TEXTO_ADH=0, MASC_MS=250;   // 062: REP_T = 0 y TEXTO_ADH = 0: las células ya no se alejan de los bloques de texto ni dejan de adherirse bajo ellos (la densidad es la misma en toda la ventana; eran 36 y 1)
-  var SEL_TEXTO='.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.demo,.grafico,.hechos,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina,.serie .plot,.flujo,.sip .arte,.retrato,.fondo-nota';   // 063: también los gráficos, los esquemas y el rótulo del fondo tienen su espacio quieto
+  var SEL_TEXTO='.hero .lugar,.hero h1,.hero .lede,.hero .acciones,.riel-top,.riel-meta,.intro,.estados,.lista,.problema,.demo,.grafico,.hechos,.con-que,.mas,.metricas,h3.titulo,.pie,.herr,.ruta,.correo,.perfiles,.nota,.evidencia figcaption,footer .pagina,.serie .plot,.flujo,.sip .arte,.retrato,.fondo-nota,.barra-in';   // 063: también los gráficos, los esquemas y el rótulo del fondo tienen su espacio quieto
   var CUR_R=75, CUR_V=40;   // 046: el cursor repele levemente a las bacterias nadadoras (no a los eucariotas): radio (px) y velocidad de empuje en el centro (px/s); el empuje cae con el cuadrado de la distancia
   var RESERVA=14, REFRACTARIA=20, NMAX=240, TMAX=40, GN=GX*GY;
   // 039: la luz (radio = LUZ_FRAC del ancho; plena hasta LUZ_R0 del radio; piso de alfa fuera; τ del seguimiento, del viaje y del fundido; margen del recorte)
@@ -723,15 +723,19 @@
   // 063 (Benjamin, tras ver la 062 a ≈ 1900 px y en oscuro: no quiere una franja al medio; cada bloque de texto tiene su propio espacio de fondo sin animación, ajustado al bloque, y fuera de los bloques la animación sigue,
   // también en la columna central): (1) el campo del microscopio (tono y grano) ya no es sólo de los márgenes: cubre toda la zona iluminada; (2) el velo pasa a f = 0 y se ciñe al bloque: los bloques se dilatan 18 px y la
   // caída termina a ≈ 48 px del texto; (3) los gráficos, los esquemas y el rótulo del fondo también son bloques; (4) el nematodo ya no cruza el párrafo de la portada partiéndolo en dos (Pretext): entra, empuja palabras sueltas y sale (empuje.js nuevo, sin librería).
-  var VELO={f:0,esc:6,r:2,dil:18};   // 063: f = 0 (detrás de cada bloque no se ve nada del fondo), mapa más fino y ajustado al bloque (era f .16, esc 10, dil 30)
+  var VELO={f:0,esc:6,r:2,dil:44,ref:1440,tope:1.34};   // 063: f = 0 (detrás de cada bloque no se ve nada del fondo) y mapa ceñido al contenido. 064 (Benjamin: quedaba muy poco fondo quieto detrás del texto; un término medio
+  // entre el velo continuo de la 062 y el borde de 48 px de la 063): dil 18 → 44, y las medidas escalan con el ancho de la ventana (veloK = ancho / 1440, entre 1 y 1,34). El desenfoque es un triángulo de medio ancho
+  // T = (2r + 1) · esc: el fondo queda del todo quieto hasta dil − T del texto y la caída ocupa 2T. A 1440 px: 14 px quietos y 60 px de caída (termina a 74 px del texto); a 1920 px: 19 px y 80 px (termina a 99 px).
+  function veloK(){ var k=W/VELO.ref; return k<1?1:k>VELO.tope?VELO.tope:k; }
+  function veloEsc(){ return Math.max(2,Math.round(VELO.esc*veloK())); }
   var velo={cv:null,cx:null,im:null,A:null,B:null,gw:0,gh:0,raf:0,t:-1e9,n:0,ms:0,hay:0,msA:0,nA:0,ins:new Float32Array(0),tIns:-1e9,rg:null,hojas:null};
   function veloCrear(){ velo.cv=document.createElement('canvas'); velo.cx=velo.cv.getContext('2d'); veloTam(); raiz.classList.add('velo-js'); veloHacer(); }
   function veloTam(){ // tamaño del mapa
-    var e=VELO.esc, gw=Math.ceil(W/e)+1, gh=Math.ceil(H/e)+1;
+    var e=veloEsc(), gw=Math.ceil(W/e)+1, gh=Math.ceil(H/e)+1;
     velo.gw=gw; velo.gh=gh; velo.cv.width=gw; velo.cv.height=gh; velo.A=new Float32Array(gw*gh); velo.B=new Float32Array(gw*gh); velo.im=velo.cx.createImageData(gw,gh);
   }
   function veloAplicar(vx){ // al final del cuadro: el mapa, ampliado con suavizado, le quita opacidad a todo lo dibujado
-    var e=VELO.esc*dpr, t0=performance.now(); if(!velo.cv||!velo.hay) return;
+    var e=veloEsc()*dpr, t0=performance.now(); if(!velo.cv||!velo.hay) return;
     vx.save(); vx.setTransform(1,0,0,1,0,0); vx.globalAlpha=1; vx.globalCompositeOperation='destination-out'; vx.imageSmoothingEnabled=true; vx.imageSmoothingQuality='low';   // bilineal: el mapa ya viene desenfocado, y 'high' costaba un nivel de calidad en los equipos sin aceleración gráfica
     vx.drawImage(velo.cv,0,0,velo.gw,velo.gh,0,0,velo.gw*e,velo.gh*e); vx.restore();
     velo.msA+=(performance.now()-t0-velo.msA)*(velo.nA<20?1/(velo.nA+1):.05); velo.nA++;
@@ -740,6 +744,7 @@
     var L=[], vistos=[];                                                                // así el Range de cada uno mide su texto y no el ancho de la columna (un título, una cifra, cada línea de una ficha)
     function caja(e){ var d=getComputedStyle(e).display; return d!=='none'&&d.indexOf('inline')!==0; }
     function baja(e,n){ var ch=e.children, k, hay=false; if(vistos.indexOf(e)>=0) return; vistos.push(e);
+      if(e.classList.contains('barra-in')){ e._veloCaja=1; L.push(e); return; }   // 064: la barra superior es un solo bloque, del ancho de su fondo (su caja menos el relleno lateral), para que su borde se funda con la animación
       if(n<6&&!(e instanceof SVGElement)&&e.tagName!=='PICTURE') for(k=0;k<ch.length;k++) if(caja(ch[k])){ hay=true; break; }
       if(!hay){ L.push(e); return; }
       for(k=0;k<ch.length;k++){ if(caja(ch[k])) baja(ch[k],n+1); else if(getComputedStyle(ch[k]).display!=='none') L.push(ch[k]); } }
@@ -748,7 +753,7 @@
   }
   function veloPedir(){ if(velo.cv&&!velo.raf) velo.raf=requestAnimationFrame(function(){ veloHacer(); if(!raf&&vivo&&cv.style.display!=='none') dibujar(); }); }   // con la animación en pausa (sin bucle) el cuadro detenido se redibuja con el velo nuevo
   function veloHacer(){
-    var t0=performance.now(), e=VELO.esc, D=VELO.dil, R=VELO.r, A, B, gw, gh, k, r, x0, x1, y0, y1, i, j, i0, i1, j0, j1, ox, oy, w, p, s, n, d, v, row, q, c, K=(1-VELO.f)*255;
+    var t0=performance.now(), e=veloEsc(), D=VELO.dil*veloK(), R=VELO.r, A, B, gw, gh, k, r, x0, x1, y0, y1, i, j, i0, i1, j0, j1, ox, oy, w, p, s, n, d, v, row, q, c, K=(1-VELO.f)*255;
     velo.raf=0; if(!velo.cv) return;
     if(cv.style.display==='none') return;
     if(velo.gw!==Math.ceil(W/e)+1||velo.gh!==Math.ceil(H/e)+1) veloTam();
@@ -760,7 +765,8 @@
     q=t0-velo.tIns>(t0-tScroll<400?150:1200); if(q||velo.ins.length!==4*velo.hojas.length){ q=true; velo.tIns=t0; if(velo.ins.length!==4*velo.hojas.length) velo.ins=new Float32Array(4*velo.hojas.length); if(!velo.rg) velo.rg=document.createRange(); }
     for(k=0;k<velo.hojas.length;k++){ r=velo.hojas[k].getBoundingClientRect(); if(r.width<2||r.height<2) continue;
       if(r.bottom+D<=0||r.top-D>=H) continue;
-      if(q){ velo.rg.selectNodeContents(velo.hojas[k]); c=velo.rg.getBoundingClientRect(); p=4*k;
+      if(q&&velo.hojas[k]._veloCaja){ c=getComputedStyle(velo.hojas[k]); p=4*k; velo.ins[p]=parseFloat(c.paddingLeft)||0; velo.ins[p+2]=parseFloat(c.paddingRight)||0; velo.ins[p+1]=velo.ins[p+3]=0; }
+      else if(q){ velo.rg.selectNodeContents(velo.hojas[k]); c=velo.rg.getBoundingClientRect(); p=4*k;
         if(c.width>2&&c.height>2){ velo.ins[p]=Math.max(0,c.left-r.left); velo.ins[p+1]=Math.max(0,c.top-r.top); velo.ins[p+2]=Math.max(0,r.right-c.right); velo.ins[p+3]=Math.max(0,r.bottom-c.bottom); } else velo.ins[p]=velo.ins[p+1]=velo.ins[p+2]=velo.ins[p+3]=0; }
       p=4*k; x0=r.left+velo.ins[p]-D; y0=r.top+velo.ins[p+1]-D; x1=r.right-velo.ins[p+2]+D; y1=r.bottom-velo.ins[p+3]+D; if(x1-x0<2*D+2||y1-y0<2*D+2){ x0=r.left-D; x1=r.right+D; y0=r.top-D; y1=r.bottom+D; }
       if(y1<=0||y0>=H||x1<=0||x0>=W) continue;
@@ -2052,7 +2058,7 @@
         nematodo:nem?{x:+nem.x.toFixed(1),y:+nem.y.toFixed(1),estado:['llega','explora la punta','se va','cruza el párrafo'][nem.st],modo:['avanza','retrocede','giro omega'][nem.mod],capa:nem.capa?'delante de la raíz':'detrás de la raíz',edad:+(tiempo-nem.t0).toFixed(1),objetivo:[+nem.tx.toFixed(1),+nem.ty.toFixed(1)],comio:euEv.nemComio.slice(),largo:+nem.L.toFixed(1),ancho:+(nem.L/EU_NANCHO).toFixed(1),aumento:+nem.S.toFixed(2),lado:nem.lado?'derecho':'izquierdo',ventral:nem.vent,invertido:nem.inv,fase:+nem.ph.toFixed(2),onda:(function(){ if(!nem.wv) nemEsq(); return Array.prototype.slice.call(nem.wv).map(function(v){ return +v.toFixed(2); }); })(),puntos:Array.prototype.slice.call(nem.p).map(function(v){ return +v.toFixed(1); })}:null,
         proximoNematodoEn:+Math.max(0,euTn-tiempo).toFixed(1),eventos:{comioBacterias:euEv.comio[0],comioFlagelados:euEv.comio[1],comioDinoflagelados:euEv.comio[2],comioAmebas:euEv.comio[3],comioParamecios:euEv.comio[4],comioEuglenas:euEv.comio[5],divisiones:euEv.div,muertes:euEv.muere,entradas:euEv.ent,huidas:euEv.huida,nematodos:euEv.nem,excrecion:euEv.exc}};
     },
-    velo:function(o){ var k; if(o){ for(k in o) if(k in VELO) VELO[k]=o[k]; veloHacer(); } k=JSON.parse(JSON.stringify(VELO)); k.ms=+velo.ms.toFixed(3); k.msAplicar=+velo.msA.toFixed(3); k.n=velo.n; k.hojas=velo.hojas?velo.hojas.length:0; k.mapa=[velo.gw,velo.gh]; return k; },   // 062: el velo del texto (f: cuánto del fondo se ve bajo el texto; dil, r: la caída; emp: el párrafo empujado)
+    velo:function(o){ var k; if(o){ for(k in o) if(k in VELO) VELO[k]=o[k]; veloHacer(); } k=JSON.parse(JSON.stringify(VELO)); k.ms=+velo.ms.toFixed(3); k.msAplicar=+velo.msA.toFixed(3); k.n=velo.n; k.hojas=velo.hojas?velo.hojas.length:0; k.mapa=[velo.gw,velo.gh]; k.px={quieto:+(VELO.dil*veloK()-(2*VELO.r+1)*veloEsc()).toFixed(1),caida:2*(2*VELO.r+1)*veloEsc(),termina:+(VELO.dil*veloK()+(2*VELO.r+1)*veloEsc()).toFixed(1)}; return k; },   // 062: el velo del texto (f: cuánto del fondo se ve bajo el texto; dil, r: la caída; emp: el párrafo empujado)
     microscopia:function(o){ var k; if(o){ if(o.activa!=null){ MIC.on=!!o.activa; MIC.cedio=false; MIC.n=0; MIC.ms=0; } for(k in o) if(k!=='activa'&&k in MIC) MIC[k]=o[k]; granoP=null; if(rz.cvR&&rz.nb) rzPintar(); dibujar(); } return JSON.parse(JSON.stringify(MIC)); },   // 059: el aspecto de microscopía (campo, grano, relieve y profundidad de foco); microscopia({activa:false}) vuelve al dibujo plano
     silueta:function(){ if(!nem) return null; nemEsq(); return {n:NM,x:nmX,y:nmY,w:nmW,cruza:!!nem.cr,fase:nem.cr?nem.fase:-1,largo:nem.L,ancho:nem.L/EU_NANCHO}; },   // 053: la silueta del nematodo (NM puntos del eje con su semiancho, en píxeles de la ventana); los arreglos son los de la simulación y valen hasta la siguiente llamada
     nivel:function(k){ if(k==null) return nivel; st.fijo=true; fijarNivel(k); st.t0=performance.now(); st.trab=0; st.cuadros=0; return nivel; },

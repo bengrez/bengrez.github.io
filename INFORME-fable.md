@@ -174,13 +174,41 @@ Verificado: sin errores de consola ni desborde en las siete configuraciones; sin
 abiertos cargan todas las imágenes; en vivo con GPU a 1920 px en oscuro (nivel 3, 60 cuadros por segundo; rehacer el mapa de
 bloques cuesta 1,7 ms); la secuencia del nematodo completa, con el texto de vuelta en su lugar al final.
 
+## Sexta ronda: más fondo quieto, más aire, barra fundida y rótulo tenue
+
+Encargo del 2026-11-23 después de la quinta ronda. No cambian los textos ni el nematodo.
+
+**Proporción propuesta** (escala con el ancho de la ventana, entre 1440 y 1920 px):
+
+| Medida | A 1440 px | A 1920 px | Quinta ronda |
+|---|---|---|---|
+| Fondo del todo quieto alrededor del texto | 14 px | 19 px | 0 (empezaba 12 px dentro del texto) |
+| Caída hasta la animación plena | 60 px | 80 px | 60 px |
+| Dónde termina la caída, desde el texto | 74 px | 99 px | 48 px |
+| Separación entre grupos de una sección | 112 px | 150 px | 24 a 36 px |
+| Separación entre secciones | 202 px | 269 px | 128 px |
+
+La separación entre grupos es dos veces el borde quieto más un tramo libre, así que entre el problema, la ficha y los
+desplegables de cada sección queda una banda de fondo animado de unos 40 px. Los espacios nuevos sólo aplican donde corre el
+fondo (escritorio con mouse, sin movimiento reducido); el celular no cambia. La página queda más larga: 7359 px de alto a
+1440 px y 8171 px a 1920 px.
+
+- **Barra superior**: ya no se ve como un rectángulo. Su fondo sigue opaco, para que el texto pase por debajo y se lea, pero
+  tiene alrededor el mismo espacio quieto con caída suave que los bloques, y abajo una franja de 16 px que se desvanece.
+- **Rótulo del fondo**: al 45 % en reposo; al 100 % con el mouse encima o con el foco del teclado (ahora es enfocable).
+- Respuestas de Benjamin del mismo día: el retrato lo entrega él (en espera), los desplegables se quedan como están y el
+  entierro del nematodo de 9 segundos está bien.
+
+Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; GPU a 1920 px en oscuro (nivel 3, 60
+cuadros por segundo); la secuencia del nematodo sigue completa.
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 35,2 KB | +1,7 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 74,0 KB | −8,6 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 123,5 KB | −41,4 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 35,7 KB | +2,2 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 74,5 KB | −8,1 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 124,2 KB | −40,7 KB |
 
 Desde la quinta ronda ya no se baja Pretext (39,9 KB) y la imagen del autodiagnóstico (23,2 KB) se carga sólo al abrir su
 desplegable. Por archivo: `index.html` +1,7 KB; `quimiotaxis.min.js` +3,5 KB (sólo escritorio); `empuje.min.js` 3,4 → 1,6 KB; `costras-biologicas.webp` 27,2 KB (nueva);
@@ -251,13 +279,13 @@ regla del control es la misma del generador. Encontró ocho cosas, todas corregi
 11. **La corrección del cuerpo de la raíz en `main`.** El error (un tubo delgado y cortado en vez del cuerpo con su ancho) existe
     en la versión publicada (056). Opciones: (a) llevarla a `main` aunque elijas la versión de Codex; (b) dejarla sólo en esta
     rama. Recomiendo (a).
-12. **El retrato.** Respondiste que está en Downloads, pero no lo pude identificar: hay 342 imágenes, ninguna con nombre de
+12. **El retrato.** En espera: Benjamin lo está buscando y arreglando (2026-11-23). Antes: respondiste que está en Downloads, pero no lo pude identificar: hay 342 imágenes, ninguna con nombre de
     retrato ni posterior al pedido, y no abrí fotos al azar (hay fotos de terceros y un archivo de fotos de curso). ¿Cuál es el
     nombre del archivo?
 13. ~~«Hoy vivo en Santiago»~~ Ya no aplica: el texto nuevo dice «Estoy en Santiago».
 14. ~~«Recorrido» fuera de la barra~~ Respondida: se queda fuera.
 15. ~~Estructura de los textos~~ Respondida el 2026-11-23: estructura A (persona primero). Hecha en la quinta ronda.
-16. **Lo que quedó dentro de desplegables.** Para que las fichas sean breves, pasaron a desplegables el esquema del sistema de
-    buses, el gráfico de citas, el perfil de RNA-SIP, las tres fichas de herramientas y el esquema del asistente escolar.
-    Opciones: (a) dejarlo así; (b) dejar a la vista las tres herramientas, que son lo que se puede abrir. Recomiendo (a) y verlo.
-17. **Duración del entierro del nematodo.** Se queda unos 9 segundos dentro del párrafo. ¿Más corto, más largo o así?
+16. ~~Desplegables~~ Respondida el 2026-11-23: se quedan como están.
+17. ~~Duración del entierro~~ Respondida el 2026-11-23: 9 segundos está bien.
+18. **Proporción del fondo quieto y de los espacios** (sexta ronda): 14 px quietos y 60 px de caída a 1440 px; 112 px entre grupos
+    y 202 px entre secciones. ¿Así, más quieto o más animado?
