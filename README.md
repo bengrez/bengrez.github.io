@@ -103,6 +103,8 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
   flota completa**: 40 buses simulados en 30 días, 39 en gris y uno que se desvía, con el aviso (día 16) y la revisión; fijo, sin
   el control del umbral (salieron `.demo`, `#ds-datos` y su script) y con rótulos llanos («Temperatura del motor»).
   `scripts/figuras.py`: `datos_flota()` y `figura_ds()`.
+- **Puente «Tres casos»** (089). Entre «Sobre mí» y la escena va la sección `#casos`: una frase que retoma la oferta de la
+  portada y un índice numerado de los tres casos, con enlace (`ol.lista.indice-casos`).
 - **«Sobre mí» antes de los casos** (081). La sección sube entre la portada y los tres casos, con el recorrido abierto
   (cuatro etapas con logo y una o dos frases cada una), una línea de talleres y patente, y las tres cifras. Al final de la
   página queda sólo Contacto. 082: bajo el título va la lista «Con qué trabajo» (`dl.oficio`). 084: las cifras separan artículos (14), capítulo de libro (1) y patente (1), y debajo van citas e índice h

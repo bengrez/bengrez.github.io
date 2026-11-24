@@ -339,6 +339,14 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 .lista a:hover .tit::after,.lista a:focus-visible .tit::after{left:4px;color:var(--accent-ink)}
 @media (prefers-reduced-motion:reduce){.lista .tit::after{transition:none}.lista a:hover .tit::after,.lista a:focus-visible .tit::after{left:0}}
 @media (max-width:760px),(min-width:960px){.lista a{grid-template-columns:1fr}}
+/* 089: índice de los tres casos, numerado, con el rótulo y el título en una misma línea */
+.indice-casos{counter-reset:caso;list-style:none;padding:0}
+.indice-casos li{counter-increment:caso;border-top:1px solid var(--rule)}
+.indice-casos li:last-child{border-bottom:1px solid var(--rule)}
+.indice-casos a,.indice-casos a:any-link{grid-template-columns:9.5rem 1fr;padding-block:.8rem}
+.indice-casos .kicker::before{content:counter(caso,decimal-leading-zero) "\00a0\00a0"}
+.indice-casos .tit{font-size:clamp(1.05rem,.5vw + .95rem,1.2rem)}
+@media (max-width:480px){.indice-casos a,.indice-casos a:any-link{grid-template-columns:1fr}}
 
 /* ---- un caso: el problema, el método en tres pasos, la evidencia y el detalle plegado ---- */
 .problema{font-family:var(--display);font-size:clamp(1.2rem,.9vw + 1rem,1.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;max-width:28em;text-wrap:balance}
@@ -476,11 +484,12 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 #sobre-mi .metricas>div{justify-content:flex-end;padding:.8rem 1rem .85rem 0}
 #sobre-mi .metricas>div:nth-child(n+4){border-top:1px solid var(--rule)}
 #sobre-mi .metricas .cuando{grid-column:1 / -1;margin-left:0;padding-bottom:0}
-#sobre-mi .metricas .con-chispa{grid-column:2 / -1;display:grid;grid-template-columns:1fr 1.6fr;grid-template-columns:subgrid;grid-template-rows:auto auto 1fr;padding-right:0}
-.con-chispa dd{grid-column:1;grid-row:1}
-.con-chispa dt{grid-column:1;grid-row:2}
+#sobre-mi .metricas>div:nth-child(4){justify-content:center}   /* 089: el índice h y las citas, centrados en el alto de su fila (que lo da el gráfico) */
+#sobre-mi .metricas .con-chispa{grid-column:2 / -1;display:grid;grid-template-columns:1fr 1.6fr;grid-template-columns:subgrid;grid-template-rows:1fr auto auto 1fr;padding-right:0}
+.con-chispa dd{grid-column:1;grid-row:2}
+.con-chispa dt{grid-column:1;grid-row:3}
 .con-chispa .graf{grid-column:2;grid-row:1 / -1;line-height:0;max-width:13rem}
-@media (max-width:480px){#sobre-mi .metricas{grid-template-columns:auto minmax(4.5rem,1fr) auto}#sobre-mi .metricas dt{overflow-wrap:normal}#sobre-mi .metricas .con-chispa{grid-template-columns:minmax(0,1fr) auto;grid-template-columns:subgrid}.con-chispa .graf{grid-column:1 / -1;grid-row:3;margin-top:.8rem}}   /* en pantallas angostas las barras van bajo la cifra, a tamaño legible */
+@media (max-width:480px){#sobre-mi .metricas{grid-template-columns:auto minmax(4.5rem,1fr) auto}#sobre-mi .metricas dt{overflow-wrap:normal}#sobre-mi .metricas .con-chispa{grid-template-columns:minmax(0,1fr) auto;grid-template-columns:subgrid}.con-chispa .graf{grid-column:1 / -1;grid-row:4;margin-top:.8rem}#sobre-mi .metricas>div:nth-child(4){justify-content:flex-end}#sobre-mi .metricas .con-chispa{grid-template-rows:auto auto auto auto}}   /* en pantallas angostas las barras van bajo la cifra, a tamaño legible */
 .chispa{display:block;width:100%;height:auto;overflow:visible}
 .chispa rect{fill:var(--serie-a)}
 .chispa .curso{fill:var(--bg);stroke:var(--serie-a);stroke-width:1.2}
@@ -674,6 +683,23 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
         </dd></div>
         <div class="cuando"><dt>fuente</dt><dd>citas e índice h: Google Scholar, noviembre de 2026</dd></div>
       </dl>
+    </div>
+  </div>
+</section>
+
+<!-- 089: puente entre «Sobre mí» y los tres casos (Benjamin: sin algo que los introduzca no se entiende el hilo de la página) -->
+<section class="seccion fuera" id="casos" aria-labelledby="h-casos">
+  <div class="pagina dos">
+    <header class="riel">
+      <div class="riel-top"><p class="kicker">En la práctica</p><h2 id="h-casos">Tres casos</h2></div>
+    </header>
+    <div>
+      <p class="problema">Tres veces hice lo mismo en lugares distintos: medir lo que nadie estaba midiendo y usarlo para decidir.</p>
+      <ol class="lista indice-casos">
+        <li><a href="#ingenieria"><span class="kicker">Data science</span><span class="tit">Fallas en una flota de buses</span></a></li>
+        <li><a href="#investigacion"><span class="kicker">Ecología</span><span class="tit">Suelos mineros</span></a></li>
+        <li><a href="#educacion"><span class="kicker">Docencia</span><span class="tit">Ciencias en un colegio</span></a></li>
+      </ol>
     </div>
   </div>
 </section>

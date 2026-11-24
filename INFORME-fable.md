@@ -466,6 +466,22 @@ alternativas: forma «línea de tiempo abierta», hilo «la experiencia acumulad
 
 Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro, oscuro y celular.
 
+## Decimoséptima ronda: puente entre «Sobre mí» y los tres casos
+
+Pedido de Benjamin (2026-11-24): entre «Sobre mí» y los tres casos tiene que haber algo que los introduzca; sin eso no se
+entiende el hilo de la página. Eligió la forma «frase puente con índice» y la frase «lo mismo en tres lugares».
+
+- **Sección nueva «Tres casos»** (rótulo «En la práctica»), entre «Sobre mí» y el primer caso.
+- **Frase**: «Tres veces hice lo mismo en lugares distintos: medir lo que nadie estaba midiendo y usarlo para decidir.»
+  Retoma la oferta de la portada.
+- **Índice numerado** de los tres casos, cada uno con su rótulo, su título y un enlace: 01 Data science, 02 Ecología,
+  03 Docencia.
+- El orden de la página queda: portada, Sobre mí, Tres casos (puente), los tres casos, Contacto.
+- En el mismo cambio: el índice h y las citas quedan centrados en el alto de su fila en «Producción científica».
+- Suma 0,3 KB.
+
+Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro, oscuro y celular.
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
