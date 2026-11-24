@@ -372,6 +372,13 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 .flota span{font-family:var(--mono);font-size:.74rem}
 .con-que{font-family:var(--mono);font-size:.82rem;line-height:1.6;color:var(--muted);margin-top:1.25rem}
 .con-que b{font-weight:500;color:var(--ink)}
+/* 082: «Con qué trabajo», bajo el título de «Sobre mí» (columna izquierda en escritorio; entre el título y el recorrido en el celular) */
+.oficio{display:grid;gap:.7rem;max-width:26rem;margin-top:1.6rem}
+.oficio>div{display:grid;grid-template-columns:6.6rem minmax(0,1fr);gap:0 .9rem}
+.oficio dt{color:var(--ink)}
+.oficio dd{margin:0}
+.oficio .cab{display:block;border-bottom:1px solid var(--rule-strong);padding-bottom:.45rem}
+.oficio .cab dt{font-family:var(--display);font-size:.95rem;font-weight:500}
 .evidencia{margin-top:clamp(1.75rem,4vw,2.75rem)}
 .evidencia figcaption,.pie{font-family:var(--mono);font-size:.78rem;line-height:1.55;color:var(--muted);margin-top:.8rem;max-width:62em}
 .seccion h3.titulo{font-size:1.2rem;margin-top:clamp(2rem,4.5vw,3rem)}
@@ -616,6 +623,13 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <div class="pagina dos">
     <header class="riel">
       <div class="riel-top"><p class="kicker">Quién soy</p><h2 id="h-sobre">Sobre mí</h2></div>
+      <dl class="con-que oficio">
+        <div class="cab"><dt>Con qué trabajo</dt></div>
+        <div><dt>Análisis</dt><dd>R, Python, SQL, estadística multivariante</dd></div>
+        <div><dt>Datos</dt><dd>PostgreSQL, Linux, Docker, agentes de&nbsp;IA</dd></div>
+        <div><dt>Laboratorio</dt><dd>metagenómica, marcaje isotópico (RNA&#8209;SIP), qPCR</dd></div>
+        <div><dt>Idiomas</dt><dd>español e inglés</dd></div>
+      </dl>
     </header>
     <div>
       <p class="problema">Resuelvo problemas con lo que hay disponible.</p>

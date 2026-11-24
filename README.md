@@ -105,7 +105,7 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
   `scripts/figuras.py`: `datos_flota()` y `figura_ds()`.
 - **«Sobre mí» antes de los casos** (081). La sección sube entre la portada y los tres casos, con el recorrido abierto
   (cuatro etapas con logo y una o dos frases cada una), una línea de talleres y patente, y las tres cifras. Al final de la
-  página queda sólo Contacto. Los logos se bajan con la página y se achicaron a 96 px de alto (11,2 KB entre los cuatro).
+  página queda sólo Contacto. 082: bajo el título va la lista «Con qué trabajo» (`dl.oficio`). Los logos se bajan con la página y se achicaron a 96 px de alto (11,2 KB entre los cuatro).
 - **Seguimiento en Docencia** (080; reemplaza a la electronegatividad de la 079, que a Benjamin no le gustó). Simulación de un
   curso de 35 estudiantes en seis evaluaciones: el curso en gris y tres trayectorias en coral que bajan; el marcador es hueco
   cuando la asistencia del período queda bajo 85 % (`datos_seg` y `figura_edu` en `scripts/figuras.py`, estilos `.fig.seg`).

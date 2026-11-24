@@ -436,6 +436,11 @@ alternativas: forma «línea de tiempo abierta», hilo «la experiencia acumulad
 - **Peso**: los logos ahora se bajan con la página, así que los reduje de 168 a 96 px de alto (de 55,7 a 11,2 KB entre los
   cuatro). La primera carga del celular sube 11,5 KB.
 
+- **«Con qué trabajo»** (pedido posterior de Benjamin, con captura: más texto bajo el título; eligió esta opción entre
+  cuatro). Lista bajo el título «Sobre mí», en la columna izquierda en escritorio y entre el título y el recorrido en el
+  celular, con datos del CV: Análisis (R, Python, SQL, estadística multivariante); Datos (PostgreSQL, Linux, Docker, agentes
+  de IA); Laboratorio (metagenómica, marcaje isotópico RNA-SIP, qPCR); Idiomas (español e inglés). Suma 0,3 KB.
+
 Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro, oscuro y celular.
 
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
