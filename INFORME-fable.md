@@ -417,15 +417,36 @@ anterior salió completo.
 
 Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro, oscuro, 1024 px y celular.
 
+## Decimosexta ronda: «Sobre mí» antes de los tres casos
+
+Pedido de Benjamin (2026-11-24): hablar más de él, su historia y su experiencia antes de los tres casos. Eligió entre
+alternativas: forma «línea de tiempo abierta», hilo «la experiencia acumulada» y largo de unas 90 palabras.
+
+- **Orden nuevo**: portada, Sobre mí, los tres casos, Contacto. En la barra, «Sobre mí» va primero.
+- **Recorrido abierto**, ya no plegado, con logo y texto por etapa (los hechos salen del CV del vault):
+  - PUCV: «Biólogo. Fui ayudante de microbiología.»
+  - UWA, Perth, 2014–2022 (las dos etapas en una): «Doctorado, con la beca Becas Chile, y después Research Associate. Ocho
+    años analizando comunidades microbianas del suelo, con estadística multivariante y metagenómica (tesis).»
+  - Instituto Domingo Eyzaguirre, 2023–hoy: «Docente de ciencias: química, biología y ciencias para la ciudadanía.»
+  - Andes, 2025–hoy: «Agentic engineer. Trabajo con los datos de una flota de buses y con agentes de IA, con límites claros
+    y revisando lo que hacen antes de usarlo.» (absorbe la frase de agentes que estaba aparte).
+- **Fuera de la línea de tiempo**: «También dicté talleres de análisis de datos en Australia y China, y soy coinventor de
+  una patente.» Va aparte porque el CV no trae las fechas de los talleres.
+- Se mantienen el lema y las tres cifras. Son 97 palabras entre lema, etapas y la línea final.
+- **Peso**: los logos ahora se bajan con la página, así que los reduje de 168 a 96 px de alto (de 55,7 a 11,2 KB entre los
+  cuatro). La primera carga del celular sube 11,5 KB.
+
+Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro, oscuro y celular.
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 72,6 KB | +39,1 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 72,6 KB | −10,0 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 156,7 KB | −8,2 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 84,1 KB | +50,6 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 84,1 KB | +1,5 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 168,2 KB | +3,3 KB |
 
-Los valores son del tema claro; en el oscuro, 66,1, 66,1 y 139,4 KB. Desde la séptima ronda la primera carga incluye el retrato
+Los valores son del tema claro; en el oscuro, 77,6, 77,6 y 150,9 KB. Desde la séptima ronda la primera carga incluye el retrato
 (31,1 KB en el celular, 70,4 KB en escritorio). Desde la quinta ronda ya no se baja Pretext (39,9 KB) y la imagen del autodiagnóstico (23,2 KB) se carga sólo al abrir su
 desplegable. Por archivo: `index.html` +1,7 KB; `quimiotaxis.min.js` +3,5 KB (sólo escritorio); `empuje.min.js` 3,4 → 1,6 KB; `costras-biologicas.webp` 27,2 KB (nueva);
 `tabla-periodica-fig-n.webp` 11,6 KB o `tabla-periodica-fig.webp` 17,0 KB (nuevas, una según el ancho); se quitó

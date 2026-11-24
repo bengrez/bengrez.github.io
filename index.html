@@ -364,7 +364,9 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 /* 061: «Sobre mí» va antes de los trabajos; el retrato (cuando exista) queda bajo el título, en la columna izquierda */
 .retrato{margin:1.25rem 0 0;max-width:13rem}
 .retrato img{display:block;width:100%;height:auto;border:1px solid var(--rule)}
-#sobre-mi .nota{margin-top:.9rem}
+#sobre-mi .nota{margin-top:1.4rem}
+#sobre-mi .ruta{margin-top:1.6rem}
+.ruta dt .sub{display:inline;margin:0 0 0 .5rem;font-weight:400}   /* 081: el recorrido va abierto, antes de los casos; el lugar y los años, junto al nombre */
 #sobre-mi + #recorrido{padding-top:0}
 .remate{font-family:var(--display);font-weight:600;font-size:1.15rem;line-height:1.3;margin-top:.5rem}
 .flota span{font-family:var(--mono);font-size:.74rem}
@@ -494,7 +496,7 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 .ruta dd{margin:0}
 /* 069: logos a la izquierda de cada hito del recorrido (PUCV, UWA y Andes), en un solo tono: cada logo es una máscara (PNG con sólo alfa) sobre el color del texto, así se ve igual de bien en claro y en oscuro.
    070: son los oficiales (el sello de la PUCV y el escudo de la UWA, tomados de los sitios de cada universidad) y miden 2,6 rem (072: Benjamin los pidió más chicos; en la 070 medían 3,5). En pantallas angostas la línea de tiempo se corre para dejarles lugar;
-   desde 960 px cuelgan a la izquierda de la línea, sobre el espacio entre las dos columnas. Se bajan recién al abrir «Mi recorrido». */
+   desde 960 px cuelgan a la izquierda de la línea, sobre el espacio entre las dos columnas. 081: el recorrido va siempre a la vista, así que los logos se bajan con la página; por eso pesan poco (96 px de alto). */
 .ruta.con-logos{margin-left:3.4rem}
 .ruta.con-logos>div{min-height:3.7rem}
 .ruta .logo{position:absolute;left:-3.6rem;top:-.2rem;width:2.6rem;height:2.6rem;background:var(--ink);opacity:.85;-webkit-mask:var(--logo) center/contain no-repeat;mask:var(--logo) center/contain no-repeat}
@@ -561,6 +563,7 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
   .herr{margin-top:2rem;padding-top:1.75rem;gap:1.25rem}
   .campos{gap:.7rem 1rem;line-height:1.6}
   .ruta>div{padding-bottom:1.75rem}
+  .ruta dt .sub{display:block;margin:.2rem 0 0}   /* 081: en pantallas angostas, el lugar y los años bajo el nombre */
   .sip{gap:1.5rem}
 }
 footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line-height:1.6;color:var(--muted)}
@@ -585,11 +588,11 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <div class="pagina barra-in">
     <a class="marca" href="#contenido">Benjamín Moreira-Grez</a>
     <nav class="indice" aria-label="Secciones de la página">
+      <a href="#sobre-mi">Sobre mí</a>
       <a href="#ingenieria">Data science</a>
       <a href="#investigacion">Ecología</a>
       <a href="#educacion">Docencia</a>
       <a class="ext" href="https://bengrez.github.io/aula-herramientas/">Herramientas de aula</a>
-      <a href="#sobre-mi">Sobre mí</a>
       <a class="fijo" href="#contacto">Contacto</a>
     </nav>
     <button type="button" class="pausa" id="pausa" aria-label="Pausar animación" aria-pressed="false" hidden><i aria-hidden="true"></i></button>
@@ -608,6 +611,30 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <p class="acciones"><a class="btn" href="mailto:benja.moreira.grez@gmail.com">Escríbeme</a></p>
 </div>
 </div>
+
+<section class="seccion fuera" id="sobre-mi" aria-labelledby="h-sobre">
+  <div class="pagina dos">
+    <header class="riel">
+      <div class="riel-top"><p class="kicker">Quién soy</p><h2 id="h-sobre">Sobre mí</h2></div>
+    </header>
+    <div>
+      <p class="problema">Resuelvo problemas con lo que hay disponible.</p>
+      <dl class="ruta con-logos" id="recorrido">
+        <div><dt><span class="logo logo-pucv" aria-hidden="true"></span>Pontificia Universidad Católica de Valparaíso</dt><dd>Biólogo. Fui ayudante de microbiología.</dd></div>
+        <div><dt><span class="logo logo-uwa" aria-hidden="true"></span>The University of Western Australia <span class="sub">Perth, 2014–2022</span></dt><dd>Doctorado, con la beca Becas Chile, y después Research Associate. Ocho años analizando comunidades microbianas del suelo, con estadística multivariante y metagenómica (<a href="https://doi.org/10.26182/5e995c216ca93">tesis</a>).</dd></div>
+        <div><dt><span class="logo logo-ide" aria-hidden="true"></span>Instituto Domingo Eyzaguirre <span class="sub">2023–hoy</span></dt><dd>Docente de ciencias: química, biología y ciencias para la ciudadanía.</dd></div>
+        <div><dt><span class="logo logo-andes" aria-hidden="true"></span>Andes <span class="sub">2025–hoy</span></dt><dd id="agentes">Agentic engineer. Trabajo con los datos de una flota de buses y con agentes de IA, con límites claros y revisando lo que hacen antes de usarlo.</dd></div>
+      </dl>
+      <p class="nota">También dicté talleres de análisis de datos en Australia y China, y soy coinventor de una patente.</p>
+      <dl class="metricas">
+        <div><dt>publicaciones</dt><dd>15</dd></div>
+        <div><dt>citas</dt><dd>796</dd></div>
+        <div><dt>índice h</dt><dd>13</dd></div>
+        <div class="cuando"><dt>fuente</dt><dd>citas e índice h: Google Scholar, octubre de 2026</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
 
 <div class="escena" id="escena">
 <div class="serie" id="serie" data-figura="1">
@@ -958,33 +985,6 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
 </div>
 
 
-<section class="seccion fuera" id="sobre-mi" aria-labelledby="h-sobre">
-  <div class="pagina dos">
-    <header class="riel">
-      <div class="riel-top"><p class="kicker">Quién soy</p><h2 id="h-sobre">Sobre mí</h2></div>
-    </header>
-    <div>
-      <p class="problema">Resuelvo problemas con lo que hay disponible.</p>
-      <p class="nota" id="agentes">Soy biólogo, y doctor en ecología microbiana por la University of Western Australia. Trabajo a diario con agentes de IA, con límites claros y revisando lo que hacen antes de usarlo.</p>
-      <dl class="metricas">
-        <div><dt>publicaciones</dt><dd>15</dd></div>
-        <div><dt>citas</dt><dd>796</dd></div>
-        <div><dt>índice h</dt><dd>13</dd></div>
-        <div class="cuando"><dt>fuente</dt><dd>citas e índice h: Google Scholar, octubre de 2026</dd></div>
-      </dl>
-      <details class="mas" id="recorrido">
-        <summary>Mi recorrido</summary>
-        <dl class="ruta con-logos">
-          <div><dt><span class="logo logo-pucv" aria-hidden="true"></span>Pontificia Universidad Católica de Valparaíso</dt><dd>Licenciado en Biología y título profesional de Biólogo.</dd></div>
-          <div><dt><span class="logo logo-uwa" aria-hidden="true"></span>The University of Western Australia, Perth</dt><dd>Ph.D., tesis de 2020 (<a href="https://doi.org/10.26182/5e995c216ca93">doi:10.26182/5e995c216ca93</a>), con la beca de Doctorado Becas Chile.</dd></div>
-          <div><dt><span class="logo logo-uwa" aria-hidden="true"></span>The University of Western Australia</dt><dd>Research Associate, 2020–2022.</dd></div>
-          <div><dt><span class="logo logo-ide" aria-hidden="true"></span>Instituto Domingo Eyzaguirre</dt><dd>Docente de ciencias, 2023–hoy.</dd></div>
-          <div><dt><span class="logo logo-andes" aria-hidden="true"></span>Andes</dt><dd>Agentic engineer, 2025–hoy.</dd></div>
-        </dl>
-      </details>
-    </div>
-  </div>
-</section>
 <section class="seccion fuera" id="contacto" aria-labelledby="h-con">
   <div class="pagina dos">
     <header class="riel">
