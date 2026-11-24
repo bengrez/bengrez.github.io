@@ -469,6 +469,10 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 .metricas .cuando{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-left:auto}
 .metricas .cuando dt{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}   /* 053: la fuente ya es un par dt/dd válido dentro de la lista (axe: definition-list); el rótulo «fuente» sólo lo leen los lectores de pantalla */
 .metricas .cuando dd{font-family:var(--mono);font-size:.78rem;font-weight:400;line-height:inherit;color:var(--muted)}
+/* 084: en «Sobre mí» las cifras van en dos filas fijas: la producción (artículos, capítulo de libro, patente) y, debajo, las citas y el índice h */
+#sobre-mi .metricas{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;align-items:start;gap:.9rem 2.25rem}
+#sobre-mi .metricas .cuando{grid-column:1 / -1;margin-left:0}
+@media (max-width:400px){#sobre-mi .metricas{column-gap:1.1rem}}
 
 /* ---- herramientas publicadas: dos piezas distintas, cada una con su captura ---- */
 .herr{position:relative;display:grid;gap:1rem clamp(1.25rem,3vw,2rem);margin-top:1.25rem;padding-top:1.25rem}
@@ -641,9 +645,11 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
         <div><dt><span class="logo logo-ide" aria-hidden="true"></span>Instituto Domingo Eyzaguirre <span class="sub">2023–hoy</span></dt><dd>Docente de ciencias: química, biología y ciencias para la ciudadanía.</dd></div>
         <div><dt><span class="logo logo-andes" aria-hidden="true"></span>Andes <span class="sub">2025–hoy</span></dt><dd id="agentes">Agentic engineer. Trabajo con los datos de una flota de buses y con agentes de IA, con límites claros y revisando lo que hacen antes de usarlo.</dd></div>
       </dl>
-      <p class="nota">También dicté talleres de análisis de datos en Australia y China, y soy coinventor de una patente.</p>
+      <p class="nota">También dicté talleres de análisis de datos en Australia y China.</p>
       <dl class="metricas">
-        <div><dt>publicaciones</dt><dd>15</dd></div>
+        <div><dt>artículos</dt><dd>14</dd></div>
+        <div><dt>capítulo de libro</dt><dd>1</dd></div>
+        <div><dt>patente</dt><dd>1</dd></div>
         <div><dt>citas</dt><dd>796</dd></div>
         <div><dt>índice h</dt><dd>13</dd></div>
         <div class="cuando"><dt>fuente</dt><dd>citas e índice h: Google Scholar, octubre de 2026</dd></div>
