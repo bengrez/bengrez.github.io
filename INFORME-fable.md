@@ -444,6 +444,11 @@ alternativas: forma «línea de tiempo abierta», hilo «la experiencia acumulad
   científica; los artículos se separan de los capítulos de libro. Quedan 14 artículos, 1 capítulo de libro y 1 patente en
   una fila, y 796 citas e índice h 13 en otra. El desglose sale de la tabla de 15 publicaciones del CV: 14 artículos en
   revistas y el capítulo de RNA-SIP de 2019. La frase queda «También dicté talleres de análisis de datos en Australia y China.»
+- **Cifras al día** (pedido de Benjamin): leídas del perfil público de Google Scholar el 2026-11-24. Citas: 801 (eran 796
+  el 26 de octubre). Índice h: 13, sin cambio. El perfil lista 21 obras: 14 artículos en revistas, 1 capítulo de libro y 1
+  patente, que confirman el desglose; el resto son un preprint y una entrada duplicada del artículo de crAssphage y tres
+  resúmenes de congreso, que no se cuentan. El pie de página dice ahora la fecha nueva y que los gráficos de Data science
+  y de Docencia son simulaciones (antes nombraba sólo el de Data science).
 - **Lados cambiados** (pedido de Benjamin, con captura): en escritorio el recorrido va a la izquierda y el título con «Con qué
   trabajo» a la derecha. Sólo en «Sobre mí»; los tres casos siguen con el gráfico y el título a la izquierda. El celular y el
   orden de lectura no cambian.
