@@ -472,14 +472,18 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 /* 084: en «Sobre mí» las cifras van en dos filas fijas: la producción (artículos, capítulo de libro, patente) y, debajo, las citas y el índice h */
 #sobre-mi .metricas{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;align-items:start;gap:.9rem 2.25rem}
 #sobre-mi .metricas .cuando{grid-column:1 / -1;margin-left:0}
-/* 086: junto a la cifra de citas, las citas por año en miniatura (datos del perfil de Google Scholar); el último año, en curso, va con marcador hueco */
-#sobre-mi .metricas .con-chispa{grid-column:2 / -1}
-.con-chispa dd{display:flex;align-items:center;gap:1rem}
-.chispa{flex:0 1 auto;min-width:0;height:1.72rem;overflow:visible}
-.chispa .l{fill:none;stroke:var(--serie-a);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+/* 086–087: junto a la cifra de citas, las citas por año en barras, como en el perfil de Google Scholar (de donde vienen los datos) y con la paleta del sitio; el año en curso va con barra hueca */
+#sobre-mi .metricas .con-chispa{grid-column:2 / -1;display:grid;grid-template-columns:auto minmax(0,13rem);grid-template-rows:auto auto 1fr;column-gap:1.4rem}
+.con-chispa dd{grid-column:1;grid-row:1}
+.con-chispa dt{grid-column:1;grid-row:2}
+.con-chispa .graf{grid-column:2;grid-row:1 / -1;line-height:0}
+@media (max-width:480px){#sobre-mi .metricas .con-chispa{grid-template-columns:minmax(0,13rem)}.con-chispa .graf{grid-column:1;grid-row:3;margin-top:.7rem}}   /* en pantallas angostas las barras van bajo la cifra, a tamaño legible */
+.chispa{display:block;width:100%;height:auto;overflow:visible}
+.chispa rect{fill:var(--serie-a)}
+.chispa .curso{fill:var(--bg);stroke:var(--serie-a);stroke-width:1.2}
 .chispa .base{fill:none;stroke:var(--rule-strong);stroke-width:1}
-.chispa circle{fill:var(--bg);stroke:var(--serie-a);stroke-width:1.6}
-.chispa text{font-family:var(--mono);font-size:10.5px;font-weight:400;fill:var(--muted)}
+.chispa text{font-family:var(--mono);font-size:9px;font-weight:400;fill:var(--muted)}
+.chispa .v{fill:var(--ink)}
 @media (max-width:400px){#sobre-mi .metricas{column-gap:1.1rem}}
 
 /* ---- herramientas publicadas: dos piezas distintas, cada una con su captura ---- */
@@ -659,9 +663,9 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
         <div><dt>capítulo de libro</dt><dd>1</dd></div>
         <div><dt>patente</dt><dd>1</dd></div>
         <div><dt>índice h</dt><dd>13</dd></div>
-        <div class="con-chispa"><dt>citas</dt><dd><span>801</span>
+        <div class="con-chispa"><dt>citas</dt><dd>801</dd><dd class="graf">
 <!-- fig:chispa -->
-<svg class="chispa" viewBox="0 0 150 30" role="img" aria-label="Citas por año según Google Scholar, de 2017 a 2026: suben de 2 en 2017 a un máximo de 137 en 2023 y van en 102 en 2026, año en curso (al 24 de noviembre de 2026)."><path class="base" d="M5 27.5H145"/><path class="l" d="M5 23.7 L20.6 23.3 L36.1 21.2 L51.7 15.1 L67.2 9.2 L82.8 5.8 L98.3 5 L113.9 8.1 L129.4 9.2 L145 9.9"/><circle cx="145" cy="9.9" r="3"/><text x="5" y="43">2017</text><text x="145" y="43" text-anchor="end">2026</text></svg>
+<svg class="chispa" viewBox="0 0 199 76" role="img" aria-label="Citas por año según Google Scholar, de 2017 a 2026: suben de 2 en 2017 a un máximo de 137 en 2023 y van en 102 en 2026, año en curso (al 24 de noviembre de 2026)."><path class="base" d="M0 62.5H199"/><rect x="3" y="60.5" width="13" height="1.5"/><text x="9.5" y="73" text-anchor="middle">17</text><rect x="23" y="60.2" width="13" height="1.8"/><text x="29.5" y="73" text-anchor="middle">18</text><rect x="43" y="55" width="13" height="7"/><text x="49.5" y="73" text-anchor="middle">19</text><rect x="63" y="39.6" width="13" height="22.4"/><text x="69.5" y="73" text-anchor="middle">20</text><rect x="83" y="24.5" width="13" height="37.5"/><text x="89.5" y="73" text-anchor="middle">21</text><rect x="103" y="16.1" width="13" height="45.9"/><text x="109.5" y="73" text-anchor="middle">22</text><rect x="123" y="14" width="13" height="48"/><text x="129.5" y="73" text-anchor="middle">23</text><text class="v" x="129.5" y="10" text-anchor="middle">137</text><rect x="143" y="21.7" width="13" height="40.3"/><text x="149.5" y="73" text-anchor="middle">24</text><rect x="163" y="24.5" width="13" height="37.5"/><text x="169.5" y="73" text-anchor="middle">25</text><rect class="curso" x="183.6" y="26.9" width="11.8" height="35.1"/><text x="189.5" y="73" text-anchor="middle">26</text><text class="v" x="189.5" y="22.3" text-anchor="middle">102</text></svg>
 <!-- /fig:chispa -->
         </dd></div>
         <div class="cuando"><dt>fuente</dt><dd>citas e índice h: Google Scholar, noviembre de 2026</dd></div>

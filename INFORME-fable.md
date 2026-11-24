@@ -454,6 +454,9 @@ alternativas: forma «línea de tiempo abierta», hilo «la experiencia acumulad
   gráfico de barras del perfil de Google Scholar, leído el 2026-11-24 (2, 5, 20, 64, 107, 131, 137, 115, 107 y 102). El
   último año va con marcador hueco porque está en curso. Las citas por año suman 790 y el total es 801, porque Scholar no
   fecha todas. Suma 0,3 KB.
+  Después Benjamin lo pidió **de barras por año, como el de Google Scholar**, con la estética de la página: una barra coral
+  por año con el año debajo (17 a 26), el valor sobre la más alta (137) y sobre la del año en curso (102), que va hueca. En
+  pantallas de hasta 480 px las barras bajan bajo la cifra para que se lean.
 - **Lados cambiados** (pedido de Benjamin, con captura): en escritorio el recorrido va a la izquierda y el título con «Con qué
   trabajo» a la derecha. Sólo en «Sobre mí»; los tres casos siguen con el gráfico y el título a la izquierda. El celular y el
   orden de lectura no cambian.

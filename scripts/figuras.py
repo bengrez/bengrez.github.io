@@ -384,19 +384,26 @@ CITAS_LEIDO = "24 de noviembre de 2026"
 
 
 def chispa_citas():
-    W, H, x0, x1, yt, yb = 150, 30, 5, 145, 5, 24                      # los años van bajo la caja (y > H), a la altura del rótulo «citas», para no alargar la fila
+    # 087 (Benjamin: «de barras por año, similar al de Google Scholar, pero con la misma estética de la página»): una barra por año con su año debajo;
+    # el valor va sobre la barra más alta y sobre la del año en curso, que es hueca.
+    paso, ancho, x0, yt, yb = 20, 13, 3, 14, 62
     an = sorted(CITAS_ANIO)
+    W, H = x0 * 2 + paso * (len(an) - 1) + ancho, 76
     mx = max(CITAS_ANIO.values())
-    X = lambda a: x0 + (a - an[0]) / (an[-1] - an[0]) * (x1 - x0)
-    Y = lambda v: yb - v / mx * (yb - yt)
-    d = "M" + " L".join(f"{f(X(a))} {f(Y(CITAS_ANIO[a]))}" for a in an)
     pico = max(an, key=lambda a: CITAS_ANIO[a])
+    p = []
+    for i, a in enumerate(an):
+        v = CITAS_ANIO[a]
+        x, h = x0 + i * paso, max(1.5, v / mx * (yb - yt))
+        curso = a == an[-1]
+        p.append(f'<rect{" class=\"curso\"" if curso else ""} x="{f(x + (.6 if curso else 0))}" y="{f(yb - h + (.6 if curso else 0))}" width="{f(ancho - (1.2 if curso else 0))}" height="{f(h - (.6 if curso else 0))}"/>')
+        p.append(f'<text x="{f(x + ancho / 2)}" y="{H - 3}" text-anchor="middle">{str(a)[2:]}</text>')
+        if a == pico or curso:
+            p.append(f'<text class="v" x="{f(x + ancho / 2)}" y="{f(yb - h - 4)}" text-anchor="middle">{v}</text>')
     aria = (f"Citas por año según Google Scholar, de {an[0]} a {an[-1]}: suben de {CITAS_ANIO[an[0]]} en {an[0]} a un máximo de {mx} en {pico} "
             f"y van en {CITAS_ANIO[an[-1]]} en {an[-1]}, año en curso (al {CITAS_LEIDO}).")
     return (f'<svg class="chispa" viewBox="0 0 {W} {H}" role="img" aria-label="{aria}">'
-            f'<path class="base" d="M{x0} {yb + 3.5}H{x1}"/><path class="l" d="{d}"/>'
-            f'<circle cx="{f(X(an[-1]))}" cy="{f(Y(CITAS_ANIO[an[-1]]))}" r="3"/>'
-            f'<text x="{x0}" y="{H + 13}">{an[0]}</text><text x="{x1}" y="{H + 13}" text-anchor="end">{an[-1]}</text></svg>')
+            f'<path class="base" d="M0 {yb + .5}H{W}"/>{"".join(p)}</svg>')
 
 
 def figura_sip():
