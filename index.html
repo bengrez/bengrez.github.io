@@ -472,6 +472,14 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 /* 084: en «Sobre mí» las cifras van en dos filas fijas: la producción (artículos, capítulo de libro, patente) y, debajo, las citas y el índice h */
 #sobre-mi .metricas{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;align-items:start;gap:.9rem 2.25rem}
 #sobre-mi .metricas .cuando{grid-column:1 / -1;margin-left:0}
+/* 086: junto a la cifra de citas, las citas por año en miniatura (datos del perfil de Google Scholar); el último año, en curso, va con marcador hueco */
+#sobre-mi .metricas .con-chispa{grid-column:2 / -1}
+.con-chispa dd{display:flex;align-items:center;gap:1rem}
+.chispa{flex:0 1 auto;min-width:0;height:1.72rem;overflow:visible}
+.chispa .l{fill:none;stroke:var(--serie-a);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+.chispa .base{fill:none;stroke:var(--rule-strong);stroke-width:1}
+.chispa circle{fill:var(--bg);stroke:var(--serie-a);stroke-width:1.6}
+.chispa text{font-family:var(--mono);font-size:10.5px;font-weight:400;fill:var(--muted)}
 @media (max-width:400px){#sobre-mi .metricas{column-gap:1.1rem}}
 
 /* ---- herramientas publicadas: dos piezas distintas, cada una con su captura ---- */
@@ -650,8 +658,12 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
         <div><dt>artículos</dt><dd>14</dd></div>
         <div><dt>capítulo de libro</dt><dd>1</dd></div>
         <div><dt>patente</dt><dd>1</dd></div>
-        <div><dt>citas</dt><dd>801</dd></div>
         <div><dt>índice h</dt><dd>13</dd></div>
+        <div class="con-chispa"><dt>citas</dt><dd><span>801</span>
+<!-- fig:chispa -->
+<svg class="chispa" viewBox="0 0 150 30" role="img" aria-label="Citas por año según Google Scholar, de 2017 a 2026: suben de 2 en 2017 a un máximo de 137 en 2023 y van en 102 en 2026, año en curso (al 24 de noviembre de 2026)."><path class="base" d="M5 27.5H145"/><path class="l" d="M5 23.7 L20.6 23.3 L36.1 21.2 L51.7 15.1 L67.2 9.2 L82.8 5.8 L98.3 5 L113.9 8.1 L129.4 9.2 L145 9.9"/><circle cx="145" cy="9.9" r="3"/><text x="5" y="43">2017</text><text x="145" y="43" text-anchor="end">2026</text></svg>
+<!-- /fig:chispa -->
+        </dd></div>
         <div class="cuando"><dt>fuente</dt><dd>citas e índice h: Google Scholar, noviembre de 2026</dd></div>
       </dl>
     </div>

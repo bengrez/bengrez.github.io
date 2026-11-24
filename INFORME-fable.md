@@ -449,6 +449,11 @@ alternativas: forma «línea de tiempo abierta», hilo «la experiencia acumulad
   patente, que confirman el desglose; el resto son un preprint y una entrada duplicada del artículo de crAssphage y tres
   resúmenes de congreso, que no se cuentan. El pie de página dice ahora la fecha nueva y que los gráficos de Data science
   y de Docencia son simulaciones (antes nombraba sólo el de Data science).
+- **Citas por año, en miniatura** (pedido de Benjamin, con captura): el índice h pasa antes que las citas y, al lado de la
+  cifra de citas, va un gráfico de línea chico con las citas de cada año, de 2017 a 2026. Tipo A, datos públicos: el
+  gráfico de barras del perfil de Google Scholar, leído el 2026-11-24 (2, 5, 20, 64, 107, 131, 137, 115, 107 y 102). El
+  último año va con marcador hueco porque está en curso. Las citas por año suman 790 y el total es 801, porque Scholar no
+  fecha todas. Suma 0,3 KB.
 - **Lados cambiados** (pedido de Benjamin, con captura): en escritorio el recorrido va a la izquierda y el título con «Con qué
   trabajo» a la derecha. Sólo en «Sobre mí»; los tres casos siguen con el gráfico y el título a la izquierda. El celular y el
   orden de lectura no cambian.

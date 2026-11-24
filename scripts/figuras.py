@@ -376,6 +376,29 @@ def figura_edu(var):
     return p.svg("seg", aria)
 
 
+# ---- 086: citas por año, en miniatura, junto a la cifra de citas de «Sobre mí» (Benjamin: «al lado de citas, agrega un linegraph de mis citas a
+# través de los años»). DATOS PÚBLICOS: el gráfico de barras del perfil de Google Scholar, leído el 2026-11-24 (suman 790; el total del perfil es 801:
+# Scholar no fecha todas las citas). El último año va con marcador hueco porque está en curso.
+CITAS_ANIO = {2017: 2, 2018: 5, 2019: 20, 2020: 64, 2021: 107, 2022: 131, 2023: 137, 2024: 115, 2025: 107, 2026: 102}
+CITAS_LEIDO = "24 de noviembre de 2026"
+
+
+def chispa_citas():
+    W, H, x0, x1, yt, yb = 150, 30, 5, 145, 5, 24                      # los años van bajo la caja (y > H), a la altura del rótulo «citas», para no alargar la fila
+    an = sorted(CITAS_ANIO)
+    mx = max(CITAS_ANIO.values())
+    X = lambda a: x0 + (a - an[0]) / (an[-1] - an[0]) * (x1 - x0)
+    Y = lambda v: yb - v / mx * (yb - yt)
+    d = "M" + " L".join(f"{f(X(a))} {f(Y(CITAS_ANIO[a]))}" for a in an)
+    pico = max(an, key=lambda a: CITAS_ANIO[a])
+    aria = (f"Citas por año según Google Scholar, de {an[0]} a {an[-1]}: suben de {CITAS_ANIO[an[0]]} en {an[0]} a un máximo de {mx} en {pico} "
+            f"y van en {CITAS_ANIO[an[-1]]} en {an[-1]}, año en curso (al {CITAS_LEIDO}).")
+    return (f'<svg class="chispa" viewBox="0 0 {W} {H}" role="img" aria-label="{aria}">'
+            f'<path class="base" d="M{x0} {yb + 3.5}H{x1}"/><path class="l" d="{d}"/>'
+            f'<circle cx="{f(X(an[-1]))}" cy="{f(Y(CITAS_ANIO[an[-1]]))}" r="3"/>'
+            f'<text x="{x0}" y="{H + 13}">{an[0]}</text><text x="{x1}" y="{H + 13}" text-anchor="end">{an[-1]}</text></svg>')
+
+
 def figura_sip():
     """RNA-SIP, simulada: ARNr 16S por fracción de un gradiente de CsTFA (12 fracciones), control con sustrato ¹²C y tratamiento con ¹³C. El ARN que incorporó ¹³C
     queda en las fracciones más densas; una parte de la comunidad no usó el sustrato y sigue en la posición liviana. Densidades del orden de las que se usan en RNA-SIP."""
@@ -440,6 +463,7 @@ def todas():
     out = {}
     for nombre, fn in (("ds", figura_ds), ("ec", figura_ec), ("edu", figura_edu)):
         out[nombre] = "\n".join(fn(v) for v in ("w", "n"))
+    out["chispa"] = chispa_citas()
     out["sip"] = figura_sip()
     out["citas"] = figura_citas()
     return out

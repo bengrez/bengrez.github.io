@@ -106,7 +106,8 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
 - **«Sobre mí» antes de los casos** (081). La sección sube entre la portada y los tres casos, con el recorrido abierto
   (cuatro etapas con logo y una o dos frases cada una), una línea de talleres y patente, y las tres cifras. Al final de la
   página queda sólo Contacto. 082: bajo el título va la lista «Con qué trabajo» (`dl.oficio`). 084: las cifras separan artículos (14), capítulo de libro (1) y patente (1), y debajo van citas e índice h
-  (085: 801 citas e índice h 13, leídos del perfil público de Google Scholar el 2026-11-24).
+  (085: 801 citas e índice h 13, leídos del perfil público de Google Scholar el 2026-11-24). 086: el índice h va antes
+  que las citas y, junto a las citas, una miniatura de las citas por año (`CITAS_ANIO` y `chispa_citas` en `scripts/figuras.py`).
   083: en escritorio los lados van cambiados
   (recorrido a la izquierda, título y lista a la derecha). Los logos se bajan con la página y se achicaron a 96 px de alto (11,2 KB entre los cuatro).
 - **Seguimiento en Docencia** (080; reemplaza a la electronegatividad de la 079, que a Benjamin no le gustó). Simulación de un
