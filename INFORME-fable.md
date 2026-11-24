@@ -355,15 +355,33 @@ artículo pero rehecho con la estética del sitio.
 
 Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro, oscuro y celular.
 
+## Decimotercera ronda: secciones más juntas, con borde y una frase más
+
+Pedido de Benjamin (2026-11-24, con captura): mucho espacio perdido entre secciones; expandir un poco el texto y darle bordes
+a cada sección. Eligió entre alternativas: línea fina arriba, espacio a la mitad y una frase más por sección.
+
+- **Espacio**: el aire entre secciones baja a la mitad en escritorio (130 px entre una sección y la siguiente a 1440 px; eran
+  260). Los desplegables quedan más cerca de su texto (43 px; eran 65). El celular no cambia.
+- **Borde**: una línea fina sobre el texto de cada sección, desde 960 px de ancho. Va sólo en la columna del texto, porque una
+  línea de lado a lado cruzaría el gráfico fijo al subir.
+- **Texto**, con hechos que ya estaban revisados en versiones anteriores de la página:
+  - Buses: «Como no había suficientes fallas registradas, construí un simulador para probar el detector a ciegas.»
+  - Suelos: «Con inóculo y nitrógeno el suelo respiró el doble, pero emergieron menos plántulas.»
+  - Colegio: «Se abren sin cuenta ni instalación, y no guardan ni envían respuestas.»
+- **Límite**: entre Buses y Suelos el espacio en la columna del texto sigue siendo mayor (unos 190 px), porque el título de
+  Buses va bajo el gráfico y esa columna es más alta que el texto.
+
+Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro y oscuro a 1440 y 1474 px.
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 70,3 KB | +36,8 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 81,9 KB | −0,7 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 171,4 KB | +6,5 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 70,5 KB | +37,0 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 82,1 KB | −0,5 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 171,6 KB | +6,7 KB |
 
-Los valores son del tema claro; en el oscuro, 63,8, 75,4 y 154,0 KB. Desde la séptima ronda la primera carga incluye el retrato
+Los valores son del tema claro; en el oscuro, 64,0, 75,6 y 154,2 KB. Desde la séptima ronda la primera carga incluye el retrato
 (31,1 KB en el celular, 70,4 KB en escritorio). Desde la quinta ronda ya no se baja Pretext (39,9 KB) y la imagen del autodiagnóstico (23,2 KB) se carga sólo al abrir su
 desplegable. Por archivo: `index.html` +1,7 KB; `quimiotaxis.min.js` +3,5 KB (sólo escritorio); `empuje.min.js` 3,4 → 1,6 KB; `costras-biologicas.webp` 27,2 KB (nueva);
 `tabla-periodica-fig-n.webp` 11,6 KB o `tabla-periodica-fig.webp` 17,0 KB (nuevas, una según el ancho); se quitó

@@ -271,6 +271,7 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 .kicker{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
 @media (min-width:960px){
   .dos{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(2rem,4vw,3.5rem)}
+  .dos>div:not(.riel){border-top:1px solid var(--rule-strong);padding-top:1.15rem}   /* 077: una línea fina sobre el texto de cada sección, para darle estructura a la página */
   .riel{position:sticky;top:calc(var(--bar) + var(--fig-h,0px) + 2rem);align-self:start}   /* 047: 2 rem bajo la figura (antes 1,5): el título que sale por arriba se desvanece en ese espacio y no cruza el gráfico */
   .fuera .riel{top:calc(var(--bar) + 1.5rem)}
 }
@@ -413,7 +414,7 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
    Cada bloque de texto lleva alrededor un espacio quieto (desde la 065: 40 px y 126 px de caída a 1440; 53 y 168 a 1920), así que los grupos de una misma sección (--grupo: 112 px a 1440, 150 a 1920) quedan
    dentro de un mismo espacio quieto y la animación corre en los márgenes, en la columna vacía junto a los títulos y entre secciones (el doble de --aire: 259 px a 1440; 346 px a 1920). */
 @media (min-width:1024px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
-  :root{--grupo:clamp(3.5rem,4.5vw,5.5rem);--aire:clamp(6rem,9vw,11rem)}   /* 068: con el texto en un párrafo por prueba, los grupos van más juntos (65 px a 1440; eran 112) */
+  :root{--grupo:clamp(2.25rem,3vw,3.5rem);--aire:clamp(3rem,4.5vw,5.5rem)}   /* 077: --aire a la mitad (65 px a 1440; eran 130): Benjamin veía mucho espacio perdido entre secciones. 068: con el texto en un párrafo por prueba, los grupos van más juntos (65 px a 1440; eran 112) */
   .seccion{padding-block:var(--aire)}
   .dos>div:not(.riel)>:is(.hechos,.metricas:not(.resultado),.lista,.evidencia,.mas){margin-top:var(--grupo)}
   .dos>div:not(.riel)>.mas + .mas{margin-top:0}
@@ -748,7 +749,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
     </header>
     <div>
       <p class="problema">Una empresa de transporte no tenía datos del estado de sus buses ni aviso de las fallas que venían.</p>
-      <p class="nota">Armé el sistema que lee cada bus en tiempo real y un detector que estima el riesgo de falla. Hoy funciona en piloto, con datos reales.</p>
+      <p class="nota">Armé el sistema que lee cada bus en tiempo real y un detector que estima el riesgo de falla. Como no había suficientes fallas registradas, construí un simulador para probar el detector a ciegas. Hoy funciona en piloto, con datos reales.</p>
       <p class="pie"><b>Simulación.</b> Los datos de la flota son del cliente y no se publican.</p>
     </div>
   </div>
@@ -762,7 +763,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
     </header>
     <div>
       <p class="problema">¿Un suelo minero degradado se recupera al devolverle microorganismos, o sólo lo parece?</p>
-      <p class="nota">Lo medí en terreno y en invernadero, en Western Australia. Más actividad no fue recuperación. Lo que sí encontré fueron las <a href="https://doi.org/10.3389/fmicb.2019.01617">especies de bacterias que importan para la estabilidad del ecosistema</a>.</p>
+      <p class="nota">Lo medí en terreno y en invernadero, en Western Australia. Con inóculo y nitrógeno el suelo respiró el doble, pero emergieron menos plántulas. Más actividad no fue recuperación. Lo que sí encontré fueron las <a href="https://doi.org/10.3389/fmicb.2019.01617">especies de bacterias que importan para la estabilidad del ecosistema</a>.</p>
       <p class="pie"><b>Datos publicados.</b> Análisis de correspondencia canónica, redibujado de la figura 6 de <a href="https://doi.org/10.3389/fmicb.2019.01617">Moreira-Grez et al. 2019</a> (CC BY 4.0).</p>
       <details class="mas">
         <summary>Seis publicaciones seleccionadas</summary>
@@ -788,7 +789,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
     </header>
     <div>
       <p class="problema">Hice herramientas web para que un curso practique sin nota y se vea qué falta reforzar.</p>
-      <p class="nota">Hoy se usan en clases y están publicadas.</p>
+      <p class="nota">Hoy se usan en clases y están publicadas. Se abren sin cuenta ni instalación, y no guardan ni envían respuestas.</p>
       <p class="pie"><b>Captura</b> de una de ellas, la <a href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/">Tabla periódica reactiva</a>.</p>
       <details class="mas">
         <summary>Tres herramientas publicadas</summary>
