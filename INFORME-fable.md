@@ -440,6 +440,9 @@ alternativas: forma «línea de tiempo abierta», hilo «la experiencia acumulad
   cuatro). Lista bajo el título «Sobre mí», en la columna izquierda en escritorio y entre el título y el recorrido en el
   celular, con datos del CV: Análisis (R, Python, SQL, estadística multivariante); Datos (PostgreSQL, Linux, Docker, agentes
   de IA); Laboratorio (metagenómica, marcaje isotópico RNA-SIP, qPCR); Idiomas (español e inglés). Suma 0,3 KB.
+- **Lados cambiados** (pedido de Benjamin, con captura): en escritorio el recorrido va a la izquierda y el título con «Con qué
+  trabajo» a la derecha. Sólo en «Sobre mí»; los tres casos siguen con el gráfico y el título a la izquierda. El celular y el
+  orden de lectura no cambian.
 
 Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro, oscuro y celular.
 

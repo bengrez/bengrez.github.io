@@ -509,6 +509,8 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 .ruta .logo{position:absolute;left:-3.6rem;top:-.2rem;width:2.6rem;height:2.6rem;background:var(--ink);opacity:.85;-webkit-mask:var(--logo) center/contain no-repeat;mask:var(--logo) center/contain no-repeat}
 .logo-pucv{--logo:url(logo-pucv.png)}.logo-uwa{--logo:url(logo-uwa.png)}.logo-andes{--logo:url(logo-andes.png)}.logo-ide{--logo:url(logo-ide.png)}
 @media (min-width:960px){.ruta.con-logos{margin-left:0}}
+/* 083: en escritorio «Sobre mí» va con los lados cambiados (Benjamin): el recorrido a la izquierda y el título con «Con qué trabajo» a la derecha. El orden del HTML no cambia (título primero); los logos quedan dentro de la columna, como en el celular. */
+@media (min-width:960px){#sobre-mi .dos>.riel{grid-column:2;grid-row:1}#sobre-mi .dos>div:not(.riel){grid-column:1;grid-row:1}#sobre-mi .ruta.con-logos{margin-left:3.4rem}}
 .rec-btn{position:relative;display:block;width:100%;margin:0;padding:0;border:0;background:none;color:inherit;font:inherit;line-height:inherit;text-align:left;cursor:pointer}
 .rec-btn:hover .rec-t{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
 .rec-ind{display:inline-block;margin-left:.55em;font-family:var(--mono);font-weight:400;color:var(--muted);transition:transform .25s ease}
