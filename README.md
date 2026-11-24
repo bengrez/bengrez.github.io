@@ -103,9 +103,10 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
   flota completa**: 40 buses simulados en 30 días, 39 en gris y uno que se desvía, con el aviso (día 16) y la revisión; fijo, sin
   el control del umbral (salieron `.demo`, `#ds-datos` y su script) y con rótulos llanos («Temperatura del motor»).
   `scripts/figuras.py`: `datos_flota()` y `figura_ds()`.
-- **Electronegatividad en Docencia** (079). El gráfico de la sección ya no es la captura: es la electronegatividad (escala de
-  Pauling) de los elementos 1 a 54 contra el número atómico, con datos de PubChem bajados el 2026-11-24 (`EN` y `figura_edu`
-  en `scripts/figuras.py`). La captura queda sólo en la ficha del desplegable.
+- **Seguimiento en Docencia** (080; reemplaza a la electronegatividad de la 079, que a Benjamin no le gustó). Simulación de un
+  curso de 35 estudiantes en seis evaluaciones: el curso en gris y tres trayectorias en coral que bajan; el marcador es hueco
+  cuando la asistencia del período queda bajo 85 % (`datos_seg` y `figura_edu` en `scripts/figuras.py`, estilos `.fig.seg`).
+  La captura de la Tabla periódica queda sólo en la ficha del desplegable.
 - **Secciones más juntas y con borde** (077). En escritorio, `--aire` baja a la mitad (65 px a 1440) y `--grupo` a 43 px; el
   texto de cada sección lleva una línea fina arriba (`.dos>div:not(.riel)`, desde 960 px). Una frase más por prueba.
   078: el título de Buses ya no alarga su sección (`margin-bottom` negativo en `#ingenieria .riel`) y el celular lleva

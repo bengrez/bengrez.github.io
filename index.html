@@ -184,7 +184,10 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 .fig.ord .tax{fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round;stroke-opacity:.2}
 .fig.ord .vec{fill:none;stroke:var(--muted);stroke-width:1;stroke-linejoin:round;stroke-opacity:.9}
 .fig.ord .vecr text{font-size:12.5px;fill:var(--muted)}
-.fig.edu .linea{stroke-width:1.3;opacity:.55}.fig.edu .tax{stroke-opacity:.45}.fig.edu .el text{fill:var(--ink);font-size:13px}   /* 079: electronegatividad (Docencia); comparte marcadores y rótulos con la ordenación */
+/* 080: seguimiento (Docencia): los tres estudiantes que bajan, en coral; el marcador es hueco cuando la asistencia del período queda bajo el umbral */
+.fig.seg .m{fill:var(--serie-a);stroke:var(--bg);stroke-width:.8}
+.fig.seg .s{fill:var(--bg);stroke:var(--serie-a);stroke-width:1.8}
+.fig.seg .linea.a{stroke-width:1.7}
 .fig.ord .cero{fill:none;stroke:var(--rule-strong);stroke-width:.8;stroke-dasharray:2 4}
 .fig.ord .fuera{fill:none;stroke:var(--serie-a);stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
 .fig.ord .leyenda .men{fill:var(--muted)}
@@ -733,85 +736,111 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
     </div></div>
     <div class="hoja" id="fig-3" hidden><div class="plot">
 <!-- fig:edu -->
-<svg class="fig w edu ord" viewBox="0 0 640 280" role="img" aria-label="Gráfico con datos reales: electronegatividad, en la escala de Pauling, de los primeros 54 elementos contra su número atómico. En cada período sube de izquierda a derecha, desde un metal alcalino (litio, sodio, potasio y rubidio, entre 0,8 y 1,0) hasta un halógeno (flúor 3,98; cloro 3,16; bromo 2,96; yodo 2,66), y cae al empezar el período siguiente. Los máximos bajan de un período al otro. El helio, el neón y el argón no tienen valor.">
+<svg class="fig w seg" viewBox="0 0 640 280" role="img" aria-label="Gráfico con datos simulados: las notas de un curso inventado de 35 estudiantes en 6 evaluaciones del año, en la escala de 1 a 7. 32 estudiantes, en gris, se mantienen casi siempre sobre 4. Tres, en coral, bajan sus notas a lo largo del año y terminan en 4,5, 4,1 y 5,5. En cada uno la asistencia cae bajo 85 % (marcador hueco) antes de que baje la nota, o al mismo tiempo.">
   <path class="eje" d="M58 24V234H626"/>
-  <path class="eje" d="M68.3 234v4"/>
-  <text class="tick" x="68.3" y="250" text-anchor="middle">1</text>
-  <path class="eje" d="M161.3 234v4"/>
-  <text class="tick" x="161.3" y="250" text-anchor="middle">10</text>
-  <path class="eje" d="M264.5 234v4"/>
-  <text class="tick" x="264.5" y="250" text-anchor="middle">20</text>
-  <path class="eje" d="M367.8 234v4"/>
-  <text class="tick" x="367.8" y="250" text-anchor="middle">30</text>
-  <path class="eje" d="M471.1 234v4"/>
-  <text class="tick" x="471.1" y="250" text-anchor="middle">40</text>
-  <path class="eje" d="M574.4 234v4"/>
-  <text class="tick" x="574.4" y="250" text-anchor="middle">50</text>
-  <path class="eje" d="M58 185.2h-4"/>
-  <text class="tick" x="51" y="189.2" text-anchor="end">1</text>
-  <path class="eje" d="M58 136.3h-4"/>
-  <text class="tick" x="51" y="140.3" text-anchor="end">2</text>
-  <path class="eje" d="M58 87.5h-4"/>
-  <text class="tick" x="51" y="91.5" text-anchor="end">3</text>
-  <path class="eje" d="M58 38.7h-4"/>
-  <text class="tick" x="51" y="42.7" text-anchor="end">4</text>
-  <text class="titulo" x="342" y="273" text-anchor="middle">Número atómico</text>
-  <text class="titulo" transform="translate(14 129) rotate(-90)" text-anchor="middle">Electronegatividad</text>
-  <text class="sello" x="626" y="15" text-anchor="end">Datos reales: PubChem, escala de Pauling</text>
-  <path class="cero" d="M83.8 24V234M166.4 24V234M249.1 24V234M434.9 24V234"/>
-  <g class="vecr"><text x="125.1" y="228" text-anchor="middle">período 2</text><text x="207.7" y="228" text-anchor="middle">período 3</text><text x="342" y="228" text-anchor="middle">período 4</text><text x="527.9" y="228" text-anchor="middle">período 5</text></g>
-  <path class="linea ink" pathLength="1" d="M89 186.1 L99.3 157.3 L109.6 134.4 L120 109.5 L130.3 85.5 L140.6 66 L150.9 39.6M171.6 188.6 L181.9 170 L192.3 155.4 L202.6 141.2 L212.9 127 L223.2 108 L233.6 79.7M254.2 194 L264.5 185.2 L274.9 167.6 L285.2 158.8 L295.5 154.4 L305.9 152.9 L316.2 158.3 L326.5 144.6 L336.8 142.2 L347.2 140.7 L357.5 141.2 L367.8 153.4 L378.1 145.6 L388.5 135.8 L398.8 127.5 L409.1 109.5 L419.5 89.4 L429.8 87.5 L440.1 194 L450.4 187.6 L460.8 174.4 L471.1 169 L481.4 155.9 L491.7 128.5 L502.1 141.2 L512.4 126.6 L522.7 122.7 L533.1 126.6 L543.4 139.7 L553.7 151.5 L564 147.1 L574.4 138.3 L584.7 133.9 L595 131.4 L605.3 104.1 L615.7 107"/>
-  <path class="tax" d="M68.3 126.6h0M99.3 157.3h0M109.6 134.4h0M120 109.5h0M130.3 85.5h0M140.6 66h0M181.9 170h0M192.3 155.4h0M202.6 141.2h0M212.9 127h0M223.2 108h0M264.5 185.2h0M274.9 167.6h0M285.2 158.8h0M295.5 154.4h0M305.9 152.9h0M316.2 158.3h0M326.5 144.6h0M336.8 142.2h0M347.2 140.7h0M357.5 141.2h0M367.8 153.4h0M378.1 145.6h0M388.5 135.8h0M398.8 127.5h0M409.1 109.5h0M429.8 87.5h0M450.4 187.6h0M460.8 174.4h0M471.1 169h0M481.4 155.9h0M491.7 128.5h0M502.1 141.2h0M512.4 126.6h0M522.7 122.7h0M533.1 126.6h0M543.4 139.7h0M553.7 151.5h0M564 147.1h0M574.4 138.3h0M584.7 133.9h0M595 131.4h0M615.7 107h0"/>
-  <circle class="pt s cir" cx="89" cy="186.1" r="4.2" style="--i:0"/>
-  <circle class="pt m cir" cx="150.9" cy="39.6" r="4.2" style="--i:1"/>
-  <circle class="pt s cir" cx="171.6" cy="188.6" r="4.2" style="--i:2"/>
-  <circle class="pt m cir" cx="233.6" cy="79.7" r="4.2" style="--i:3"/>
-  <circle class="pt s cir" cx="254.2" cy="194" r="4.2" style="--i:4"/>
-  <circle class="pt m cir" cx="419.5" cy="89.4" r="4.2" style="--i:5"/>
-  <circle class="pt s cir" cx="440.1" cy="194" r="4.2" style="--i:6"/>
-  <circle class="pt m cir" cx="605.3" cy="104.1" r="4.2" style="--i:7"/>
-  <g class="vecr el"><text x="89" y="203.3" text-anchor="middle">Li</text><text x="150.9" y="30.4" text-anchor="middle">F</text><text x="171.6" y="205.8" text-anchor="middle">Na</text><text x="233.6" y="70.5" text-anchor="middle">Cl</text><text x="254.2" y="211.2" text-anchor="middle">K</text><text x="414.5" y="80.2" text-anchor="middle">Br</text><text x="440.1" y="211.2" text-anchor="middle">Rb</text><text x="605.3" y="94.9" text-anchor="middle">I</text><text x="75.3" y="130.6">H</text></g>
-  <g class="leyenda"><circle class="m cir" cx="460.8" cy="36" r="4.2"/><text x="470.8" y="40">halógenos</text><circle class="s cir" cx="460.8" cy="55" r="4.2"/><text x="470.8" y="59">metales alcalinos</text></g>
+  <path class="eje" d="M83.8 234v4"/>
+  <text class="tick" x="83.8" y="250" text-anchor="middle">1</text>
+  <path class="eje" d="M187.1 234v4"/>
+  <text class="tick" x="187.1" y="250" text-anchor="middle">2</text>
+  <path class="eje" d="M290.4 234v4"/>
+  <text class="tick" x="290.4" y="250" text-anchor="middle">3</text>
+  <path class="eje" d="M393.6 234v4"/>
+  <text class="tick" x="393.6" y="250" text-anchor="middle">4</text>
+  <path class="eje" d="M496.9 234v4"/>
+  <text class="tick" x="496.9" y="250" text-anchor="middle">5</text>
+  <path class="eje" d="M600.2 234v4"/>
+  <text class="tick" x="600.2" y="250" text-anchor="middle">6</text>
+  <path class="eje" d="M58 192h-4"/>
+  <text class="tick" x="51" y="196" text-anchor="end">3</text>
+  <path class="eje" d="M58 150h-4"/>
+  <text class="tick" x="51" y="154" text-anchor="end">4</text>
+  <path class="eje" d="M58 108h-4"/>
+  <text class="tick" x="51" y="112" text-anchor="end">5</text>
+  <path class="eje" d="M58 66h-4"/>
+  <text class="tick" x="51" y="70" text-anchor="end">6</text>
+  <path class="eje" d="M58 24h-4"/>
+  <text class="tick" x="51" y="28" text-anchor="end">7</text>
+  <text class="titulo" x="342" y="273" text-anchor="middle">Evaluación del año</text>
+  <text class="titulo" transform="translate(14 129) rotate(-90)" text-anchor="middle">Nota</text>
+  <text class="sello" x="626" y="15" text-anchor="end">Simulación: un curso de 35, 6 evaluaciones</text>
+  <path class="ref" d="M58 150H626"/>
+  <path class="flota" d="M83.8 103.8 187.1 112.2 290.4 95.4 393.6 120.6 496.9 116.4 600.2 108M83.8 129 187.1 91.2 290.4 95.4 393.6 108 496.9 116.4 600.2 103.8M83.8 53.4 187.1 49.2 290.4 49.2 393.6 36.6 496.9 32.4 600.2 40.8M83.8 78.6 187.1 82.8 290.4 95.4 393.6 95.4 496.9 57.6 600.2 82.8M83.8 87 187.1 82.8 290.4 87 393.6 78.6 496.9 108 600.2 87M83.8 45 187.1 53.4 290.4 70.2 393.6 66 496.9 66 600.2 66M83.8 78.6 187.1 87 290.4 78.6 393.6 78.6 496.9 99.6 600.2 78.6M83.8 129 187.1 112.2 290.4 99.6 393.6 120.6 496.9 103.8 600.2 99.6M83.8 108 187.1 112.2 290.4 112.2 393.6 116.4 496.9 116.4 600.2 141.6M83.8 61.8 187.1 78.6 290.4 108 393.6 53.4 496.9 57.6 600.2 82.8M83.8 87 187.1 82.8 290.4 112.2 393.6 124.8 496.9 112.2 600.2 91.2M83.8 66 187.1 49.2 290.4 61.8 393.6 82.8 496.9 66 600.2 57.6M83.8 78.6 187.1 103.8 290.4 99.6 393.6 87 496.9 95.4 600.2 91.2M83.8 108 187.1 91.2 290.4 108 393.6 95.4 496.9 112.2 600.2 87M83.8 91.2 187.1 87 290.4 95.4 393.6 91.2 496.9 61.8 600.2 82.8M83.8 108 187.1 116.4 290.4 129 393.6 91.2 496.9 99.6 600.2 112.2M83.8 82.8 187.1 87 290.4 99.6 393.6 78.6 496.9 87 600.2 82.8M83.8 124.8 187.1 141.6 290.4 183.6 393.6 158.4 496.9 141.6 600.2 129M83.8 87 187.1 82.8 290.4 124.8 393.6 108 496.9 99.6 600.2 78.6M83.8 66 187.1 87 290.4 78.6 393.6 70.2 496.9 66 600.2 53.4M83.8 82.8 187.1 103.8 290.4 70.2 393.6 87 496.9 91.2 600.2 91.2M83.8 40.8 187.1 53.4 290.4 36.6 393.6 45 496.9 57.6 600.2 61.8M83.8 32.4 187.1 40.8 290.4 24 393.6 40.8 496.9 78.6 600.2 61.8M83.8 112.2 187.1 87 290.4 78.6 393.6 116.4 496.9 103.8 600.2 74.4M83.8 87 187.1 66 290.4 36.6 393.6 74.4 496.9 66 600.2 78.6M83.8 99.6 187.1 108 290.4 103.8 393.6 82.8 496.9 70.2 600.2 120.6M83.8 87 187.1 87 290.4 87 393.6 66 496.9 91.2 600.2 95.4M83.8 108 187.1 124.8 290.4 103.8 393.6 99.6 496.9 120.6 600.2 108M83.8 74.4 187.1 70.2 290.4 70.2 393.6 87 496.9 95.4 600.2 61.8M83.8 78.6 187.1 57.6 290.4 74.4 393.6 57.6 496.9 53.4 600.2 61.8M83.8 66 187.1 82.8 290.4 78.6 393.6 78.6 496.9 61.8 600.2 49.2M83.8 91.2 187.1 99.6 290.4 99.6 393.6 74.4 496.9 78.6 600.2 95.4"/>
+  <path class="linea a" pathLength="1" d="M83.8 74.4 L187.1 70.2 L290.4 82.8 L393.6 103.8 L496.9 116.4 L600.2 129"/>
+  <circle class="pt m cir" cx="83.8" cy="74.4" r="4.4" style="--i:0"/>
+  <circle class="pt m cir" cx="187.1" cy="70.2" r="4.4" style="--i:1"/>
+  <circle class="pt s cir" cx="290.4" cy="82.8" r="4.4" style="--i:2"/>
+  <circle class="pt s cir" cx="393.6" cy="103.8" r="4.4" style="--i:3"/>
+  <circle class="pt s cir" cx="496.9" cy="116.4" r="4.4" style="--i:4"/>
+  <circle class="pt s cir" cx="600.2" cy="129" r="4.4" style="--i:5"/>
+  <path class="linea a" pathLength="1" d="M83.8 99.6 L187.1 99.6 L290.4 95.4 L393.6 116.4 L496.9 124.8 L600.2 145.8"/>
+  <circle class="pt m cir" cx="83.8" cy="99.6" r="4.4" style="--i:6"/>
+  <circle class="pt m cir" cx="187.1" cy="99.6" r="4.4" style="--i:7"/>
+  <circle class="pt m cir" cx="290.4" cy="95.4" r="4.4" style="--i:8"/>
+  <circle class="pt s cir" cx="393.6" cy="116.4" r="4.4" style="--i:9"/>
+  <circle class="pt s cir" cx="496.9" cy="124.8" r="4.4" style="--i:10"/>
+  <circle class="pt s cir" cx="600.2" cy="145.8" r="4.4" style="--i:11"/>
+  <path class="linea a" pathLength="1" d="M83.8 45 L187.1 49.2 L290.4 45 L393.6 53.4 L496.9 66 L600.2 87"/>
+  <circle class="pt m cir" cx="83.8" cy="45" r="4.4" style="--i:12"/>
+  <circle class="pt m cir" cx="187.1" cy="49.2" r="4.4" style="--i:13"/>
+  <circle class="pt m cir" cx="290.4" cy="45" r="4.4" style="--i:14"/>
+  <circle class="pt m cir" cx="393.6" cy="53.4" r="4.4" style="--i:15"/>
+  <circle class="pt s cir" cx="496.9" cy="66" r="4.4" style="--i:16"/>
+  <circle class="pt s cir" cx="600.2" cy="87" r="4.4" style="--i:17"/>
+  <g class="leyenda"><circle class="m cir" cx="72" cy="220" r="4.4"/><text x="82" y="224">asistencia sobre 85 %</text><circle class="s cir" cx="288" cy="220" r="4.4"/><text x="298" y="224">bajo 85 %</text><path class="flota-l" d="M403 220h10"/><text x="418" y="224">el resto del curso</text></g>
+  <g class="rev"><text x="626" y="164" text-anchor="end">se aprueba con 4,0</text></g>
 </svg>
-<svg class="fig n edu ord" viewBox="0 0 400 220" role="img" aria-label="Gráfico con datos reales: electronegatividad, en la escala de Pauling, de los primeros 54 elementos contra su número atómico. En cada período sube de izquierda a derecha, desde un metal alcalino (litio, sodio, potasio y rubidio, entre 0,8 y 1,0) hasta un halógeno (flúor 3,98; cloro 3,16; bromo 2,96; yodo 2,66), y cae al empezar el período siguiente. Los máximos bajan de un período al otro. El helio, el neón y el argón no tienen valor.">
+<svg class="fig n seg" viewBox="0 0 400 220" role="img" aria-label="Gráfico con datos simulados: las notas de un curso inventado de 35 estudiantes en 6 evaluaciones del año, en la escala de 1 a 7. 32 estudiantes, en gris, se mantienen casi siempre sobre 4. Tres, en coral, bajan sus notas a lo largo del año y terminan en 4,5, 4,1 y 5,5. En cada uno la asistencia cae bajo 85 % (marcador hueco) antes de que baje la nota, o al mismo tiempo.">
   <path class="eje" d="M50 22V176H388"/>
-  <path class="eje" d="M56.1 176v4"/>
-  <text class="tick" x="56.1" y="192" text-anchor="middle">1</text>
-  <path class="eje" d="M111.5 176v4"/>
-  <text class="tick" x="111.5" y="192" text-anchor="middle">10</text>
-  <path class="eje" d="M172.9 176v4"/>
-  <text class="tick" x="172.9" y="192" text-anchor="middle">20</text>
-  <path class="eje" d="M234.4 176v4"/>
-  <text class="tick" x="234.4" y="192" text-anchor="middle">30</text>
-  <path class="eje" d="M295.8 176v4"/>
-  <text class="tick" x="295.8" y="192" text-anchor="middle">40</text>
-  <path class="eje" d="M357.3 176v4"/>
-  <text class="tick" x="357.3" y="192" text-anchor="middle">50</text>
-  <path class="eje" d="M50 140.2h-4"/>
-  <text class="tick" x="43" y="144.2" text-anchor="end">1</text>
-  <path class="eje" d="M50 104.4h-4"/>
-  <text class="tick" x="43" y="108.4" text-anchor="end">2</text>
-  <path class="eje" d="M50 68.6h-4"/>
-  <text class="tick" x="43" y="72.6" text-anchor="end">3</text>
-  <path class="eje" d="M50 32.7h-4"/>
-  <text class="tick" x="43" y="36.7" text-anchor="end">4</text>
-  <text class="titulo" x="219" y="213" text-anchor="middle">Número atómico</text>
-  <text class="titulo" transform="translate(13 99) rotate(-90)" text-anchor="middle">Electronegatividad</text>
-  <text class="sello" x="388" y="13" text-anchor="end">Datos reales: PubChem</text>
-  <path class="cero" d="M65.4 22V176M114.5 22V176M163.7 22V176M274.3 22V176"/>
-  <g class="vecr"><text x="89.9" y="170" text-anchor="middle">2</text><text x="139.1" y="170" text-anchor="middle">3</text><text x="219" y="170" text-anchor="middle">período 4</text><text x="329.6" y="170" text-anchor="middle">período 5</text></g>
-  <path class="linea ink" pathLength="1" d="M68.4 140.9 L74.6 119.8 L80.7 102.9 L86.9 84.7 L93 67.1 L99.2 52.8 L105.3 33.5M117.6 142.7 L123.7 129.1 L129.9 118.3 L136 108 L142.2 97.6 L148.3 83.6 L154.5 62.8M166.8 146.6 L172.9 140.2 L179.1 127.3 L185.2 120.8 L191.3 117.6 L197.5 116.5 L203.6 120.5 L209.8 110.5 L215.9 108.7 L222.1 107.6 L228.2 108 L234.4 116.9 L240.5 111.2 L246.7 104 L252.8 97.9 L258.9 84.7 L265.1 70 L271.2 68.6 L277.4 146.6 L283.5 142 L289.7 132.3 L295.8 128.4 L302 118.7 L308.1 98.6 L314.3 108 L320.4 97.2 L326.5 94.3 L332.7 97.2 L338.8 106.9 L345 115.5 L351.1 112.3 L357.3 105.8 L363.4 102.6 L369.6 100.8 L375.7 80.7 L381.9 82.9"/>
-  <path class="tax" d="M56.1 97.2h0M74.6 119.8h0M80.7 102.9h0M86.9 84.7h0M93 67.1h0M99.2 52.8h0M123.7 129.1h0M129.9 118.3h0M136 108h0M142.2 97.6h0M148.3 83.6h0M172.9 140.2h0M179.1 127.3h0M185.2 120.8h0M191.3 117.6h0M197.5 116.5h0M203.6 120.5h0M209.8 110.5h0M215.9 108.7h0M222.1 107.6h0M228.2 108h0M234.4 116.9h0M240.5 111.2h0M246.7 104h0M252.8 97.9h0M258.9 84.7h0M271.2 68.6h0M283.5 142h0M289.7 132.3h0M295.8 128.4h0M302 118.7h0M308.1 98.6h0M314.3 108h0M320.4 97.2h0M326.5 94.3h0M332.7 97.2h0M338.8 106.9h0M345 115.5h0M351.1 112.3h0M357.3 105.8h0M363.4 102.6h0M369.6 100.8h0M381.9 82.9h0"/>
-  <circle class="pt s cir" cx="68.4" cy="140.9" r="3.4" style="--i:0"/>
-  <circle class="pt m cir" cx="105.3" cy="33.5" r="3.4" style="--i:1"/>
-  <circle class="pt s cir" cx="117.6" cy="142.7" r="3.4" style="--i:2"/>
-  <circle class="pt m cir" cx="154.5" cy="62.8" r="3.4" style="--i:3"/>
-  <circle class="pt s cir" cx="166.8" cy="146.6" r="3.4" style="--i:4"/>
-  <circle class="pt m cir" cx="265.1" cy="70" r="3.4" style="--i:5"/>
-  <circle class="pt s cir" cx="277.4" cy="146.6" r="3.4" style="--i:6"/>
-  <circle class="pt m cir" cx="375.7" cy="80.7" r="3.4" style="--i:7"/>
-  <g class="vecr el"><text x="68.4" y="157.3" text-anchor="middle">Li</text><text x="105.3" y="25.1" text-anchor="middle">F</text><text x="117.6" y="159.1" text-anchor="middle">Na</text><text x="154.5" y="54.4" text-anchor="middle">Cl</text><text x="166.8" y="163" text-anchor="middle">K</text><text x="260.1" y="61.6" text-anchor="middle">Br</text><text x="277.4" y="163" text-anchor="middle">Rb</text><text x="375.7" y="72.3" text-anchor="middle">I</text><text x="63.1" y="101.2">H</text></g>
-  <g class="leyenda"><circle class="m cir" cx="295.8" cy="30" r="3.4"/><text x="305.8" y="34">halógenos</text><circle class="s cir" cx="295.8" cy="46" r="3.4"/><text x="305.8" y="50">alcalinos</text></g>
+  <path class="eje" d="M65.4 176v4"/>
+  <text class="tick" x="65.4" y="192" text-anchor="middle">1</text>
+  <path class="eje" d="M126.8 176v4"/>
+  <text class="tick" x="126.8" y="192" text-anchor="middle">2</text>
+  <path class="eje" d="M188.3 176v4"/>
+  <text class="tick" x="188.3" y="192" text-anchor="middle">3</text>
+  <path class="eje" d="M249.7 176v4"/>
+  <text class="tick" x="249.7" y="192" text-anchor="middle">4</text>
+  <path class="eje" d="M311.2 176v4"/>
+  <text class="tick" x="311.2" y="192" text-anchor="middle">5</text>
+  <path class="eje" d="M372.6 176v4"/>
+  <text class="tick" x="372.6" y="192" text-anchor="middle">6</text>
+  <path class="eje" d="M50 145.2h-4"/>
+  <text class="tick" x="43" y="149.2" text-anchor="end">3</text>
+  <path class="eje" d="M50 114.4h-4"/>
+  <text class="tick" x="43" y="118.4" text-anchor="end">4</text>
+  <path class="eje" d="M50 83.6h-4"/>
+  <text class="tick" x="43" y="87.6" text-anchor="end">5</text>
+  <path class="eje" d="M50 52.8h-4"/>
+  <text class="tick" x="43" y="56.8" text-anchor="end">6</text>
+  <path class="eje" d="M50 22h-4"/>
+  <text class="tick" x="43" y="26" text-anchor="end">7</text>
+  <text class="titulo" x="219" y="213" text-anchor="middle">Evaluación del año</text>
+  <text class="titulo" transform="translate(13 99) rotate(-90)" text-anchor="middle">Nota</text>
+  <text class="sello" x="388" y="13" text-anchor="end">Simulación: un curso de 35</text>
+  <path class="ref" d="M50 114.4H388"/>
+  <path class="flota" d="M65 81 127 87 188 74 250 93 311 90 373 84M65 99 127 71 188 74 250 84 311 90 373 81M65 44 127 40 188 40 250 31 311 28 373 34M65 62 127 65 188 74 250 74 311 47 373 65M65 68 127 65 188 68 250 62 311 84 373 68M65 37 127 44 188 56 250 53 311 53 373 53M65 62 127 68 188 62 250 62 311 77 373 62M65 99 127 87 188 77 250 93 311 81 373 77M65 84 127 87 188 87 250 90 311 90 373 108M65 50 127 62 188 84 250 44 311 47 373 65M65 68 127 65 188 87 250 96 311 87 373 71M65 53 127 40 188 50 250 65 311 53 373 47M65 62 127 81 188 77 250 68 311 74 373 71M65 84 127 71 188 84 250 74 311 87 373 68M65 71 127 68 188 74 250 71 311 50 373 65M65 84 127 90 188 99 250 71 311 77 373 87M65 65 127 68 188 77 250 62 311 68 373 65M65 96 127 108 188 139 250 121 311 108 373 99M65 68 127 65 188 96 250 84 311 77 373 62M65 53 127 68 188 62 250 56 311 53 373 44M65 65 127 81 188 56 250 68 311 71 373 71M65 34 127 44 188 31 250 37 311 47 373 50M65 28 127 34 188 22 250 34 311 62 373 50M65 87 127 68 188 62 250 90 311 81 373 59M65 68 127 53 188 31 250 59 311 53 373 62M65 77 127 84 188 81 250 65 311 56 373 93M65 68 127 68 188 68 250 53 311 71 373 74M65 84 127 96 188 81 250 77 311 93 373 84M65 59 127 56 188 56 250 68 311 74 373 50M65 62 127 47 188 59 250 47 311 44 373 50M65 53 127 65 188 62 250 62 311 50 373 40M65 71 127 77 188 77 250 59 311 62 373 74"/>
+  <path class="linea a" pathLength="1" d="M65.4 59 L126.8 55.9 L188.3 65.1 L249.7 80.5 L311.2 89.8 L372.6 99"/>
+  <circle class="pt m cir" cx="65.4" cy="59" r="3.6" style="--i:0"/>
+  <circle class="pt m cir" cx="126.8" cy="55.9" r="3.6" style="--i:1"/>
+  <circle class="pt s cir" cx="188.3" cy="65.1" r="3.6" style="--i:2"/>
+  <circle class="pt s cir" cx="249.7" cy="80.5" r="3.6" style="--i:3"/>
+  <circle class="pt s cir" cx="311.2" cy="89.8" r="3.6" style="--i:4"/>
+  <circle class="pt s cir" cx="372.6" cy="99" r="3.6" style="--i:5"/>
+  <path class="linea a" pathLength="1" d="M65.4 77.4 L126.8 77.4 L188.3 74.4 L249.7 89.8 L311.2 95.9 L372.6 111.3"/>
+  <circle class="pt m cir" cx="65.4" cy="77.4" r="3.6" style="--i:6"/>
+  <circle class="pt m cir" cx="126.8" cy="77.4" r="3.6" style="--i:7"/>
+  <circle class="pt m cir" cx="188.3" cy="74.4" r="3.6" style="--i:8"/>
+  <circle class="pt s cir" cx="249.7" cy="89.8" r="3.6" style="--i:9"/>
+  <circle class="pt s cir" cx="311.2" cy="95.9" r="3.6" style="--i:10"/>
+  <circle class="pt s cir" cx="372.6" cy="111.3" r="3.6" style="--i:11"/>
+  <path class="linea a" pathLength="1" d="M65.4 37.4 L126.8 40.5 L188.3 37.4 L249.7 43.6 L311.2 52.8 L372.6 68.2"/>
+  <circle class="pt m cir" cx="65.4" cy="37.4" r="3.6" style="--i:12"/>
+  <circle class="pt m cir" cx="126.8" cy="40.5" r="3.6" style="--i:13"/>
+  <circle class="pt m cir" cx="188.3" cy="37.4" r="3.6" style="--i:14"/>
+  <circle class="pt m cir" cx="249.7" cy="43.6" r="3.6" style="--i:15"/>
+  <circle class="pt s cir" cx="311.2" cy="52.8" r="3.6" style="--i:16"/>
+  <circle class="pt s cir" cx="372.6" cy="68.2" r="3.6" style="--i:17"/>
+  <g class="leyenda"><circle class="m cir" cx="64" cy="152" r="3.6"/><text x="73" y="156">asiste sobre 85 %</text><circle class="s cir" cx="232" cy="152" r="3.6"/><text x="241" y="156">bajo 85 %</text><path class="flota-l" d="M59 168h10"/><text x="73" y="172">el resto del curso</text></g>
+  <g class="rev"><text x="388" y="128.4" text-anchor="end">se aprueba con 4,0</text></g>
 </svg>
 <!-- /fig:edu -->
     </div></div>
@@ -867,8 +896,8 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
     </header>
     <div>
       <p class="problema">Hice herramientas web para que un curso practique sin nota y se vea qué falta reforzar.</p>
-      <p class="nota">Hoy se usan en clases y están publicadas. Se abren sin cuenta ni instalación, y no guardan ni envían respuestas.</p>
-      <p class="pie"><b>Datos reales.</b> Electronegatividad de los primeros 54 elementos (escala de Pauling, <a href="https://pubchem.ncbi.nlm.nih.gov/periodic-table/">PubChem</a>). Es el patrón que se razona en una de ellas, la <a href="https://bengrez.github.io/aula-herramientas/tabla-periodica-reactiva/">Tabla periódica reactiva</a>.</p>
+      <p class="nota">Hoy se usan en clases y están publicadas. Se abren sin cuenta ni instalación, y no guardan ni envían respuestas. También sigo las notas y la asistencia de cada curso, para ver a tiempo a quién acompañar.</p>
+      <p class="pie"><b>Simulación.</b> Un curso inventado: no publico datos de estudiantes.</p>
       <details class="mas">
         <summary>Tres herramientas publicadas</summary>
         <p class="pie">Las imágenes son fragmentos de cada interfaz.</p>

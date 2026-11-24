@@ -376,7 +376,7 @@ a cada sección. Eligió entre alternativas: línea fina arriba, espacio a la mi
 
 Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro y oscuro a 1440 y 1474 px.
 
-## Decimocuarta ronda: electronegatividad en Docencia
+## Decimocuarta ronda: electronegatividad en Docencia (reemplazada en la decimoquinta)
 
 Pedido de Benjamin (2026-11-24): iterar el gráfico de Docencia manteniendo la estética. Entre cuatro direcciones eligió la
 tendencia periódica y, como propiedad, la electronegatividad.
@@ -393,6 +393,27 @@ tendencia periódica y, como propiedad, la electronegatividad.
 - **La captura** queda sólo en la ficha del desplegable «Tres herramientas publicadas»; ya no se repite en escritorio.
 - **Peso**: el gráfico suma 2,1 KB a `index.html`, pero la página ya no carga la captura al recorrerla: el escritorio baja
   14,9 KB y el celular completo, 9,5 KB.
+
+Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro, oscuro, 1024 px y celular.
+
+## Decimoquinta ronda: seguimiento por notas y asistencia en Docencia
+
+Benjamin (2026-11-24): el gráfico de electronegatividad no le gustó; pidió uno más relevante para la docencia, que evoque el
+seguimiento de estudiantes por notas y asistencia. Entre tres formas eligió «trayectorias del año». El gráfico de la ronda
+anterior salió completo.
+
+- **Qué muestra**: las notas de un curso de 35 estudiantes en seis evaluaciones del año (escala de 1 a 7, con la línea de
+  aprobación en 4,0). El curso va en gris. Tres estudiantes, en coral, bajan a lo largo del año; su marcador es lleno cuando
+  la asistencia del período está sobre 85 % y hueco cuando queda bajo. En los tres la asistencia cae antes que la nota, o al
+  mismo tiempo: es lo que el seguimiento permite ver a tiempo.
+- **Tipo B, simulación**: no hay ningún dato de estudiantes ni de un curso real. Rotulada en el sello («Simulación: un curso
+  de 35, 6 evaluaciones») y en el pie («Un curso inventado: no publico datos de estudiantes»). Los parámetros y la semilla
+  están en `scripts/figuras.py`.
+- **Con esto hay dos gráficos simulados** en la página (flota y seguimiento); el encargo original pedía uno solo. Es decisión
+  directa de Benjamin.
+- **Texto**: sumé la frase que él confirmó: «También sigo las notas y la asistencia de cada curso, para ver a tiempo a quién
+  acompañar.»
+- **Peso**: sin cambio respecto de la ronda anterior (41,5 KB de `index.html`).
 
 Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro, oscuro, 1024 px y celular.
 

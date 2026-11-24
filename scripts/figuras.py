@@ -305,55 +305,75 @@ def figura_ec(var):
     return f'<svg class="fig {var} ec ord" viewBox="0 0 {v["W"]} {v["H"]}" role="img" aria-label="{aria}">\n  {cuerpo}\n</svg>'
 
 
-# ---- 079: Docencia (Benjamin: una tendencia periódica dibujada con la estética del sitio, en vez de la captura; eligió la electronegatividad).
-# DATOS REALES Y PÚBLICOS: electronegatividad en la escala de Pauling de los elementos 1 a 54 (períodos 1 a 5), de la tabla periódica de PubChem
-# (NIH/NLM, https://pubchem.ncbi.nlm.nih.gov/rest/pug/periodictable/CSV, bajada el 2026-11-24; dominio público). He, Ne y Ar no tienen valor.
-# Es el patrón que se razona por posición en la vista «Electronegatividad» de la Tabla periódica reactiva (la herramienta no trae valores).
-EN = [("H", 2.2), ("He", None), ("Li", 0.98), ("Be", 1.57), ("B", 2.04), ("C", 2.55), ("N", 3.04), ("O", 3.44), ("F", 3.98), ("Ne", None), ("Na", 0.93), ("Mg", 1.31), ("Al", 1.61), ("Si", 1.9), ("P", 2.19), ("S", 2.58), ("Cl", 3.16), ("Ar", None), ("K", 0.82), ("Ca", 1), ("Sc", 1.36), ("Ti", 1.54), ("V", 1.63), ("Cr", 1.66), ("Mn", 1.55), ("Fe", 1.83), ("Co", 1.88), ("Ni", 1.91), ("Cu", 1.9), ("Zn", 1.65), ("Ga", 1.81), ("Ge", 2.01), ("As", 2.18), ("Se", 2.55), ("Br", 2.96), ("Kr", 3), ("Rb", 0.82), ("Sr", 0.95), ("Y", 1.22), ("Zr", 1.33), ("Nb", 1.6), ("Mo", 2.16), ("Tc", 1.9), ("Ru", 2.2), ("Rh", 2.28), ("Pd", 2.2), ("Ag", 1.93), ("Cd", 1.69), ("In", 1.78), ("Sn", 1.96), ("Sb", 2.05), ("Te", 2.1), ("I", 2.66), ("Xe", 2.6)]
-EN_HAL, EN_ALC = ("F", "Cl", "Br", "I"), ("Li", "Na", "K", "Rb")
-EN_PER = [(2, 3, 10), (3, 11, 18), (4, 19, 36), (5, 37, 54)]            # período, primer y último número atómico
+# ---- 080: Docencia (Benjamin: el gráfico de electronegatividad de la 079 no le gustó; pidió uno más relevante para la docencia, que evoque el
+# seguimiento de estudiantes por notas y asistencia; eligió «trayectorias del año»).
+# SIMULACIÓN, sin datos de ningún estudiante ni de ningún curso real. SEG_N estudiantes y SEG_E evaluaciones en la escala chilena (1,0 a 7,0; se
+# aprueba con 4,0). Cada estudiante tiene su nivel y un ruido por evaluación. Tres bajan su asistencia desde una evaluación distinta (SEG_BAJAN:
+# desde cuál y cuántos puntos por período); su nota baja 0,08 por cada punto de asistencia perdido bajo 90 %, con un período de retraso: primero cae
+# la asistencia (marcador hueco bajo SEG_UMBRAL) y después la nota. Semilla fija.
+SEG_N, SEG_E, SEG_UMBRAL = 35, 6, 85
+SEG_BAJAN = [(2, 5.0, 5.85), (3, 6.5, 5.35), (4, 8.5, 6.4)]            # (evaluación desde la que falta más, puntos de asistencia por período, nivel de notas)
+
+
+def datos_seg():
+    rng = np.random.default_rng(80)
+    nivel = np.clip(rng.normal(5.5, 0.55, SEG_N), 4.3, 6.7)
+    notas = nivel[:, None] + rng.normal(0, 0.3, (SEG_N, SEG_E))
+    sel, asis = [], []
+    for j, (desde, pend, niv) in enumerate(SEG_BAJAN):
+        a = np.array([93.0 - pend * max(0, e - desde + 1) for e in range(1, SEG_E + 1)]) + rng.normal(0, 1.2, SEG_E)
+        previo = np.concatenate([[93.0], a[:-1]])                       # la nota responde a la asistencia del período anterior
+        notas[j] = niv + rng.normal(0, 0.12, SEG_E) - 0.08 * np.clip(90 - previo, 0, None)
+        sel.append(j)
+        asis.append(a)
+    notas = np.round(np.clip(notas, 2.2, 7.0), 1)
+    return dict(notas=notas, sel=sel, asis=np.round(np.array(asis)))
 
 
 def figura_edu(var):
     ancho = var == "w"
-    p = Panel(var, 0, 55, 0, 4.3)
-    p.ejes([1, 10, 20, 30, 40, 50], [1, 2, 3, 4], "Número atómico", "Electronegatividad",
-           "Datos reales: PubChem, escala de Pauling" if ancho else "Datos reales: PubChem")
-    r = 4.2 if ancho else 3.4
-    p.partes.append('<path class="cero" d="' + "".join(f"M{f(p.X(a - .5))} {f(p.T)}V{f(p.B)}" for _, a, _ in EN_PER) + '"/>')
-    per = "".join(f'<text x="{f(p.X((a + b) / 2))}" y="{f(p.B - 6)}" text-anchor="middle">{("período " if ancho or n > 3 else "") + str(n)}</text>' for n, a, b in EN_PER)
-    p.partes.append(f'<g class="vecr">{per}</g>')
-    tramos, d = [], []
-    for z, (_, v) in enumerate(EN, 1):                                   # la línea se corta donde no hay valor (He, Ne, Ar)
-        if v is None:
-            if len(d) > 1:
-                tramos.append(d)
-            d = []
-        else:
-            d.append((z, v))
-    if len(d) > 1:
-        tramos.append(d)
-    p.partes.append('<path class="linea ink" pathLength="1" d="' + "".join("M" + " L".join(f"{f(p.X(z))} {f(p.Y(v))}" for z, v in t) for t in tramos) + '"/>')
-    p.partes.append('<path class="tax" d="' + "".join(f"M{f(p.X(z))} {f(p.Y(v))}h0" for z, (s, v) in enumerate(EN, 1) if v is not None and s not in EN_HAL + EN_ALC) + '"/>')
-    rot, i = [], 0
-    for z, (s, v) in enumerate(EN, 1):
-        if s in EN_HAL or s in EN_ALC:
-            x, y = p.X(z), p.Y(v)
-            arriba = s in EN_HAL
-            p.partes.append(_marca("m cir" if arriba else "s cir", x, y, r, f' style="--i:{i}"'))
-            dx = -5 if s == "Br" else 0                                  # el kriptón (3,0) queda pegado al bromo
-            rot.append(f'<text x="{f(x + dx)}" y="{f(y - r - 5 if arriba else y + r + 13)}" text-anchor="middle">{s}</text>')
+    d = datos_seg()
+    ev = list(range(1, SEG_E + 1))
+    p = Panel(var, 0.75, SEG_E + 0.25, 2, 7)
+    p.ejes(ev, [3, 4, 5, 6, 7], "Evaluación del año", "Nota",
+           f"Simulación: un curso de {SEG_N}, {SEG_E} evaluaciones" if ancho else f"Simulación: un curso de {SEG_N}")
+    p.partes.append(f'<path class="ref" d="M{f(p.L)} {f(p.Y(4))}H{f(p.R)}"/>')
+    g = (lambda v: f(v)) if ancho else (lambda v: str(int(round(v))))
+    otros = "".join("M" + " ".join(f"{g(p.X(e))} {g(p.Y(n))}" for e, n in zip(ev, fila)) for i, fila in enumerate(d["notas"]) if i not in d["sel"])
+    p.partes.append(f'<path class="flota" d="{otros}"/>')
+    r = 4.4 if ancho else 3.6
+    i = 0
+    for k, j in enumerate(d["sel"]):
+        p.linea(ev, d["notas"][j], "a")
+        for e, n, a in zip(ev, d["notas"][j], d["asis"][k]):
+            p.partes.append(_marca("m cir" if a >= SEG_UMBRAL else "s cir", p.X(e), p.Y(n), r, f' style="--i:{i}"'))
             i += 1
-    rot.append(f'<text x="{f(p.X(1) + 7)}" y="{f(p.Y(EN[0][1]) + 4)}">H</text>')
-    p.partes.append(f'<g class="vecr el">{"".join(rot)}</g>')
-    lx, ly, paso = p.X(39 if ancho else 40), p.T + (12 if ancho else 8), (19 if ancho else 16)
-    p.partes.append(f'<g class="leyenda">{_marca("m cir", lx, ly, r).replace(chr(34) + "pt ", chr(34))}<text x="{f(lx + 10)}" y="{f(ly + 4)}">halógenos</text>'
-                    f'{_marca("s cir", lx, ly + paso, r).replace(chr(34) + "pt ", chr(34))}<text x="{f(lx + 10)}" y="{f(ly + paso + 4)}">{"metales alcalinos" if ancho else "alcalinos"}</text></g>')
-    aria = ("Gráfico con datos reales: electronegatividad, en la escala de Pauling, de los primeros 54 elementos contra su número atómico. "
-            "En cada período sube de izquierda a derecha, desde un metal alcalino (litio, sodio, potasio y rubidio, entre 0,8 y 1,0) hasta un halógeno "
-            "(flúor 3,98; cloro 3,16; bromo 2,96; yodo 2,66), y cae al empezar el período siguiente. Los máximos bajan de un período al otro. "
-            "El helio, el neón y el argón no tienen valor.")
-    return p.svg("edu ord", aria)
+    q = chr(34)
+    m = lambda cls, x, y: _marca(cls, x, y, r).replace(q + "pt ", q)
+    lx, ly = p.L + 14, p.B - (14 if ancho else 24)                       # leyenda en la franja de abajo, donde no llegan las notas
+    if ancho:
+        ley = (f'{m("m cir", lx, ly)}<text x="{f(lx + 10)}" y="{f(ly + 4)}">asistencia sobre {SEG_UMBRAL} %</text>'
+               f'{m("s cir", lx + 216, ly)}<text x="{f(lx + 226)}" y="{f(ly + 4)}">bajo {SEG_UMBRAL} %</text>'
+               f'<path class="flota-l" d="M{f(lx + 331)} {f(ly)}h10"/><text x="{f(lx + 346)}" y="{f(ly + 4)}">el resto del curso</text>')
+    else:
+        ley = (f'{m("m cir", lx, ly)}<text x="{f(lx + 9)}" y="{f(ly + 4)}">asiste sobre {SEG_UMBRAL} %</text>'
+               f'{m("s cir", lx + 168, ly)}<text x="{f(lx + 177)}" y="{f(ly + 4)}">bajo {SEG_UMBRAL} %</text>'
+               f'<path class="flota-l" d="M{f(lx - 5)} {f(ly + 16)}h10"/><text x="{f(lx + 9)}" y="{f(ly + 20)}">el resto del curso</text>')
+    p.partes.append(f'<g class="leyenda">{ley}</g>')
+    p.partes.append(f'<g class="rev"><text x="{f(p.R)}" y="{f(p.Y(4) + 14)}" text-anchor="end">se aprueba con 4,0</text></g>')
+    for k, j in enumerate(d["sel"]):                                     # la simulación tiene que contar lo que dice el texto
+        hueco = [e for e, a in zip(ev, d["asis"][k]) if a < SEG_UMBRAL]
+        cae = [e for e, n in zip(ev, d["notas"][j]) if n < d["notas"][j][0] - 0.5]
+        assert hueco and cae and hueco[0] <= cae[0], "en cada caso la asistencia baja antes que la nota, o junto con ella"
+    sel = d["notas"][d["sel"]]
+    assert min(abs(a - b) for e in range(SEG_E) for a, b in ((sel[0][e], sel[1][e]), (sel[0][e], sel[2][e]), (sel[1][e], sel[2][e]))) >= 0.2, "los tres casos no se montan"
+    assert np.delete(d["notas"], d["sel"], axis=0).min() >= 3.2, "la franja de la leyenda queda libre"
+    fin = [d["notas"][j][-1] for j in d["sel"]]
+    aria = (f"Gráfico con datos simulados: las notas de un curso inventado de {SEG_N} estudiantes en {SEG_E} evaluaciones del año, en la escala de 1 a 7. "
+            f"{SEG_N - len(d['sel'])} estudiantes, en gris, se mantienen casi siempre sobre 4. Tres, en coral, bajan sus notas a lo largo del año y terminan en "
+            f"{', '.join(str(v).replace('.', ',') for v in fin[:-1])} y {str(fin[-1]).replace('.', ',')}. En cada uno la asistencia cae bajo {SEG_UMBRAL} % "
+            "(marcador hueco) antes de que baje la nota, o al mismo tiempo.")
+    return p.svg("seg", aria)
 
 
 def figura_sip():
