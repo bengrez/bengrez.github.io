@@ -478,7 +478,7 @@ entiende el hilo de la página. Eligió la forma «frase puente con índice» y 
   03 Docencia.
 - El orden de la página queda: portada, Sobre mí, Tres casos (puente), los tres casos, Contacto.
 - En el mismo cambio: el índice h y las citas quedan centrados en el alto de su fila en «Producción científica».
-- Suma 0,3 KB.
+- Suma 0,5 KB.
 
 Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro, oscuro y celular.
 
@@ -486,11 +486,11 @@ Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 84,3 KB | +50,8 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 84,3 KB | +1,7 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 168,4 KB | +3,5 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 85,9 KB | +52,4 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 85,9 KB | +3,3 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 170,0 KB | +5,1 KB |
 
-Los valores son del tema claro; en el oscuro, 77,8, 77,8 y 151,1 KB. Desde la séptima ronda la primera carga incluye el retrato
+Los valores son del tema claro; en el oscuro, 79,4, 79,4 y 152,7 KB. Desde la séptima ronda la primera carga incluye el retrato
 (31,1 KB en el celular, 70,4 KB en escritorio). Desde la quinta ronda ya no se baja Pretext (39,9 KB) y la imagen del autodiagnóstico (23,2 KB) se carga sólo al abrir su
 desplegable. Por archivo: `index.html` +1,7 KB; `quimiotaxis.min.js` +3,5 KB (sólo escritorio); `empuje.min.js` 3,4 → 1,6 KB; `costras-biologicas.webp` 27,2 KB (nueva);
 `tabla-periodica-fig-n.webp` 11,6 KB o `tabla-periodica-fig.webp` 17,0 KB (nuevas, una según el ancho); se quitó
