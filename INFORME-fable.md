@@ -457,6 +457,9 @@ alternativas: forma «línea de tiempo abierta», hilo «la experiencia acumulad
   Después Benjamin lo pidió **de barras por año, como el de Google Scholar**, con la estética de la página: una barra coral
   por año con el año debajo (17 a 26), el valor sobre la más alta (137) y sobre la del año en curso (102), que va hueca. En
   pantallas de hasta 480 px las barras bajan bajo la cifra para que se lean.
+  Por último pidió **ordenar el bloque**: quedó como una tabla chica bajo el rótulo «Producción científica», con tres
+  columnas fijas y dos filas separadas por una línea (artículos, capítulo de libro, patente; índice h, citas y las barras
+  en la tercera columna) y la fuente al pie. Usa el mismo rótulo con línea que «Con qué trabajo».
 - **Lados cambiados** (pedido de Benjamin, con captura): en escritorio el recorrido va a la izquierda y el título con «Con qué
   trabajo» a la derecha. Sólo en «Sobre mí»; los tres casos siguen con el gráfico y el título a la izquierda. El celular y el
   orden de lectura no cambian.

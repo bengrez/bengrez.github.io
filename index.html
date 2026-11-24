@@ -373,12 +373,11 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 .con-que{font-family:var(--mono);font-size:.82rem;line-height:1.6;color:var(--muted);margin-top:1.25rem}
 .con-que b{font-weight:500;color:var(--ink)}
 /* 082: «Con qué trabajo», bajo el título de «Sobre mí» (columna izquierda en escritorio; entre el título y el recorrido en el celular) */
-.oficio{display:grid;gap:.7rem;max-width:26rem;margin-top:1.6rem}
+.rotulo{font-family:var(--display);font-size:.95rem;font-weight:500;line-height:1.3;max-width:26rem;margin:1.6rem 0 0;padding-bottom:.45rem;border-bottom:1px solid var(--rule-strong)}
+.oficio{display:grid;gap:.7rem;max-width:26rem;margin-top:.75rem}
 .oficio>div{display:grid;grid-template-columns:6.6rem minmax(0,1fr);gap:0 .9rem}
 .oficio dt{color:var(--ink)}
 .oficio dd{margin:0}
-.oficio .cab{display:block;border-bottom:1px solid var(--rule-strong);padding-bottom:.45rem}
-.oficio .cab dt{font-family:var(--display);font-size:.95rem;font-weight:500}
 .evidencia{margin-top:clamp(1.75rem,4vw,2.75rem)}
 .evidencia figcaption,.pie{font-family:var(--mono);font-size:.78rem;line-height:1.55;color:var(--muted);margin-top:.8rem;max-width:62em}
 .seccion h3.titulo{font-size:1.2rem;margin-top:clamp(2rem,4.5vw,3rem)}
@@ -469,22 +468,26 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
 .metricas .cuando{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-left:auto}
 .metricas .cuando dt{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}   /* 053: la fuente ya es un par dt/dd válido dentro de la lista (axe: definition-list); el rótulo «fuente» sólo lo leen los lectores de pantalla */
 .metricas .cuando dd{font-family:var(--mono);font-size:.78rem;font-weight:400;line-height:inherit;color:var(--muted)}
-/* 084: en «Sobre mí» las cifras van en dos filas fijas: la producción (artículos, capítulo de libro, patente) y, debajo, las citas y el índice h */
-#sobre-mi .metricas{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;align-items:start;gap:.9rem 2.25rem}
-#sobre-mi .metricas .cuando{grid-column:1 / -1;margin-left:0}
-/* 086–087: junto a la cifra de citas, las citas por año en barras, como en el perfil de Google Scholar (de donde vienen los datos) y con la paleta del sitio; el año en curso va con barra hueca */
-#sobre-mi .metricas .con-chispa{grid-column:2 / -1;display:grid;grid-template-columns:auto minmax(0,13rem);grid-template-rows:auto auto 1fr;column-gap:1.4rem}
+/* 084–088: las cifras de «Sobre mí», ordenadas como una tabla chica bajo su rótulo: tres columnas fijas y dos filas con una línea entre ellas. Arriba, la producción
+   (artículos, capítulo de libro, patente); abajo, el índice h, las citas y, en la tercera columna, las citas por año en barras (086–087: datos del perfil de Google Scholar, con la
+   paleta del sitio; el año en curso va con barra hueca). */
+#sobre-mi .metricas + .rotulo,#sobre-mi .nota + .rotulo{max-width:none;margin-top:clamp(2rem,3.2vw,3rem)}
+#sobre-mi .metricas{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1fr) minmax(0,1.6fr);gap:0;align-items:stretch;margin-top:0;padding-block:0}
+#sobre-mi .metricas>div{justify-content:flex-end;padding:.8rem 1rem .85rem 0}
+#sobre-mi .metricas>div:nth-child(n+4){border-top:1px solid var(--rule)}
+#sobre-mi .metricas .cuando{grid-column:1 / -1;margin-left:0;padding-bottom:0}
+#sobre-mi .metricas .con-chispa{grid-column:2 / -1;display:grid;grid-template-columns:1fr 1.6fr;grid-template-columns:subgrid;grid-template-rows:auto auto 1fr;padding-right:0}
 .con-chispa dd{grid-column:1;grid-row:1}
 .con-chispa dt{grid-column:1;grid-row:2}
-.con-chispa .graf{grid-column:2;grid-row:1 / -1;line-height:0}
-@media (max-width:480px){#sobre-mi .metricas .con-chispa{grid-template-columns:minmax(0,13rem)}.con-chispa .graf{grid-column:1;grid-row:3;margin-top:.7rem}}   /* en pantallas angostas las barras van bajo la cifra, a tamaño legible */
+.con-chispa .graf{grid-column:2;grid-row:1 / -1;line-height:0;max-width:13rem}
+@media (max-width:480px){#sobre-mi .metricas{grid-template-columns:auto minmax(4.5rem,1fr) auto}#sobre-mi .metricas dt{overflow-wrap:normal}#sobre-mi .metricas .con-chispa{grid-template-columns:minmax(0,1fr) auto;grid-template-columns:subgrid}.con-chispa .graf{grid-column:1 / -1;grid-row:3;margin-top:.8rem}}   /* en pantallas angostas las barras van bajo la cifra, a tamaño legible */
 .chispa{display:block;width:100%;height:auto;overflow:visible}
 .chispa rect{fill:var(--serie-a)}
 .chispa .curso{fill:var(--bg);stroke:var(--serie-a);stroke-width:1.2}
 .chispa .base{fill:none;stroke:var(--rule-strong);stroke-width:1}
 .chispa text{font-family:var(--mono);font-size:9px;font-weight:400;fill:var(--muted)}
 .chispa .v{fill:var(--ink)}
-@media (max-width:400px){#sobre-mi .metricas{column-gap:1.1rem}}
+@media (max-width:400px){#sobre-mi .metricas>div{padding-right:.8rem}}
 
 /* ---- herramientas publicadas: dos piezas distintas, cada una con su captura ---- */
 .herr{position:relative;display:grid;gap:1rem clamp(1.25rem,3vw,2rem);margin-top:1.25rem;padding-top:1.25rem}
@@ -641,8 +644,8 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
   <div class="pagina dos">
     <header class="riel">
       <div class="riel-top"><p class="kicker">Quién soy</p><h2 id="h-sobre">Sobre mí</h2></div>
+      <h3 class="rotulo">Con qué trabajo</h3>
       <dl class="con-que oficio">
-        <div class="cab"><dt>Con qué trabajo</dt></div>
         <div><dt>Análisis</dt><dd>R, Python, SQL, estadística multivariante</dd></div>
         <div><dt>Datos</dt><dd>PostgreSQL, Linux, Docker, agentes de&nbsp;IA</dd></div>
         <div><dt>Laboratorio</dt><dd>metagenómica, marcaje isotópico (RNA&#8209;SIP), qPCR</dd></div>
@@ -658,6 +661,7 @@ footer{padding-block:1.5rem 2.5rem;font-family:var(--mono);font-size:.78rem;line
         <div><dt><span class="logo logo-andes" aria-hidden="true"></span>Andes <span class="sub">2025–hoy</span></dt><dd id="agentes">Agentic engineer. Trabajo con los datos de una flota de buses y con agentes de IA, con límites claros y revisando lo que hacen antes de usarlo.</dd></div>
       </dl>
       <p class="nota">También dicté talleres de análisis de datos en Australia y China.</p>
+      <h3 class="rotulo">Producción científica</h3>
       <dl class="metricas">
         <div><dt>artículos</dt><dd>14</dd></div>
         <div><dt>capítulo de libro</dt><dd>1</dd></div>
