@@ -305,6 +305,57 @@ def figura_ec(var):
     return f'<svg class="fig {var} ec ord" viewBox="0 0 {v["W"]} {v["H"]}" role="img" aria-label="{aria}">\n  {cuerpo}\n</svg>'
 
 
+# ---- 079: Docencia (Benjamin: una tendencia periódica dibujada con la estética del sitio, en vez de la captura; eligió la electronegatividad).
+# DATOS REALES Y PÚBLICOS: electronegatividad en la escala de Pauling de los elementos 1 a 54 (períodos 1 a 5), de la tabla periódica de PubChem
+# (NIH/NLM, https://pubchem.ncbi.nlm.nih.gov/rest/pug/periodictable/CSV, bajada el 2026-11-24; dominio público). He, Ne y Ar no tienen valor.
+# Es el patrón que se razona por posición en la vista «Electronegatividad» de la Tabla periódica reactiva (la herramienta no trae valores).
+EN = [("H", 2.2), ("He", None), ("Li", 0.98), ("Be", 1.57), ("B", 2.04), ("C", 2.55), ("N", 3.04), ("O", 3.44), ("F", 3.98), ("Ne", None), ("Na", 0.93), ("Mg", 1.31), ("Al", 1.61), ("Si", 1.9), ("P", 2.19), ("S", 2.58), ("Cl", 3.16), ("Ar", None), ("K", 0.82), ("Ca", 1), ("Sc", 1.36), ("Ti", 1.54), ("V", 1.63), ("Cr", 1.66), ("Mn", 1.55), ("Fe", 1.83), ("Co", 1.88), ("Ni", 1.91), ("Cu", 1.9), ("Zn", 1.65), ("Ga", 1.81), ("Ge", 2.01), ("As", 2.18), ("Se", 2.55), ("Br", 2.96), ("Kr", 3), ("Rb", 0.82), ("Sr", 0.95), ("Y", 1.22), ("Zr", 1.33), ("Nb", 1.6), ("Mo", 2.16), ("Tc", 1.9), ("Ru", 2.2), ("Rh", 2.28), ("Pd", 2.2), ("Ag", 1.93), ("Cd", 1.69), ("In", 1.78), ("Sn", 1.96), ("Sb", 2.05), ("Te", 2.1), ("I", 2.66), ("Xe", 2.6)]
+EN_HAL, EN_ALC = ("F", "Cl", "Br", "I"), ("Li", "Na", "K", "Rb")
+EN_PER = [(2, 3, 10), (3, 11, 18), (4, 19, 36), (5, 37, 54)]            # período, primer y último número atómico
+
+
+def figura_edu(var):
+    ancho = var == "w"
+    p = Panel(var, 0, 55, 0, 4.3)
+    p.ejes([1, 10, 20, 30, 40, 50], [1, 2, 3, 4], "Número atómico", "Electronegatividad",
+           "Datos reales: PubChem, escala de Pauling" if ancho else "Datos reales: PubChem")
+    r = 4.2 if ancho else 3.4
+    p.partes.append('<path class="cero" d="' + "".join(f"M{f(p.X(a - .5))} {f(p.T)}V{f(p.B)}" for _, a, _ in EN_PER) + '"/>')
+    per = "".join(f'<text x="{f(p.X((a + b) / 2))}" y="{f(p.B - 6)}" text-anchor="middle">{("período " if ancho or n > 3 else "") + str(n)}</text>' for n, a, b in EN_PER)
+    p.partes.append(f'<g class="vecr">{per}</g>')
+    tramos, d = [], []
+    for z, (_, v) in enumerate(EN, 1):                                   # la línea se corta donde no hay valor (He, Ne, Ar)
+        if v is None:
+            if len(d) > 1:
+                tramos.append(d)
+            d = []
+        else:
+            d.append((z, v))
+    if len(d) > 1:
+        tramos.append(d)
+    p.partes.append('<path class="linea ink" pathLength="1" d="' + "".join("M" + " L".join(f"{f(p.X(z))} {f(p.Y(v))}" for z, v in t) for t in tramos) + '"/>')
+    p.partes.append('<path class="tax" d="' + "".join(f"M{f(p.X(z))} {f(p.Y(v))}h0" for z, (s, v) in enumerate(EN, 1) if v is not None and s not in EN_HAL + EN_ALC) + '"/>')
+    rot, i = [], 0
+    for z, (s, v) in enumerate(EN, 1):
+        if s in EN_HAL or s in EN_ALC:
+            x, y = p.X(z), p.Y(v)
+            arriba = s in EN_HAL
+            p.partes.append(_marca("m cir" if arriba else "s cir", x, y, r, f' style="--i:{i}"'))
+            dx = -5 if s == "Br" else 0                                  # el kriptón (3,0) queda pegado al bromo
+            rot.append(f'<text x="{f(x + dx)}" y="{f(y - r - 5 if arriba else y + r + 13)}" text-anchor="middle">{s}</text>')
+            i += 1
+    rot.append(f'<text x="{f(p.X(1) + 7)}" y="{f(p.Y(EN[0][1]) + 4)}">H</text>')
+    p.partes.append(f'<g class="vecr el">{"".join(rot)}</g>')
+    lx, ly, paso = p.X(39 if ancho else 40), p.T + (12 if ancho else 8), (19 if ancho else 16)
+    p.partes.append(f'<g class="leyenda">{_marca("m cir", lx, ly, r).replace(chr(34) + "pt ", chr(34))}<text x="{f(lx + 10)}" y="{f(ly + 4)}">halógenos</text>'
+                    f'{_marca("s cir", lx, ly + paso, r).replace(chr(34) + "pt ", chr(34))}<text x="{f(lx + 10)}" y="{f(ly + paso + 4)}">{"metales alcalinos" if ancho else "alcalinos"}</text></g>')
+    aria = ("Gráfico con datos reales: electronegatividad, en la escala de Pauling, de los primeros 54 elementos contra su número atómico. "
+            "En cada período sube de izquierda a derecha, desde un metal alcalino (litio, sodio, potasio y rubidio, entre 0,8 y 1,0) hasta un halógeno "
+            "(flúor 3,98; cloro 3,16; bromo 2,96; yodo 2,66), y cae al empezar el período siguiente. Los máximos bajan de un período al otro. "
+            "El helio, el neón y el argón no tienen valor.")
+    return p.svg("edu ord", aria)
+
+
 def figura_sip():
     """RNA-SIP, simulada: ARNr 16S por fracción de un gradiente de CsTFA (12 fracciones), control con sustrato ¹²C y tratamiento con ¹³C. El ARN que incorporó ¹³C
     queda en las fracciones más densas; una parte de la comunidad no usó el sustrato y sigue en la posición liviana. Densidades del orden de las que se usan en RNA-SIP."""
@@ -367,7 +418,7 @@ def figura_citas():
 
 def todas():
     out = {}
-    for nombre, fn in (("ds", figura_ds), ("ec", figura_ec)):
+    for nombre, fn in (("ds", figura_ds), ("ec", figura_ec), ("edu", figura_edu)):
         out[nombre] = "\n".join(fn(v) for v in ("w", "n"))
     out["sip"] = figura_sip()
     out["citas"] = figura_citas()

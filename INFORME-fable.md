@@ -376,15 +376,35 @@ a cada sección. Eligió entre alternativas: línea fina arriba, espacio a la mi
 
 Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro y oscuro a 1440 y 1474 px.
 
+## Decimocuarta ronda: electronegatividad en Docencia
+
+Pedido de Benjamin (2026-11-24): iterar el gráfico de Docencia manteniendo la estética. Entre cuatro direcciones eligió la
+tendencia periódica y, como propiedad, la electronegatividad.
+
+- **Qué muestra**: la electronegatividad (escala de Pauling) de los primeros 54 elementos contra su número atómico. En cada
+  período sube desde un metal alcalino hasta un halógeno y cae al empezar el siguiente. Halógenos en coral, metales alcalinos
+  con contorno burdeos, el resto como puntos tenues; los períodos van separados por líneas punteadas.
+- **Tipo A, datos reales y públicos**: tabla periódica de PubChem (NIH), bajada el 2026-11-24. Fuente en el sello del gráfico
+  y en el pie, con enlace.
+- **Vacíos, declarados**: el helio, el neón y el argón no tienen valor y la línea se corta ahí. El kriptón (3,0) y el xenón
+  (2,6) sí lo tienen en PubChem y van como puntos corrientes.
+- **Relación con la herramienta**: es el patrón que se razona en la vista «Electronegatividad» de la Tabla periódica reactiva.
+  La herramienta no trae valores (se razona por posición), así que los datos no salen de ella.
+- **La captura** queda sólo en la ficha del desplegable «Tres herramientas publicadas»; ya no se repite en escritorio.
+- **Peso**: el gráfico suma 2,1 KB a `index.html`, pero la página ya no carga la captura al recorrerla: el escritorio baja
+  14,9 KB y el celular completo, 9,5 KB.
+
+Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro, oscuro, 1024 px y celular.
+
 ## Peso (transferido con gzip, sin fuentes, como en el guardrail 5)
 
 | Caso | Antes (056) | Ahora | Diferencia |
 |---|---|---|---|
-| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 70,5 KB | +37,0 KB |
-| Celular, recorriendo toda la página | 82,6 KB | 82,1 KB | −0,5 KB |
-| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 171,6 KB | +6,7 KB |
+| Celular, primera carga (sólo `index.html`; las imágenes son diferidas) | 33,5 KB | 72,6 KB | +39,1 KB |
+| Celular, recorriendo toda la página | 82,6 KB | 72,6 KB | −10,0 KB |
+| Escritorio desde 1200 px, recorriendo toda la página (con fondo y Pretext) | 164,9 KB | 156,7 KB | −8,2 KB |
 
-Los valores son del tema claro; en el oscuro, 64,0, 75,6 y 154,2 KB. Desde la séptima ronda la primera carga incluye el retrato
+Los valores son del tema claro; en el oscuro, 66,1, 66,1 y 139,4 KB. Desde la séptima ronda la primera carga incluye el retrato
 (31,1 KB en el celular, 70,4 KB en escritorio). Desde la quinta ronda ya no se baja Pretext (39,9 KB) y la imagen del autodiagnóstico (23,2 KB) se carga sólo al abrir su
 desplegable. Por archivo: `index.html` +1,7 KB; `quimiotaxis.min.js` +3,5 KB (sólo escritorio); `empuje.min.js` 3,4 → 1,6 KB; `costras-biologicas.webp` 27,2 KB (nueva);
 `tabla-periodica-fig-n.webp` 11,6 KB o `tabla-periodica-fig.webp` 17,0 KB (nuevas, una según el ancho); se quitó
