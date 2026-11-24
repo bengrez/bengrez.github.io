@@ -432,7 +432,7 @@ alternativas: forma «línea de tiempo abierta», hilo «la experiencia acumulad
     y revisando lo que hacen antes de usarlo.» (absorbe la frase de agentes que estaba aparte).
 - **Fuera de la línea de tiempo**: «También dicté talleres de análisis de datos en Australia y China, y soy coinventor de
   una patente.» Va aparte porque el CV no trae las fechas de los talleres.
-- Se mantienen el lema y las tres cifras. Son 97 palabras entre lema, etapas y la línea final.
+- Se mantienen el lema y las tres cifras. Son 109 palabras contando los nombres de las instituciones y las fechas (unas 90 de texto).
 - **Peso**: los logos ahora se bajan con la página, así que los reduje de 168 a 96 px de alto (de 55,7 a 11,2 KB entre los
   cuatro). La primera carga del celular sube 11,5 KB.
 
