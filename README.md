@@ -105,6 +105,8 @@ Segunda ronda (060, pedidos de Benjamin del mismo día):
   `scripts/figuras.py`: `datos_flota()` y `figura_ds()`.
 - **Secciones más juntas y con borde** (077). En escritorio, `--aire` baja a la mitad (65 px a 1440) y `--grupo` a 43 px; el
   texto de cada sección lleva una línea fina arriba (`.dos>div:not(.riel)`, desde 960 px). Una frase más por prueba.
+  078: el título de Buses ya no alarga su sección (`margin-bottom` negativo en `#ingenieria .riel`) y el celular lleva
+  una línea entre secciones (`.seccion:not(#ingenieria)::before`).
 - **Ordenación en Ecología** (075). El gráfico de la sección pasa a ser la figura 6 de doi:10.3389/fmicb.2019.01617 (CC BY 4.0)
   redibujada: un análisis de correspondencia canónica con 18 muestras (seis grupos por tres réplicas), 214 taxones y 15 vectores
   de química del suelo. Las posiciones se leyeron de la imagen publicada (no se recalculó el análisis) y están en

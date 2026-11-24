@@ -279,6 +279,7 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
   /* El título es lo primero de la sección y el salto con ancla lo deja justo bajo la figura. */
   html{scroll-padding-top:calc(var(--bar) + var(--fig-h,0px))}
   .seccion{padding-top:0}
+  .seccion:not(#ingenieria)::before{content:"";display:block;height:1px;background:var(--rule-strong);margin-inline:var(--gutter)}   /* 078: en el celular, una línea fina entre secciones (la primera va pegada a su figura y no la lleva) */
   .riel{display:contents}
   .riel-top{position:sticky;top:calc(var(--bar) + var(--fig-h,0px));z-index:5;background:var(--bg);margin-inline:calc(-1*var(--gutter));padding:.6rem var(--gutter) .65rem}
   .riel-meta{margin-top:.5rem}
@@ -306,7 +307,7 @@ h1{font-size:calc(clamp(2.3rem,2.5vw + 1rem,3.6rem)*(1 - var(--k)) + clamp(1.75r
   .serie .hoja{position:relative;grid-column:1;margin:0 calc(-1 * clamp(2rem,4vw,3.5rem)) 0 0;padding:1.5rem clamp(2rem,4vw,3.5rem) .75rem 0;pointer-events:auto}
   #ingenieria{grid-column:1;grid-row:1}#investigacion{grid-column:1;grid-row:2}#educacion{grid-column:1;grid-row:3}   /* 068: sin el índice de casos, la escena tiene tres filas */
   /* en la primera fila el título parte bajo la figura, a la altura donde se pega */
-  #ingenieria .riel{margin-top:calc(var(--fig-h,15rem) - clamp(2.25rem,5.5vw,4rem) + 2rem)}
+  #ingenieria .riel{margin-top:calc(var(--fig-h,15rem) - clamp(2.25rem,5.5vw,4rem) + 2rem);margin-bottom:-4.5rem}   /* 078: el título, que va bajo la figura, ya no alarga la primera sección: su alto lo da el texto, como en las otras, y el espacio hasta la siguiente es el mismo */
   /* 047: el título (riel) de una sección que se va hacia arriba pasaba por detrás del gráfico, que no tiene fondo, y se montaba sobre él. Ahora el JS (cortar(), más abajo) mide
      cuánto de su borde superior queda por encima del borde inferior de la figura (--corte) y el título se desvanece hacia ese borde con una máscara de 30 px: nunca cruza el gráfico y el fondo vivo
      de la columna sigue a la vista (la máscara es más ancha que el título para no recortar el velo y su sombra). */

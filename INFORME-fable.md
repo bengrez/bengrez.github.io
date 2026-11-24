@@ -368,8 +368,11 @@ a cada sección. Eligió entre alternativas: línea fina arriba, espacio a la mi
   - Buses: «Como no había suficientes fallas registradas, construí un simulador para probar el detector a ciegas.»
   - Suelos: «Con inóculo y nitrógeno el suelo respiró el doble, pero emergieron menos plántulas.»
   - Colegio: «Se abren sin cuenta ni instalación, y no guardan ni envían respuestas.»
-- **Límite**: entre Buses y Suelos el espacio en la columna del texto sigue siendo mayor (unos 190 px), porque el título de
-  Buses va bajo el gráfico y esa columna es más alta que el texto.
+- **Espacio tras Buses, igualado** (respuesta de Benjamin: sí). El título de Buses, que va bajo el gráfico, ya no alarga la
+  sección: el espacio hasta Suelos es el mismo que entre las demás. Medido de texto a línea siguiente: 103, 101 y 102 px a
+  1440 px. Los títulos de Buses y Suelos quedan a unos 80 px.
+- **Línea en el celular** (respuesta de Benjamin: sí): una línea fina entre secciones, sobre cada título. La primera sección
+  no la lleva, porque va pegada a su gráfico.
 
 Verificado: siete configuraciones sin errores ni desborde; sin JavaScript a 375 px; capturas en claro y oscuro a 1440 y 1474 px.
 
