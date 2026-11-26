@@ -1,0 +1,31 @@
+{
+  "_nota": "Datos públicos de la página, ya filtrados. Los escribe la sincronización con el vault (fuera de este repo) o una persona; scripts/datos.py los valida y los pega en index.html. Ver datos/LEEME.md.",
+  "scholar_leido": "2026-11-24",
+  "produccion": {
+    "articulos": 14,
+    "capitulos": 1,
+    "patentes": 1,
+    "indice_h": 13,
+    "citas": 801
+  },
+  "citas_por_anio": {
+    "2017": 2,
+    "2018": 5,
+    "2019": 20,
+    "2020": 64,
+    "2021": 107,
+    "2022": 131,
+    "2023": 137,
+    "2024": 115,
+    "2025": 107,
+    "2026": 102
+  },
+  "estados": {
+    "data-science": "piloto",
+    "ecologia": "publicado",
+    "docencia": "en-uso",
+    "herr-tabla-periodica-reactiva": "en-uso",
+    "herr-autodiagnostico-bienestar-salud": "en-uso",
+    "herr-vacunas-rebano": "publicada"
+  }
+}

@@ -379,11 +379,20 @@ def figura_edu(var):
 # ---- 086: citas por año, en miniatura, junto a la cifra de citas de «Sobre mí» (Benjamin: «al lado de citas, agrega un linegraph de mis citas a
 # través de los años»). DATOS PÚBLICOS: el gráfico de barras del perfil de Google Scholar, leído el 2026-11-24 (suman 790; el total del perfil es 801:
 # Scholar no fecha todas las citas). El último año va con marcador hueco porque está en curso.
-CITAS_ANIO = {2017: 2, 2018: 5, 2019: 20, 2020: 64, 2021: 107, 2022: 131, 2023: 137, 2024: 115, 2025: 107, 2026: 102}
-CITAS_LEIDO = "24 de noviembre de 2026"
+# Desde feat/sync-vault (2026-11-25) los valores viven en datos/sitio.json (citas_por_anio, scholar_leido), los mismos que pega
+# scripts/datos.py; esta función los recibe de ahí. Sin argumentos, los lee del archivo.
 
 
-def chispa_citas():
+def _citas_de_datos():
+    sys.path.insert(0, AQUI)
+    import datos
+    v = datos.cargar()
+    return v["citas_por_anio"], datos.fecha_larga(v["leido"])
+
+
+def chispa_citas(CITAS_ANIO=None, CITAS_LEIDO=None):
+    if CITAS_ANIO is None:
+        CITAS_ANIO, CITAS_LEIDO = _citas_de_datos()
     # 087 (Benjamin: «de barras por año, similar al de Google Scholar, pero con la misma estética de la página»): una barra por año con su año debajo;
     # el valor va sobre la barra más alta y sobre la del año en curso, que es hueca.
     paso, ancho, x0, yt, yb = 20, 13, 3, 14, 62
