@@ -11,6 +11,14 @@ DOI verificados) en `~/LLM-context/Personal/sitio-personal/`.
 
 Publicado con GitHub Pages desde la rama `main`, raíz del repositorio: https://bengrez.github.io/
 
+## Datos al día con el estado real (rama `feat/sync-vault`, 2026-11-25)
+
+Las cifras de Google Scholar y el estado de cada caso y herramienta viven en `datos/sitio.json`; `scripts/datos.py --pegar` los
+valida y los pega en `index.html` entre marcadores `<!-- dato:ID -->` (ver `datos/LEEME.md`). La miniatura de citas por año
+(`scripts/figuras.py`, `chispa_citas`) lee los mismos datos. Una sincronización mensual, fuera de este repo, actualiza ese archivo
+desde las fuentes y publica sólo si pasa su compuerta. La revisión del sitio contra el estado real de los proyectos, con lo que se
+corrigió y lo que quedó como pregunta, está en `INFORME-sync.md`.
+
 ## Versión realista (rama `feat/realista-fable`, 2026-11-21; sin publicar)
 
 Contraste con Codex pedido por Benjamin: misma estética (paleta, tipografía, estructura de dos columnas con la figura fija), contenido
