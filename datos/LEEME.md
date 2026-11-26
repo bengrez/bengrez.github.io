@@ -15,4 +15,6 @@ como siempre; no muevas ni borres un marcador sin cambiar `scripts/datos.py`.
 Una sincronización mensual, que vive fuera de este repo, lee los valores de las fuentes y publica sólo si el cambio toca estos dos
 archivos (`datos/sitio.json` e `index.html` dentro de los marcadores), pasa una lista negra privada, deja el HTML válido, la
 página se ve sin JavaScript a 375 px, sin errores de consola y bajo 200 kB con gzip en escritorio. También se puede editar
-`sitio.json` a mano y correr `python3 scripts/datos.py --pegar`.
+`sitio.json` a mano y correr `python3 scripts/datos.py --pegar`. Los estados de Data science y Ecología no tienen fuente
+automática: la sincronización los deja como estén aquí, así que se cambian a mano. Las cifras de Scholar sí las actualiza, y
+nunca a una lectura más vieja que la publicada.
